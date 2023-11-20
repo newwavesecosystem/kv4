@@ -1,0 +1,66 @@
+import React, { useState } from "react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import DeleteIcon from "../icon/outline/DeleteIcon";
+import EllipsisIcon from "../icon/outline/EllipsisIcon";
+import InformationIcon from "../icon/outline/InformationIcon";
+import DummyChat from "~/data/dummyChat";
+import { useRecoilValue } from "recoil";
+import { authUserState } from "~/recoil/atom";
+dayjs.extend(relativeTime);
+function SingleChat({
+  key,
+  chat,
+}: {
+  key: number;
+  chat: (typeof DummyChat)[0];
+}) {
+  const [open, setOpen] = useState(false);
+  const user = useRecoilValue(authUserState);
+
+  return (
+    <div className="flex flex-col py-4 text-sm m-4">
+      <div className="mb-3 flex justify-between">
+        <div className="flex items-center gap-2">
+          <span className="font-bold">
+            {user?.fullName === chat.name ? "You" : chat.name}
+          </span>
+          {/* <span>{dayjs().from(new Date())}</span> */}
+          <span className="text-sm text-[#E0ECFF]/80">{dayjs(chat.time).fromNow()}</span>
+        </div>
+        <DropdownMenu open={open} onOpenChange={setOpen}>
+          <DropdownMenuTrigger asChild>
+            <button>
+              <EllipsisIcon className="h-5 w-5 rotate-90" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="border-0 bg-konn3ct-active text-white"
+          >
+            <DropdownMenuItem className="">
+              <InformationIcon className="mr-2 h-4 w-4" />
+              Info
+            </DropdownMenuItem>
+            <DropdownMenuItem className="">
+              <DeleteIcon className="mr-2 h-4 w-4" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <span>
+        Can we discuss how the data is being provided to the clients on an "as
+        is" and "where-is" basis.
+      </span>
+    </div>
+  );
+}
+
+export default SingleChat;
