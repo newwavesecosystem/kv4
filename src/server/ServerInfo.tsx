@@ -1,0 +1,24 @@
+export const extRegisterURL = "https://k40.konn3ct.ng";
+export const engineBaseURL = "meet.konn3ct.ng";
+export const tokenValidationURL = `${extRegisterURL}/enter`;
+export const joinURL = `http://127.0.0.1:8000/api/k4/`;
+export const sfuURL = `wss://${engineBaseURL}/bbb-webrtc-sfu`;
+export const websocketURL = `https://${engineBaseURL}/html5client/sockjs`;
+export const aiBotURL = `${extRegisterURL}/ai-bot-message`;
+
+export function generateRandomId(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+}
+
+export function generateSmallId() {
+    const characters = new Date();
+    return characters.getSeconds() + characters.getMilliseconds();
+}

@@ -33,7 +33,8 @@ export default function Home() {
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
 
-      {user ? <PostSignIn /> : <PreSignIn />}
+      {/*{user ? <PostSignIn /> : <PreSignIn />}*/}
+      <PostSignIn />
     </>
   );
 }

@@ -5,6 +5,7 @@ export const authUserState = atom<{
   id: number;
   fullName: string;
   email: string;
+  meetingDetails: any;
 } | null>({
   key: "authUserState",
   default: null,
