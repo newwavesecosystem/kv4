@@ -35,6 +35,7 @@ const KurentoAudio = () => {
 
     const user = useRecoilValue(authUserState);
     const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
+    const [audioState, setAudioState] = useState(false);
 
     var ws = null;
     var webRtcPeer;
@@ -48,7 +49,7 @@ const KurentoAudio = () => {
 
     useEffect(() => {
 
-        if(connectionStatus?.websocket_connection && ws == null){
+        if(!audioState){
             console.log("websocket_connection is active")
             ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
         }
@@ -57,7 +58,7 @@ const KurentoAudio = () => {
             // Add event listeners for various socket events
             ws.onopen = () => {
                 console.log('Kurento audio Socket connection established');
-                // audioChanged(1)
+                setAudioState(true);
                 setTimeout(()=>{
                     startProcess();
                 }, 40);
@@ -96,9 +97,9 @@ const KurentoAudio = () => {
 
             ws.onclose = () => {
                 console.log('Kurento Socket connection closed');
-                setConnection({
-                    audio_connection:false
-                })
+                // setConnection({
+                //     audio_connection:false
+                // })
             };
         }
     // },[ ])
