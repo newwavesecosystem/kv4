@@ -28,13 +28,13 @@ function ManageUserSettings() {
   return (
     <div
       className={cn(
-        "hidden w-full rounded-t-2xl bg-[#5D957E] px-5 lg:block lg:rounded-t-none ",
+        "hidden w-full rounded-t-2xl bg-primary px-5 lg:block lg:rounded-t-none ",
         currentTab.clickSourceId <= 3 && settingsMeta.isFoward && "block",
       )}
     >
-      <div className="flex items-center justify-between border-b-2 border-white/20 py-6 ">
+      <div className="border-a11y/20 flex items-center justify-between border-b-2 py-6 ">
         <button
-          className="mr-auto rounded-full bg-konn3ct-green p-2 lg:hidden"
+          className="bg-a11y/20 mr-auto rounded-full p-2 lg:hidden"
           onClick={() => {
             if (screenSize.id <= 3) {
               setSettingsMeta({
@@ -54,7 +54,7 @@ function ManageUserSettings() {
           <span className="sr-only">Close</span>
         </SettingsSheetClose>
       </div>
-      <div className="flex flex-col divide-y divide-white/20 py-6">
+      <div className="divide-a11y/20 flex flex-col divide-y py-6">
         <div className="flex items-center justify-between py-4">
           <div className={cn("flex gap-3", !data.muteAllUsers && "opacity-60")}>
             <MicOffIcon className="h-6 w-6" />

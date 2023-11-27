@@ -11,7 +11,7 @@ import ExitIcon from "../icon/outline/ExitIcon";
 import ChatIcon from "../icon/outline/ChatIcon";
 import AlertOctagonIcon from "../icon/outline/AlertOctagonIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
-import HandOnIcon from "../icon/outline/Hand/HandOnIcon";
+import HandOnIcon from "../icon/outline/HandOnIcon";
 
 function NotificationsSettings() {
   const currentTab = useRecoilValue(currentTabState);
@@ -32,13 +32,13 @@ function NotificationsSettings() {
   return (
     <div
       className={cn(
-        "hidden w-full rounded-t-2xl bg-[#5D957E] px-5 lg:block lg:rounded-t-none ",
+        "hidden w-full rounded-t-2xl bg-primary px-5 lg:block lg:rounded-t-none ",
         currentTab.clickSourceId <= 3 && settingsMeta.isFoward && "block",
       )}
     >
-      <div className="flex items-center justify-between border-b-2 border-white/20 py-6 ">
+      <div className="flex items-center justify-between border-b-2 border-a11y/20 py-6 ">
         <button
-          className="mr-auto rounded-full bg-konn3ct-green p-2 lg:hidden"
+          className="mr-auto rounded-full bg-a11y/20 p-2 lg:hidden"
           onClick={() => {
             if (screenSize.id <= 3) {
               setSettingsMeta({
@@ -58,7 +58,7 @@ function NotificationsSettings() {
           <span className="sr-only">Close</span>
         </SettingsSheetClose>
       </div>
-      <div className="flex flex-col divide-y divide-white/20 py-6">
+      <div className="flex flex-col divide-y divide-a11y/20 py-6">
         <div className="flex items-center justify-between py-4">
           <div className={cn("flex gap-3", !data.joined && "opacity-60")}>
             <PeopleAdd className="h-6 w-6" />

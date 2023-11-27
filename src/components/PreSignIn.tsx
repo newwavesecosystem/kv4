@@ -15,9 +15,9 @@ import {
   authUserState,
   cameraOpenState,
   cameraStreamState,
+  connectedUsersState,
   micOpenState,
   microphoneStreamState,
-  screenSharingStreamState,
   settingsModalState,
 } from "~/recoil/atom";
 import { useToast } from "./ui/use-toast";
@@ -33,10 +33,9 @@ export default function PreSignIn() {
   const [microphoneStream, setMicrophoneStream] = useRecoilState(
     microphoneStreamState,
   );
-  const [screenSharingStream, setScreenSharingStream] = useRecoilState(
-    screenSharingStreamState,
-  );
+
   const setUser = useSetRecoilState(authUserState);
+  const setConnectedUsers = useSetRecoilState(connectedUsersState);
 
   const [data, setData] = useState({
     fullName: "dev init",
@@ -53,17 +52,17 @@ export default function PreSignIn() {
   return (
     <Guest>
       <Settings />
-      <div className="flex h-screen items-center justify-center bg-konn3ct-gray-light md:h-full md:flex-1">
-        <div className="flex flex-col items-center justify-center gap-3 px-5 text-center">
+      <div className="flex h-screen items-center justify-center bg-primary md:h-full md:flex-1">
+        <div className="m-auto flex flex-col items-center justify-center gap-3 px-5 text-center">
           <span className=" text-xl font-semibold md:text-2xl">
             Get Started
           </span>
           <p>Setup your audio and video before joining</p>
-          <div className=" mt-9 flex w-full flex-col items-center justify-center gap-5">
+          <div className=" flex w-full flex-col items-center justify-center gap-5">
             {videoState ? (
-              <div className="relative flex h-72 w-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-konn3ct-inactive text-white md:w-[500px]">
+              <div className="relative flex h-72 w-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-a11y/20 md:w-[500px]">
                 <CameraComponent />
-                <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg  bg-konn3ct-black px-2 py-1 text-sm">
+                <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg  bg-primary/60 px-2 py-1 text-sm">
                   <span className="hidden max-w-[150px] truncate lg:block">
                     {data.fullName}
                   </span>
@@ -71,22 +70,22 @@ export default function PreSignIn() {
                 </div>
               </div>
             ) : (
-              <div className=" flex aspect-auto h-64 w-full flex-col items-center justify-center rounded-2xl bg-konn3ct-inactive text-white md:w-[500px]">
-                <div className="flex aspect-square h-32 items-center justify-center rounded-full bg-[#93B3A5] text-3xl font-extrabold uppercase">
+              <div className=" flex aspect-auto h-64 w-full flex-col items-center justify-center rounded-2xl bg-a11y/20 md:w-[500px]">
+                <div className="flex aspect-square h-32 items-center justify-center rounded-full bg-primary/80 text-3xl font-extrabold uppercase">
                   {data.fullName.split(" ")[0]?.slice(0, 1)}
                   {data.fullName.split(" ")[1]?.slice(0, 1)}
                 </div>
                 <span className="capitalize">{data.fullName}</span>
               </div>
             )}
+
+            {/* action buttons */}
             <div className="flex w-full justify-between">
               <div className="flex items-center gap-4">
                 <button
                   className={cn(
                     "rounded-full p-2",
-                    micState
-                      ? "bg-konn3ct-active dark:bg-red-900"
-                      : "bg-konn3ct-inactive",
+                    micState ? "bg-a11y/20" : "border border-a11y/20",
                   )}
                   onClick={async () => {
                     if (micState && microphoneStream) {
@@ -118,7 +117,7 @@ export default function PreSignIn() {
                 <button
                   className={cn(
                     "rounded-full p-2",
-                    videoState ? "bg-konn3ct-active" : "bg-konn3ct-inactive",
+                    videoState ? "bg-a11y/20" : "border border-a11y/20",
                   )}
                   onClick={async () => {
                     if (videoState && cameraStream) {
@@ -148,7 +147,7 @@ export default function PreSignIn() {
                 </button>
               </div>
               <button
-                className="rounded-full bg-konn3ct-inactive p-2"
+                className="rounded-full bg-a11y/20 p-2"
                 onClick={() => setSettingsOpen(!settingsOpen)}
               >
                 <SettingsIcon className="h-6 w-6 " />
@@ -161,7 +160,7 @@ export default function PreSignIn() {
                 placeholder="Full Name"
                 value={data.fullName}
                 onChange={onChange}
-                className="w-[60%] truncate rounded-md border border-konn3ct-green bg-transparent px-2 py-2  focus:shadow-none focus:outline-none md:w-full"
+                className="w-[60%] truncate rounded-md border border-a11y/20 bg-transparent px-2 py-2 placeholder:text-a11y/80  focus:shadow-none focus:outline-none md:w-full"
               />
               <input
                 type="email"
@@ -169,19 +168,41 @@ export default function PreSignIn() {
                 placeholder="Email"
                 value={data.email}
                 onChange={onChange}
-                className=" w-full truncate rounded-md border border-konn3ct-green bg-transparent px-2 py-2  focus:shadow-none focus:outline-none "
+                className=" w-full truncate rounded-md border border-a11y/20 bg-transparent px-2 py-2 placeholder:text-a11y/80  focus:shadow-none focus:outline-none "
               />
             </div>
             <div className="flex w-full text-sm ">
               <button
                 disabled={!data.email || !data.fullName}
-                onClick={() =>
+                onClick={() => {
+                  const id = Math.floor(Math.random() * 100);
+                  // login user
                   setUser({
                     ...data,
-                    id: Math.floor(Math.random() * 100),
-                  })
-                }
-                className=" rounded-lg bg-konn3ct-green px-10 py-2 text-white disabled:opacity-40"
+                    id,
+                  });
+
+                  // add user to connected list array
+                  setConnectedUsers((prev) => [
+                    ...prev,
+                    {
+                      cameraFeed: cameraStream,
+                      email: data.email,
+                      fullName: data.fullName,
+                      id: id,
+                      isCameraOpen: videoState,
+                      isHandRaised: false,
+                      isMicOpen: micState,
+                      isScreenSharing: false,
+                      microphoneFeed: microphoneStream,
+                      screenSharingFeed: null,
+                      isModerator: false,
+                      speaker: null,
+                      profilePicture: null,
+                    },
+                  ]);
+                }}
+                className=" rounded-lg bg-secondary/30 px-10 py-2 disabled:opacity-40"
               >
                 Konn3ct
               </button>

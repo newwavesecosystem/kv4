@@ -37,18 +37,18 @@ function Settings() {
   return (
     <SettingsSheet open={settingsOpen} onOpenChange={handleModalClose}>
       <SettingsSheetContent
-        className="w-full text-white lg:w-[900px] "
+        className="text-a11y w-full lg:w-[900px] "
         side={screenSize.id <= 3 ? "bottom" : "right"}
       >
         <div className="flex">
           {/* left */}
           <div
             className={cn(
-              "hidden w-full rounded-t-2xl bg-[#3E8466] px-5 lg:block lg:h-screen lg:w-[600px] lg:rounded-bl-2xl lg:rounded-tr-none lg:pt-5",
+              "hidden w-full rounded-t-2xl bg-primary px-5 lg:block lg:h-screen lg:w-[600px] lg:rounded-bl-2xl lg:rounded-tr-none lg:pt-5",
               screenSize.id <= 3 && !settingsMeta.isFoward && "block",
             )}
           >
-            <div className="flex items-center justify-between border-b border-white/20 py-5 lg:border-0">
+            <div className="border-a11y/20 flex items-center justify-between border-b py-5 lg:border-0">
               <span className="text-lg font-semibold lg:border-b-0 lg:text-xl ">
                 Settings
               </span>

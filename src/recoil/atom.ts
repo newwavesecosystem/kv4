@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 import settingsTabData from "~/data/settingsTabData";
+import { IConnectedUser } from "~/types";
 
 export const authUserState = atom<{
   id: number;
@@ -10,8 +11,24 @@ export const authUserState = atom<{
   default: null,
 });
 
+export const currentColorTheme = atom<{
+  background: string;
+  text: string;
+}>({
+  key: "currentColorTheme",
+  default: {
+    background: "#227451",
+    text: "#FFFFFF",
+  },
+});
+
 export const settingsModalState = atom<boolean>({
   key: "settingsModalState",
+  default: false,
+});
+
+export const endCallModalState = atom<boolean>({
+  key: "endCallModalState",
   default: false,
 });
 
@@ -27,6 +44,10 @@ export const screenSharingStreamState = atom<MediaStream | null>({
   key: "screenSharingStreamState",
   default: null,
 });
+export const whiteBoardOpenState = atom<boolean>({
+  key: "whiteBoardOpenState",
+  default: false,
+});
 
 export const micOpenState = atom<boolean>({
   key: "micOpenState",
@@ -35,6 +56,10 @@ export const micOpenState = atom<boolean>({
 
 export const cameraOpenState = atom<boolean>({
   key: "cameraOpenState",
+  default: false,
+});
+export const screenSharingState = atom<boolean>({
+  key: "screenSharingState",
   default: false,
 });
 
@@ -83,6 +108,42 @@ export const recordingModalState = atom<{
   default: { step: 0, isActive: false, height: 0, width: 0, id: 0, name: "" },
 });
 
+export const donationModalState = atom<{
+  isActive: boolean;
+  step: number;
+  donationName: string;
+  donationAmount: number;
+  donationAmountType: number;
+  donationCreator: string;
+  donationCreatorId: number;
+  donationCreatedAt: string;
+  enableFlashNotification: boolean;
+  totalAmountDonatated: number;
+  usersDonated: {
+    id: number;
+    fullName?: string;
+    emaail?: string;
+    donationDescription: string;
+    donationUniqueNumber?: number;
+    donationAmount: number;
+  }[];
+}>({
+  key: "donationModalState",
+  default: {
+    step: 0,
+    isActive: false,
+    donationName: "",
+    donationAmount: 0,
+    donationAmountType: 2,
+    donationCreator: "",
+    donationCreatorId: 0,
+    donationCreatedAt: "",
+    enableFlashNotification: false,
+    totalAmountDonatated: 0,
+    usersDonated: [],
+  },
+});
+
 export const availableCamerasState = atom<Array<MediaDeviceInfo>>({
   key: "availableCamerasState",
   default: [],
@@ -111,4 +172,9 @@ export const selectedMicrophoneState = atom<string | null>({
 export const selectedSpeakersState = atom<string | null>({
   key: "selectedSpeakersState",
   default: null,
+});
+
+export const connectedUsersState = atom<IConnectedUser[]>({
+  key: "connectedUsersState",
+  default: [],
 });

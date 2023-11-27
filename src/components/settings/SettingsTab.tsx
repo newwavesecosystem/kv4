@@ -42,7 +42,7 @@ function SettingsTab() {
               }}
               className={cn(
                 "my-1 flex w-full items-center gap-2 px-2 py-4 disabled:opacity-40",
-                currentTab.id === tab.id && "rounded-lg bg-konn3ct-inactive/40",
+                currentTab.id === tab.id && "rounded-lg bg-a11y/20",
               )}
               disabled={tab.disable}
               key={index}
@@ -78,7 +78,7 @@ function SettingsTab() {
                 className={cn(
                   "my-1 flex w-full items-center gap-2 px-2 py-4 disabled:opacity-40",
                   currentTab.id === tab.id &&
-                    "rounded-lg bg-konn3ct-inactive/40",
+                    "rounded-lg bg-a11y/20",
                 )}
                 disabled={tab.disable}
                 key={index}

@@ -1,4 +1,5 @@
 import { type Config } from "tailwindcss";
+import { RecursiveKeyValuePair } from "tailwindcss/types/config";
 
 export default {
   darkMode: ["class"],
@@ -19,12 +20,11 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "rgb(var(--color-primary) / <alpha-value>)",
         },
+        a11y: "rgb(var(--color-a11y) / <alpha-value>)",
         konn3ct: {
           DEFAULT: "#227451",
-          "light-green": "#green",
           green: "#227451",
           cyan: "#000F2D",
           gray: "#1B1B1B",
@@ -36,8 +36,7 @@ export default {
           red: "#CC525F",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "rgb(var(--color-secondary) / <alpha-value>)",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

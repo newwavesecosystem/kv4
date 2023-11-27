@@ -2,7 +2,7 @@ import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import useScreenSize from "~/lib/useScreenSize";
 import { cn } from "~/lib/utils";
-import { currentTabState, settingsModalMetaState } from "~/recoil/atom"; 
+import { currentTabState, settingsModalMetaState } from "~/recoil/atom";
 import { SettingsSheetClose } from "../ui/settingsSheet";
 import CloseIcon from "../icon/outline/CloseIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
@@ -18,13 +18,13 @@ function TakeSpotAttendanceSettings() {
   return (
     <div
       className={cn(
-        "hidden w-full rounded-t-2xl bg-[#5D957E] px-5 lg:block lg:rounded-t-none ",
+        "hidden w-full rounded-t-2xl bg-primary px-5 lg:block lg:rounded-t-none ",
         currentTab.clickSourceId <= 3 && settingsMeta.isFoward && "block",
       )}
     >
-      <div className="flex items-center justify-between border-b-2 border-white/20 py-6 ">
+      <div className="border-a11y/20 flex items-center justify-between border-b-2 py-6 ">
         <button
-          className="mr-auto rounded-full bg-konn3ct-green p-2 lg:hidden"
+          className="bg-a11y/20 mr-auto rounded-full p-2 lg:hidden"
           onClick={() => {
             if (screenSize.id <= 3) {
               setSettingsMeta({

@@ -1,22 +1,28 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import useScreenSize from "~/lib/useScreenSize";
-import { cn } from "~/lib/utils";
-import { currentTabState, settingsModalMetaState } from "~/recoil/atom";
+import { cn, getContrastColor } from "~/lib/utils";
+import {
+  currentColorTheme,
+  currentTabState,
+  settingsModalMetaState,
+} from "~/recoil/atom";
 import { SettingsSheetClose } from "../ui/settingsSheet";
 import CloseIcon from "../icon/outline/CloseIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
 import { Switch } from "../ui/switch";
-import VolumeOnIcon from "../icon/outline/VolumeOnIcon";
 import MicOnIcon from "../icon/outline/MicOnIcon";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Slider } from "../ui/slider";
+import predefinedColorsData from "~/data/predefinedColorsData";
 
 function LayoutSettings() {
+  const colorPickerRef = useRef<HTMLInputElement>(null);
   const currentTab = useRecoilValue(currentTabState);
   const [settingsMeta, setSettingsMeta] = useRecoilState(
     settingsModalMetaState,
   );
+  const [currentColor, setCurrentColor] = useRecoilState(currentColorTheme);
 
   const [data, setData] = useState<{
     speakerMode: boolean;
@@ -35,13 +41,13 @@ function LayoutSettings() {
   return (
     <div
       className={cn(
-        "hidden w-full rounded-t-2xl bg-[#5D957E] px-5 lg:block lg:rounded-t-none ",
+        "hidden w-full rounded-t-2xl bg-primary px-5 lg:block lg:rounded-t-none ",
         currentTab.clickSourceId <= 3 && settingsMeta.isFoward && "block",
       )}
     >
-      <div className="flex items-center justify-between border-b-2 border-white/20 py-6 ">
+      <div className="border-a11y/20 flex items-center justify-between border-b-2 py-6 ">
         <button
-          className="mr-auto rounded-full bg-konn3ct-green p-2 lg:hidden"
+          className="bg-a11y/20 mr-auto rounded-full p-2 lg:hidden"
           onClick={() => {
             if (screenSize.id <= 3) {
               setSettingsMeta({
@@ -61,18 +67,63 @@ function LayoutSettings() {
           <span className="sr-only">Close</span>
         </SettingsSheetClose>
       </div>
-      <div className="flex flex-col divide-y divide-white/20 py-6">
+      <div className="divide-a11y/20 flex flex-col divide-y pb-6 pt-2">
         <div className="flex items-center justify-between py-4">
-          <div className={cn("flex gap-3", !data.speakerMode && "opacity-60")}>
-            <VolumeOnIcon volume={2} className="h-6 w-6" />
-            <label htmlFor="speakerMode">Active Speaker Mode</label>
+          <div className="flex w-full items-center gap-1">
+            {predefinedColorsData.map((color, index) => (
+              <button
+                key={index}
+                // TODO use tailwind classes
+                style={{
+                  backgroundColor: color.background,
+                }}
+                className={cn(
+                  "border-a11y h-7 w-7 rounded-full",
+                  color.background === currentColor.background && "border-2",
+                )}
+                onClick={() => {
+                  setCurrentColor({
+                    background: color.background,
+                    text: color.text,
+                  });
+                }}
+              ></button>
+            ))}
+            {/* check if the current colour not in predefined list then render it */}
+            {predefinedColorsData.filter(
+              (color) => color.background === currentColor.background,
+            ).length === 0 && (
+              <button>
+                <div
+                  style={{
+                    backgroundColor: currentColor.background,
+                    borderColor: currentColor.text,
+                  }}
+                  className="h-7 w-7 rounded-full border-2"
+                ></div>
+              </button>
+            )}
           </div>
-          <Switch
-            checked={data.speakerMode}
-            onCheckedChange={(checked) =>
-              setData({ ...data, speakerMode: checked })
-            }
-            id="speakerMode"
+          <button
+            onClick={() => {
+              if (colorPickerRef.current) {
+                colorPickerRef.current.click();
+              }
+            }}
+            className=" border-a11y/20 shrink-0 rounded-lg border px-4 py-2 text-xs"
+          >
+            Edit Color
+          </button>
+          <input
+            ref={colorPickerRef}
+            type="color"
+            onChange={(e) => {
+              setCurrentColor({
+                background: e.target.value,
+                text: getContrastColor(e.target.value),
+              });
+            }}
+            hidden
           />
         </div>
         <div className="flex items-center justify-between py-4">
@@ -114,7 +165,7 @@ function LayoutSettings() {
             </div>
           </RadioGroup>
           <div>
-            <button className=" rounded-lg border border-white bg-konn3ct-green px-4 py-2 text-sm">
+            <button className=" border-a11y/20 bg-a11y/20 rounded-lg border px-4 py-2 text-sm">
               Update Everyone
             </button>
           </div>
@@ -128,10 +179,10 @@ function LayoutSettings() {
           </div>
           <div className="mt-5 flex w-full items-center gap-4">
             <div className="grid aspect-square h-5 w-5 grid-cols-2 gap-1">
-              <div className="h-full w-full bg-white"></div>
-              <div className="h-full w-full bg-white"></div>
-              <div className="h-full w-full bg-white"></div>
-              <div className="h-full w-full bg-white"></div>
+              <div className="bg-a11y h-full w-full"></div>
+              <div className="bg-a11y h-full w-full"></div>
+              <div className="bg-a11y h-full w-full"></div>
+              <div className="bg-a11y h-full w-full"></div>
             </div>
             <Slider
               value={data.maxTiles}
@@ -140,12 +191,12 @@ function LayoutSettings() {
               step={2}
             />
             <div className="grid h-5 w-8 grid-cols-3 gap-[2px]">
-              <div className="h-full w-full bg-white"></div>
-              <div className="h-full w-full bg-white"></div>
-              <div className="h-full w-full bg-white"></div>
-              <div className="h-full w-full bg-white"></div>
-              <div className="h-full w-full bg-white"></div>
-              <div className="h-full w-full bg-white"></div>
+              <div className="bg-a11y h-full w-full"></div>
+              <div className="bg-a11y h-full w-full"></div>
+              <div className="bg-a11y h-full w-full"></div>
+              <div className="bg-a11y h-full w-full"></div>
+              <div className="bg-a11y h-full w-full"></div>
+              <div className="bg-a11y h-full w-full"></div>
             </div>
           </div>
         </div>
