@@ -5,11 +5,31 @@ export const authUserState = atom<{
   id: number;
   fullName: string;
   email: string;
+  sessiontoken: string;
   meetingDetails: any;
 } | null>({
   key: "authUserState",
   default: null,
 });
+
+export const connectionStatusState = atom<{
+  websocket_connection: boolean;
+  audio_connection: boolean;
+} | null>({
+  key: "connectionStatusState",
+  default: null,
+});
+
+export const participantListState = atom<any>({
+  key: "participantListState",
+  default: [],
+});
+
+export const participantTalkingListState = atom<any>({
+  key: "participantTalkingListState",
+  default: [],
+});
+
 
 export const settingsModalState = atom<boolean>({
   key: "settingsModalState",

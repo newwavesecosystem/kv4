@@ -40,13 +40,14 @@ import { cn } from "~/lib/utils";
 import MoneyIcon from "~/components/icon/outline/MoneyIcon";
 import SettingsIcon from "~/components/icon/outline/SettingsIcon";
 import Settings from "~/components/settings/Settings";
-import { useRecoilState } from "recoil";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {
+  authUserState,
   cameraOpenState,
   cameraStreamState,
-  chatModalState,
+  chatModalState, connectionStatusState,
   micOpenState,
-  microphoneStreamState,
+  microphoneStreamState, participantListState,
   participantsModalState,
   recordingModalState,
   screenSharingStreamState,
@@ -64,6 +65,7 @@ import stopCameraStream from "~/lib/camera/stopCameraStream";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 import ScreenSharingComponent from "~/components/screenSharing/ScreenSharingComponent";
 import ChatModal from "~/components/chat/ChatModal";
+import {websocketMuteMic} from "~/server/Websocket";
 
 function Authenticated({ children }: { children: React.ReactNode }) {
   const [micState, setMicState] = useRecoilState(micOpenState);
@@ -84,7 +86,10 @@ function Authenticated({ children }: { children: React.ReactNode }) {
     screenSharingStreamState,
   );
   const [chatState, setChatState] = useRecoilState(chatModalState);
-  const { toast } = useToast();
+
+  const [user, setUser] = useRecoilState(authUserState);
+  const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
+  const participantList = useRecoilValue(participantListState);
 
   return (
     <div
@@ -112,7 +117,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             orientation="vertical"
           />
           <div className="hidden flex-col md:flex">
-            <span>Lagos State Tech Summit 2023</span>
+            <span>{user?.meetingDetails?.confname}</span>
             <p>{new Date().toDateString()}</p>
           </div>
           <button className="items-center rounded-full border p-2 md:hidden">
@@ -161,15 +166,24 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           )}
         </div>
         {/* right side */}
-        <div className="flex items-center gap-2 md:gap-5">
+         <div className="flex items-center gap-2 md:gap-5">
           {recordingState.isActive ? (
             <button
               onClick={() => {
-                setRecordingState((prev) => ({
-                  ...prev,
-                  step: 2,
-                }));
-              }}
+                if(user?.meetingDetails?.role == "MODERATOR") {
+
+                  setRecordingState((prev) => ({
+                    ...prev,
+                    step: 2,
+                  }));
+
+              }else{
+              toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: 'You to have the permission for this. Kindly chat with the host or moderator',
+              });
+            }}}
               className="hidden items-center gap-2 rounded-lg bg-konn3ct-red px-3 py-2 text-white md:flex"
             >
               <RecordOnIcon className="h-6 w-6 fill-white" />
@@ -178,11 +192,19 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           ) : (
             <button
               onClick={() => {
-                setRecordingState((prev) => ({
-                  ...prev,
-                  step: 1,
-                }));
-              }}
+                if(user?.meetingDetails?.role == "MODERATOR") {
+                  setRecordingState((prev) => ({
+                    ...prev,
+                    step: 1,
+                  }));
+
+              }else{
+              toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: 'You to have the permission for this. Kindly chat with the host or moderator',
+              });
+            }}}
               className="hidden items-center gap-2 rounded-lg border px-3 py-2 md:flex"
             >
               <RecordOnIcon className="h-6 w-6 fill-black" />
@@ -200,7 +222,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             className="flex items-center gap-2 rounded-lg bg-konn3ct-active px-3 py-2 text-white md:border md:bg-transparent md:text-black"
           >
             <PeoplesIcon className="h-5 w-5 md:fill-black" />
-            <span>5</span>
+            <span>{participantList.length}</span>
           </button>
         </div>
       </div>
@@ -240,27 +262,12 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               micState ? "bg-transparent" : "bg-konn3ct-active",
             )}
             onClick={async () => {
-              if (micState && microphoneStream) {
-                stopMicrophoneStream(microphoneStream);
-                setMicrophoneStream(null);
-                setMicState(!micState);
-                return;
-              }
 
-              const mic = await requestMicrophoneAccess();
-              if (mic) {
-                setMicrophoneStream(mic);
-                setMicState(!micState);
-              } else {
-                toast({
-                  variant: "destructive",
-                  title: "Uh oh! Something went wrong.",
-                  description: "Kindly check your microphone settings.",
-                });
-              }
+              setMicState(!micState);
+              websocketMuteMic();
             }}
           >
-            {micState ? (
+            {!micState ? (
               <MicOnIcon className="h-6 w-6 " />
             ) : (
               <MicOffIcon className="h-6 w-6 " />

@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import EllipsisIcon from "../icon/outline/EllipsisIcon";
-import { authUserState } from "~/recoil/atom";
+import {authUserState, participantTalkingListState} from "~/recoil/atom";
 import { useRecoilValue } from "recoil";
 import InformationIcon from "../icon/outline/InformationIcon";
 import VolumeOnIcon from "../icon/outline/VolumeOnIcon";
@@ -16,16 +16,18 @@ import ChatIcon from "../icon/outline/ChatIcon";
 import MicOffIcon from "../icon/outline/MicOffIcon";
 import PeopleRemove from "../icon/outline/PeopleRemove";
 import RepeatIcon from "../icon/outline/RepeatIcon";
+import MicOnIcon from "~/components/icon/outline/MicOnIcon";
 
 function SingleParticipant({
   key,
   participant,
 }: {
   key: number;
-  participant: (typeof DummyChat)[0];
+  participant: any;
 }) {
   const [open, setOpen] = useState(false);
   const user = useRecoilValue(authUserState);
+  const talkingList = useRecoilValue(participantTalkingListState);
   return (
     <div className="flex justify-between border-b border-b-white/20 py-4 text-sm">
       <div className="flex items-center gap-3">
@@ -33,15 +35,20 @@ function SingleParticipant({
         <div className="flex flex-col">
           <span className="font-bold">
             {participant.name}
-            {user?.fullName === participant.name && " (You)"}
+            {user?.meetingDetails?.internalUserID === participant.intId && " (You)"}
           </span>
-          <span className="text-xs">host</span>
+          {/*<span className="text-xs">host</span>*/}
         </div>
       </div>
       <div className=" flex items-center gap-2">
+
         <button>
-          <MicOffIcon className="h-6 w-6" />
+          {talkingList.map(eachItem => (
+              eachItem?.intId == participant.intId && eachItem?.joined ? (eachItem?.muted ? <MicOffIcon className="h-6 w-6" /> :
+                <MicOnIcon className="h-6 w-6" />): null
+          ))}
         </button>
+
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
             <button>

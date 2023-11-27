@@ -5,6 +5,7 @@ import { useRecoilState } from "recoil";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import recordingResolutionsData from "~/data/recordingResolutionsData";
 import { useToast } from "../ui/use-toast";
+import {websocketRecord} from "~/server/Websocket";
 
 function ResolutionModal() {
   const [recordingState, setRecordingState] =
@@ -75,6 +76,7 @@ function ResolutionModal() {
                 isActive: true,
                 step: 0,
               }));
+              websocketRecord();
             }}
             className="ml-auto rounded-md bg-konn3ct-active px-4 py-2"
           >

@@ -2,17 +2,9 @@ import {useContext, useEffect, useRef, useState} from 'react';
 import * as kurentoUtils from "kurento-utils";
 import * as UserInfo from './UserInfo';
 import * as ServerInfo from './ServerInfo';
+import {useRecoilState, useRecoilValue} from "recoil";
+import {authUserState, connectionStatusState} from "~/recoil/atom";
 
-
-var ws = null;
-var webRtcPeer;
-var streamID;
-
-
-export function kurentoSend(data) {
-    ws.send(JSON.stringify(data))
-    console.log('Sending this data via kurento websocket')
-}
 
 function generateRandomId(length) {
     let result = '';
@@ -41,20 +33,34 @@ const KurentoAudio = () => {
     // const connectionStatusContext = useContext(ConnectionStatusContext)
     // const {connectionStatus,audioChanged} = connectionStatusContext
 
+    const user = useRecoilValue(authUserState);
+    const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
+
+    var ws = null;
+    var webRtcPeer;
+    var streamID;
+
+
+    function kurentoSend(data) {
+        ws.send(JSON.stringify(data))
+        console.log('Sending this data via kurento websocket')
+    }
+
     useEffect(() => {
 
-        // if(connectionStatus?.websocket_connection == 1){
-        //     console.log("websocket_connection is active")
-        //     audioChanged(2)
-        //     ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${UserInfo.sessionToken}`);
-        // }
+        if(connectionStatus?.websocket_connection && ws == null){
+            console.log("websocket_connection is active")
+            ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
+        }
         if (ws != null) {
 
             // Add event listeners for various socket events
             ws.onopen = () => {
                 console.log('Kurento audio Socket connection established');
                 // audioChanged(1)
-                // setTimeout(startProcess(), 40);
+                setTimeout(()=>{
+                    startProcess();
+                }, 40);
 
             };
 
@@ -76,6 +82,9 @@ const KurentoAudio = () => {
                         break;
                     case 'webRTCAudioSuccess':
                         console.log("Audio Connected Successfully");
+                        setConnection({
+                            audio_connection:true
+                        })
                         break;
                     case 'pong':
                         console.log("Active connection");
@@ -87,11 +96,13 @@ const KurentoAudio = () => {
 
             ws.onclose = () => {
                 console.log('Kurento Socket connection closed');
-                // audioChanged(0)
+                setConnection({
+                    audio_connection:false
+                })
             };
         }
-    },[ ])
-    // },[connectionStatus?.websocket_connection])
+    // },[ ])
+    },[connectionStatus?.websocket_connection])
 
     function startProcess() {
         console.log('Creating WebRtcPeer and generating local sdp offer ...');
@@ -108,10 +119,10 @@ const KurentoAudio = () => {
             mediaConstraints: constraints
         }
 
-        // webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function (error) {
-        //     if (error) return onError(error)
-        //     this.generateOffer(onOffer)
-        // });
+        webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function (error) {
+            if (error) return onError(error)
+            this.generateOffer(onOffer)
+        });
     }
 
     function onOffer(error, offerSdp) {

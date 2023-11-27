@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Sheet, SheetContent } from "../ui/sheet";
 import useScreenSize from "~/lib/useScreenSize";
-import { useRecoilState } from "recoil";
-import { participantsModalState } from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {participantListState, participantsModalState} from "~/recoil/atom";
 import {
   Select,
   SelectContent,
@@ -80,6 +80,8 @@ function ParticipantsModal() {
   const [selectedParticipant, setSelectedParticipant] = useState();
   const [selectedMenu, setSelectedMenu] = useState(DummyMenu[0]);
 
+  const participantList = useRecoilValue(participantListState);
+
   const screenSize = useScreenSize();
   return (
     <Sheet open={participantState} onOpenChange={setParticipantState}>
@@ -144,7 +146,7 @@ function ParticipantsModal() {
           />
         </div>
         <div>
-          {DummyChat.map((participant, index) => (
+          {participantList.map((participant, index) => (
             <SingleParticipant key={index} participant={participant} />
           ))}
         </div>
