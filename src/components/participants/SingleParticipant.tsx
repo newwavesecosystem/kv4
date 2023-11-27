@@ -37,6 +37,7 @@ function SingleParticipant({
             {participant.name}
             {user?.meetingDetails?.internalUserID === participant.intId && " (You)"}
           </span>
+          {user?.meetingDetails?.role === 'MODERATOR' && (<span className="text-xs">Moderator</span>) }
           {/*<span className="text-xs">host</span>*/}
         </div>
       </div>

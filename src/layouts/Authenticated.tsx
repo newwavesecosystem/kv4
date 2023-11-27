@@ -181,7 +181,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: 'You to have the permission for this. Kindly chat with the host or moderator',
+                description: 'You dont have the permission for this action. Kindly chat with the host or moderator',
               });
             }}}
               className="hidden items-center gap-2 rounded-lg bg-konn3ct-red px-3 py-2 text-white md:flex"
@@ -202,7 +202,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: 'You to have the permission for this. Kindly chat with the host or moderator',
+                description: 'You dont have the permission for this action. Kindly chat with the host or moderator',
               });
             }}}
               className="hidden items-center gap-2 rounded-lg border px-3 py-2 md:flex"
