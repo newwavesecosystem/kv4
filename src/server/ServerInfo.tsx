@@ -6,7 +6,7 @@ export const sfuURL = `wss://${engineBaseURL}/bbb-webrtc-sfu`;
 export const websocketURL = `https://${engineBaseURL}/html5client/sockjs`;
 export const aiBotURL = `${extRegisterURL}/ai-bot-message`;
 
-export function generateRandomId(length) {
+export function generateRandomId(length:number) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;

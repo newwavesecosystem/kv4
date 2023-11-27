@@ -8,18 +8,6 @@ import {authUserState, connectionStatusState} from "~/recoil/atom";
 
 const KurentoAudio = () => {
 
-    // const groupChatContext = useContext(GroupChatContext)
-    // const {groupchat, togglePanel, closeGroupchat, addtypingUsers, removetypingUsers, sendnewMessage} = groupChatContext
-    //
-    // const participantContext = useContext(ParticipantContext)
-    // const {participant, toggleParticipant, closeParticipant, addtoUserlist, removeUserlist} = participantContext
-    //
-    // const recordingContext = useContext(RecordingContext)
-    // const {startRecording, stopRecording, recordingTiming} = recordingContext
-    //
-    // const connectionStatusContext = useContext(ConnectionStatusContext)
-    // const {connectionStatus,audioChanged} = connectionStatusContext
-
     const user = useRecoilValue(authUserState);
     const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
     const [audioState, setAudioState] = useState(false);
@@ -107,13 +95,19 @@ const KurentoAudio = () => {
             mediaConstraints: constraints
         }
 
-        webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function (error) {
-            if (error) return onError(error)
-            this.generateOffer(onOffer)
+        webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(this: any, error) {
+            if (error) return this.onError(error);
+            this.generateOffer(onOffer);
         });
+
+
+        // webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function (error) {
+        //     if (error) return onError(error)
+        //     this.generateOffer(onOffer)
+        // });
     }
 
-    function onOffer(error, offerSdp) {
+    function onOffer(error:any, offerSdp:any) {
 
         if (error) return onError(error);
 
@@ -130,7 +124,7 @@ const KurentoAudio = () => {
         kurentoSend(message);
     }
 
-    function onIceCandidate(candidate) {
+    function onIceCandidate(candidate:any) {
         console.log('Local candidate' + JSON.stringify(candidate));
 
         var message = {"id":"ping"};
@@ -138,11 +132,11 @@ const KurentoAudio = () => {
         kurentoSend(message);
     }
 
-    function onError(error) {
+    function onError(error:any) {
         console.log("kurento error:", error);
     }
 
-    function startResponse(message) {
+    function startResponse(message:any) {
         // setState(I_CAN_STOP);
         console.log('SDP answer received from server. Processing ...');
         webRtcPeer?.processAnswer(message.sdpAnswer);

@@ -19,7 +19,7 @@ var sock = new SockJS(ServerInfo.websocketURL);
 
 const reConnect = () => {
     sock = new SockJS(ServerInfo.websocketURL);
-    websocketConnect()
+    // websocketConnect()
 }
 
 function pinger(){
@@ -32,58 +32,58 @@ function pinger(){
 }
 
 
-export function websocketConnect() {
-    // Add event listeners for various socket events
+// export function websocketConnect() {
+//     // Add event listeners for various socket events
+//
+//     sock.onopen = () => {
+//         console.log('Websocket connection established');
+//         websocketSend(["{\"msg\":\"connect\",\"version\":\"1\",\"support\":[\"1\",\"pre2\",\"pre1\"]}"])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meteor_autoupdate_clientVersions\",\"params\":[]}`])
+//         websocketSend(["{\"msg\":\"method\",\"id\":\"1\",\"method\":\"userChangedLocalSettings\",\"params\":[{\"application\":{\"animations\":true,\"chatAudioAlerts\":false,\"chatPushAlerts\":false,\"userJoinAudioAlerts\":false,\"userJoinPushAlerts\":false,\"userLeaveAudioAlerts\":false,\"userLeavePushAlerts\":false,\"raiseHandAudioAlerts\":true,\"raiseHandPushAlerts\":true,\"guestWaitingAudioAlerts\":true,\"guestWaitingPushAlerts\":true,\"paginationEnabled\":true,\"pushLayoutToEveryone\":false,\"fallbackLocale\":\"en\",\"overrideLocale\":null,\"locale\":\"en-US\"},\"audio\":{\"inputDeviceId\":\"undefined\",\"outputDeviceId\":\"undefined\"},\"dataSaving\":{\"viewParticipantsWebcams\":true,\"viewScreenshare\":true}}]}"])
+//         websocketSend([`{\"msg\":\"method\",\"id\":\"2\",\"method\":\"validateAuthToken\",\"params\":[\"${UserInfo.meetingID}\",\"${UserInfo.internalUserID}\",\"${UserInfo.authToken}\",\"${UserInfo.externUserID}\"]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"auth-token-validation\",\"params\":[{\"meetingId\":\"${UserInfo.meetingID}\",\"userId\":\"${UserInfo.internalUserID}\"}]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"current-user\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meetings\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"polls\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"presentations\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"slides\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"slide-positions\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"captions\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"voiceUsers\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"whiteboard-multi-user\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"screenshare\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"group-chat\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"group-chat-msg\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"presentation-pods\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-settings\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"guestUser\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-infos\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"note\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meeting-time-remaining\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"local-settings\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-typing\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"record-meetings\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"video-streams\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"connection-status\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"voice-call-states\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"external-video-meetings\",\"params\":[]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meetings\",\"params\":[\"MODERATOR\"]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users\",\"params\":[\"MODERATOR\"]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"breakouts\",\"params\":[\"MODERATOR\"]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"guestUser\",\"params\":[\"MODERATOR\"]}`])
+//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"annotations\",\"params\":[]}`])
+//
+//         pinger();
+//     };
+//
+//     sock.onmessage = (e) => {
+//         console.log('Received message:', e.data);
+//         // handleIncomingmsg(e.data)
+//     };
+// }
 
-    sock.onopen = () => {
-        console.log('Websocket connection established');
-        websocketSend(["{\"msg\":\"connect\",\"version\":\"1\",\"support\":[\"1\",\"pre2\",\"pre1\"]}"])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meteor_autoupdate_clientVersions\",\"params\":[]}`])
-        websocketSend(["{\"msg\":\"method\",\"id\":\"1\",\"method\":\"userChangedLocalSettings\",\"params\":[{\"application\":{\"animations\":true,\"chatAudioAlerts\":false,\"chatPushAlerts\":false,\"userJoinAudioAlerts\":false,\"userJoinPushAlerts\":false,\"userLeaveAudioAlerts\":false,\"userLeavePushAlerts\":false,\"raiseHandAudioAlerts\":true,\"raiseHandPushAlerts\":true,\"guestWaitingAudioAlerts\":true,\"guestWaitingPushAlerts\":true,\"paginationEnabled\":true,\"pushLayoutToEveryone\":false,\"fallbackLocale\":\"en\",\"overrideLocale\":null,\"locale\":\"en-US\"},\"audio\":{\"inputDeviceId\":\"undefined\",\"outputDeviceId\":\"undefined\"},\"dataSaving\":{\"viewParticipantsWebcams\":true,\"viewScreenshare\":true}}]}"])
-        websocketSend([`{\"msg\":\"method\",\"id\":\"2\",\"method\":\"validateAuthToken\",\"params\":[\"${UserInfo.meetingID}\",\"${UserInfo.internalUserID}\",\"${UserInfo.authToken}\",\"${UserInfo.externUserID}\"]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"auth-token-validation\",\"params\":[{\"meetingId\":\"${UserInfo.meetingID}\",\"userId\":\"${UserInfo.internalUserID}\"}]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"current-user\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meetings\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"polls\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"presentations\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"slides\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"slide-positions\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"captions\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"voiceUsers\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"whiteboard-multi-user\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"screenshare\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"group-chat\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"group-chat-msg\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"presentation-pods\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-settings\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"guestUser\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-infos\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"note\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meeting-time-remaining\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"local-settings\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-typing\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"record-meetings\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"video-streams\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"connection-status\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"voice-call-states\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"external-video-meetings\",\"params\":[]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meetings\",\"params\":[\"MODERATOR\"]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users\",\"params\":[\"MODERATOR\"]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"breakouts\",\"params\":[\"MODERATOR\"]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"guestUser\",\"params\":[\"MODERATOR\"]}`])
-        websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"annotations\",\"params\":[]}`])
-
-        pinger();
-    };
-
-    sock.onmessage = (e) => {
-        console.log('Received message:', e.data);
-        // handleIncomingmsg(e.data)
-    };
-}
-
-export function websocketSend(data) {
+export function websocketSend(data:any) {
     // addNewmessage2()
     sock.send(data)
 
@@ -203,7 +203,7 @@ const Websocket = () => {
                     audio_connection: false,
                     websocket_connection:false
                 })
-                reConnect()
+                // reConnect()
 
             };
         }
@@ -254,7 +254,7 @@ const Websocket = () => {
     //     }
     // }
     //
-    const handleUsers = (eventData) => {
+    const handleUsers = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id, fields} = obj;
@@ -320,7 +320,7 @@ const Websocket = () => {
     //     }
     // }
     //
-    const handleVoiceUsers = (eventData) => {
+    const handleVoiceUsers = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id} = obj;
@@ -434,10 +434,10 @@ const Websocket = () => {
     //     }
     // }
 
-    const addtoUserlist = (user) => {
+    const addtoUserlist = (user:any) => {
         let ishola = participantList;
         console.log("UserState: ishola", ishola)
-        if (ishola.filter(item => item?.userId == user?.userId).length < 1) {
+        if (ishola.filter((item :any) => item?.userId == user?.userId).length < 1) {
             setParticipantList([...participantList,user]);
         }
 
@@ -483,30 +483,30 @@ const Websocket = () => {
         // }
     }
 
-    const removeUserlist = (id) => {
+    const removeUserlist = (id:number) => {
         console.log('removing user ',id);
         let ishola = participantList;
 
-        let ur=ishola.filter(item => item?.id != id);
+        let ur=ishola.filter((item:any) => item?.id != id);
         console.log("UserState: handleUsers ",ur)
         setParticipantList(ur);
 
     }
 
 
-    const addTalkingUser = (user) => {
+    const addTalkingUser = (user:any) => {
         console.log('voice user', user);
         // { id: '7J2pQrMaH5C58ZsHj', intId: 'w_6pjsehfq5dcf', callerName: 'Test Sam', joined: false, talking: false, muted:false }
         var ishola = participantTalkingList
         console.log(ishola)
-        if (ishola.filter(item => item?.id == user?.id).length < 1) {
+        if (ishola.filter((item:any) => item?.id == user?.id).length < 1) {
             setParticipantTalkingList([...participantTalkingList,user])
         }
     }
 
-    const modifyTalkingUser = (id, state) => {
+    const modifyTalkingUser = (id:number, state:boolean) => {
         // Update the 'talking' property to 'true' for the object with id '7J2pQrMaH5C58ZsHj'
-        const updatedArray = participantTalkingList?.map(item => {
+        const updatedArray = participantTalkingList?.map((item:any) => {
             if (item.id === id) {
                 return {...item, talking: state};
             }
@@ -518,9 +518,9 @@ const Websocket = () => {
     }
 
 
-    const modifyJoinedUser = (id, state) => {
+    const modifyJoinedUser = (id:number, state:boolean) => {
         // Update the 'joined' property to 'true' for the object with id '7J2pQrMaH5C58ZsHj' for Audio state
-        const updatedArray = participantTalkingList?.map(item => {
+        const updatedArray = participantTalkingList?.map((item:any) => {
             if (item.id === id) {
                 return {...item, joined: state};
             }
@@ -534,9 +534,9 @@ const Websocket = () => {
 
     }
 
-    const modifyMutedUser = (id, state) => {
+    const modifyMutedUser = (id:number, state:boolean) => {
         // Update the 'muted' property to 'true' for the object with id '7J2pQrMaH5C58ZsHj' for Audio
-        const updatedArray = participantTalkingList?.map(item => {
+        const updatedArray = participantTalkingList?.map((item:any) => {
             if (item.id === id) {
                 return {...item, muted: state};
             }
@@ -549,15 +549,15 @@ const Websocket = () => {
         setParticipantTalkingList(updatedArray)
     }
 
-    const removeTalkingUser = (user) => {
+    const removeTalkingUser = (user:any) => {
         var ishola = participantTalkingList;
         // console.log(ishola)
-        if (ishola.filter(item => item?.userId == user?.userId).length > 0) {
+        if (ishola.filter((item:any) => item?.userId == user?.userId).length > 0) {
             setParticipantTalkingList(ishola)
         }
     }
 
-    const handleRecording = (eventData) => {
+    const handleRecording = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {recording, time,} = obj.fields;
@@ -579,9 +579,9 @@ const Websocket = () => {
     }
 
 
-    const findUserfromUserId = (userId) => {
+    const findUserfromUserId = (userId:string) => {
         var ishola = participantList
-        var damola = ishola.filter(item => item?.userId == userId)
+        var damola = ishola.filter((item:any) => item?.userId == userId)
         console.log('damola')
         console.log(damola)
         if (damola.length > 0) {
