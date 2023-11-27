@@ -54,7 +54,7 @@ import {
   settingsModalState,
 } from "~/recoil/atom";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
-import { useToast } from "~/components/ui/use-toast";
+import {toast, useToast} from "~/components/ui/use-toast";
 import ResolutionModal from "~/components/recording/ResolutionModal";
 import EndRecordingModal from "~/components/recording/EndRecordingModal";
 import ParticipantsModal from "~/components/participants/ParticipantsModal";
