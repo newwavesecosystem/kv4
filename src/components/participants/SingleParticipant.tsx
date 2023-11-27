@@ -37,14 +37,14 @@ function SingleParticipant({
             {participant.name}
             {user?.meetingDetails?.internalUserID === participant.intId && " (You)"}
           </span>
-          {user?.meetingDetails?.role === 'MODERATOR' && (<span className="text-xs">Moderator</span>) }
+          {user?.meetingDetails?.role === "MODERATOR" && (<span className="text-xs">Moderator</span>) }
           {/*<span className="text-xs">host</span>*/}
         </div>
       </div>
       <div className=" flex items-center gap-2">
 
         <button>
-          {talkingList.map(eachItem => (
+          {talkingList.map((eachItem:any) => (
               eachItem?.intId == participant.intId && eachItem?.joined ? (eachItem?.muted ? <MicOffIcon className="h-6 w-6" /> :
                 <MicOnIcon className="h-6 w-6" />): null
           ))}

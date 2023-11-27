@@ -146,7 +146,7 @@ function ParticipantsModal() {
           />
         </div>
         <div>
-          {participantList.map((participant, index) => (
+          {participantList.map((participant:any, index:number) => (
             <SingleParticipant key={index} participant={participant} />
           ))}
         </div>

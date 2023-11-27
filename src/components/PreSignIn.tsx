@@ -70,8 +70,9 @@ export default function PreSignIn() {
             // window.location.reload()
 
             setUser({
+              meetingDetails: undefined, sessiontoken: "",
               ...data,
-              id: Math.floor(Math.random() * 100),
+              id: Math.floor(Math.random() * 100)
             })
           } else {
             toast({

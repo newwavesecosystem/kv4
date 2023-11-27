@@ -6,19 +6,6 @@ import {useRecoilState, useRecoilValue} from "recoil";
 import {authUserState, connectionStatusState} from "~/recoil/atom";
 
 
-function generateRandomId(length) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    return result;
-}
-
-
 const KurentoAudio = () => {
 
     // const groupChatContext = useContext(GroupChatContext)
@@ -37,13 +24,12 @@ const KurentoAudio = () => {
     const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
     const [audioState, setAudioState] = useState(false);
 
-    var ws = null;
-    var webRtcPeer;
-    var streamID;
+    let ws: WebSocket | null = null;
+    let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
 
 
-    function kurentoSend(data) {
-        ws.send(JSON.stringify(data))
+    function kurentoSend(data: any) {
+        ws?.send(JSON.stringify(data))
         console.log('Sending this data via kurento websocket')
     }
 
@@ -79,11 +65,12 @@ const KurentoAudio = () => {
                         break;
                     case 'iceCandidate':
                         console.log("iceCandidate");
-                        webRtcPeer.addIceCandidate(parsedMessage.candidate);
+                        webRtcPeer?.addIceCandidate(parsedMessage.candidate);
                         break;
                     case 'webRTCAudioSuccess':
                         console.log("Audio Connected Successfully");
                         setConnection({
+                            websocket_connection: true,
                             audio_connection:true
                         })
                         break;
@@ -158,7 +145,7 @@ const KurentoAudio = () => {
     function startResponse(message) {
         // setState(I_CAN_STOP);
         console.log('SDP answer received from server. Processing ...');
-        webRtcPeer.processAnswer(message.sdpAnswer);
+        webRtcPeer?.processAnswer(message.sdpAnswer);
     }
 
     return (

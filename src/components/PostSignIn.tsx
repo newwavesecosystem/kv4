@@ -17,7 +17,7 @@ function PostSignIn() {
 
   const setUser = useSetRecoilState(authUserState);
 
-  const validateToken=(token)=>{
+  const validateToken= (token: string | null)=>{
     axios.get(`${ServerInfo.tokenValidationURL}?sessionToken=${token}`)
         .then(function (response) {
           const responseData = response.data;
@@ -28,8 +28,9 @@ function PostSignIn() {
             if (responseData?.response?.returncode === 'SUCCESS') {
 
                 setUser({
+                    email: "", fullName: "", id: 0,
                     meetingDetails: responseData?.response,
-                    sessiontoken: token
+                    sessiontoken: token ?? ' '
                 })
             } else {
                 toast({

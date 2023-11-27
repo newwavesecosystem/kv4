@@ -150,6 +150,7 @@ const Websocket = () => {
 
             sock.onmessage = (e) => {
                 setConnection({
+                    audio_connection: false,
                     websocket_connection:true
                 })
                 console.log('Received message:', e.data);
@@ -199,6 +200,7 @@ const Websocket = () => {
                 console.log('Socket connection closed');
                 console.log('Trying to Reconnect');
                 setConnection({
+                    audio_connection: false,
                     websocket_connection:false
                 })
                 reConnect()
