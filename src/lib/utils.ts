@@ -47,3 +47,8 @@ export const getDynamicSecondaryColor = (primaryColorHex: string) => {
   const secondaryColor = RGBToHex(secondaryRGB);
   return secondaryColor;
 };
+
+// number formatting
+export const formatNumber = (number: number) => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};

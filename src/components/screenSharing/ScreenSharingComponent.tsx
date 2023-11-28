@@ -30,7 +30,6 @@ function ScreenSharingComponent() {
     // get the user from the connected users state and attach the stream to the video element
     const user = connectedUsers.find((user) => user.isScreenSharing === true);
     if (!user) return null;
-    console.log(user);
 
     videoRef.current.srcObject = user.screenSharingFeed;
   }
@@ -44,7 +43,7 @@ function ScreenSharingComponent() {
       )}
     >
       {isLoading && (
-        <div className="bg-a11y/20 flex h-full flex-col items-center justify-center rounded-xl">
+        <div className="flex h-full flex-col items-center justify-center rounded-xl bg-a11y/20">
           <SpinnerIcon className="h-16 w-16 animate-spin" />
         </div>
       )}

@@ -24,28 +24,6 @@ import SearchIcon from "../icon/outline/SearchIcon";
 import DummyChat from "~/data/dummyChat";
 import SingleParticipant from "./SingleParticipant";
 
-const DummyParticipants = [
-  {
-    id: 1,
-    name: "katy Perry",
-    role: "Host",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    role: "Guest",
-  },
-  {
-    id: 3,
-    name: "Jane Doe",
-    role: "Guest",
-  },
-  {
-    id: 4,
-    name: "michael Jackson",
-    role: "Guest",
-  },
-];
 const DummyMenu = [
   {
     id: 1,
@@ -84,18 +62,18 @@ function ParticipantsModal() {
   return (
     <Sheet open={participantState} onOpenChange={setParticipantState}>
       <SheetContent
-        className="text-a11y h-screen w-full border-0 bg-primary lg:w-[900px] "
+        className="h-screen w-full border-0 bg-primary text-a11y lg:w-[900px] "
         side={screenSize.id <= 3 ? "bottom" : "right"}
       >
         <div className="flex items-center gap-2">
           <span className="text-xl font-bold">Participants</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="border-a11y/20 items-center rounded-lg border p-2 text-sm">
+              <button className="items-center rounded-lg border border-a11y/20 p-2 text-sm">
                 {selectedMenu?.name}
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className=" text-a11y mt-1  w-52 border-0 bg-primary ">
+            <DropdownMenuContent className=" mt-1 w-52  border-0 bg-primary text-a11y ">
               <DropdownMenuGroup className="py-2 ">
                 {DummyMenu.map((menu, index) => (
                   <DropdownMenuItem
@@ -133,17 +111,17 @@ function ParticipantsModal() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="bg-a11y/20 mt-6 flex w-full items-center rounded-lg px-3 py-2">
+        <div className="mt-6 flex w-full items-center rounded-lg bg-a11y/20 px-3 py-2">
           <SearchIcon className="h-6 w-6" />
           <input
             type="search"
             name=""
             id=""
-            className="placeholder:text-a11y/60 w-full rounded-md border-transparent bg-transparent pl-3 focus:shadow-none focus:outline-none"
+            className="w-full rounded-md border-transparent bg-transparent pl-3 placeholder:text-a11y/60 focus:shadow-none focus:outline-none"
             placeholder="Find the person"
           />
         </div>
-        <div>
+        <div className="no-scrollbar h-full overflow-y-scroll pb-20">
           {DummyChat.map((participant, index) => (
             <SingleParticipant key={index} participant={participant} />
           ))}

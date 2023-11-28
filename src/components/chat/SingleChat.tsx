@@ -26,13 +26,13 @@ function SingleChat({
 
   return (
     <div className="m-4 flex flex-col py-4 text-sm">
-      <div className="mb-3 flex justify-between">
+      <div className="flex justify-between">
         <div className="flex items-center gap-2">
           <span className="font-bold">
             {user?.fullName === chat.name ? "You" : chat.name}
           </span>
           {/* <span>{dayjs().from(new Date())}</span> */}
-          <span className="text-a11y/50 text-sm">
+          <span className="text-sm text-a11y/50">
             {dayjs(chat.time).fromNow()}
           </span>
         </div>
@@ -44,7 +44,7 @@ function SingleChat({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="border-a11y/20 text-a11y border bg-primary shadow-lg"
+            className="border border-a11y/20 bg-primary text-a11y shadow-lg"
           >
             <DropdownMenuItem className="">
               <InformationIcon className="mr-2 h-4 w-4" />
@@ -57,10 +57,7 @@ function SingleChat({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <span>
-        Can we discuss how the data is being provided to the clients on an "as
-        is" and "where-is" basis.
-      </span>
+      <span>{chat.message}</span>
     </div>
   );
 }

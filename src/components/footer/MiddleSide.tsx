@@ -88,7 +88,7 @@ function MiddleSide() {
     useRecoilState(screenSharingState);
   return (
     <div className=" flex w-full items-center justify-center gap-5">
-      <div className="flex items-center gap-1 rounded-3xl bg-a11y/40 p-2 md:hidden">
+      <div className="flex items-center gap-1 rounded-3xl bg-[#DF2622] border-a11y/40 border p-2 md:hidden">
         <button
           onClick={() => {
             setEndCallModal(true);
@@ -106,7 +106,7 @@ function MiddleSide() {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="mb-5 w-80 rounded-b-none border-0 bg-primary text-a11y md:mb-3 md:hidden md:rounded-b-md">
             <DropdownMenuGroup className="divide-y divide-a11y/20">
-              <DropdownMenuItem className="flex items-start p-4">
+              <DropdownMenuItem className="flex items-start p-4 focus:bg-[#DF2622]">
                 <RecordOnIcon className="mr-2 h-5 w-5 shrink-0" />
                 <div className="flex flex-col">
                   <span className="">End Room For All</span>
@@ -322,7 +322,7 @@ function MiddleSide() {
                     step: 2,
                   }));
                 }}
-                className="bg-a11y/20"
+                className="bg-[#DF2622]"
               >
                 <RecordOnIcon className="mr-2 h-5 w-5" />
                 <span>End Recording</span>
@@ -486,7 +486,7 @@ function MiddleSide() {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className="hidden items-center gap-1 rounded-3xl bg-a11y/40 p-2 md:flex">
+      <div className="hidden items-center gap-1 rounded-3xl bg-[#DF2622] border-a11y/40 border p-2 md:flex">
         <button
           onClick={() => {
             setEndCallModal(true);
@@ -506,7 +506,7 @@ function MiddleSide() {
             {/* <div className="absolute bottom-0 right-[45%] hidden h-0 w-0 border-l-[10px] border-r-[10px] border-t-[15px] border-l-transparent border-r-transparent border-t-primary md:block"></div> */}
 
             <DropdownMenuGroup className="divide-y divide-a11y/20">
-              <DropdownMenuItem className="flex items-start p-4">
+              <DropdownMenuItem className="flex focus:bg-[#DF2622] items-start p-4">
                 <RecordOnIcon className="mr-2 h-5 w-5 shrink-0" />
                 <div className="flex flex-col">
                   <span className="">End Room For All</span>

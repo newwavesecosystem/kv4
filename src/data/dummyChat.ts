@@ -1,7 +1,7 @@
 const DummyChat = [
   {
     id: 1,
-    name: "John Doe",
+    name: "John Doe1",
     message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     time: getRandomTime(),
   },

@@ -88,7 +88,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 }));
               }}
               className={cn(
-                "flex items-center gap-1 rounded-lg bg-a11y/20 p-2 text-xs text-a11y md:hidden",
+                "flex items-center gap-1 rounded-lg bg-[#DF2622] p-2 text-xs text-a11y md:hidden",
                 donationState.isActive &&
                   recordingState.isActive &&
                   " rounded-full p-1.5",
@@ -117,7 +117,10 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 // TODO check if user is mod then set step to 2 else 3
                 setDonationState((prev) => ({
                   ...prev,
-                  step: 1,
+                  // trigger admin view
+                  step: 2,
+                  // trigger user view
+                  // step: 3,
                 }));
               }}
               className="flex items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:hidden"
@@ -137,7 +140,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                   step: 2,
                 }));
               }}
-              className="hidden items-center gap-2 rounded-lg bg-a11y/20 px-3 py-2 md:flex"
+              className="hidden items-center gap-2 rounded-lg bg-[#DF2622] px-3 py-2 md:flex"
             >
               <RecordOnIcon className="h-6 w-6" />
               <span>End Recording</span>
@@ -184,6 +187,24 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           <button className="items-center rounded-full border border-a11y/20 p-2">
             <BotIcon className="h-6 w-6" />
           </button>
+          {donationState.isActive && (
+            <button
+              onClick={() => {
+                // TODO check if user is mod then set step to 2 else 3
+                setDonationState((prev) => ({
+                  ...prev,
+                  // trigger admin view
+                  step: 2,
+                  // trigger user view
+                  // step: 3,
+                }));
+              }}
+              className="md:flex items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y hidden"
+            >
+              <MoneyIcon className="h-6 w-6 pt-1" />
+              <span>Donation</span>
+            </button>
+          )}
         </div>
 
         {/* middle side */}

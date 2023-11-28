@@ -113,18 +113,18 @@ export const donationModalState = atom<{
   step: number;
   donationName: string;
   donationAmount: number;
-  donationAmountType: number;
-  donationCreator: string;
+  donationAmountType: string;
+  donationCreatorName: string;
   donationCreatorId: number;
-  donationCreatedAt: string;
+  donationCreatedAt: Date;
   enableFlashNotification: boolean;
   totalAmountDonatated: number;
   usersDonated: {
     id: number;
-    fullName?: string;
-    emaail?: string;
+    fullName: string | null;
+    emaail: string | null;
     donationDescription: string;
-    donationUniqueNumber?: number;
+    donationUniqueNumber: number | null;
     donationAmount: number;
   }[];
 }>({
@@ -134,10 +134,10 @@ export const donationModalState = atom<{
     isActive: false,
     donationName: "",
     donationAmount: 0,
-    donationAmountType: 2,
-    donationCreator: "",
+    donationAmountType: "2",
+    donationCreatorName: "",
     donationCreatorId: 0,
-    donationCreatedAt: "",
+    donationCreatedAt: new Date(),
     enableFlashNotification: false,
     totalAmountDonatated: 0,
     usersDonated: [],

@@ -22,7 +22,6 @@ const WhiteboardComponent = dynamic(
 );
 
 function PostSignIn() {
-  const [screenShareState, setScreenShareState] = useState(true);
   const [screenSharingStream, setScreenSharingStream] = useRecoilState(
     screenSharingStreamState,
   );
@@ -65,44 +64,45 @@ function PostSignIn() {
         </div>
 
         {/* show active people talking */}
-        {connectedUsers.filter((user) => user.isMicOpen === true)?.length >
-          0 && (
-          <div className="no-scrollbar absolute top-2 flex h-6 w-full justify-center gap-3 overflow-x-scroll text-xs antialiased">
-            {connectedUsers
-              .filter((user) => user.isMicOpen === true)
-              .map((user, index) => (
-                <div
-                  key={index}
-                  className="border-a11y/20 flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border p-1"
-                >
-                  {user.profilePicture ? (
-                    <Image
-                      src={user.profilePicture}
-                      width={20}
-                      height={20}
-                      className="rounded-full"
-                      alt="profile picture"
-                    />
-                  ) : (
-                    <div className="bg-a11y/20 flex h-4 w-4 shrink-0 items-center justify-center rounded-full">
-                      {" "}
-                      {user.fullName.split(" ")[0]?.slice(0, 1)}
-                      {user.fullName.split(" ")[1]?.slice(0, 1)}
-                    </div>
-                  )}
-                  <span className="truncate">{user.fullName}</span>
-                  <MicOnIcon className="h-4 w-4 shrink-0" />
-                </div>
-              ))}
-          </div>
-        )}
+        {(isWhiteboardOpen || screenSharingStream) &&
+          connectedUsers.filter((user) => user.isMicOpen === true)?.length >
+            0 && (
+            <div className="no-scrollbar absolute top-2 flex h-6 w-full justify-center gap-3 overflow-x-scroll text-xs antialiased">
+              {connectedUsers
+                .filter((user) => user.isMicOpen === true)
+                .map((user, index) => (
+                  <div
+                    key={index}
+                    className="flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border border-a11y/20 p-1"
+                  >
+                    {user.profilePicture ? (
+                      <Image
+                        src={user.profilePicture}
+                        width={20}
+                        height={20}
+                        className="rounded-full"
+                        alt="profile picture"
+                      />
+                    ) : (
+                      <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-a11y/20">
+                        {" "}
+                        {user.fullName.split(" ")[0]?.slice(0, 1)}
+                        {user.fullName.split(" ")[1]?.slice(0, 1)}
+                      </div>
+                    )}
+                    <span className="truncate">{user.fullName}</span>
+                    <MicOnIcon className="h-4 w-4 shrink-0" />
+                  </div>
+                ))}
+            </div>
+          )}
 
         {/* render camera feed if not whiteboard or screensharing */}
         {!isWhiteboardOpen && !screenSharingStream && (
           <div
             className={cn(
               " m-auto h-[calc(100vh-128px)] p-4 ",
-              connectedUsers.filter((user) => user.isMicOpen === true)?.length >
+              (isWhiteboardOpen || screenSharingStream) && connectedUsers.filter((user) => user.isMicOpen === true)?.length >
                 0 && "mt-6 h-[calc(100vh-150px)]",
               connectedUsers.length === 1 &&
                 " flex items-center justify-center md:aspect-square  ",

@@ -62,7 +62,6 @@ const DummyMenu = [
 function ChatModal() {
   const [chatState, setChatState] = useRecoilState(chatModalState);
   const [infoMessageStatus, setInfoMessageStatus] = useState(false);
-  const [selectedParticipant, setSelectedParticipant] = useState();
   const [selectedMenu, setSelectedMenu] = useState(DummyMenu[0]);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
@@ -71,10 +70,10 @@ function ChatModal() {
   return (
     <Sheet open={chatState} onOpenChange={setChatState}>
       <SheetContent
-        className="m-h-screen text-a11y w-full border-0 bg-primary p-0 lg:w-[900px] "
+        className="m-h-screen w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
         side={"right"}
       >
-        <div className="sticky top-0 flex flex-col gap-2 p-4">
+        <div className="sticky top-0 max-h-32 flex flex-col gap-2 p-4">
           <div className="flex items-center gap-2">
             <span className="text-xl font-bold">Chat</span>
             <Popover open={open} onOpenChange={setOpen}>
@@ -83,7 +82,7 @@ function ChatModal() {
                   // variant="outline"
                   role="combobox"
                   aria-expanded={open}
-                  className="border-a11y/20 flex items-center gap-2 rounded-md border px-3 py-1 text-sm"
+                  className="flex items-center gap-2 rounded-md border border-a11y/20 px-3 py-1 text-sm"
                 >
                   {/* {value
                   ? frameworks.find((framework) => framework.value === value)
@@ -98,7 +97,7 @@ function ChatModal() {
                   )}
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="text-a11y w-[200px] border-0 bg-primary p-0">
+              <PopoverContent className="w-[200px] border-0 bg-primary p-0 text-a11y">
                 <Command className="border-0 bg-primary  ">
                   <CommandInput
                     className=""
@@ -150,7 +149,7 @@ function ChatModal() {
             </Popover>
           </div>
           {!infoMessageStatus && (
-            <div className=" border-a11y/20 mt-5 flex items-center gap-2 rounded-lg border bg-primary p-2 text-xs shadow-sm">
+            <div className=" mt-5 flex items-center gap-2 rounded-lg border border-a11y/20 bg-primary p-2 text-xs shadow-sm">
               <InformationIcon className="h-5 w-5" />
               <span className="w-full">
                 Messages can only be seen by people in the call and are deleted
@@ -166,13 +165,13 @@ function ChatModal() {
           )}
         </div>
 
-        <div className="h-screen overflow-y-auto">
+        <div className={cn(" h-[calc(100vh-192px)] no-scrollbar overflow-y-auto", infoMessageStatus && "h-[calc(100vh-130px)]")}>
           {DummyChat.map((chat, index) => (
             <SingleChat key={index} chat={chat} />
           ))}
         </div>
-        <div className="border-a11y/20 fixed bottom-0 w-full border-t bg-primary px-4 py-10 md:sticky">
-          <div className=" flex w-full items-center rounded-xl bg-primary px-4 py-4 ">
+        <div className="sticky bottom-0 w-full border-t h-16 border-a11y/20 bg-primary/20 px-4 md:sticky">
+          <div className=" flex w-full items-center rounded-xl bg-transparent py-4 ">
             <input
               type="text"
               name=""
@@ -180,7 +179,7 @@ function ChatModal() {
               id=""
               placeholder="Send a message to everyone"
             />
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <EmojiIcon className="h-6 w-6" />
               <SendIcon className="h-6 w-6" />
             </div>
