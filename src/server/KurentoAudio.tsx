@@ -1,6 +1,5 @@
-import {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as kurentoUtils from "kurento-utils";
-import * as UserInfo from './UserInfo';
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
 import {authUserState, connectionStatusState} from "~/recoil/atom";
@@ -40,7 +39,7 @@ const KurentoAudio = () => {
             };
 
             ws.onmessage = (message) => {
-                var parsedMessage = JSON.parse(message.data);
+                let parsedMessage = JSON.parse(message.data);
                 console.info('Kurento Received message: ' + message.data);
                 console.log("Kurento Websocket");
                 console.log(parsedMessage.id);
@@ -84,12 +83,12 @@ const KurentoAudio = () => {
         console.log('Creating WebRtcPeer and generating local sdp offer ...');
 
         const audioElement = document.getElementById('audioElement');
-        var constraints = {
+        let constraints = {
             audio: true,
             video: false
         };
 
-        var options = {
+        let options = {
             remoteVideo:audioElement,
             onicecandidate: onIceCandidate,
             mediaConstraints: constraints
@@ -112,7 +111,7 @@ const KurentoAudio = () => {
         if (error) return onError(error);
 
         console.info('Invoking SDP offer callback function ' + offerSdp);
-        var message = {
+        let message = {
             "id": "start",
             "type": "audio",
             "role": "sendrecv",
@@ -127,7 +126,7 @@ const KurentoAudio = () => {
     function onIceCandidate(candidate:any) {
         console.log('Local candidate' + JSON.stringify(candidate));
 
-        var message = {"id":"ping"};
+        let message = {"id":"ping"};
 
         kurentoSend(message);
     }
@@ -144,7 +143,7 @@ const KurentoAudio = () => {
 
     return (
         <div style={{height: 1}}>
-            <audio id="audioElement" autoPlay></audio>
+            <audio id="audioElement" autoPlay/>
         </div>
     )
 
