@@ -579,7 +579,7 @@ const Websocket = () => {
     }
 
 
-    const findUserfromUserId = (userId:string) => {
+    const findUserNamefromUserId = (userId:string) => {
         var ishola = participantList
         var damola = ishola.filter((item:any) => item?.userId == userId)
         console.log('damola')
@@ -588,6 +588,18 @@ const Websocket = () => {
             return damola[0]?.name
         } else {
             return 'unknown'
+        }
+    }
+
+    const findAvatarfromUserId = (userId:string) => {
+        var ishola = participantList
+        var damola = ishola.filter((item:any) => item?.userId == userId)
+        console.log('damola')
+        console.log(damola)
+        if (damola.length > 0) {
+            return damola[0]?.avatar
+        } else {
+            return ''
         }
     }
 

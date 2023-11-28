@@ -19,10 +19,8 @@ import {
   chatModalState,
   connectedUsersState,
   donationModalState,
-  authUserState,
   cameraOpenState,
-  cameraStreamState,
-  chatModalState, connectionStatusState,
+  cameraStreamState, connectionStatusState,
   micOpenState,
   microphoneStreamState, participantListState,
   participantsModalState,
@@ -53,7 +51,6 @@ function Authenticated({ children }: { children: React.ReactNode }) {
   const user = useRecoilValue(authUserState);
   const [donationState, setDonationState] = useRecoilState(donationModalState);
 
-  const [user, setUser] = useRecoilState(authUserState);
   const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
   const participantList = useRecoilValue(participantListState);
 

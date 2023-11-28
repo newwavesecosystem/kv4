@@ -61,6 +61,7 @@ import ShareScreenOffIcon from "../icon/outline/ShareScreenOffIcon";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
+import {websocketMuteMic} from "~/server/Websocket";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
@@ -133,56 +134,14 @@ function MiddleSide() {
       <button
         className={cn(
           "rounded-full p-2",
-          micState ? "border border-a11y/20 bg-transparent" : "bg-a11y/20",
+          !micState ? "border border-a11y/20 bg-transparent" : "bg-a11y/20",
         )}
         onClick={async () => {
-          if (micState && microphoneStream) {
-            stopMicrophoneStream(microphoneStream);
-            // update the connected users state for the user where the id is the same
-            setConnectedUsers((prev) =>
-              prev.map((prevUser) => {
-                if (prevUser.id === user?.id) {
-                  return {
-                    ...prevUser,
-                    microphoneFeed: null,
-                    isMicOpen: false,
-                  };
-                }
-                return prevUser;
-              }),
-            );
-            setMicrophoneStream(null);
-            setMicState(!micState);
-            return;
-          }
-
-          const mic = await requestMicrophoneAccess();
-          if (mic) {
-            setMicrophoneStream(mic);
-            // update the connected users state for the user where the id is the same
-            setConnectedUsers((prev) =>
-              prev.map((prevUser) => {
-                if (prevUser.id === user?.id) {
-                  return {
-                    ...prevUser,
-                    microphoneFeed: mic,
-                    isMicOpen: true,
-                  };
-                }
-                return prevUser;
-              }),
-            );
-            setMicState(!micState);
-          } else {
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "Kindly check your microphone settings.",
-            });
-          }
+          setMicState(!micState);
+          websocketMuteMic();
         }}
       >
-        {micState ? (
+        {!micState ? (
           <MicOnIcon className="h-6 w-6 " />
         ) : (
           <MicOffIcon className="h-6 w-6 " />

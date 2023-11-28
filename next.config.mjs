@@ -17,6 +17,16 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'dev.konn3ct.ng',
+        port: '',
+        pathname: '/storage/profile-photos/**',
+      },
+    ],
+  },
 };
 
 export default config;
