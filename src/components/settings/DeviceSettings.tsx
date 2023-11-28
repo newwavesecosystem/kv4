@@ -11,7 +11,7 @@ import {
   selectedMicrophoneState,
   selectedSpeakersState,
   settingsModalMetaState,
-} from "~/recoil/atom"; 
+} from "~/recoil/atom";
 import { SettingsSheetClose } from "../ui/settingsSheet";
 import CloseIcon from "../icon/outline/CloseIcon";
 import {
@@ -97,7 +97,8 @@ function DeviceSettings() {
   }
 
   const testSpeaker = () => {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const audioContext = new (window.AudioContext ||
+      window.webkitAudioContext)();
     const oscillator = audioContext.createOscillator();
     const destination = audioContext.createMediaStreamDestination();
     oscillator.connect(destination);
@@ -111,13 +112,13 @@ function DeviceSettings() {
   return (
     <div
       className={cn(
-        "hidden w-full rounded-t-2xl bg-[#5D957E] px-5 lg:block lg:rounded-t-none ",
+        "hidden w-full rounded-t-2xl bg-primary px-5 lg:block lg:rounded-t-none ",
         currentTab.clickSourceId <= 3 && settingsMeta.isFoward && "block",
       )}
     >
-      <div className="flex items-center justify-between border-b-2 border-white/20 py-6 ">
+      <div className="border-a11y/20 flex items-center justify-between border-b-2 py-6 ">
         <button
-          className="mr-auto rounded-full bg-konn3ct-green p-2 lg:hidden"
+          className="bg-a11y/20 mr-auto rounded-full p-2 lg:hidden"
           onClick={() => {
             if (screenSize.id <= 3) {
               setSettingsMeta({
@@ -141,15 +142,15 @@ function DeviceSettings() {
         <div className="flex flex-col gap-3">
           <span>Video</span>
           <Select>
-            <SelectTrigger className="bg-konn3ct-green">
+            <SelectTrigger className="bg-a11y/20">
               <div className="flex items-center gap-4">
                 <VideoOnIcon className="h-6 w-6" />{" "}
                 <SelectValue placeholder="Pick a camera" />
               </div>
             </SelectTrigger>
-            <SelectContent className="w-full bg-konn3ct-green text-white">
-              {availableCameras.map((camera) => (
-                <SelectItem className="" value={camera.deviceId}>
+            <SelectContent className="bg-a11y/20 w-full text-white">
+              {availableCameras.map((camera, index) => (
+                <SelectItem className="" key={index} value={camera.deviceId}>
                   {camera.label}
                 </SelectItem>
               ))}
@@ -166,12 +167,12 @@ function DeviceSettings() {
               );
             }}
           >
-            <SelectTrigger className="bg-konn3ct-green">
+            <SelectTrigger className="bg-a11y/20">
               {selectedVideoQuality?.name}
             </SelectTrigger>
-            <SelectContent className="bg-konn3ct-green text-white">
-              {VideoQuality.map((item) => (
-                <SelectItem className="" value={item.id.toString()}>
+            <SelectContent className="bg-a11y/20 text-white">
+              {VideoQuality.map((item, index) => (
+                <SelectItem className="" key={index} value={item.id.toString()}>
                   {item.name}
                 </SelectItem>
               ))}
@@ -181,15 +182,19 @@ function DeviceSettings() {
         <div className="flex flex-col gap-3">
           <span>Microphone</span>
           <Select>
-            <SelectTrigger className="bg-konn3ct-green">
+            <SelectTrigger className="bg-a11y/20">
               <div className="flex items-center gap-4">
                 <VideoOnIcon className="h-6 w-6" />{" "}
                 <SelectValue placeholder="Pick a microphone" />
               </div>
             </SelectTrigger>
-            <SelectContent className="w-full bg-konn3ct-green text-white">
-              {availableMicrophones.map((microphone) => (
-                <SelectItem className="" value={microphone.deviceId}>
+            <SelectContent className="bg-a11y/20 w-full text-white">
+              {availableMicrophones.map((microphone, index) => (
+                <SelectItem
+                  className=""
+                  key={index}
+                  value={microphone.deviceId}
+                >
                   {microphone.label}
                 </SelectItem>
               ))}
@@ -200,21 +205,24 @@ function DeviceSettings() {
           <span>Speakers</span>
           <div className="flex items-center gap-3">
             <Select>
-              <SelectTrigger className="bg-konn3ct-green">
+              <SelectTrigger className="bg-a11y/20">
                 <div className="flex items-center gap-4">
                   <VideoOnIcon className="h-6 w-6" />{" "}
                   <SelectValue placeholder="Pick a microphone" />
                 </div>
               </SelectTrigger>
-              <SelectContent className="w-full bg-konn3ct-green text-white">
-                {availableSpeakers.map((speaker) => (
-                  <SelectItem className="" value={speaker.deviceId}>
+              <SelectContent className="bg-a11y/20 w-full text-white">
+                {availableSpeakers.map((speaker, index) => (
+                  <SelectItem className="" key={index} value={speaker.deviceId}>
                     {speaker.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <button onClick={testSpeaker} className="flex items-center gap-2 rounded-md bg-konn3ct-green px-2 py-2 text-sm">
+            <button
+              onClick={testSpeaker}
+              className="bg-a11y/20 flex items-center gap-2 rounded-md px-2 py-2 text-sm"
+            >
               <VolumeOnIcon className="h-6 w-6" />
               <span>Test</span>
             </button>

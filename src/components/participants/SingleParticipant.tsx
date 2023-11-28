@@ -29,9 +29,9 @@ function SingleParticipant({
   const user = useRecoilValue(authUserState);
   const talkingList = useRecoilValue(participantTalkingListState);
   return (
-    <div className="flex justify-between border-b border-b-white/20 py-4 text-sm">
+    <div className="border-b-a11y/20 flex justify-between border-b py-4 text-sm">
       <div className="flex items-center gap-3">
-        <div className="h-9 w-9 rounded-full bg-konn3ct-green"></div>
+        <div className="h-9 w-9 rounded-full bg-secondary/40"></div>
         <div className="flex flex-col">
           <span className="font-bold">
             {participant.name}
@@ -58,22 +58,21 @@ function SingleParticipant({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="border-0 bg-konn3ct-active text-white"
+            className="divide-a11y/20 text-a11y divide-y border-a11y/20 shadow-lg bg-primary"
           >
-            <DropdownMenuItem className="py-2">
+            <DropdownMenuItem className="py-4">
               <RepeatIcon className="mr-2 h-5 w-5" />
               Change Role
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="py-2">
+            <DropdownMenuItem className="py-4">
               <VolumeOnIcon volume={1} className="mr-2 h-5 w-5" />
               Mute User
             </DropdownMenuItem>
-            <DropdownMenuItem className="py-2">
+            <DropdownMenuItem className="py-4">
               <ChatIcon className="mr-2 h-5 w-5" />
               private chat
             </DropdownMenuItem>
-            <DropdownMenuItem className="py-2">
+            <DropdownMenuItem className="py-4">
               <PeopleRemove className="mr-2 h-5 w-5" />
               Remove User
             </DropdownMenuItem>

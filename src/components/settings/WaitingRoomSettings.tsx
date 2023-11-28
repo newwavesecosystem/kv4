@@ -20,13 +20,13 @@ function WaitingRoomSettings() {
   return (
     <div
       className={cn(
-        "hidden w-full rounded-t-2xl bg-[#5D957E] px-5 lg:block lg:rounded-t-none ",
+        "hidden w-full rounded-t-2xl bg-primary px-5 lg:block lg:rounded-t-none ",
         currentTab.clickSourceId <= 3 && settingsMeta.isFoward && "block",
       )}
     >
-      <div className="flex items-center justify-between border-b-2 border-white/20 py-6 ">
+      <div className="border-a11y/20 flex items-center justify-between border-b-2 py-6 ">
         <button
-          className="mr-auto rounded-full bg-konn3ct-green p-2 lg:hidden"
+          className="bg-a11y/20 mr-auto rounded-full p-2 lg:hidden"
           onClick={() => {
             if (screenSize.id <= 3) {
               setSettingsMeta({
@@ -46,13 +46,13 @@ function WaitingRoomSettings() {
           <span className="sr-only">Close</span>
         </SettingsSheetClose>
       </div>
-      <div className="flex flex-col divide-y divide-white/20 py-4">
+      <div className="divide-a11y/20 flex flex-col divide-y py-4">
         <div className="flex items-center justify-between py-3 text-sm">
-          <button className="flex items-center rounded-lg bg-konn3ct-green p-2">
+          <button className="bg-a11y/40 flex items-center rounded-lg p-2">
             <TickIcon className="h-6 w-6" />
             <span className="ml-2">Allow Everyone</span>
           </button>
-          <button className="bg-konn3ct-red flex items-center rounded-lg p-2">
+          <button className="bg-a11y/20 flex items-center rounded-lg p-2">
             {" "}
             <CloseIcon className="h-6 w-6" />
             <span className="ml-2">Deny Everyone</span>
@@ -61,28 +61,28 @@ function WaitingRoomSettings() {
         <div className="flex flex-col gap-2 py-5">
           <div className="flex items-center justify-between py-2">
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 rounded-full border-[1px] bg-slate-500"></div>
+              <div className="h-7 w-7 rounded-full border-[1px] border-secondary/20 bg-secondary"></div>
               <span>Samuel Odejinmi</span>
             </div>
             <div className="flex items-center gap-2">
               <button>
                 <ChatIcon className="h-7 w-7" />
               </button>
-              <button className="rounded-2xl border px-4 py-1 text-sm">
+              <button className="border-a11y/20 rounded-2xl border px-4 py-1 text-sm">
                 Allow
               </button>
             </div>
           </div>
           <div className="flex items-center justify-between py-2">
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 rounded-full border-[1px] bg-slate-700"></div>
+              <div className="h-7 w-7 rounded-full border-[1px] border-secondary/20 bg-secondary/60"></div>
               <span>Femi Williams</span>
             </div>
             <div className="flex items-center gap-2">
               <button>
                 <ChatIcon className="h-7 w-7" />
               </button>
-              <button className="rounded-2xl border px-4 py-1 text-sm">
+              <button className="border-a11y/20 rounded-2xl border px-4 py-1 text-sm">
                 Allow
               </button>
             </div>

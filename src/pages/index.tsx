@@ -2,10 +2,26 @@ import Head from "next/head";
 import { useRecoilValue } from "recoil";
 import PostSignIn from "~/components/PostSignIn";
 import PreSignIn from "~/components/PreSignIn";
-import { authUserState } from "~/recoil/atom";
+import {
+  getContrastColor,
+  getDynamicSecondaryColor,
+  getRGBColor,
+} from "~/lib/utils";
+import { authUserState, currentColorTheme } from "~/recoil/atom";
 
 export default function Home() {
   const user = useRecoilValue(authUserState);
+  const currentColor = useRecoilValue(currentColorTheme);
+
+  const primaryColor = getRGBColor(currentColor.background, "primary");
+  const secondaryColor = getRGBColor(
+    getDynamicSecondaryColor(currentColor.background),
+    "secondary",
+  );
+  const a11yColor = getRGBColor(
+    getContrastColor(currentColor.background),
+    "a11y",
+  );
 
   return (
     <>
@@ -31,6 +47,9 @@ export default function Home() {
           href="/favicon-16x16.png"
         />
         <link rel="manifest" href="/site.webmanifest" />
+        <style>
+          :root {`{${primaryColor} ${a11yColor} ${secondaryColor}}`}
+        </style>
       </Head>
 
       {/*{user ? <PostSignIn /> : <PreSignIn />}*/}

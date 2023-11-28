@@ -25,14 +25,16 @@ function SingleChat({
   const user = useRecoilValue(authUserState);
 
   return (
-    <div className="flex flex-col py-4 text-sm m-4">
+    <div className="m-4 flex flex-col py-4 text-sm">
       <div className="mb-3 flex justify-between">
         <div className="flex items-center gap-2">
           <span className="font-bold">
             {user?.fullName === chat.name ? "You" : chat.name}
           </span>
           {/* <span>{dayjs().from(new Date())}</span> */}
-          <span className="text-sm text-[#E0ECFF]/80">{dayjs(chat.time).fromNow()}</span>
+          <span className="text-a11y/50 text-sm">
+            {dayjs(chat.time).fromNow()}
+          </span>
         </div>
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
@@ -42,7 +44,7 @@ function SingleChat({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="border-0 bg-konn3ct-active text-white"
+            className="border-a11y/20 text-a11y border bg-primary shadow-lg"
           >
             <DropdownMenuItem className="">
               <InformationIcon className="mr-2 h-4 w-4" />

@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import PeoplesIcon from "../icon/outline/PeoplesIcon";
-import HandOnIcon from "../icon/outline/Hand/HandOnIcon";
+import HandOnIcon from "../icon/outline/HandOnIcon";
 import SearchIcon from "../icon/outline/SearchIcon";
 import DummyChat from "~/data/dummyChat";
 import SingleParticipant from "./SingleParticipant";
@@ -86,18 +86,18 @@ function ParticipantsModal() {
   return (
     <Sheet open={participantState} onOpenChange={setParticipantState}>
       <SheetContent
-        className="h-screen w-full border-0 bg-konn3ct-active text-white lg:w-[900px] "
+        className="text-a11y h-screen w-full border-0 bg-primary lg:w-[900px] "
         side={screenSize.id <= 3 ? "bottom" : "right"}
       >
         <div className="flex items-center gap-2">
           <span className="text-xl font-bold">Participants</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="items-center rounded-lg border p-2 text-sm">
+              <button className="border-a11y/20 items-center rounded-lg border p-2 text-sm">
                 {selectedMenu?.name}
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className=" mt-1 w-52  border-0 bg-konn3ct-active text-white ">
+            <DropdownMenuContent className=" text-a11y mt-1  w-52 border-0 bg-primary ">
               <DropdownMenuGroup className="py-2 ">
                 {DummyMenu.map((menu, index) => (
                   <DropdownMenuItem
@@ -115,7 +115,7 @@ function ParticipantsModal() {
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuGroup>
-              <DropdownMenuSeparator className="bg-konn3ct-green" />
+              <DropdownMenuSeparator className="bg-a11y/20" />
               <DropdownMenuGroup className="py-2 ">
                 {DummyMenu2.map((menu, index) => (
                   <DropdownMenuItem
@@ -135,13 +135,13 @@ function ParticipantsModal() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="mt-6 flex w-full items-center rounded-lg bg-[#5D957E] px-3 py-2">
+        <div className="bg-a11y/20 mt-6 flex w-full items-center rounded-lg px-3 py-2">
           <SearchIcon className="h-6 w-6" />
           <input
             type="search"
             name=""
             id=""
-            className="w-full rounded-md border-transparent bg-transparent pl-3 placeholder:text-[#E0ECFF]  focus:shadow-none focus:outline-none"
+            className="placeholder:text-a11y/60 w-full rounded-md border-transparent bg-transparent pl-3 focus:shadow-none focus:outline-none"
             placeholder="Find the person"
           />
         </div>
