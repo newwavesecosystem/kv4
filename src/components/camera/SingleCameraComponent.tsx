@@ -50,13 +50,13 @@ function SingleCameraComponent({
         <button
           className={cn(
             "p-1 ",
-              participantTalkingList.filter((eachItem) => eachItem?.intId == user.intId).map((eachItem:any) => (
+              participantTalkingList.filter((eachItem:any) => eachItem?.intId == user.intId).map((eachItem:any) => (
                   eachItem?.joined && eachItem?.muted
               ? "border-a11y/20 rounded-full border bg-primary/40"
               : "rounded-full bg-primary/80"
           )))}
         >
-          {participantTalkingList.filter((eachItem) => eachItem?.intId == user.intId).map((eachItem:any) => (
+          {participantTalkingList.filter((eachItem:any) => eachItem?.intId == user.intId).map((eachItem:any) => (
                eachItem?.joined && !eachItem?.muted  ? (
             <MicOnIcon className="h-5 w-5 " />
           ) : (
@@ -85,7 +85,7 @@ function SingleCameraComponent({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {user?.meetingDetails?.raiseHand && (
+      {user.raiseHand && (
         <div className="absolute left-3 top-3 flex items-center gap-1">
           <HandOnIcon className="h-8 w-8 " />
         </div>

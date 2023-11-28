@@ -221,8 +221,9 @@ export default function PreSignIn() {
                   const id = Math.floor(Math.random() * 100);
                   // login user
                   setUser({
+                    meetingDetails: undefined, sessiontoken: "",
                     ...data,
-                    id,
+                    id
                   });
 
                   // add user to connected list array

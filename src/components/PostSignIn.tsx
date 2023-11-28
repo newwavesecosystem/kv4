@@ -21,6 +21,7 @@ import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";
 import {toast} from "~/components/ui/use-toast";
 import MicOffIcon from "~/components/icon/outline/MicOffIcon";
+import {IParticipant} from "~/types";
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
   () => import("~/components/whiteboard/WhiteboardComponent"),
@@ -174,12 +175,12 @@ function PostSignIn() {
 
 
         {/* show active people talking */}
-        {participantTalkingList.filter((eachItem) => eachItem.talking)?.length >
+        {participantTalkingList.filter((eachItem:any) => eachItem.talking)?.length >
           0 && (
           <div className="no-scrollbar absolute top-2 flex h-6 w-full justify-center gap-3 overflow-x-scroll text-xs antialiased">
             {participantTalkingList
-              .filter((eachItem) => eachItem.talking )
-              .map((eachItem, index) => (
+              .filter((eachItem:any) => eachItem.talking )
+              .map((eachItem:any, index:number) => (
                 <div
                   key={index}
                   className="border-a11y/20 flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border p-1"
@@ -211,7 +212,7 @@ function PostSignIn() {
           <div
             className={cn(
               " m-auto h-[calc(100vh-128px)] p-4 ",
-                participantTalkingList.filter((eachItem) => !eachItem.muted)?.length >
+                participantTalkingList.filter((eachItem:any) => !eachItem.muted)?.length >
                 0 && "mt-6 h-[calc(100vh-150px)]",
                 participantList.length === 1 &&
                 " flex items-center justify-center md:aspect-square  ",
@@ -226,7 +227,7 @@ function PostSignIn() {
                 participantList.length >= 16 && "grid gap-2 md:grid-cols-6",
             )}
           >
-            {participantList.map((participant, index) => (
+            {participantList.map((participant:IParticipant, index:number) => (
               <SingleCameraComponent index={index} key={index} user={participant} />
             ))}
           </div>
