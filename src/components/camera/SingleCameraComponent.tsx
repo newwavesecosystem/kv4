@@ -1,5 +1,11 @@
 import React, { useRef, useState } from "react";
-import {authUserState, connectedUsersState, participantListState, participantTalkingListState} from "~/recoil/atom";
+import {
+  authUserState,
+  connectedUsersState,
+  participantCameraListState,
+  participantListState,
+  participantTalkingListState
+} from "~/recoil/atom";
 import {IAuthUser, IConnectedUser, IParticipant} from "~/types";
 import MicOnIcon from "../icon/outline/MicOnIcon";
 import MicOffIcon from "../icon/outline/MicOffIcon";
@@ -18,27 +24,33 @@ import VideoConfOffIcon from "../icon/outline/VideoConfOffIcon";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 
 function SingleCameraComponent({
-  user,
+  participant,
   key,
   index,
 }: {
-  user: IParticipant;
+  participant: IParticipant;
   key: number;
   index: number;
 }) {
   const [connectedUsers, setConnectedUsers] = useRecoilState(connectedUsersState);
-  const setUser = useSetRecoilState(authUserState);
+  // const user = useRecoilValue(authUserState);
   const participantList = useRecoilValue(participantListState);
   const participantTalkingList = useRecoilValue(participantTalkingListState);
+  const participantCameraList = useRecoilValue(participantCameraListState);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  let userCamera=participantCameraList.filter((cItem:any) => cItem?.intId == participant.intId);
   // Attach the new stream to the video element
-  // if (videoRef.current) {
-  //   videoRef.current.srcObject = user.cameraFeed;
-  // }
+  if(userCamera.length>0){
+    if (videoRef.current) {
+      videoRef.current.srcObject = userCamera.stream;
+    }
+  }
+
 
   return (
     <div
+        key={key}
       className={cn(
         "bg-a11y/20 relative aspect-square h-full w-full overflow-hidden rounded-lg",
         (participantList.length === 3 || participantList.length === 5) &&
@@ -50,13 +62,13 @@ function SingleCameraComponent({
         <button
           className={cn(
             "p-1 ",
-              participantTalkingList.filter((eachItem:any) => eachItem?.intId == user.intId).map((eachItem:any) => (
+              participantTalkingList.filter((eachItem:any) => eachItem?.intId == participant.intId).map((eachItem:any) => (
                   eachItem?.joined && eachItem?.muted
               ? "border-a11y/20 rounded-full border bg-primary/40"
               : "rounded-full bg-primary/80"
           )))}
         >
-          {participantTalkingList.filter((eachItem:any) => eachItem?.intId == user.intId).map((eachItem:any) => (
+          {participantTalkingList.filter((eachItem:any) => eachItem?.intId == participant.intId).map((eachItem:any) => (
                eachItem?.joined && !eachItem?.muted  ? (
             <MicOnIcon className="h-5 w-5 " />
           ) : (
@@ -85,22 +97,22 @@ function SingleCameraComponent({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {user.raiseHand && (
+      {participant?.raiseHand && (
         <div className="absolute left-3 top-3 flex items-center gap-1">
           <HandOnIcon className="h-8 w-8 " />
         </div>
       )}
-      {/*<video*/}
-      {/*  ref={videoRef}*/}
-      {/*  autoPlay*/}
-      {/*  playsInline*/}
-      {/*  muted*/}
-      {/*  hidden={!user.isCameraOpen}*/}
-      {/*  className="h-full w-full flex-1 object-cover"*/}
-      {/*>*/}
-      {/*  Your browser does not support video tag*/}
-      {/*</video>*/}
-      {/*{!user.isCameraOpen && (*/}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        hidden={userCamera.length == 0}
+        className="h-full w-full flex-1 object-cover"
+      >
+        Your browser does not support video tag
+      </video>
+      {userCamera.length == 0 && (
         <div
           className={cn(
             " bg-a11y/20 flex h-full w-full flex-col items-center justify-center ",
@@ -108,12 +120,12 @@ function SingleCameraComponent({
           )}
         >
           <div className="flex aspect-square h-32 items-center justify-center rounded-full bg-primary/80 text-3xl font-extrabold uppercase">
-            {user.name.split(" ")[0]?.slice(0, 1)}
-            {user.name.split(" ")[1]?.slice(0, 1)}
+            {participant?.name.split(" ")[0]?.slice(0, 1)}
+            {participant?.name.split(" ")[1]?.slice(0, 1)}
           </div>
-          <span className="capitalize">{user.name}</span>
+          <span className="capitalize">{participant?.name}</span>
         </div>
-      {/*)}*/}
+      )}
     </div>
   );
 }

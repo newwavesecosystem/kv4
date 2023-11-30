@@ -228,7 +228,7 @@ function PostSignIn() {
             )}
           >
             {participantList.map((participant:IParticipant, index:number) => (
-              <SingleCameraComponent index={index} key={index} user={participant} />
+              <SingleCameraComponent index={index} key={index} participant={participant}/>
             ))}
           </div>
         )}

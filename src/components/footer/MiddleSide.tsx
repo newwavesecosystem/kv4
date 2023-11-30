@@ -9,7 +9,7 @@ import {
   donationModalState,
   endCallModalState,
   micOpenState,
-  microphoneStreamState,
+  microphoneStreamState, participantCameraListState,
   recordingModalState,
   screenSharingState,
   screenSharingStreamState,
@@ -62,6 +62,7 @@ import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
 import {websocketMuteMic} from "~/server/Websocket";
+import {IParticipantCamera} from "~/types";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
@@ -87,6 +88,8 @@ function MiddleSide() {
   const [videoState, setVideoState] = useRecoilState(cameraOpenState);
   const [screenShareState, setScreenShareState] =
     useRecoilState(screenSharingState);
+  const [participantCameraList, setParticipantCameraList] = useRecoilState(participantCameraListState);
+
   return (
     <div className=" flex w-full items-center justify-center gap-5">
       <div className="flex items-center gap-1 rounded-3xl bg-a11y/40 p-2 md:hidden">
@@ -172,30 +175,72 @@ function MiddleSide() {
             setVideoState(!videoState);
             return;
           }
-          const video = await requestCameraAccess();
-          if (video) {
-            setCameraSteam(video);
-            // update the connected users state for the user where the id is the same
-            setConnectedUsers((prev) =>
-              prev.map((prevUser) => {
-                if (prevUser.id === user?.id) {
-                  return {
-                    ...prevUser,
-                    cameraFeed: video,
-                    isCameraOpen: true,
-                  };
+
+          navigator.mediaDevices
+              .getUserMedia({
+                video: {
+                  width: 640,
+                  framerate: 15,
+                },
+                audio: false,
+              })
+              .then((cameraStream) => {
+                setVideoState(!videoState);
+                let newRecord:IParticipantCamera={
+                  intId:user?.meetingDetails.internalUserID,
+                  streamID:'6776767',
+                  id:'55656',
+                  deviceID:'4444',
+                  stream:cameraStream
                 }
-                return prevUser;
-              }),
-            );
-            setVideoState(!videoState);
-          } else {
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "Kindly check your camera settings.",
-            });
-          }
+
+                setParticipantCameraList([...participantCameraList,newRecord])
+
+              })
+              .catch((error) => {
+                console.error('Error accessing camera:', error);
+                toast({
+                  variant: "destructive",
+                  title: "Uh oh! Something went wrong.",
+                  description: `Error accessing camera: ${error}`,
+                });
+              });
+
+          // const video = await requestCameraAccess();
+          // if (video) {
+          //   console.log('Camera is on');
+          //   setCameraSteam(video);
+          //   // update the connected users state for the user where the id is the same
+          //   setConnectedUsers((prev) =>
+          //     prev.map((prevUser) => {
+          //       if (prevUser.id === user?.id) {
+          //         return {
+          //           ...prevUser,
+          //           cameraFeed: video,
+          //           isCameraOpen: true,
+          //         };
+          //       }
+          //       return prevUser;
+          //     }),
+          //   );
+          //   setVideoState(!videoState);
+          //   let newRecord:IParticipantCamera={
+          //     intId:user?.meetingDetails.internalUserID,
+          //     streamID:'6776767',
+          //     id:'55656',
+          //     deviceID:'4444',
+          //     stream:video
+          //   }
+          //
+          //   setParticipantCameraList([...participantCameraList,newRecord])
+          //
+          // } else {
+          //   toast({
+          //     variant: "destructive",
+          //     title: "Uh oh! Something went wrong.",
+          //     description: "Kindly check your camera settings.",
+          //   });
+          // }
         }}
       >
         {videoState ? (

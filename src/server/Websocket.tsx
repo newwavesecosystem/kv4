@@ -7,12 +7,13 @@ import {generateRandomId} from "./ServerInfo";
 
 import {
     authUserState,
-    connectionStatusState,
+    connectionStatusState, participantCameraListState,
     participantListState,
     participantTalkingListState,
     recordingModalState
 } from "~/recoil/atom";
 import {useRecoilState, useRecoilValue} from "recoil";
+import {IParticipantCamera} from "~/types";
 
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
@@ -98,6 +99,7 @@ const Websocket = () => {
     const [participantList, setParticipantList] = useRecoilState(participantListState);
     const [participantTalkingList, setParticipantTalkingList] = useRecoilState(participantTalkingListState);
     const [recordingState, setRecordingState] = useRecoilState(recordingModalState);
+    const [participantCameraList, setParticipantCameraList] = useRecoilState(participantCameraListState);
 
     // const connectionContext = useContext(ConnectionStatusContext)
     // const {websocket_connection, webSocketChanged} = connectionContext
@@ -281,25 +283,25 @@ const Websocket = () => {
         }
     }
 
-    // const handleRemoteVideo = (eventData) => {
-    //     console.log('I got to handle incoming messages')
-    //     const obj = JSON.parse(eventData);
-    //     const {msg, id} = obj;
-    //
-    //     if(msg == "added"){
-    //         const {stream, name,userId} = obj.fields;
-    //
-    //         if(userId != UserInfo?.internalUserID){
-    //             console.log("stream video request received on websocket")
-    //             openRemoteCamera(userId,stream);
-    //         }
-    //     }
-    //
-    //     if(msg == "removed"){
-    //         closeRemoteCamera(id);
-    //     }
-    // }
-    //
+    const handleRemoteVideo = (eventData) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id} = obj;
+
+        if(msg == "added"){
+            const {stream, name,userId} = obj.fields;
+
+            if(userId != user?.meetingDetails?.intId){
+                console.log("stream video request received on websocket")
+                openRemoteCamera(id,userId,stream);
+            }
+        }
+
+        if(msg == "removed"){
+            closeRemoteCamera(id);
+        }
+    }
+
     // const handleRemoteScreenShare = (eventData) => {
     //     console.log('I got to handle incoming  screenshare messages')
     //     const obj = JSON.parse(eventData);
@@ -578,6 +580,31 @@ const Websocket = () => {
         }
     }
 
+
+    const openRemoteCamera = (id:string,intId:string, streamID:string) => {
+        console.log('Hi, im here')
+
+        let newRecord:IParticipantCamera={
+            intId,streamID,id
+        }
+
+        var ishola = participantCameraList
+        console.log(ishola)
+        if (ishola.filter((item:any) => item?.id == id).length < 1) {
+            setParticipantCameraList([...participantCameraList,newRecord])
+        }
+
+    };
+
+    const closeRemoteCamera = (streamID:string) => {
+        console.log('Hi, im here')
+
+        let ishola = participantCameraList;
+
+        let ur=ishola.filter((item:any) => item?.streamID != streamID);
+        console.log("setParticipantCameraList: remove stream ",ur)
+        setParticipantCameraList(ur);
+    };
 
     const findUserNamefromUserId = (userId:string) => {
         var ishola = participantList

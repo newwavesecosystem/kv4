@@ -1,13 +1,13 @@
 import { atom } from "recoil";
 import settingsTabData from "~/data/settingsTabData";
-import { IConnectedUser } from "~/types";
+import {IConnectedUser, IMeetingDetails, IParticipant} from "~/types";
 
 export const authUserState = atom<{
   id: number;
   fullName: string;
   email: string;
   sessiontoken: string;
-  meetingDetails: any;
+  meetingDetails: IMeetingDetails;
 } | null>({
   key: "authUserState",
   default: null,
@@ -28,6 +28,11 @@ export const participantListState = atom<any>({
 
 export const participantTalkingListState = atom<any>({
   key: "participantTalkingListState",
+  default: [],
+});
+
+export const participantCameraListState = atom<any>({
+  key: "participantCameraListState",
   default: [],
 });
 
