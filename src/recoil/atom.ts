@@ -7,7 +7,7 @@ export const authUserState = atom<{
   fullName: string;
   email: string;
   sessiontoken: string;
-  meetingDetails: IMeetingDetails;
+  meetingDetails: IMeetingDetails|null;
 } | null>({
   key: "authUserState",
   default: null,

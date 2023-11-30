@@ -281,13 +281,13 @@ const Websocket = () => {
         }
     }
 
-    const handleRemoteVideo = (eventData) => {
+    const handleRemoteVideo = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id} = obj;
 
         if(msg == "added"){
-            const {stream, name,userId} = obj.fields;
+            const {stream, name,userId} = obj?.fields;
 
             if(userId != user?.meetingDetails?.internalUserID){
                 console.log("stream video request received on websocket")
@@ -635,6 +635,11 @@ const Websocket = () => {
         </div>
     )
 
+}
+
+export function websocketStopCamera(streamID:string) {
+    console.log('I am websocketStopCamera')
+    websocketSend([`{\"msg\":\"method\",\"id\":\"41\",\"method\":\"userUnshareWebcam\",\"params\":[\"${streamID}\"]}`])
 }
 
 export function websocketRecord() {

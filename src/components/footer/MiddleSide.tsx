@@ -61,7 +61,7 @@ import ShareScreenOffIcon from "../icon/outline/ShareScreenOffIcon";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
-import {websocketMuteMic} from "~/server/Websocket";
+import {websocketMuteMic, websocketStopCamera} from "~/server/Websocket";
 import {IParticipantCamera} from "~/types";
 
 function MiddleSide() {
@@ -172,9 +172,10 @@ function MiddleSide() {
             //   }),
             // );
             // setCameraSteam(null);
+            websocketStopCamera(`${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}${participantCameraList.filter((item:any) => item?.intId != user?.meetingDetails?.internalUserID)[0]?.deviceID}`);
             setVideoState(!videoState);
 
-            let ur=participantCameraList.filter((item:any) => item?.intId != user?.meetingDetails.internalUserID);
+            let ur=participantCameraList.filter((item:any) => item?.intId != user?.meetingDetails?.internalUserID);
             console.log("setParticipantCameraList: remove stream ",ur)
             setParticipantCameraList(ur);
 
@@ -183,16 +184,13 @@ function MiddleSide() {
 
           navigator.mediaDevices
               .getUserMedia({
-                video: {
-                  width: 640,
-                  framerate: 15,
-                },
+                video: true,
                 audio: false,
               })
               .then((cameraStream) => {
                 setVideoState(!videoState);
                 let newRecord:IParticipantCamera={
-                  intId:user?.meetingDetails.internalUserID,
+                  intId:user?.meetingDetails?.internalUserID,
                   streamID:'6776767',
                   id:'55656',
                   deviceID:'4444',

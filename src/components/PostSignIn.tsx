@@ -5,7 +5,7 @@ import {
     connectedUsersState,
     currentColorTheme,
     screenSharingStreamState,
-    whiteBoardOpenState, authUserState, participantListState, participantTalkingListState,
+    whiteBoardOpenState, authUserState, participantListState, participantTalkingListState, participantCameraListState,
 } from "~/recoil/atom";
 import Image from "next/image";
 import MicOnIcon from "./icon/outline/MicOnIcon";
@@ -21,8 +21,9 @@ import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";
 import {toast} from "~/components/ui/use-toast";
 import MicOffIcon from "~/components/icon/outline/MicOffIcon";
-import {IParticipant} from "~/types";
+import {IParticipant, IParticipantCamera} from "~/types";
 import KurentoVideo from "~/server/KurentoVideo";
+import KurentoVideoViewer from "~/server/KurentoVideoViewer";
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
   () => import("~/components/whiteboard/WhiteboardComponent"),
@@ -38,6 +39,7 @@ function PostSignIn() {
   const setUser = useSetRecoilState(authUserState);
     const participantList = useRecoilValue(participantListState);
     const participantTalkingList = useRecoilValue(participantTalkingListState);
+    const participantCameraList = useRecoilValue(participantCameraListState);
 
   const validateToken= (token: string | null)=>{
         axios.get(`${ServerInfo.tokenValidationURL}?sessionToken=${token}`)
@@ -243,6 +245,10 @@ function PostSignIn() {
         <Websocket/>
         <KurentoAudio/>
         <KurentoVideo/>
+          {participantCameraList.map((cItem:IParticipantCamera,index:number)=>{
+              return <KurentoVideoViewer streamID={cItem.streamID}/>
+          })}
+
       </div>
     </Authenticated>
   );

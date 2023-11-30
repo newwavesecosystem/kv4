@@ -4,8 +4,9 @@ import {websocketSend} from "./Websocket";
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
 import {authUserState, participantCameraListState} from "~/recoil/atom";
+import {IParticipantCamera} from "~/types";
 
-const KurentoVideoViewer = (props) => {
+const KurentoVideoViewer = (props:any) => {
     const user = useRecoilValue(authUserState);
     const [wsStarted, setWsStarted] = useState(false);
     const [streamID, setStreamID] = useState(props?.streamID);
@@ -18,7 +19,6 @@ const KurentoVideoViewer = (props) => {
 
 
     useEffect(() => {
-        let webRtcPeer;
 
         console.log("effect changes in KurentoVideoViewer")
 
@@ -27,12 +27,12 @@ const KurentoVideoViewer = (props) => {
             ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
         };
 
-        const KurentoVideoViewerSend = (data) => {
+        const KurentoVideoViewerSend = (data:any) => {
             ws?.send(JSON.stringify(data));
             console.log('Sending this data via KurentoVideoViewer websocket');
         };
 
-        const onOffer = (error, offerSdp) => {
+        const onOffer = (error:any, offerSdp:any) => {
             if (error) return onError(error);
 
             console.info('Invoking SDP offer callback function ' + offerSdp);
@@ -47,7 +47,7 @@ const KurentoVideoViewer = (props) => {
             KurentoVideoViewerSend(message);
         };
 
-        const onIceCandidate = (candidate) => {
+        const onIceCandidate = (candidate:any) => {
             console.log('Local candidate' + JSON.stringify(candidate));
 
             const message = {
@@ -61,13 +61,12 @@ const KurentoVideoViewer = (props) => {
             KurentoVideoViewerSend(message);
         };
 
-        const onError = (error) => {
+        const onError = (error:any) => {
             console.error('KurentoVideoViewer error:', error);
         };
 
         const startProcess = () => {
             console.log('Creating WebRtcPeer and generating local sdp offer ...');
-            const videoElement = document.getElementById('rVideoElement');
             const constraints = {
                 audio: false,
                 video: {
@@ -78,22 +77,22 @@ const KurentoVideoViewer = (props) => {
 
             const options = {
                 localVideo: null,
-                remoteVideo: videoElement,
+                remoteVideo: null,
                 onicecandidate: onIceCandidate,
                 mediaConstraints: constraints,
             };
 
-            webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function (error) {
-                if (error) return onError(error);
+            webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(this: any, error) {
+                if (error) return this.onError(error);
                 this.generateOffer(onOffer);
             });
         };
 
-        const startResponse = (message) => {
+        const startResponse = (message:any) => {
             console.log('SDP answer received from server. Processing ...');
 
             // Handle the SDP offer by setting it on the WebRTC endpoint
-            webRtcPeer.processOffer(message.sdpAnswer, (error, sdpAnswer) => {
+            webRtcPeer?.processOffer(message.sdpAnswer, (error, sdpAnswer) => {
                 if (error) {
                     // Handle error
                     console.error(error);
@@ -120,11 +119,11 @@ const KurentoVideoViewer = (props) => {
         const parseStream = () => {
             console.log('starting Remote Stream. Processing ...');
 
-            var gstream = webRtcPeer.getRemoteStream()
+            let gstream = webRtcPeer?.getRemoteStream()
             console.log('Remote gstream:', gstream)
 
             // Check the length of the remote stream's tracks
-            const streamTracksCount = gstream.getTracks().length;
+            const streamTracksCount = gstream?.getTracks().length;
 
             console.log('Number of tracks in the remote stream:', streamTracksCount);
 
@@ -132,11 +131,11 @@ const KurentoVideoViewer = (props) => {
         };
 
 
-        const remoteStreams= async (streamID, stream) => {
+        const remoteStreams= (streamID: unknown, stream: MediaStream | undefined) => {
             console.log("remoteVideoStream",participantCameraList)
             console.log("remoteVideoStream streamID",streamID)
 
-            const updatedArray = participantCameraList.map(item => {
+            const updatedArray = participantCameraList.map((item:IParticipantCamera) => {
                 if (item.streamID === streamID) {
                     return {...item, stream: stream};
                 }
@@ -179,10 +178,10 @@ const KurentoVideoViewer = (props) => {
                         break;
                     case 'iceCandidate':
                         console.log('iceCandidate');
-                        webRtcPeer.addIceCandidate(parsedMessage.candidate);
+                        webRtcPeer?.addIceCandidate(parsedMessage.candidate);
                         break;
                     default:
-                        onError('Unrecognized message', parsedMessage);
+                        onError(`Unrecognized message ${parsedMessage}`);
                 }
             };
 
@@ -192,15 +191,15 @@ const KurentoVideoViewer = (props) => {
             };
         }
 
-        // return () => {
-        //     // Cleanup: Close WebSocket and release WebRTC resources
-        //     if (ws && ws.readyState === WebSocket.OPEN) {
-        //         ws.close();
-        //     }
-        //     if (webRtcPeer) {
-        //         webRtcPeer.dispose();
-        //     }
-        // };
+        return () => {
+            // Cleanup: Close WebSocket and release WebRTC resources
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.close();
+            }
+            if (webRtcPeer) {
+                webRtcPeer.dispose();
+            }
+        };
     }, [wsStarted]);
 
     return <div>

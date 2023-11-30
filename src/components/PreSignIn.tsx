@@ -69,7 +69,7 @@ export default function PreSignIn() {
             // window.location.reload()
 
             setUser({
-              meetingDetails: undefined, sessiontoken: "",
+              meetingDetails: null, sessiontoken: "",
               ...data,
               id: Math.floor(Math.random() * 100)
             })
@@ -221,7 +221,7 @@ export default function PreSignIn() {
                   const id = Math.floor(Math.random() * 100);
                   // login user
                   setUser({
-                    meetingDetails: undefined, sessiontoken: "",
+                    meetingDetails: null, sessiontoken: "",
                     ...data,
                     id
                   });

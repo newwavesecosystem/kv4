@@ -20,7 +20,7 @@ const KurentoVideo = () => {
     const participantCameraList = useRecoilValue(participantCameraListState);
     const [videoStateWS, setVideoStateWS] = useState(false);
 
-    let userCamera=participantCameraList.filter((cItem:any) => cItem?.intId == user?.meetingDetails.internalUserID);
+    let userCamera=participantCameraList.filter((cItem:any) => cItem?.intId == user?.meetingDetails?.internalUserID);
 
     let ws: WebSocket | null = null;
     let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
@@ -61,13 +61,13 @@ const KurentoVideo = () => {
                 mediaConstraints: constraints,
             };
 
-            webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function (error) {
-                if (error) return onError(error);
+            webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(this: any, error) {
+                if (error) return this.onError(error);
                 this.generateOffer(onOffer);
             });
         };
 
-        const onOffer = (error, offerSdp) => {
+        const onOffer = (error:any, offerSdp:any) => {
             if (error) return onError(error);
 
             console.info('Invoking SDP offer callback function ' + offerSdp);
@@ -83,7 +83,7 @@ const KurentoVideo = () => {
             kurentoSend(message);
         };
 
-        const onIceCandidate = (candidate) => {
+        const onIceCandidate = (candidate:any) => {
             console.log('Local candidate' + JSON.stringify(candidate));
 
             const message = {
@@ -97,20 +97,20 @@ const KurentoVideo = () => {
             kurentoSend(message);
         };
 
-        const onError = (error) => {
+        const onError = (error:any) => {
             console.error('kurento error:', error);
         };
 
-        const startResponse = (message) => {
+        const startResponse = (message:any) => {
             console.log('SDP answer received from server. Processing ...');
-            webRtcPeer?.processAnswer(message.sdpAnswer);
+            webRtcPeer?.processAnswer(message?.sdpAnswer);
         };
 
-        const buildStreamName = (deviceId) => {
-            return `${user?.meetingDetails.internalUserID}${user?.meetingDetails.authToken}${deviceId}`;
+        const buildStreamName = (deviceId:string) => {
+            return `${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}${deviceId}`;
         };
 
-        const kurentoSend = (data) => {
+        const kurentoSend = (data:any) => {
             ws?.send(JSON.stringify(data));
             console.log('Sending this data via kurento websocket');
         };
