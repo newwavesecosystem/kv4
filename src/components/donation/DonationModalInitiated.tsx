@@ -125,7 +125,7 @@ function DonationModalInitiated() {
                       donationDescription: data.description,
                       id: user?.id as number,
                       donationUniqueNumber: parseInt(data.uniqueNumber) || null,
-                      emaail: data.isAnonymous ? null : (user?.email as string),
+                      email: data.isAnonymous ? null : (user?.email as string),
                       fullName: data.isAnonymous
                         ? null
                         : (user?.fullName as string),

@@ -4,12 +4,16 @@ import {
   authUserState,
   cameraOpenState,
   cameraStreamState,
+  chatModalKonn3ctAiState,
   chatModalState,
   connectedUsersState,
   donationModalState,
+  eCinemaModalState,
   endCallModalState,
+  leaveRoomCallModalState,
   micOpenState,
   microphoneStreamState,
+  pollModalState,
   recordingModalState,
   screenSharingState,
   screenSharingStreamState,
@@ -47,11 +51,9 @@ import SettingsIcon from "../icon/outline/SettingsIcon";
 import ShareIcon from "../icon/outline/ShareIcon";
 import ChatIcon from "../icon/outline/ChatIcon";
 import RefreshIcon from "../icon/outline/RefreshIcon";
-import AllAppsIcon from "../icon/outline/AllAppsIcon";
 import ExpandIcon from "../icon/outline/ExpandIcon";
 import DesktopIcon from "../icon/outline/DesktopIcon";
 import FolderOpenIcon from "../icon/outline/FolderOpenIcon";
-import EmojiIcon from "../icon/outline/EmojiIcon";
 import TextFormatIcon from "../icon/outline/TextFormatIcon";
 import GiftIcon from "../icon/outline/GiftIcon";
 import BotIcon from "../icon/outline/BotIcon";
@@ -61,6 +63,7 @@ import ShareScreenOffIcon from "../icon/outline/ShareScreenOffIcon";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
+import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
@@ -86,9 +89,20 @@ function MiddleSide() {
   const [videoState, setVideoState] = useRecoilState(cameraOpenState);
   const [screenShareState, setScreenShareState] =
     useRecoilState(screenSharingState);
+  const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
+
+  const [pollModal, setPollModal] = useRecoilState(pollModalState);
+
+  const [konn3ctAiChatState, setKonn3ctAiChatState] = useRecoilState(
+    chatModalKonn3ctAiState,
+  );
+
+  const [leaveRoomCallModal, setRoomCallModal] = useRecoilState(
+    leaveRoomCallModalState,
+  );
   return (
     <div className=" flex w-full items-center justify-center gap-5">
-      <div className="flex items-center gap-1 rounded-3xl bg-[#DF2622] border-a11y/40 border p-2 md:hidden">
+      <div className="flex items-center gap-1 rounded-3xl border border-a11y/40 bg-[#DF2622] p-2 md:hidden">
         <button
           onClick={() => {
             setEndCallModal(true);
@@ -106,7 +120,12 @@ function MiddleSide() {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="mb-5 w-80 rounded-b-none border-0 bg-primary text-a11y md:mb-3 md:hidden md:rounded-b-md">
             <DropdownMenuGroup className="divide-y divide-a11y/20">
-              <DropdownMenuItem className="flex items-start p-4 focus:bg-[#DF2622]">
+              <DropdownMenuItem
+                onClick={() => {
+                  setEndCallModal(true);
+                }}
+                className="flex items-start p-4 focus:bg-[#DF2622]"
+              >
                 <RecordOnIcon className="mr-2 h-5 w-5 shrink-0" />
                 <div className="flex flex-col">
                   <span className="">End Room For All</span>
@@ -116,7 +135,12 @@ function MiddleSide() {
                   </span>
                 </div>
               </DropdownMenuItem>
-              <DropdownMenuItem className="flex items-start p-4">
+              <DropdownMenuItem
+                onClick={() => {
+                  setRoomCallModal(true);
+                }}
+                className="flex items-start p-4"
+              >
                 <ExitIcon className="mr-2 h-5 w-5 shrink-0" />
                 <div className="flex flex-col">
                   <span className="">Leave Room</span>
@@ -356,12 +380,13 @@ function MiddleSide() {
               onClick={() => {
                 // setChatState(!chatState);
               }}
-              className="py-2 "
+              className="py-2"
             >
               <RefreshIcon className="mr-2 h-5 w-5" />
               <span>Rekonn3ct</span>
             </DropdownMenuItem>
-            <DropdownMenuSub>
+            {/* disabled because its redundant with layout on settings */}
+            {/* <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <AllAppsIcon className="mr-1 h-6 w-6" />
                 <span>Change layout</span>
@@ -376,8 +401,13 @@ function MiddleSide() {
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
-            </DropdownMenuSub>
-            <DropdownMenuItem className="py-2">
+            </DropdownMenuSub> */}
+            <DropdownMenuItem
+              onClick={() => {
+                document.documentElement.requestFullscreen();
+              }}
+              className="py-2"
+            >
               <ExpandIcon className="mr-2 h-5 w-5" />
               <span>Go Fullscreen</span>
             </DropdownMenuItem>
@@ -425,15 +455,38 @@ function MiddleSide() {
               <FolderOpenIcon className="mr-2 h-5 w-5" />
               <span>Upload Files</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="py-2">
-              <EmojiIcon className="mr-2 h-5 w-5" />
-              <span>Emoji</span>
+            <DropdownMenuItem
+              onClick={() => {
+                if (eCinemaModal.isActive)
+                  return toast({
+                    title: "Uh oh! Something went wrong.",
+                    description:
+                      "You can't start a new eCinema session while one is ongoing.",
+                  });
+                setECinemaModal((prev) => ({
+                  ...prev,
+                  step: 1,
+                }));
+              }}
+              className="py-2 md:hidden"
+            >
+              <MovieColoredIcon className="mr-2 h-5 w-5" />
+              <span>ECinema</span>
             </DropdownMenuItem>
             <DropdownMenuItem className="py-2">
               <MicOffIcon className="mr-2 h-5 w-5" />
               <span>Mute All</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="py-2">
+            <DropdownMenuItem
+              onClick={() => {
+                if (pollModal.isActive || pollModal.isEnded) return;
+                setPollModal((prev) => ({
+                  ...prev,
+                  step: 1,
+                }));
+              }}
+              className="py-2"
+            >
               <TextFormatIcon className="mr-2 h-5 w-5" />
               <span>Polls</span>
             </DropdownMenuItem>
@@ -466,14 +519,18 @@ function MiddleSide() {
                   <DropdownMenuItem>
                     <span className="">Notes</span>
                   </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setKonn3ctAiChatState(!konn3ctAiChatState);
+                    }}
+                    className="md:hidden"
+                  >
+                    <span className="">Chat</span>
+                  </DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
 
-            <DropdownMenuItem className="hidden py-2 md:flex">
-              <ShareIcon className="mr-2 h-5 w-5" />
-              <span>Invite/Share</span>
-            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
                 setSettingsOpen(!settingsOpen);
@@ -486,7 +543,7 @@ function MiddleSide() {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className="hidden items-center gap-1 rounded-3xl bg-[#DF2622] border-a11y/40 border p-2 md:flex">
+      <div className="hidden items-center gap-1 rounded-3xl border border-a11y/40 bg-[#DF2622] p-2 md:flex">
         <button
           onClick={() => {
             setEndCallModal(true);
@@ -503,10 +560,13 @@ function MiddleSide() {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="mb-2 w-80 rounded-b-none border-0 bg-primary text-a11y md:mb-3 md:rounded-b-md">
-            {/* <div className="absolute bottom-0 right-[45%] hidden h-0 w-0 border-l-[10px] border-r-[10px] border-t-[15px] border-l-transparent border-r-transparent border-t-primary md:block"></div> */}
-
             <DropdownMenuGroup className="divide-y divide-a11y/20">
-              <DropdownMenuItem className="flex focus:bg-[#DF2622] items-start p-4">
+              <DropdownMenuItem
+                onClick={() => {
+                  setEndCallModal(true);
+                }}
+                className="flex items-start p-4 focus:bg-[#DF2622]"
+              >
                 <RecordOnIcon className="mr-2 h-5 w-5 shrink-0" />
                 <div className="flex flex-col">
                   <span className="">End Room For All</span>
@@ -516,7 +576,12 @@ function MiddleSide() {
                   </span>
                 </div>
               </DropdownMenuItem>
-              <DropdownMenuItem className="flex items-start p-4">
+              <DropdownMenuItem
+                onClick={() => {
+                  setRoomCallModal(true);
+                }}
+                className="flex items-start p-4"
+              >
                 <ExitIcon className="mr-2 h-5 w-5 shrink-0" />
                 <div className="flex flex-col">
                   <span className="">Leave Room</span>

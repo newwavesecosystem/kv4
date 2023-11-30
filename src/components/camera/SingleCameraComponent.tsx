@@ -16,6 +16,7 @@ import { useRecoilState } from "recoil";
 import PinIcon from "../icon/outline/PinIcon";
 import VideoConfOffIcon from "../icon/outline/VideoConfOffIcon";
 import HandOnIcon from "../icon/outline/HandOnIcon";
+import WifiOnIcon from "../icon/outline/WifiOnIcon";
 
 function SingleCameraComponent({
   user,
@@ -42,7 +43,8 @@ function SingleCameraComponent({
         (connectedUsers.length === 3 || connectedUsers.length === 5) &&
           index === 0 &&
           "col-span-2 md:col-auto",
-        user.isMicOpen && "border-2 border-primary",
+        user.isMicOpen &&
+          "ring-2 ring-primary ring-offset-2 ring-offset-primary",
       )}
     >
       <div className=" absolute right-3 top-3 flex items-center gap-1">
@@ -97,6 +99,12 @@ function SingleCameraComponent({
       >
         Your browser does not support video tag
       </video>
+      {user.isCameraOpen && (
+        <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg  bg-primary/60 px-2 py-1 text-sm">
+          <span className=" max-w-[150px] truncate ">{user.fullName}</span>
+          <WifiOnIcon className="hidden h-6 w-6 md:block" />
+        </div>
+      )}
       {!user.isCameraOpen && (
         <div
           className={cn(

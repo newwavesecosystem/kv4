@@ -55,7 +55,6 @@ function ParticipantsModal() {
   const [participantState, setParticipantState] = useRecoilState(
     participantsModalState,
   );
-  const [selectedParticipant, setSelectedParticipant] = useState();
   const [selectedMenu, setSelectedMenu] = useState(DummyMenu[0]);
 
   const screenSize = useScreenSize();

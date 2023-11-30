@@ -4,6 +4,8 @@ import Authenticated from "~/layouts/Authenticated";
 import {
   connectedUsersState,
   currentColorTheme,
+  eCinemaModalState,
+  pollModalState,
   screenSharingStreamState,
   whiteBoardOpenState,
 } from "~/recoil/atom";
@@ -15,6 +17,8 @@ import { cn } from "~/lib/utils";
 // import "~/styles/tldraw.css";
 import dynamic from "next/dynamic";
 import ScreenSharingComponent from "./screenSharing/ScreenSharingComponent";
+import ArrowChevronDownIcon from "./icon/outline/ArrowChevronDownIcon";
+import ECinemaComponent from "./eCinema/ECinemaComponent";
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
   () => import("~/components/whiteboard/WhiteboardComponent"),
@@ -31,11 +35,29 @@ function PostSignIn() {
   const [isWhiteboardOpen, setIsWhiteboardOpen] =
     useRecoilState(whiteBoardOpenState);
 
+  const [pollModal, setPollModal] = useRecoilState(pollModalState);
+  const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
+
   return (
     <Authenticated>
       <div className="relative h-[calc(100vh-128px)] bg-primary/60 ">
+        {/* polls */}
+        {(pollModal.isActive || pollModal.isEnded) && pollModal.step === 0 && (
+          <button
+            onClick={() => {
+              setPollModal((prev) => ({
+                ...prev,
+                step: 2,
+              }));
+            }}
+            className="fixed bottom-20 left-5 z-10 flex items-center gap-2 rounded-md bg-primary px-4 py-3"
+          >
+            <span>View Polls</span>
+            <ArrowChevronDownIcon className="h-6 w-6" />
+          </button>
+        )}
         {/* temp button to stimulate ppl joining */}
-        <div className={"fixed right-[50%] top-0 z-[999] flex gap-2 "}>
+        {/* <div className={"fixed right-[50%] top-0 z-[999] flex gap-2 "}>
           <button
             className="  rounded-md bg-orange-400 p-1"
             onClick={() => {
@@ -61,7 +83,7 @@ function PostSignIn() {
           >
             remove
           </button>
-        </div>
+        </div> */}
 
         {/* show active people talking */}
         {(isWhiteboardOpen || screenSharingStream) &&
@@ -98,36 +120,44 @@ function PostSignIn() {
           )}
 
         {/* render camera feed if not whiteboard or screensharing */}
-        {!isWhiteboardOpen && !screenSharingStream && (
-          <div
-            className={cn(
-              " m-auto h-[calc(100vh-128px)] p-4 ",
-              (isWhiteboardOpen || screenSharingStream) && connectedUsers.filter((user) => user.isMicOpen === true)?.length >
-                0 && "mt-6 h-[calc(100vh-150px)]",
-              connectedUsers.length === 1 &&
-                " flex items-center justify-center md:aspect-square  ",
-              connectedUsers.length === 2 &&
-                "grid justify-center gap-2 md:grid-cols-2",
-              connectedUsers.length === 3 &&
-                "grid grid-cols-2 gap-2 md:grid-cols-3",
-              connectedUsers.length >= 4 && "grid grid-cols-2 gap-2",
-              connectedUsers.length >= 5 && "grid gap-2 md:grid-cols-3",
-              connectedUsers.length >= 7 && "grid gap-2 md:grid-cols-4",
-              connectedUsers.length >= 13 && "grid gap-2 md:grid-cols-5",
-              connectedUsers.length >= 16 && "grid gap-2 md:grid-cols-6",
-            )}
-          >
-            {connectedUsers.map((user, index) => (
-              <SingleCameraComponent index={index} key={index} user={user} />
-            ))}
-          </div>
-        )}
+        {!isWhiteboardOpen &&
+          !screenSharingStream &&
+          !eCinemaModal.isActive && (
+            <div
+              className={cn(
+                " m-auto h-[calc(100vh-128px)] p-4 ",
+                (isWhiteboardOpen || screenSharingStream) &&
+                  connectedUsers.filter((user) => user.isMicOpen === true)
+                    ?.length > 0 &&
+                  "mt-6 h-[calc(100vh-150px)]",
+                connectedUsers.length === 1 &&
+                  " flex items-center justify-center md:aspect-square  ",
+                connectedUsers.length === 2 &&
+                  "grid justify-center gap-2 md:grid-cols-2",
+                connectedUsers.length === 3 &&
+                  "grid grid-cols-2 gap-2 md:grid-cols-3",
+                connectedUsers.length >= 4 && "grid grid-cols-2 gap-2",
+                connectedUsers.length >= 5 && "grid gap-2 md:grid-cols-3",
+                connectedUsers.length >= 7 && "grid gap-2 md:grid-cols-4",
+                connectedUsers.length >= 13 && "grid gap-2 md:grid-cols-5",
+                connectedUsers.length >= 16 && "grid gap-2 md:grid-cols-6",
+              )}
+            >
+              {connectedUsers.map((user, index) => (
+                <SingleCameraComponent index={index} key={index} user={user} />
+              ))}
+            </div>
+          )}
 
         {/* render screen sharing if screen sharing is open and whiteboard is closed */}
         {screenSharingStream && !isWhiteboardOpen && <ScreenSharingComponent />}
 
         {/* render whiteboard if whiteboard is open */}
         {isWhiteboardOpen && <WhiteboardComponent />}
+
+        {(!isWhiteboardOpen || !screenSharingStream) &&
+          eCinemaModal.isActive && <ECinemaComponent />}
+
         {/* {screenSharingStream && screenShareState && <ScreenSharingComponent />} */}
       </div>
     </Authenticated>

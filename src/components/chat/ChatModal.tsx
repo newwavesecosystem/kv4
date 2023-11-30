@@ -24,28 +24,6 @@ import {
 import TickIcon from "../icon/outline/TickIcon";
 import { cn } from "~/lib/utils";
 
-const DummyParticipants = [
-  {
-    id: 1,
-    name: "katy Perry",
-    role: "Host",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    role: "Guest",
-  },
-  {
-    id: 3,
-    name: "Jane Doe",
-    role: "Guest",
-  },
-  {
-    id: 4,
-    name: "michael Jackson",
-    role: "Guest",
-  },
-];
 const DummyMenu = [
   {
     id: 1,
@@ -62,9 +40,8 @@ const DummyMenu = [
 function ChatModal() {
   const [chatState, setChatState] = useRecoilState(chatModalState);
   const [infoMessageStatus, setInfoMessageStatus] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState(DummyMenu[0]);
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
 
   const screenSize = useScreenSize();
   return (
@@ -73,22 +50,16 @@ function ChatModal() {
         className="m-h-screen w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
         side={"right"}
       >
-        <div className="sticky top-0 max-h-32 flex flex-col gap-2 p-4">
+        <div className="sticky top-0 flex max-h-32 flex-col gap-2 p-4">
           <div className="flex items-center gap-2">
             <span className="text-xl font-bold">Chat</span>
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <button
-                  // variant="outline"
                   role="combobox"
                   aria-expanded={open}
                   className="flex items-center gap-2 rounded-md border border-a11y/20 px-3 py-1 text-sm"
                 >
-                  {/* {value
-                  ? frameworks.find((framework) => framework.value === value)
-                      ?.label
-                  : "Select framework..."} */}
-                  {/* {DummyChat[0]?.name} */}
                   Everyone
                   {open ? (
                     <ArrowChevronUpIcon className="  h-4 w-4 shrink-0 opacity-50" />
@@ -98,7 +69,7 @@ function ChatModal() {
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-[200px] border-0 bg-primary p-0 text-a11y">
-                <Command className="border-0 bg-primary  ">
+                <Command className="border-0 bg-primary text-a11y  ">
                   <CommandInput
                     className=""
                     placeholder="Search for participants..."
@@ -113,18 +84,12 @@ function ChatModal() {
                         setOpen(false);
                       }}
                     >
-                      <TickIcon
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          // value === framework.value
-                          //   ? "opacity-100"
-                          //   : "opacity-0",
-                        )}
-                      />
+                      <TickIcon className={cn("mr-2 h-4 w-4")} />
                       Everyone
                     </CommandItem>
                     {DummyChat.map((user, index) => (
                       <CommandItem
+                        className="text-a11y"
                         key={index}
                         value={user.name}
                         onSelect={(currentValue) => {
@@ -132,14 +97,7 @@ function ChatModal() {
                           setOpen(false);
                         }}
                       >
-                        <TickIcon
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            // value === framework.value
-                            //   ? "opacity-100"
-                            //   : "opacity-0",
-                          )}
-                        />
+                        <TickIcon className={cn("mr-2 h-4 w-4")} />
                         {user.name}
                       </CommandItem>
                     ))}
@@ -165,17 +123,22 @@ function ChatModal() {
           )}
         </div>
 
-        <div className={cn(" h-[calc(100vh-192px)] no-scrollbar overflow-y-auto", infoMessageStatus && "h-[calc(100vh-130px)]")}>
+        <div
+          className={cn(
+            " no-scrollbar h-[calc(100vh-192px)] overflow-y-auto",
+            infoMessageStatus && "h-[calc(100vh-130px)]",
+          )}
+        >
           {DummyChat.map((chat, index) => (
             <SingleChat key={index} chat={chat} />
           ))}
         </div>
-        <div className="sticky bottom-0 w-full border-t h-16 border-a11y/20 bg-primary/20 px-4 md:sticky">
+        <div className="sticky bottom-0 h-16 w-full border-t border-a11y/20 bg-primary/20 px-4 md:sticky">
           <div className=" flex w-full items-center rounded-xl bg-transparent py-4 ">
             <input
               type="text"
               name=""
-              className="w-full bg-transparent pl-3  focus:shadow-none focus:outline-none"
+              className="w-full bg-transparent pl-3 placeholder:text-a11y/80  focus:shadow-none focus:outline-none"
               id=""
               placeholder="Send a message to everyone"
             />
