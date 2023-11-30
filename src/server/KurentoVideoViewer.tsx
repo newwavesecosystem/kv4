@@ -149,9 +149,6 @@ const KurentoVideoViewer = (props:any) => {
         if (!wsStarted) {
             setWsStarted(true)
             KurentoVideoViewerConnect();
-        }else{
-            console.log('KurentoVideoViewer continued on existing protocol ');
-            startProcess();
         }
 
         if (ws != null) {
