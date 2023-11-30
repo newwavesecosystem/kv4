@@ -156,23 +156,28 @@ function MiddleSide() {
           videoState ? "border border-a11y/20 bg-transparent" : "bg-a11y/20",
         )}
         onClick={async () => {
-          if (videoState && cameraStream) {
-            stopCameraStream(cameraStream);
+          if (videoState) {
+            // stopCameraStream(cameraStream);
             // update the connected users state for the user where the id is the same
-            setConnectedUsers((prev) =>
-              prev.map((prevUser) => {
-                if (prevUser.id === user?.id) {
-                  return {
-                    ...prevUser,
-                    cameraFeed: null,
-                    isCameraOpen: false,
-                  };
-                }
-                return prevUser;
-              }),
-            );
-            setCameraSteam(null);
+            // setConnectedUsers((prev) =>
+            //   prev.map((prevUser) => {
+            //     if (prevUser.id === user?.id) {
+            //       return {
+            //         ...prevUser,
+            //         cameraFeed: null,
+            //         isCameraOpen: false,
+            //       };
+            //     }
+            //     return prevUser;
+            //   }),
+            // );
+            // setCameraSteam(null);
             setVideoState(!videoState);
+
+            let ur=participantCameraList.filter((item:any) => item?.intId != user?.meetingDetails.internalUserID);
+            console.log("setParticipantCameraList: remove stream ",ur)
+            setParticipantCameraList(ur);
+
             return;
           }
 

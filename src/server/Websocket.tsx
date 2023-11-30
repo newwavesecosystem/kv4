@@ -170,20 +170,18 @@ const Websocket = () => {
                 if (collection == "record-meetings") {
                     handleRecording(e.data)
                 }
-                // if (collection == "video-streams") {
-                //     handleRecording(e.data)
-                // }
+
                 // if(collection == "meetings"){
                 //     handleMeetings(e.data)
                 // }
                 // if(collection == "external-video-meetings"){
                 //     handleExternalVideo(e.data)
                 // }
-                //
-                // if(collection == "video-streams"){
-                //     handleRemoteVideo(e.data)
-                // }
-                //
+
+                if(collection == "video-streams"){
+                    handleRemoteVideo(e.data)
+                }
+
                 if(collection == "voiceUsers"){
                     handleVoiceUsers(e.data)
                 }
@@ -291,7 +289,7 @@ const Websocket = () => {
         if(msg == "added"){
             const {stream, name,userId} = obj.fields;
 
-            if(userId != user?.meetingDetails?.intId){
+            if(userId != user?.meetingDetails?.internalUserID){
                 console.log("stream video request received on websocket")
                 openRemoteCamera(id,userId,stream);
             }
@@ -585,6 +583,7 @@ const Websocket = () => {
         console.log('Hi, im here')
 
         let newRecord:IParticipantCamera={
+            deviceID: null, stream: null,
             intId,streamID,id
         }
 

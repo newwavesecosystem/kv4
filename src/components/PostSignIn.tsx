@@ -22,6 +22,7 @@ import * as ServerInfo from "~/server/ServerInfo";
 import {toast} from "~/components/ui/use-toast";
 import MicOffIcon from "~/components/icon/outline/MicOffIcon";
 import {IParticipant} from "~/types";
+import KurentoVideo from "~/server/KurentoVideo";
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
   () => import("~/components/whiteboard/WhiteboardComponent"),
@@ -241,6 +242,7 @@ function PostSignIn() {
         {/* {screenSharingStream && screenShareState && <ScreenSharingComponent />} */}
         <Websocket/>
         <KurentoAudio/>
+        <KurentoVideo/>
       </div>
     </Authenticated>
   );

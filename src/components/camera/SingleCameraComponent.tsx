@@ -43,7 +43,7 @@ function SingleCameraComponent({
   // Attach the new stream to the video element
   if(userCamera.length>0){
     if (videoRef.current) {
-      videoRef.current.srcObject = userCamera.stream;
+      videoRef.current.srcObject = userCamera[0].stream;
     }
   }
 

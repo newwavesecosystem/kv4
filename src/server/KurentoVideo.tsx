@@ -3,16 +3,24 @@ import * as kurentoUtils from "kurento-utils";
 import {websocketSend} from "./Websocket";
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, cameraOpenState, cameraStreamState, connectionStatusState} from "~/recoil/atom";
+import {
+    authUserState,
+    cameraOpenState,
+    cameraStreamState,
+    connectionStatusState,
+    participantCameraListState
+} from "~/recoil/atom";
 
 
-const Kurento = () => {
+const KurentoVideo = () => {
     const user = useRecoilValue(authUserState);
     const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
     const [cameraStream, setCameraSteam] = useRecoilState(cameraStreamState);
     const [videoState, setVideoState] = useRecoilState(cameraOpenState);
-    // const [videoState, setVideoState] = useState(false);
-    const {sessionToken} = user;
+    const participantCameraList = useRecoilValue(participantCameraListState);
+    const [videoStateWS, setVideoStateWS] = useState(false);
+
+    let userCamera=participantCameraList.filter((cItem:any) => cItem?.intId == user?.meetingDetails.internalUserID);
 
     let ws: WebSocket | null = null;
     let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
@@ -20,16 +28,18 @@ const Kurento = () => {
 
     useEffect(() => {
 
-        console.log("effect changes in Kurento")
+        console.log("effect changes in KurentoVideo")
 
         const kurentoConnect = () => {
-            console.log('Kurento Connect');
-            ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${sessionToken}`);
+            console.log('KurentoVideo Connect');
+            ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
         };
 
-        if (!videoState) {
-            setVideoState(true)
+        if (!videoStateWS) {
+            setVideoStateWS(true)
             kurentoConnect();
+        }else{
+            ws?.close();
         }
 
         const startProcess = () => {
@@ -64,7 +74,7 @@ const Kurento = () => {
             const message = {
                 id: 'start',
                 type: 'video',
-                cameraId: buildStreamName(camera?.cameraDeviceID),
+                cameraId: buildStreamName(userCamera.deviceID),
                 role: 'share',
                 sdpOffer: offerSdp,
                 bitrate: 200,
@@ -81,7 +91,7 @@ const Kurento = () => {
                 role: 'share',
                 id: 'onIceCandidate',
                 candidate: candidate,
-                cameraId: buildStreamName(camera?.cameraDeviceID),
+                cameraId: buildStreamName(userCamera.deviceID),
             };
 
             kurentoSend(message);
@@ -93,34 +103,34 @@ const Kurento = () => {
 
         const startResponse = (message) => {
             console.log('SDP answer received from server. Processing ...');
-            webRtcPeer.processAnswer(message.sdpAnswer);
+            webRtcPeer?.processAnswer(message.sdpAnswer);
         };
 
         const buildStreamName = (deviceId) => {
-            return `${UserInfo.internalUserID}${UserInfo.authToken}${deviceId}`;
+            return `${user?.meetingDetails.internalUserID}${user?.meetingDetails.authToken}${deviceId}`;
         };
 
         const kurentoSend = (data) => {
-            ws.send(JSON.stringify(data));
+            ws?.send(JSON.stringify(data));
             console.log('Sending this data via kurento websocket');
         };
 
 
         if (ws != null) {
             ws.onopen = () => {
-                console.log('Kurento Socket connection established');
+                console.log('KurentoVideo Socket connection established');
                 startProcess();
             };
 
             ws.onmessage = (message) => {
                 const parsedMessage = JSON.parse(message.data);
-                console.info('Kurento Received message: ' + message.data);
+                console.info('KurentoVideo Received message: ' + message.data);
 
-                console.log('Kurento Websocket');
+                console.log('KurentoVideo Websocket');
                 console.log(parsedMessage.id);
                 switch (parsedMessage.id) {
                     case 'playStart':
-                        websocketSend([`{\"msg\":\"method\",\"id\":\"100\",\"method\":\"userShareWebcam\",\"params\":[\"${buildStreamName(camera?.cameraDeviceID)}\"]}`]);
+                        websocketSend([`{\"msg\":\"method\",\"id\":\"100\",\"method\":\"userShareWebcam\",\"params\":[\"${buildStreamName(userCamera.deviceID)}\"]}`]);
                         break;
                     case 'startResponse':
                         startResponse(parsedMessage);
@@ -130,16 +140,17 @@ const Kurento = () => {
                         break;
                     case 'iceCandidate':
                         console.log('iceCandidate');
-                        webRtcPeer.addIceCandidate(parsedMessage.candidate);
+                        webRtcPeer?.addIceCandidate(parsedMessage.candidate);
                         break;
                     default:
-                        onError('Unrecognized message', parsedMessage);
+                        onError(`Unrecognized message ${parsedMessage}`);
                 }
             };
 
             ws.onclose = () => {
-                console.log('Kurento Socket connection closed');
+                console.log('KurentoVideo Socket connection closed');
                 setVideoState(false);
+                setVideoStateWS(false);
             };
         }
 
@@ -159,4 +170,4 @@ const Kurento = () => {
     </div>;
 };
 
-export default Kurento
+export default KurentoVideo
