@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import CameraComponent from "~/components/camera/CameraComponent";
 import MicOffIcon from "~/components/icon/outline/MicOffIcon";
@@ -8,8 +9,12 @@ import VideoOffIcon from "~/components/icon/outline/VideoOffIcon";
 import VideoOnIcon from "~/components/icon/outline/VideoOnIcon";
 import WifiOnIcon from "~/components/icon/outline/WifiOnIcon";
 import Settings from "~/components/settings/Settings";
+import { toast } from "~/components/ui/use-toast";
 import Guest from "~/layouts/Guest";
+import requestCameraAccess from "~/lib/camera/requestCameraAccess";
+import stopCameraStream from "~/lib/camera/stopCameraStream";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
+import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
 import { cn } from "~/lib/utils";
 import {
   authUserState,
@@ -20,14 +25,12 @@ import {
   microphoneStreamState,
   settingsModalState,
 } from "~/recoil/atom";
-import { useToast } from "./ui/use-toast";
-import requestCameraAccess from "~/lib/camera/requestCameraAccess";
-import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
-import stopCameraStream from "~/lib/camera/stopCameraStream";
-import axios from "axios";
-import * as ServerInfo from '../server/ServerInfo';
 
-export default function PreSignIn() {
+function JoinId() {
+  // get id from url
+  const router = useRouter();
+  const { id } = router.query;
+
   const [micState, setMicState] = useRecoilState(micOpenState);
   const [videoState, setVideoState] = useRecoilState(cameraOpenState);
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
@@ -35,7 +38,7 @@ export default function PreSignIn() {
   const [microphoneStream, setMicrophoneStream] = useRecoilState(
     microphoneStreamState,
   );
-
+  const passCode = false;
   const setUser = useSetRecoilState(authUserState);
   const setConnectedUsers = useSetRecoilState(connectedUsersState);
 
@@ -43,13 +46,8 @@ export default function PreSignIn() {
     fullName: "dev init",
     email: "dev",
     passCode: "",
-    meetingId: "konn3ct.com/join/konn3ct",
+    meetingId: id || "",
   });
-
-  // import { getMeetingIdFromLink } from "~/lib/utils";
-  // const meetingId = getMeetingIdFromLink(data.meetingId)
-  const passCode = true;
-
   const onChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -57,48 +55,6 @@ export default function PreSignIn() {
   ) => {
     setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-
-  const joinRoom=()=>{
-    axios.post(`${ServerInfo.joinURL}join-room`,{
-      "room": "tesss",
-      "name": data.fullName,
-      "email": data.email
-    })
-        .then(function (response) {
-          const responseData = response.data;
-
-          console.log(responseData)
-          console.log(response);
-          if (responseData?.success) {
-            localStorage.setItem("meetingDetails", JSON.stringify(responseData?.response));
-            // localStorage.setItem("sessiontoken", sessiontoken);
-            // navigate("/call");
-            // window.location.reload()
-
-            setUser({
-              meetingDetails: null, sessiontoken: "",
-              ...data,
-              id: Math.floor(Math.random() * 100)
-            })
-          } else {
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: responseData?.message,
-            });
-          }
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-        .finally(function () {
-          // always executed
-        })
-
-  }
-
-  const { toast } = useToast();
   return (
     <Guest>
       <Settings />
@@ -211,17 +167,16 @@ export default function PreSignIn() {
                   passCode ? "w-[60%] md:w-full" : "w-full",
                 )}
               >
-                <label htmlFor="Meeting ID" className="self-start truncate">
-                  Meeting Link or ID
+                <label htmlFor="Meeting ID" className="self-start">
+                  Meeting ID
                 </label>
-                <input
-                  type="meetingId"
-                  name="meetingId"
-                  placeholder="Meeting Link or ID"
-                  value={data.meetingId}
-                  onChange={onChange}
-                  className="w-full truncate rounded-md border border-a11y/20 bg-transparent px-2 py-2 placeholder:text-a11y/80  focus:shadow-none focus:outline-none"
-                />
+                {id ? (
+                  <div className=" w-full truncate rounded-md border border-a11y/20 bg-transparent p-2 text-left ">
+                    {id}
+                  </div>
+                ) : (
+                  <div className=" h-8 w-full animate-pulse rounded-md bg-a11y/40"></div>
+                )}
               </div>
               {passCode && (
                 <div className="md:full flex w-full flex-col gap-1">
@@ -265,14 +220,13 @@ export default function PreSignIn() {
             </div>
             <div className="flex w-full text-sm ">
               <button
-                disabled={!data.email || !data.fullName || !data.meetingId}
+                disabled={!data.email || !data.fullName}
                 onClick={() => {
                   const id = Math.floor(Math.random() * 100);
                   // login user
                   setUser({
-                    meetingDetails: null, sessiontoken: "",
                     ...data,
-                    id
+                    id,
                   });
 
                   // add user to connected list array
@@ -294,6 +248,9 @@ export default function PreSignIn() {
                       profilePicture: null,
                     },
                   ]);
+
+                  // redirect to room
+                  router.push("/");
                 }}
                 className=" rounded-lg bg-secondary/30 px-10 py-2 disabled:opacity-40"
               >
@@ -306,3 +263,5 @@ export default function PreSignIn() {
     </Guest>
   );
 }
+
+export default JoinId;

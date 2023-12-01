@@ -4,7 +4,8 @@ import Authenticated from "~/layouts/Authenticated";
 import {
     connectedUsersState,
     currentColorTheme,
-    screenSharingStreamState,
+    eCinemaModalState,
+  pollModalState,screenSharingStreamState,
     whiteBoardOpenState, authUserState, participantListState, participantTalkingListState, participantCameraListState,
 } from "~/recoil/atom";
 import Image from "next/image";
@@ -15,6 +16,8 @@ import { cn } from "~/lib/utils";
 // import "~/styles/tldraw.css";
 import dynamic from "next/dynamic";
 import ScreenSharingComponent from "./screenSharing/ScreenSharingComponent";
+import ArrowChevronDownIcon from "./icon/outline/ArrowChevronDownIcon";
+import ECinemaComponent from "./eCinema/ECinemaComponent";
 import Websocket from "~/server/Websocket";
 import KurentoAudio from "~/server/KurentoAudio";
 import axios from "axios";
@@ -31,7 +34,6 @@ const WhiteboardComponent = dynamic(
 );
 
 function PostSignIn() {
-  const [screenShareState, setScreenShareState] = useState(true);
   const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState,);
   const [connectedUsers, setConnectedUsers] = useRecoilState(connectedUsersState);
 
@@ -111,11 +113,29 @@ function PostSignIn() {
     }
 
 
-    return (
+    const [pollModal, setPollModal] = useRecoilState(pollModalState);
+  const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
+
+  return (
     <Authenticated>
       <div className="relative h-[calc(100vh-128px)] bg-primary/60 ">
+        {/* polls */}
+        {(pollModal.isActive || pollModal.isEnded) && pollModal.step === 0 && (
+          <button
+            onClick={() => {
+              setPollModal((prev) => ({
+                ...prev,
+                step: 2,
+              }));
+            }}
+            className="fixed bottom-20 left-5 z-10 flex items-center gap-2 rounded-md bg-primary px-4 py-3"
+          >
+            <span>View Polls</span>
+            <ArrowChevronDownIcon className="h-6 w-6" />
+          </button>
+        )}
         {/* temp button to stimulate ppl joining */}
-        {/*<div className={"fixed right-[50%] top-0 z-[999] flex gap-2 "}>*/}
+        {/* <div className={"fixed right-[50%] top-0 z-[999] flex gap-2 "}>*/}
         {/*  <button*/}
         {/*    className="  rounded-md bg-orange-400 p-1"*/}
         {/*    onClick={() => {*/}
@@ -141,7 +161,7 @@ function PostSignIn() {
         {/*  >*/}
         {/*    remove*/}
         {/*  </button>*/}
-        {/*</div>*/}
+        {/*</div> */}
 
         {/* show active people talking */}
 {/*        {connectedUsers.filter((user) => user.isMicOpen === true)?.length >
@@ -209,14 +229,50 @@ function PostSignIn() {
               ))}
           </div>
         )}
+        {(isWhiteboardOpen || screenSharingStream) &&
+          connectedUsers.filter((user) => user.isMicOpen === true)?.length >
+            0 && (
+            <div className="no-scrollbar absolute top-2 flex h-6 w-full justify-center gap-3 overflow-x-scroll text-xs antialiased">
+              {connectedUsers
+                .filter((user) => user.isMicOpen === true)
+                .map((user, index) => (
+                  <div
+                    key={index}
+                    className="flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border border-a11y/20 p-1"
+                  >
+                    {user.profilePicture ? (
+                      <Image
+                        src={user.profilePicture}
+                        width={20}
+                        height={20}
+                        className="rounded-full"
+                        alt="profile picture"
+                      />
+                    ) : (
+                      <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-a11y/20">
+                        {" "}
+                        {user.fullName.split(" ")[0]?.slice(0, 1)}
+                        {user.fullName.split(" ")[1]?.slice(0, 1)}
+                      </div>
+                    )}
+                    <span className="truncate">{user.fullName}</span>
+                    <MicOnIcon className="h-4 w-4 shrink-0" />
+                  </div>
+                ))}
+            </div>
+          )}
 
         {/* render camera feed if not whiteboard or screensharing */}
-        {!isWhiteboardOpen && !screenSharingStream && (
-          <div
-            className={cn(
-              " m-auto h-[calc(100vh-128px)] p-4 ",
-                participantTalkingList.filter((eachItem:any) => !eachItem.muted)?.length >
-                0 && "mt-6 h-[calc(100vh-150px)]",
+        {!isWhiteboardOpen &&
+          !screenSharingStream &&
+          !eCinemaModal.isActive && (
+            <div
+              className={cn(
+                " m-auto h-[calc(100vh-128px)] p-4 ",
+                (isWhiteboardOpen || screenSharingStream) &&
+                participantTalkingList.filter((eachItem:any) => !eachItem.muted)
+                    ?.length > 0 &&
+                  "mt-6 h-[calc(100vh-150px)]",
                 participantList.length === 1 &&
                 " flex items-center justify-center md:aspect-square  ",
                 participantList.length === 2 &&
@@ -228,10 +284,10 @@ function PostSignIn() {
                 participantList.length >= 7 && "grid gap-2 md:grid-cols-4",
                 participantList.length >= 13 && "grid gap-2 md:grid-cols-5",
                 participantList.length >= 16 && "grid gap-2 md:grid-cols-6",
-            )}
-          >
-            {participantList.map((participant:IParticipant, index:number) => (
-              <SingleCameraComponent index={index} key={index} participant={participant}/>
+              )}
+            >
+              {participantList.map((participant:IParticipant, index:number) => (
+                <SingleCameraComponent index={index} key={index} participant={participant}/>
             ))}
           </div>
         )}
@@ -241,6 +297,10 @@ function PostSignIn() {
 
         {/* render whiteboard if whiteboard is open */}
         {isWhiteboardOpen && <WhiteboardComponent />}
+
+        {(!isWhiteboardOpen || !screenSharingStream) &&
+          eCinemaModal.isActive && <ECinemaComponent />}
+
         {/* {screenSharingStream && screenShareState && <ScreenSharingComponent />} */}
         <Websocket/>
         <KurentoAudio/>

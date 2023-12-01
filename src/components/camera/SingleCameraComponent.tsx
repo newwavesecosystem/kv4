@@ -22,6 +22,7 @@ import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import PinIcon from "../icon/outline/PinIcon";
 import VideoConfOffIcon from "../icon/outline/VideoConfOffIcon";
 import HandOnIcon from "../icon/outline/HandOnIcon";
+import WifiOnIcon from "../icon/outline/WifiOnIcon";
 
 function SingleCameraComponent({
   participant,
@@ -52,10 +53,12 @@ function SingleCameraComponent({
     <div
         key={key}
       className={cn(
-        "bg-a11y/20 relative aspect-square h-full w-full overflow-hidden rounded-lg",
+        "relative aspect-square h-full w-full overflow-hidden rounded-lg bg-a11y/20",
         (participantList.length === 3 || participantList.length === 5) &&
           index === 0 &&
           "col-span-2 md:col-auto",
+        user.isMicOpen &&
+          "ring-2 ring-primary ring-offset-2 ring-offset-primary",
       )}
     >
       <div className=" absolute right-3 top-3 flex items-center gap-1">
@@ -64,7 +67,7 @@ function SingleCameraComponent({
             "p-1 ",
               participantTalkingList.filter((eachItem:any) => eachItem?.intId == participant.intId).map((eachItem:any) => (
                   eachItem?.joined && eachItem?.muted
-              ? "border-a11y/20 rounded-full border bg-primary/40"
+              ? "rounded-full border border-a11y/20 bg-primary/40"
               : "rounded-full bg-primary/80"
           )))}
         >
@@ -83,7 +86,7 @@ function SingleCameraComponent({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="text-a11y border-0 bg-primary"
+            className="border-0 bg-primary text-a11y"
           >
             <DropdownMenuItem className="py-2">
               <PinIcon className="mr-2 h-5 w-5" />
@@ -112,10 +115,16 @@ function SingleCameraComponent({
       >
         Your browser does not support video tag
       </video>
+      {userCamera.length > 0 && (
+        <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg  bg-primary/60 px-2 py-1 text-sm">
+          <span className=" max-w-[150px] truncate ">{user.fullName}</span>
+          <WifiOnIcon className="hidden h-6 w-6 md:block" />
+        </div>
+      )}
       {userCamera.length == 0 && (
         <div
           className={cn(
-            " bg-a11y/20 flex h-full w-full flex-col items-center justify-center ",
+            " flex h-full w-full flex-col items-center justify-center bg-a11y/20 ",
             connectedUsers.length === 2 && "w-screen md:w-full",
           )}
         >

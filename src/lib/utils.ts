@@ -47,3 +47,16 @@ export const getDynamicSecondaryColor = (primaryColorHex: string) => {
   const secondaryColor = RGBToHex(secondaryRGB);
   return secondaryColor;
 };
+
+// number formatting
+export const formatNumber = (number: number) => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+// check if link, split it at /join/ and return the last part
+export const getMeetingIdFromLink = (link: string) => {
+  if (link.includes("/join/")) {
+    return link.split("/join/")[1];
+  }
+  return link;
+};

@@ -61,17 +61,6 @@ function DeviceSettings() {
     availableSpeakersState,
   );
 
-  const [selectedCamera, setSelectedCamera] =
-    useRecoilState(selectedCameraState);
-
-  const [selectedMicrophone, setSelectedMicrophone] = useRecoilState(
-    selectedMicrophoneState,
-  );
-
-  const [selectedSpeaker, setSelectedSpeaker] = useRecoilState(
-    selectedSpeakersState,
-  );
-
   const screenSize = useScreenSize();
 
   const getDevices = async () => {
@@ -148,12 +137,23 @@ function DeviceSettings() {
                 <SelectValue placeholder="Pick a camera" />
               </div>
             </SelectTrigger>
-            <SelectContent className="bg-a11y/20 w-full text-white">
-              {availableCameras.map((camera, index) => (
-                <SelectItem className="" key={index} value={camera.deviceId}>
-                  {camera.label}
-                </SelectItem>
-              ))}
+            <SelectContent className="bg-primary w-full border border-a11y/40 text-white">
+              {availableCameras.length > 0 && availableCameras[0]?.deviceId ? (
+                <>
+                  {availableCameras.map((camera, index) => (
+                    <SelectItem className="" key={index} value={camera.deviceId}>
+                      {camera.label}
+                    </SelectItem>
+                  ))}
+
+                </>
+              ) : (
+
+                <div className="py-2 px-4">
+                  No Camera found.
+                </div>
+
+              )}
             </SelectContent>
           </Select>
         </div>
@@ -170,7 +170,7 @@ function DeviceSettings() {
             <SelectTrigger className="bg-a11y/20">
               {selectedVideoQuality?.name}
             </SelectTrigger>
-            <SelectContent className="bg-a11y/20 text-white">
+            <SelectContent className="bg-primary w-full border border-a11y/40 text-white">
               {VideoQuality.map((item, index) => (
                 <SelectItem className="" key={index} value={item.id.toString()}>
                   {item.name}
@@ -188,16 +188,29 @@ function DeviceSettings() {
                 <SelectValue placeholder="Pick a microphone" />
               </div>
             </SelectTrigger>
-            <SelectContent className="bg-a11y/20 w-full text-white">
-              {availableMicrophones.map((microphone, index) => (
-                <SelectItem
-                  className=""
-                  key={index}
-                  value={microphone.deviceId}
-                >
-                  {microphone.label}
-                </SelectItem>
-              ))}
+            <SelectContent className="bg-primary w-full border border-a11y/40 text-white">
+              {
+                availableMicrophones.length > 0 && availableMicrophones[0]?.deviceId ? (
+                  <>
+
+                    {availableMicrophones.map((microphone, index) => (
+                      <SelectItem
+                        className=""
+                        key={index}
+                        value={microphone.deviceId}
+                      >
+                        {microphone.label}
+                      </SelectItem>
+                    ))}
+                  </>
+                ) : (
+
+                  <div className="py-2 px-4">
+                    No Microphone found.
+                  </div>
+
+                )
+              }
             </SelectContent>
           </Select>
         </div>
@@ -208,15 +221,27 @@ function DeviceSettings() {
               <SelectTrigger className="bg-a11y/20">
                 <div className="flex items-center gap-4">
                   <VideoOnIcon className="h-6 w-6" />{" "}
-                  <SelectValue placeholder="Pick a microphone" />
+                  <SelectValue placeholder="Pick a Speaker" />
                 </div>
               </SelectTrigger>
-              <SelectContent className="bg-a11y/20 w-full text-white">
-                {availableSpeakers.map((speaker, index) => (
-                  <SelectItem className="" key={index} value={speaker.deviceId}>
-                    {speaker.label}
-                  </SelectItem>
-                ))}
+              <SelectContent className="bg-primary w-full border border-a11y/40 text-white">
+
+                {availableSpeakers.length > 0 && availableSpeakers[0]?.deviceId ? (
+                  <>
+                    {availableSpeakers.map((speaker, index) => (
+                      <SelectItem className="" key={index} value={speaker.deviceId}>
+                        {speaker.label}
+                      </SelectItem>
+                    ))}
+
+                  </>
+                ) : (
+
+                  <div className="py-2 px-4">
+                    No Speakers found.
+                  </div>
+
+                )}
               </SelectContent>
             </Select>
             <button

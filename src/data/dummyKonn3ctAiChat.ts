@@ -1,9 +1,10 @@
-const DummyChat = [
+const DummyKonn3ctAiChat = [
   {
     id: 1,
     name: "John Doe1",
     message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 2,
@@ -11,6 +12,7 @@ const DummyChat = [
     message:
       "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 3,
@@ -18,6 +20,7 @@ const DummyChat = [
     message:
       "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 4,
@@ -25,6 +28,7 @@ const DummyChat = [
     message:
       "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 5,
@@ -32,12 +36,14 @@ const DummyChat = [
     message:
       "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 6,
     name: "Sophia Davis",
     message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 7,
@@ -45,6 +51,7 @@ const DummyChat = [
     message:
       "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 8,
@@ -52,6 +59,7 @@ const DummyChat = [
     message:
       "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 9,
@@ -59,6 +67,7 @@ const DummyChat = [
     message:
       "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 10,
@@ -66,12 +75,14 @@ const DummyChat = [
     message:
       "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 11,
     name: "Liam Anderson",
     message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 12,
@@ -79,6 +90,7 @@ const DummyChat = [
     message:
       "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 13,
@@ -86,6 +98,7 @@ const DummyChat = [
     message:
       "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 14,
@@ -93,6 +106,7 @@ const DummyChat = [
     message:
       "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 15,
@@ -100,12 +114,14 @@ const DummyChat = [
     message:
       "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 16,
     name: "Grace Baker",
     message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 17,
@@ -113,6 +129,7 @@ const DummyChat = [
     message:
       "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 18,
@@ -120,6 +137,7 @@ const DummyChat = [
     message:
       "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 19,
@@ -127,6 +145,7 @@ const DummyChat = [
     message:
       "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 20,
@@ -134,6 +153,7 @@ const DummyChat = [
     message:
       "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 21,
@@ -141,6 +161,7 @@ const DummyChat = [
     message:
       "Can we discuss how the data is being provided to the clients on an 'as is' and 'where-is' basis.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 22,
@@ -148,6 +169,7 @@ const DummyChat = [
     message:
       "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
   {
     id: 23,
@@ -155,6 +177,7 @@ const DummyChat = [
     message:
       "f you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.",
     time: getRandomTime(),
+    from: getRandomHost(),
   },
 ];
 function getRandomTime() {
@@ -164,5 +187,14 @@ function getRandomTime() {
   currentDate.setHours(randomHours, randomMinutes, 0, 0); // Set random hours and minutes
   return currentDate;
 }
+function getRandomHost() {
+  // return random string either 'ai' or 'client'
+  const randomHost = Math.floor(Math.random() * 2) + 1; // Range: 1 to 2
+  if (randomHost === 1) {
+    return "ai";
+  } else {
+    return "client";
+  }
+}
 
-export default DummyChat;
+export default DummyKonn3ctAiChat;

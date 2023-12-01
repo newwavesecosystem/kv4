@@ -16,6 +16,8 @@ import Settings from "~/components/settings/Settings";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {
   authUserState,
+  ccModalState,
+  chatModalKonn3ctAiState,
   chatModalState,
   connectedUsersState,
   donationModalState,
@@ -23,6 +25,7 @@ import {
   cameraStreamState, connectionStatusState,
   micOpenState,
   microphoneStreamState, participantListState,
+  eCinemaModalState,
   participantsModalState,
   recordingModalState,
 } from "~/recoil/atom";
@@ -37,6 +40,14 @@ import RecordOnIcon from "~/components/icon/outline/RecordOnIcon";
 import MiddleSide from "~/components/footer/MiddleSide";
 import DonationModal from "~/components/donation/DonationModal";
 import {websocketMuteMic} from "~/server/Websocket";
+import ChatModalKonn3ctAi from "~/components/chat/ChatModalKonn3ctAi";
+import ChatModalPrivateMessage from "~/components/chat/ChatModalPrivateMessage";
+import PollModal from "~/components/poll/PollModal";
+import { toast } from "~/components/ui/use-toast";
+import ECinemaModal from "~/components/eCinema/ECinemaModal";
+import CCModal from "~/components/cc/CCModal";
+import RemoveUserModal from "~/components/participants/RemoveUserModal";
+import LeaveRoomCallModal from "~/components/endCall/LeaveRoomCallModal";
 
 function Authenticated({ children }: { children: React.ReactNode }) {
   const [recordingState, setRecordingState] =
@@ -50,6 +61,11 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
   const user = useRecoilValue(authUserState);
   const [donationState, setDonationState] = useRecoilState(donationModalState);
+  const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
+  const [ccModal, setCCModal] = useRecoilState(ccModalState);
+  const [konn3ctAiChatState, setKonn3ctAiChatState] = useRecoilState(
+    chatModalKonn3ctAiState,
+  );
 
   const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
   const participantList = useRecoilValue(participantListState);
@@ -64,10 +80,17 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       <ResolutionModal />
       <EndRecordingModal />
       <ParticipantsModal />
+      <RemoveUserModal />
       <ChatModal />
+      <ChatModalKonn3ctAi />
+      <ChatModalPrivateMessage />
       <EndCallModal />
+      <LeaveRoomCallModal />
       <Settings />
       <DonationModal />
+      <PollModal />
+      <ECinemaModal />
+      <CCModal />
       <div className="sticky top-0 z-50 flex h-16 w-full justify-between border-b border-a11y/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:py-4">
         {/* left side */}
         <div className=" flex items-center gap-2 md:gap-5">
@@ -86,7 +109,30 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             <span>{user?.meetingDetails?.confname}</span>
             <p>{new Date().toDateString()}</p>
           </div>
-          <button className="items-center rounded-full border border-a11y/20 p-2 md:hidden">
+          <button
+            onClick={() => {
+              // copy link to clipboard and show toast
+              const meetingId = user?.meetingId || "";
+
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(
+                  `https://konn3ct.com/join/${meetingId}`,
+                );
+                toast({
+                  title: "Copied",
+                  description: "Link copied to clipboard",
+                  duration: 5000,
+                });
+              } else {
+                toast({
+                  title: "Error",
+                  description: "Your browser does not support clipboard",
+                  duration: 5000,
+                });
+              }
+            }}
+            className="items-center rounded-full border border-a11y/20 p-2 md:hidden"
+          >
             <ShareIcon className="h-6 w-6" />
           </button>
           {recordingState.isActive && (
@@ -98,7 +144,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 }));
               }}
               className={cn(
-                "flex items-center gap-1 rounded-lg bg-a11y/20 p-2 text-xs text-a11y md:hidden",
+                "flex items-center gap-1 rounded-lg bg-[#DF2622] p-2 text-xs text-a11y md:hidden",
                 donationState.isActive &&
                   recordingState.isActive &&
                   " rounded-full p-1.5",
@@ -127,7 +173,10 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 // TODO check if user is mod then set step to 2 else 3
                 setDonationState((prev) => ({
                   ...prev,
-                  step: 1,
+                  // trigger admin view
+                  step: 2,
+                  // trigger user view
+                  // step: 3,
                 }));
               }}
               className="flex items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:hidden"
@@ -156,7 +205,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 description: 'You dont have the permission for this action. Kindly chat with the host or moderator',
               });
             }}}
-              className="hidden items-center gap-2 rounded-lg bg-a11y/20 px-3 py-2 md:flex"
+              className="hidden items-center gap-2 rounded-lg bg-[#DF2622] px-3 py-2 md:flex"
             >
               <RecordOnIcon className="h-6 w-6" />
               <span>End Recording</span>
@@ -184,7 +233,16 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             </button>
           )}
 
-          <button className="items-center rounded-full border border-a11y/20 p-2 md:hidden">
+          <button
+            onClick={() => {
+              setCCModal((prev) => ({
+                ...prev,
+                isActive: true,
+                step: 1,
+              }));
+            }}
+            className="items-center rounded-full border border-a11y/20 p-2 md:hidden"
+          >
             <CCIcon className="h-6 w-6" />
           </button>
           <button
@@ -202,15 +260,69 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       <div className="sticky bottom-0 z-50 flex h-16 w-full justify-center border-t border-a11y/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:justify-between">
         {/* left side */}
         <div className="hidden w-full items-center justify-start gap-5 md:flex">
-          <button className="items-center rounded-full border border-a11y/20 p-2">
+          <button
+            onClick={() => {
+              // copy link to clipboard and show toast
+              const meetingId = user?.meetingId || "";
+
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(
+                  `https://konn3ct.com/join/${meetingId}`,
+                );
+                toast({
+                  title: "Copied",
+                  description: "Link copied to clipboard",
+                  duration: 5000,
+                });
+              } else {
+                toast({
+                  title: "Error",
+                  description: "Your browser does not support clipboard",
+                  duration: 5000,
+                });
+              }
+            }}
+            className="items-center rounded-full border border-a11y/20 p-2"
+          >
             <ShareIcon className="h-6 w-6" />
           </button>
-          <button className="items-center rounded-full border border-a11y/20 p-2">
+          <button
+            onClick={() => {
+              setECinemaModal((prev) => ({
+                ...prev,
+                step: 1,
+              }));
+            }}
+            className="items-center rounded-full border border-a11y/20 p-2"
+          >
             <MovieColoredIcon className="h-6 w-6" />
           </button>
-          <button className="items-center rounded-full border border-a11y/20 p-2">
+          <button
+            onClick={() => {
+              setKonn3ctAiChatState(!konn3ctAiChatState);
+            }}
+            className="items-center rounded-full border border-a11y/20 p-2"
+          >
             <BotIcon className="h-6 w-6" />
           </button>
+          {donationState.isActive && (
+            <button
+              onClick={() => {
+                // TODO check if user is mod then set step to 2 else 3
+                setDonationState((prev) => ({
+                  ...prev,
+                  // trigger admin view
+                  step: 2,
+                  // trigger user view
+                  // step: 3,
+                }));
+              }}
+              className="hidden items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:flex"
+            >
+              <MoneyIcon className="h-6 w-6 pt-1" />
+              <span>Donation</span>
+            </button>
+          )}
         </div>
 
         {/* middle side */}
@@ -236,7 +348,16 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           >
             <HandOnIcon className="h-6 w-6" />
           </button>
-          <button className="items-center rounded-full border border-a11y/20 bg-transparent p-2">
+          <button
+            onClick={() => {
+              setCCModal((prev) => ({
+                ...prev,
+                isActive: true,
+                step: 1,
+              }));
+            }}
+            className="items-center rounded-full border border-a11y/20 bg-transparent p-2"
+          >
             <CCIcon className="h-6 w-6" />
           </button>
           <button

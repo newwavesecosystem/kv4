@@ -6,6 +6,8 @@ export const authUserState = atom<{
   id: number;
   fullName: string;
   email: string;
+  passCode: string;
+  meetingId: string;
   sessiontoken: string;
   meetingDetails: IMeetingDetails|null;
 } | null>({
@@ -58,6 +60,16 @@ export const endCallModalState = atom<boolean>({
   default: false,
 });
 
+export const leaveRoomCallModalState = atom<boolean>({
+  key: "leaveRoomCallModalState",
+  default: false,
+});
+
+export const postLeaveMeetingState = atom<boolean>({
+  key: "postLeaveMeetingState",
+  default: false,
+});
+
 export const cameraStreamState = atom<MediaStream | null>({
   key: "cameraStreamState",
   default: null,
@@ -99,6 +111,11 @@ export const chatModalState = atom<boolean>({
   default: false,
 });
 
+export const chatModalKonn3ctAiState = atom<boolean>({
+  key: "chatModalKonn3ctAiState",
+  default: false,
+});
+
 export const settingsModalMetaState = atom<{
   isFoward: boolean;
   sourceId: number;
@@ -134,23 +151,81 @@ export const recordingModalState = atom<{
   default: { step: 0, isActive: false, height: 0, width: 0, id: 0, name: "" },
 });
 
+export const eCinemaModalState = atom<{
+  isActive: boolean;
+  source: string;
+  step: number;
+}>({
+  key: "eCinemaModalState",
+  default: {
+    isActive: false,
+    source: "",
+    step: 0,
+  },
+});
+
+export const removeUserModalState = atom<{
+  isActive: boolean;
+  userId: number;
+  userFullName: string;
+  isBan: boolean;
+}>({
+  key: "removeUserModalState",
+  default: {
+    isActive: false,
+    userId: 0,
+    userFullName: "",
+    isBan: false,
+  },
+});
+
+export const privateChatModalState = atom<{
+  isActive: boolean;
+  id: number;
+  users: {
+    id: number;
+    fullName: string;
+    email: string;
+  }[];
+}>({
+  key: "privateChatModalState",
+  default: {
+    isActive: false,
+    id: 0,
+    users: [],
+  },
+});
+
+export const ccModalState = atom<{
+  isActive: boolean;
+  language: string;
+  step: number;
+}>({
+  key: "ccModalState",
+  default: {
+    isActive: false,
+    language: "en",
+    step: 0,
+  },
+});
+
 export const donationModalState = atom<{
   isActive: boolean;
   step: number;
   donationName: string;
   donationAmount: number;
-  donationAmountType: number;
-  donationCreator: string;
+  donationAmountType: string;
+  donationCreatorName: string;
   donationCreatorId: number;
-  donationCreatedAt: string;
+  donationCreatedAt: Date;
   enableFlashNotification: boolean;
   totalAmountDonatated: number;
   usersDonated: {
     id: number;
-    fullName?: string;
-    emaail?: string;
+    fullName: string | null;
+    email: string | null;
     donationDescription: string;
-    donationUniqueNumber?: number;
+    donationUniqueNumber: number | null;
     donationAmount: number;
   }[];
 }>({
@@ -160,13 +235,52 @@ export const donationModalState = atom<{
     isActive: false,
     donationName: "",
     donationAmount: 0,
-    donationAmountType: 2,
-    donationCreator: "",
+    donationAmountType: "2",
+    donationCreatorName: "",
     donationCreatorId: 0,
-    donationCreatedAt: "",
+    donationCreatedAt: new Date(),
     enableFlashNotification: false,
     totalAmountDonatated: 0,
     usersDonated: [],
+  },
+});
+
+export const pollModalState = atom<{
+  isActive: boolean;
+  isEnded: boolean;
+  isEdit: boolean;
+  step: number;
+  pollQuestion: string;
+  pollCreatorName: string;
+  pollCreatorId: number;
+  pollCreatedAt: Date;
+  pollOptions: {
+    id: number;
+    option: string;
+    votes: number;
+  }[];
+  totalVotes: number;
+  usersVoted: {
+    id: number;
+    fullName: string | null;
+    email: string | null;
+    votedOption: string;
+    votedOptionId: number;
+  }[];
+}>({
+  key: "pollModalState",
+  default: {
+    step: 0,
+    isActive: false,
+    isEnded: false,
+    isEdit: false,
+    pollQuestion: "",
+    pollCreatorName: "",
+    pollCreatorId: 0,
+    pollCreatedAt: new Date(),
+    pollOptions: [],
+    totalVotes: 0,
+    usersVoted: [],
   },
 });
 
