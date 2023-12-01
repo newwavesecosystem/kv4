@@ -185,12 +185,12 @@ const Websocket = () => {
                 if(collection == "voiceUsers"){
                     handleVoiceUsers(e.data)
                 }
-                //
-                // if(collection == "screenshare"){
-                //     handleRemoteScreenShare(e.data)
-                // }
-                //
-                //
+
+                if(collection == "screenshare"){
+                    handleRemoteScreenShare(e.data)
+                }
+
+
                 // if(collection == "presentation-upload-token"){
                 //     handlePresentationPreUpload(e.data)
                 // }
@@ -208,31 +208,7 @@ const Websocket = () => {
             };
         }
     })
-    // const groupChatContext = useContext(GroupChatContext)
-    // const {groupchat, togglePanel, closeGroupchat, addtypingUsers, removetypingUsers, sendnewMessage, timeoutUsers} = groupChatContext
-    //
-    // const participantContext = useContext(ParticipantContext)
-    // const {participant, toggleParticipant, modifyPresenterStateUser, randomlyselectedUser, addtoUserlist, removeUserlist,findUserfromUserId,addTalkingUser,removeTalkingUser,modifyTalkingUser,modifyJoinedUser,modifyMutedUser} = participantContext
-    //
-    // const recordingContext = useContext(RecordingContext)
-    // const {startRecording, stopRecording, recordingTiming} = recordingContext
-    //
-    // const settingsContext = useContext(SettingFunctionContext)
-    // const {receiveVideoLinkFromWebsocket,stopVideoLinkFromWebsocket, endCall, handleUploadTCP} = settingsContext
-    //
-    // const cameracontext = useContext(CameraContext)
-    // const {openRemoteCamera,closeRemoteCamera} = cameracontext
-    //
-    //
-    // const screenshareContext = useContext(ScreenshareContext)
-    // const {screenshare,toggleRemoteScreenshare} = screenshareContext
 
-
-    // const handleIncomingvideo = (eventData) => {
-    //     console.log('I got to handle incoming messages')
-    //     const obj = JSON.parse(eventData);
-    //     const {deviceId, message} = obj.fields;
-    // }
     // const handleIncomingmsg = (eventData) => {
     //     console.log('I got to handle incoming messages')
     //     const obj = JSON.parse(eventData);
@@ -300,26 +276,26 @@ const Websocket = () => {
         }
     }
 
-    // const handleRemoteScreenShare = (eventData) => {
-    //     console.log('I got to handle incoming  screenshare messages')
-    //     const obj = JSON.parse(eventData);
-    //     const {msg, id} = obj;
-    //
-    //     if(msg == "added"){
-    //         const {stream, name,callerName} = obj.fields;
-    //
-    //         // if(userId != UserInfo?.internalUserID){
-    //         //     openRemoteCamera(stream);
-    //         // }
-    //
-    //         toggleRemoteScreenshare();
-    //     }
-    //
-    //     if(msg == "removed"){
-    //         toggleRemoteScreenshare();
-    //     }
-    // }
-    //
+    const handleRemoteScreenShare = (eventData:any) => {
+        console.log('I got to handle incoming  screenshare messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id} = obj;
+
+        if(msg == "added"){
+            const {stream, name,callerName} = obj?.fields;
+
+            // if(userId != UserInfo?.internalUserID){
+            //     openRemoteCamera(stream);
+            // }
+
+            toggleRemoteScreenshare();
+        }
+
+        if(msg == "removed"){
+            toggleRemoteScreenshare();
+        }
+    }
+
     const handleVoiceUsers = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
@@ -604,6 +580,17 @@ const Websocket = () => {
         console.log("setParticipantCameraList: remove stream ",ur)
         setParticipantCameraList(ur);
     };
+
+
+    const toggleRemoteScreenshare= async () => {
+        console.log("remoteScreenshareStreamState: ",screenshare.remoteScreenshareStreamState);
+        if(screenshare.localScreenshareStreamState){
+            screenshareDispatch(closeRemotePanel());
+        }else{
+            screenshareDispatch(openRemotePanel());
+        }
+    };
+
 
     const findUserNamefromUserId = (userId:string) => {
         var ishola = participantList
