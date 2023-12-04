@@ -2,19 +2,22 @@ import {useContext, useEffect, useState} from 'react';
 import * as kurentoUtils from "kurento-utils";
 import {websocketSend} from "./Websocket"
 import * as ServerInfo from './ServerInfo';
-import {useRecoilValue} from "recoil";
-import {authUserState} from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {authUserState, screenSharingState, screenSharingStreamState} from "~/recoil/atom";
 
 const KurentoScreenShare = () => {
 
     const user = useRecoilValue(authUserState);
+    const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
+    const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState);
 
     const [wsStarted, setWsStarted] = useState(false);
 
-    let ws = null;
+    let ws: WebSocket | null = null;
+    let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
+
 
     useEffect(() => {
-        let webRtcPeer;
 
         console.log("effect changes in KurentoScreenShare")
 
@@ -24,7 +27,7 @@ const KurentoScreenShare = () => {
         };
 
         const KurentoScreenShareSend = (data:any) => {
-            ws.send(JSON.stringify(data));
+            ws?.send(JSON.stringify(data));
             console.log('Sending this data via KurentoScreenShare websocket');
         };
 
@@ -75,7 +78,7 @@ const KurentoScreenShare = () => {
             const options = {
                 localVideo: videoElement,
                 remoteVideo: null,
-                videoStream:screenshare?.localScreenshareStream,
+                videoStream:screenSharingStream,
                 onicecandidate: onIceCandidate,
                 mediaConstraints: constraints,
             };
@@ -88,10 +91,10 @@ const KurentoScreenShare = () => {
 
         const startResponse = (message:any) => {
             console.log('SDP answer received from server. Processing ...');
-            webRtcPeer.processAnswer(message?.sdpAnswer);
+            webRtcPeer?.processAnswer(message?.sdpAnswer);
         };
 
-        if (!wsStarted && screenshare?.localScreenshareStream != null) {
+        if (!wsStarted && screenShareState) {
             console.log("ws is starting");
             setWsStarted(true)
             KurentoScreenShareConnect();
@@ -141,7 +144,7 @@ const KurentoScreenShare = () => {
                         break;
                     case 'iceCandidate':
                         console.log('iceCandidate');
-                        webRtcPeer.addIceCandidate(parsedMessage.candidate);
+                        webRtcPeer?.addIceCandidate(parsedMessage.candidate);
                         break;
                     default:
                         onError(`Unrecognized message ${parsedMessage}`);
@@ -163,7 +166,7 @@ const KurentoScreenShare = () => {
         //         webRtcPeer.dispose();
         //     }
         // };
-    }, [screenshare?.localScreenshareStream]);
+    }, [screenShareState]);
 
     return <div>
         {/*{screenshare?.localScreenshareStreamState ? 'localScreenshareStreamState stream on' : 'localScreenshareStreamState stream false'}*/}

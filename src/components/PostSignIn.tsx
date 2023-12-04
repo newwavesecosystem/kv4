@@ -27,6 +27,7 @@ import MicOffIcon from "~/components/icon/outline/MicOffIcon";
 import {IParticipant, IParticipantCamera} from "~/types";
 import KurentoVideo from "~/server/KurentoVideo";
 import KurentoVideoViewer from "~/server/KurentoVideoViewer";
+import KurentoScreenShare from "~/server/KurentoScreenshare";
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
   () => import("~/components/whiteboard/WhiteboardComponent"),
@@ -308,6 +309,7 @@ function PostSignIn() {
           {participantCameraList.map((cItem:IParticipantCamera,index:number)=>{
               return <KurentoVideoViewer streamID={cItem.streamID}/>
           })}
+          <KurentoScreenShare/>
 
       </div>
     </Authenticated>

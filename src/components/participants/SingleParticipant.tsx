@@ -11,13 +11,12 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import EllipsisIcon from "../icon/outline/EllipsisIcon";
-import {authUserState, participantTalkingListState} from "~/recoil/atom";
-import { useRecoilValue } from "recoil";
 import InformationIcon from "../icon/outline/InformationIcon";
 import {
   authUserState,
   privateChatModalState,
   removeUserModalState,
+  participantTalkingListState
 } from "~/recoil/atom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import VolumeOnIcon from "../icon/outline/VolumeOnIcon";

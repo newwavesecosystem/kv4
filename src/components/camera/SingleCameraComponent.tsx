@@ -57,8 +57,9 @@ function SingleCameraComponent({
         (participantList.length === 3 || participantList.length === 5) &&
           index === 0 &&
           "col-span-2 md:col-auto",
-        user.isMicOpen &&
-          "ring-2 ring-primary ring-offset-2 ring-offset-primary",
+          participantTalkingList.filter((eachItem:any) => eachItem?.intId == participant.intId).map((eachItem:any) => (
+                  eachItem?.joined && !eachItem?.muted &&
+          "ring-2 ring-primary ring-offset-2 ring-offset-primary"))
       )}
     >
       <div className=" absolute right-3 top-3 flex items-center gap-1">
@@ -117,7 +118,7 @@ function SingleCameraComponent({
       </video>
       {userCamera.length > 0 && (
         <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg  bg-primary/60 px-2 py-1 text-sm">
-          <span className=" max-w-[150px] truncate ">{user.fullName}</span>
+          <span className=" max-w-[150px] truncate ">{participant?.name}</span>
           <WifiOnIcon className="hidden h-6 w-6 md:block" />
         </div>
       )}
@@ -125,7 +126,7 @@ function SingleCameraComponent({
         <div
           className={cn(
             " flex h-full w-full flex-col items-center justify-center bg-a11y/20 ",
-            connectedUsers.length === 2 && "w-screen md:w-full",
+              participantList.length === 2 && "w-screen md:w-full",
           )}
         >
           <div className="flex aspect-square h-32 items-center justify-center rounded-full bg-primary/80 text-3xl font-extrabold uppercase">

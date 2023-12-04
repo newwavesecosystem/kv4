@@ -288,12 +288,12 @@ const Websocket = () => {
             //     openRemoteCamera(stream);
             // }
 
-            toggleRemoteScreenshare();
+            // toggleRemoteScreenshare();
         }
 
-        if(msg == "removed"){
-            toggleRemoteScreenshare();
-        }
+        // if(msg == "removed"){
+        //     toggleRemoteScreenshare();
+        // }
     }
 
     const handleVoiceUsers = (eventData:any) => {
@@ -582,14 +582,14 @@ const Websocket = () => {
     };
 
 
-    const toggleRemoteScreenshare= async () => {
-        console.log("remoteScreenshareStreamState: ",screenshare.remoteScreenshareStreamState);
-        if(screenshare.localScreenshareStreamState){
-            screenshareDispatch(closeRemotePanel());
-        }else{
-            screenshareDispatch(openRemotePanel());
-        }
-    };
+    // const toggleRemoteScreenshare= async () => {
+    //     console.log("remoteScreenshareStreamState: ",screenshare.remoteScreenshareStreamState);
+    //     if(screenshare.localScreenshareStreamState){
+    //         screenshareDispatch(closeRemotePanel());
+    //     }else{
+    //         screenshareDispatch(openRemotePanel());
+    //     }
+    // };
 
 
     const findUserNamefromUserId = (userId:string) => {

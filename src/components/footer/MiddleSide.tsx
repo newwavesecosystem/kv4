@@ -12,7 +12,7 @@ import {
   endCallModalState,
   leaveRoomCallModalState,
   micOpenState,
-  microphoneStreamState, participantCameraListState,
+  participantCameraListState,
   microphoneStreamState,
   pollModalState,
   recordingModalState,
