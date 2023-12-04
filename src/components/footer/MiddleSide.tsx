@@ -19,7 +19,7 @@ import {
   screenSharingState,
   screenSharingStreamState,
   settingsModalState,
-  whiteBoardOpenState,
+  whiteBoardOpenState, participantListState, connectionStatusState,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -65,46 +65,39 @@ import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
 import {websocketMuteMic, websocketStopCamera} from "~/server/Websocket";
-import {IParticipantCamera} from "~/types";
+import {IParticipant, IParticipantCamera} from "~/types";
 import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
   const [cameraStream, setCameraSteam] = useRecoilState(cameraStreamState);
-  const [microphoneStream, setMicrophoneStream] = useRecoilState(
-    microphoneStreamState,
-  );
-  const [screenSharingStream, setScreenSharingStream] = useRecoilState(
-    screenSharingStreamState,
-  );
-  const [recordingState, setRecordingState] =
-    useRecoilState(recordingModalState);
+  const [microphoneStream, setMicrophoneStream] = useRecoilState(microphoneStreamState,);
+  const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState,);
+  const [recordingState, setRecordingState] = useRecoilState(recordingModalState);
   const [donationState, setDonationState] = useRecoilState(donationModalState);
   const [chatState, setChatState] = useRecoilState(chatModalState);
   const [endCallModal, setEndCallModal] = useRecoilState(endCallModalState);
-  const [isWhiteboardOpen, setIsWhiteboardOpen] =
-    useRecoilState(whiteBoardOpenState);
-  const [connectedUsers, setConnectedUsers] =
-    useRecoilState(connectedUsersState);
+  const [isWhiteboardOpen, setIsWhiteboardOpen] = useRecoilState(whiteBoardOpenState);
+  const [connectedUsers, setConnectedUsers] = useRecoilState(connectedUsersState);
   const { toast } = useToast();
+
   const user = useRecoilValue(authUserState);
+  const participantList = useRecoilValue(participantListState);
   const [micState, setMicState] = useRecoilState(micOpenState);
   const [videoState, setVideoState] = useRecoilState(cameraOpenState);
-  const [screenShareState, setScreenShareState] =
-    useRecoilState(screenSharingState);
+  const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
   const [participantCameraList, setParticipantCameraList] = useRecoilState(participantCameraListState);
 
   const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
-
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
-
   const [konn3ctAiChatState, setKonn3ctAiChatState] = useRecoilState(
     chatModalKonn3ctAiState,
   );
-
   const [leaveRoomCallModal, setRoomCallModal] = useRecoilState(
     leaveRoomCallModalState,
   );
+
+
   return (
     <div className=" flex w-full items-center justify-center gap-5">
       <div className="flex items-center gap-1 rounded-3xl border border-a11y/40 bg-[#DF2622] p-2 md:hidden">
@@ -277,7 +270,8 @@ function MiddleSide() {
           <VideoOffIcon className="h-6 w-6 " />
         )}
       </button>
-      <button
+
+      { participantList.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter && <button
         className={cn(
           "rounded-full p-2",
           screenShareState
@@ -335,7 +329,7 @@ function MiddleSide() {
         ) : (
           <ShareScreenOffIcon className="h-6 w-6 " />
         )}
-      </button>
+      </button>))}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

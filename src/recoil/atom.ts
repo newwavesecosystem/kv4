@@ -101,6 +101,11 @@ export const screenSharingState = atom<boolean>({
   default: false,
 });
 
+export const viewerScreenSharingState = atom<boolean>({
+  key: "viewerScreenSharingState",
+  default: false,
+});
+
 export const participantsModalState = atom<boolean>({
   key: "participantsModalState",
   default: false,

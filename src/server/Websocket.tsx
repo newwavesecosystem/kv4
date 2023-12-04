@@ -10,10 +10,10 @@ import {
     connectionStatusState, participantCameraListState,
     participantListState,
     participantTalkingListState,
-    recordingModalState
+    recordingModalState, screenSharingStreamState, viewerScreenSharingState
 } from "~/recoil/atom";
 import {useRecoilState, useRecoilValue} from "recoil";
-import {IParticipantCamera} from "~/types";
+import {IParticipant, IParticipantCamera} from "~/types";
 
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
@@ -100,6 +100,8 @@ const Websocket = () => {
     const [participantTalkingList, setParticipantTalkingList] = useRecoilState(participantTalkingListState);
     const [recordingState, setRecordingState] = useRecoilState(recordingModalState);
     const [participantCameraList, setParticipantCameraList] = useRecoilState(participantCameraListState);
+    const [viewerscreenShareState, setViewerScreenShareState] = useRecoilState(viewerScreenSharingState);
+    const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState);
 
     // const connectionContext = useContext(ConnectionStatusContext)
     // const {websocket_connection, webSocketChanged} = connectionContext
@@ -243,15 +245,15 @@ const Websocket = () => {
             addtoUserlist(urecord)
         }
 
-        // if (msg == 'changed') {
-        //     const {presenter} = fields;
-        //
-        //     if(presenter != null){
-        //         console.log("UserState: handling presenter change",obj);
-        //         modifyPresenterStateUser(id,presenter)
-        //     }
-        // }
-        //
+        if (msg == 'changed') {
+            const {presenter} = fields;
+
+            if(presenter != null){
+                console.log("UserState: handling presenter change",obj);
+                modifyPresenterStateUser(id,presenter)
+            }
+        }
+
         if (msg == 'removed') {
             removeUserlist(id)
         }
@@ -283,17 +285,13 @@ const Websocket = () => {
 
         if(msg == "added"){
             const {stream, name,callerName} = obj?.fields;
-
-            // if(userId != UserInfo?.internalUserID){
-            //     openRemoteCamera(stream);
-            // }
-
-            // toggleRemoteScreenshare();
+            setViewerScreenShareState(true);
         }
 
-        // if(msg == "removed"){
-        //     toggleRemoteScreenshare();
-        // }
+        if(msg == "removed"){
+            setViewerScreenShareState(true);
+            setScreenSharingStream(null);
+        }
     }
 
     const handleVoiceUsers = (eventData:any) => {
@@ -524,6 +522,27 @@ const Websocket = () => {
 
         setParticipantTalkingList(updatedArray)
     }
+
+
+    const modifyPresenterStateUser = (id:any, state:boolean) => {
+
+        const updatedArray = participantList?.map((item:IParticipant) => {
+            if (item.id === id) {
+                if (item.userId == user?.meetingDetails?.internalUserID) {
+                    console.log("UserState: You have been made Presenter");
+                }
+                return {...item, presenter: state};
+            }
+            return item;
+        });
+
+        console.log(updatedArray);
+
+        console.log("UserState: updatedArray", updatedArray);
+
+        setParticipantList(updatedArray)
+    }
+
 
     const removeTalkingUser = (user:any) => {
         var ishola = participantTalkingList;

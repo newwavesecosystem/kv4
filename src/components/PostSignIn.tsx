@@ -5,8 +5,14 @@ import {
     connectedUsersState,
     currentColorTheme,
     eCinemaModalState,
-  pollModalState,screenSharingStreamState,
-    whiteBoardOpenState, authUserState, participantListState, participantTalkingListState, participantCameraListState,
+    pollModalState,
+    screenSharingStreamState,
+    whiteBoardOpenState,
+    authUserState,
+    participantListState,
+    participantTalkingListState,
+    participantCameraListState,
+    viewerScreenSharingState, screenSharingState, connectionStatusState, cameraOpenState,
 } from "~/recoil/atom";
 import Image from "next/image";
 import MicOnIcon from "./icon/outline/MicOnIcon";
@@ -28,6 +34,7 @@ import {IParticipant, IParticipantCamera} from "~/types";
 import KurentoVideo from "~/server/KurentoVideo";
 import KurentoVideoViewer from "~/server/KurentoVideoViewer";
 import KurentoScreenShare from "~/server/KurentoScreenshare";
+import KurentoScreenShareViewer from "~/server/KurentoScreenshareViewer";
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
   () => import("~/components/whiteboard/WhiteboardComponent"),
@@ -39,10 +46,14 @@ function PostSignIn() {
   const [connectedUsers, setConnectedUsers] = useRecoilState(connectedUsersState);
 
   const [isWhiteboardOpen, setIsWhiteboardOpen] = useRecoilState(whiteBoardOpenState);
-  const setUser = useSetRecoilState(authUserState);
+    const [user, setUser] = useRecoilState(authUserState);
     const participantList = useRecoilValue(participantListState);
     const participantTalkingList = useRecoilValue(participantTalkingListState);
     const participantCameraList = useRecoilValue(participantCameraListState);
+    const viewerscreenShareState = useRecoilValue(viewerScreenSharingState);
+    const screenShareState = useRecoilValue(screenSharingState);
+    const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
+    const [videoState, setVideoState] = useRecoilState(cameraOpenState);
 
   const validateToken= (token: string | null)=>{
         axios.get(`${ServerInfo.tokenValidationURL}?sessionToken=${token}`)
@@ -55,6 +66,7 @@ function PostSignIn() {
                 if (responseData?.response?.returncode === 'SUCCESS') {
 
                     setUser({
+                        meetingId: "", passCode: "",
                         email: "", fullName: "", id: 0,
                         meetingDetails: responseData?.response,
                         sessiontoken: token ?? ' '
@@ -303,13 +315,15 @@ function PostSignIn() {
           eCinemaModal.isActive && <ECinemaComponent />}
 
         {/* {screenSharingStream && screenShareState && <ScreenSharingComponent />} */}
-        <Websocket/>
-        <KurentoAudio/>
-        <KurentoVideo/>
+          {user?.sessiontoken != '' && <Websocket/>}
+          {connectionStatus && <KurentoAudio/>}
+
+           <KurentoVideo/>
           {participantCameraList.map((cItem:IParticipantCamera,index:number)=>{
               return <KurentoVideoViewer streamID={cItem.streamID}/>
           })}
-          <KurentoScreenShare/>
+          {screenShareState && <KurentoScreenShare/>}
+          {viewerscreenShareState && <KurentoScreenShareViewer/>}
 
       </div>
     </Authenticated>

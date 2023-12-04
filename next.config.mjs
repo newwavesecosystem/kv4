@@ -25,6 +25,18 @@ const config = {
         port: '',
         pathname: '/storage/profile-photos/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'konn3ct.com',
+        port: '',
+        pathname: '/storage/profile-photos/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'konn3ct.com',
+        port: '',
+        pathname: '/assets/**',
+      },
     ],
   },
 };

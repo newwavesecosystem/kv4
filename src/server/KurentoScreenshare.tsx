@@ -83,8 +83,8 @@ const KurentoScreenShare = () => {
                 mediaConstraints: constraints,
             };
 
-            webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function (error) {
-                if (error) return onError(error);
+            webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(this: any, error) {
+                if (error) return this.onError(error);
                 this.generateOffer(onOffer);
             });
         };
