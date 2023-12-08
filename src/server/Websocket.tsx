@@ -250,11 +250,16 @@ const Websocket = () => {
         }
 
         if (msg == 'changed') {
-            const {presenter} = fields;
+            const {presenter, role} = fields;
 
             if(presenter != null){
                 console.log("UserState: handling presenter change",obj);
                 modifyPresenterStateUser(id,presenter)
+            }
+
+            if(role != null){
+                console.log("UserState: handling role change",obj);
+                modifyRoleStateUser(id,role)
             }
         }
 
@@ -547,6 +552,25 @@ const Websocket = () => {
         setParticipantList(updatedArray)
     }
 
+    const modifyRoleStateUser = (id:any, role:string) => {
+
+        const updatedArray = participantList?.map((item:IParticipant) => {
+            if (item.id === id) {
+                if (item.userId == user?.meetingDetails?.internalUserID) {
+                    console.log(`UserState: You have been made ${role}`);
+                }
+                return {...item, role: role};
+            }
+            return item;
+        });
+
+        console.log(updatedArray);
+
+        console.log("UserState: updatedArray", updatedArray);
+
+        setParticipantList(updatedArray)
+    }
+
 
     const removeTalkingUser = (user:any) => {
         var ishola = participantTalkingList;
@@ -724,8 +748,15 @@ export function websocketRecord() {
     websocketSend(["{\"msg\":\"method\",\"id\":\"273\",\"method\":\"toggleRecording\",\"params\":[]}"])
 }
 
-export function websocketParticipantsStatus() {
+export function websocketParticipantsChangeRole(internalUserID:any,type:number) {
+    console.log('I am websocketParticipantsChangeStatus')
 
+    let role='VIEWER';
+
+    if(type==1){
+        role='MODERATOR';
+    }
+    websocketSend([`{\"msg\":\"method\",\"id\":\"39\",\"method\":\"changeRole\",\"params\":[\"${internalUserID}\",\"${role}\"]}`])
 }
 
 export function websocketMuteParticipants(internalUserID:any) {
@@ -733,8 +764,8 @@ export function websocketMuteParticipants(internalUserID:any) {
     websocketSend([`{\"msg\":\"method\",\"id\":\"11\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
 }
 
-export function websocketMuteParticipantsePresenter() {
-    // websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"muteAllExceptPresenter\",\"params\":[\"${UserInfo.internalUserID}\"]}`])
+export function websocketMuteParticipantsePresenter(internalUserID:any) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"muteAllExceptPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
 
 export function websocketClear() {
@@ -744,9 +775,11 @@ export function websocketClear() {
 export function websocketMuteMic() {
     websocketSend(["{\"msg\":\"method\",\"id\":\"9\",\"method\":\"toggleVoice\",\"params\":[]}"])
 }
+
 export function websocketPresenter(internalUserID:string){
     websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"assignPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
+
 export function endMeeting(){
     websocketSend(["{\"msg\":\"method\",\"id\":\"27\",\"method\":\"endMeeting\",\"params\":[]}"])
 }

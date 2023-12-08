@@ -26,7 +26,7 @@ import PeopleRemove from "../icon/outline/PeopleRemove";
 import RepeatIcon from "../icon/outline/RepeatIcon";
 import MicOnIcon from "~/components/icon/outline/MicOnIcon";
 import userRolesData from "~/data/userRolesData";
-import {websocketMuteParticipants} from "~/server/Websocket";
+import {websocketMuteParticipants, websocketParticipantsChangeRole, websocketPresenter} from "~/server/Websocket";
 import {IParticipant} from "~/types";
 
 function SingleParticipant({
@@ -42,6 +42,24 @@ function SingleParticipant({
   const [removeParticipant, setRemoveParticipant] =
     useRecoilState(removeUserModalState);
   const [privateChat, setPrivateChat] = useRecoilState(privateChatModalState);
+
+  const displayActions=(item:any,index:number)=>{
+    return (<DropdownMenuItem onClick={()=>{
+      if(item.id==1){
+        websocketParticipantsChangeRole(participant.userId,1);
+      }
+
+      if(item.id==4){
+        websocketPresenter(participant.userId);
+      }
+
+      if(item.id==5){
+        websocketParticipantsChangeRole(participant.userId,2);
+      }
+    }} key={index} className="py-2">
+      {item.name}
+    </DropdownMenuItem>);
+  }
   return (
     <div className="flex justify-between border-b border-b-a11y/20 py-4 text-sm">
       <div className="flex items-center gap-3">
@@ -51,7 +69,12 @@ function SingleParticipant({
             {participant.name}
             {user?.meetingDetails?.internalUserID === participant.intId && " (You)"}
           </span>
-          {user?.meetingDetails?.role === "MODERATOR" && (<span className="text-xs">Moderator</span>) }
+
+          <div>
+            {participant.role === "MODERATOR" && (<span className="text-xs">Moderator</span>) }
+            {participant.presenter && (<span className="text-xs"> | Presenter</span>) }
+            {participant.mobile && (<span className="text-xs"> | Mobile</span>) }
+          </div>
           {/*<span className="text-xs">host</span>*/}
         </div>
       </div>
@@ -81,11 +104,23 @@ function SingleParticipant({
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent className="divide-y divide-a11y/20 border border-a11y/20 bg-primary text-a11y shadow-2xl">
-                    {userRolesData.map((item, index) => (
-                      <DropdownMenuItem key={index} className="py-2">
-                        {item.name}
-                      </DropdownMenuItem>
-                    ))}
+                    {userRolesData.map((item: any, index: number) => {
+
+                      if (participant.role !== "MODERATOR" && item.id === 1) {
+                        return displayActions(item, index);
+                      }
+
+                      if (participant.role !== "VIEWER" && item.id === 5) {
+                        return displayActions(item, index);
+                      }
+
+                      if (!participant.presenter && item.id === 4) {
+                        return displayActions(item, index);
+                      }
+
+                      // Make sure to handle the case where neither condition is met
+                      return null;
+                    })}
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>

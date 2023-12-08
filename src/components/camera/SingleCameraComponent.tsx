@@ -130,8 +130,8 @@ function SingleCameraComponent({
           )}
         >
           <div className="flex aspect-square h-32 items-center justify-center rounded-full bg-primary/80 text-3xl font-extrabold uppercase">
-            {participant?.name.split(" ")[0]?.slice(0, 1)}
-            {participant?.name.split(" ")[1]?.slice(0, 1)}
+            {participant?.name?.split(" ")[0]?.slice(0, 1)}
+            {participant?.name?.split(" ")[1]?.slice(0, 1)}
           </div>
           <span className="capitalize">{participant?.name}</span>
         </div>
