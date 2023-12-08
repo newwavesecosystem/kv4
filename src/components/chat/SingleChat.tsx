@@ -13,13 +13,14 @@ import InformationIcon from "../icon/outline/InformationIcon";
 import DummyChat from "~/data/dummyChat";
 import { useRecoilValue } from "recoil";
 import { authUserState } from "~/recoil/atom";
+import {IChat} from "~/types";
 dayjs.extend(relativeTime);
 function SingleChat({
   key,
   chat,
 }: {
   key: number;
-  chat: (typeof DummyChat)[0];
+  chat: IChat;
 }) {
   const [open, setOpen] = useState(false);
   const user = useRecoilValue(authUserState);

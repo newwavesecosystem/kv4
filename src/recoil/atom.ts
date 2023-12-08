@@ -181,14 +181,14 @@ export const eCinemaModalState = atom<{
 
 export const removeUserModalState = atom<{
   isActive: boolean;
-  userId: number;
+  userId: string;
   userFullName: string;
   isBan: boolean;
 }>({
   key: "removeUserModalState",
   default: {
     isActive: false,
-    userId: 0,
+    userId: '0',
     userFullName: "",
     isBan: false,
   },

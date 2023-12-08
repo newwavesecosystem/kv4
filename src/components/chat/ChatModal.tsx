@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {ChangeEventHandler, useState} from "react";
 import { Sheet, SheetContent } from "../ui/sheet";
 import useScreenSize from "~/lib/useScreenSize";
 import {useRecoilState, useRecoilValue} from "recoil";
@@ -24,6 +24,7 @@ import {
 import TickIcon from "../icon/outline/TickIcon";
 import { cn } from "~/lib/utils";
 import {websocketSendMessage, websocketStartTyping} from "~/server/Websocket";
+import {IChat} from "~/types";
 
 const DummyMenu = [
   {
@@ -62,7 +63,7 @@ function ChatModal() {
 
   }
 
-  const handleKeyDown =(e)=>{
+  const handleKeyDown =(e:any)=>{
     if(e.key !== 'Enter') return
     const value = e.target.value
     console.log('Well');
@@ -70,7 +71,7 @@ function ChatModal() {
     sendMsg();
   }
 
-  const handleTyping =(e)=>{
+  const handleTyping =(e:any)=>{
     websocketStartTyping();
     setValue(e.target.value)
   }
@@ -120,18 +121,18 @@ function ChatModal() {
                       <TickIcon className={cn("mr-2 h-4 w-4")} />
                       Everyone
                     </CommandItem>
-                    {DummyChat.map((user, index) => (
+                    {chatList.map((chat:IChat, index:number) => (
                       <CommandItem
                         className="text-a11y"
                         key={index}
-                        value={user.name}
+                        value={chat.name}
                         onSelect={(currentValue) => {
                           setValue(currentValue === value ? "" : currentValue);
                           setOpen(false);
                         }}
                       >
                         <TickIcon className={cn("mr-2 h-4 w-4")} />
-                        {user.name}
+                        {chat.name}
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -162,12 +163,12 @@ function ChatModal() {
             infoMessageStatus && "h-[calc(100vh-130px)]",
           )}
         >
-          {chatList.map((chat, index) => (
+          {chatList.map((chat:IChat, index:number) => (
             <SingleChat key={index} chat={chat} />
           ))}
         </div>
 
-        {chatTypingList.map((text) =>(
+        {chatTypingList.map((text:any) =>(
             <div>
               {text.name}, is typing
             </div>

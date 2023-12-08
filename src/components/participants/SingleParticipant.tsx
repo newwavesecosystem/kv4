@@ -26,13 +26,15 @@ import PeopleRemove from "../icon/outline/PeopleRemove";
 import RepeatIcon from "../icon/outline/RepeatIcon";
 import MicOnIcon from "~/components/icon/outline/MicOnIcon";
 import userRolesData from "~/data/userRolesData";
+import {websocketMuteParticipants} from "~/server/Websocket";
+import {IParticipant} from "~/types";
 
 function SingleParticipant({
   key,
   participant,
 }: {
   key: number;
-  participant: any;
+  participant: IParticipant;
 }) {
   const [open, setOpen] = useState(false);
   const user = useRecoilValue(authUserState);
@@ -53,7 +55,7 @@ function SingleParticipant({
           {/*<span className="text-xs">host</span>*/}
         </div>
       </div>
-      {participant.id != user?.id && (<div className=" flex items-center gap-2">
+      {participant.id != user?.id.toString() && <div className=" flex items-center gap-2">
 
         <button>
           {talkingList.map((eachItem:any) => (
@@ -88,30 +90,33 @@ function SingleParticipant({
                 </DropdownMenuPortal>
               </DropdownMenuSub>
 
-              <DropdownMenuItem className="py-4">
+              <DropdownMenuItem className="py-4" onClick={()=>{
+                websocketMuteParticipants(participant.userId);
+              }}>
                 <VolumeOnIcon volume={1} className="mr-2 h-5 w-5" />
                 Mute User
               </DropdownMenuItem>
+
               <DropdownMenuItem
-                onClick={() => {
-                  if (!user) return;
-                  setPrivateChat({
-                    ...privateChat,
-                    isActive: !privateChat.isActive,
-                    users: [
-                      {
-                        email: user.email,
-                        fullName: user.fullName,
-                        id: user.id,
-                      },
-                      {
-                        email: "",
-                        fullName: participant.name,
-                        id: participant.id,
-                      },
-                    ],
-                  });
-                }}
+                // onClick={() => {
+                //   if (!user) return;
+                //   setPrivateChat({
+                //     ...privateChat,
+                //     isActive: !privateChat.isActive,
+                //     users: [
+                //       {
+                //         email: user.email,
+                //         fullName: user.fullName,
+                //         id: user.id,
+                //       },
+                //       {
+                //         email: "",
+                //         fullName: participant.name,
+                //         id: participant.id,
+                //       },
+                //     ],
+                //   });
+                // }}
                 className="py-4"
               >
                 <ChatIcon className="mr-2 h-5 w-5" />
@@ -122,7 +127,7 @@ function SingleParticipant({
                   setRemoveParticipant({
                     ...removeParticipant,
                     isActive: !removeParticipant.isActive,
-                    userId: participant.id,
+                    userId: participant.intId,
                     userFullName: participant.name,
                   });
                 }}
@@ -133,8 +138,7 @@ function SingleParticipant({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
-      )}
+        </div>}
     </div>
   );
 }

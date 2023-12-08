@@ -224,7 +224,7 @@ const Websocket = () => {
         addMessage(senderName,message,timestamp,id);
     }
 
-    const handleTyping = (eventData) => {
+    const handleTyping = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id} = obj;
@@ -709,6 +709,11 @@ export function websocketStopTyping() {
     websocketSend(["{\"msg\":\"method\",\"id\":\"57\",\"method\":\"stopUserTyping\",\"params\":[]}"])
 }
 
+export function websocketRemoveUser(internalUserID:any,preventRejoin:boolean) {
+    console.log('I am websocketRemoveUser')
+    websocketSend([`{\"msg\":\"method\",\"id\":\"19\",\"method\":\"removeUser\",\"params\":[\"${internalUserID}\",${preventRejoin}]}`])
+}
+
 export function websocketStopCamera(streamID:string) {
     console.log('I am websocketStopCamera')
     websocketSend([`{\"msg\":\"method\",\"id\":\"41\",\"method\":\"userUnshareWebcam\",\"params\":[\"${streamID}\"]}`])
@@ -723,9 +728,9 @@ export function websocketParticipantsStatus() {
 
 }
 
-export function websocketMuteParticipants() {
+export function websocketMuteParticipants(internalUserID:any) {
     console.log('Muted all')
-    // websocketSend([`{\"msg\":\"method\",\"id\":\"11\",\"method\":\"muteAllUsers\",\"params\":[\"${UserInfo.internalUserID}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"11\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
 }
 
 export function websocketMuteParticipantsePresenter() {
