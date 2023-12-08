@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Sheet, SheetContent } from "../ui/sheet";
 import useScreenSize from "~/lib/useScreenSize";
-import { useRecoilState } from "recoil";
-import { chatModalState, participantsModalState } from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {authUserState, chatListState, chatModalState, chatTypingListState, participantsModalState} from "~/recoil/atom";
 import PeoplesIcon from "../icon/outline/PeoplesIcon";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import CloseIcon from "../icon/outline/CloseIcon";
@@ -23,6 +23,7 @@ import {
 } from "../ui/command";
 import TickIcon from "../icon/outline/TickIcon";
 import { cn } from "~/lib/utils";
+import {websocketSendMessage, websocketStartTyping} from "~/server/Websocket";
 
 const DummyMenu = [
   {
@@ -39,9 +40,41 @@ const DummyMenu = [
 
 function ChatModal() {
   const [chatState, setChatState] = useRecoilState(chatModalState);
+  const [chatList, setChatList] = useRecoilState(chatListState);
+  const [chatTypingList, setChatTypingList] = useRecoilState(chatTypingListState);
+  const user = useRecoilValue(authUserState);
   const [infoMessageStatus, setInfoMessageStatus] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+
+  const sendMsg=()=>{
+    let sender=user?.meetingDetails?.internalUserID;
+    let message=value;
+    let ishola = chatList;
+    console.log('sendingMsg')
+    console.log(ishola)
+
+    if(message!=""){
+      setValue("");
+      console.log('sendingMsg : ',message);
+      websocketSendMessage(sender,user?.meetingDetails?.confname,sender,message);
+    }
+
+  }
+
+  const handleKeyDown =(e)=>{
+    if(e.key !== 'Enter') return
+    const value = e.target.value
+    console.log('Well');
+    if(!value.trim()) return
+    sendMsg();
+  }
+
+  const handleTyping =(e)=>{
+    websocketStartTyping();
+    setValue(e.target.value)
+  }
+
 
   const screenSize = useScreenSize();
   return (
@@ -129,10 +162,16 @@ function ChatModal() {
             infoMessageStatus && "h-[calc(100vh-130px)]",
           )}
         >
-          {DummyChat.map((chat, index) => (
+          {chatList.map((chat, index) => (
             <SingleChat key={index} chat={chat} />
           ))}
         </div>
+
+        {chatTypingList.map((text) =>(
+            <div>
+              {text.name}, is typing
+            </div>
+        ))}
         <div className="sticky bottom-0 h-16 w-full border-t border-a11y/20 bg-primary/20 px-4 md:sticky">
           <div className=" flex w-full items-center rounded-xl bg-transparent py-4 ">
             <input
@@ -141,10 +180,13 @@ function ChatModal() {
               className="w-full bg-transparent pl-3 placeholder:text-a11y/80  focus:shadow-none focus:outline-none"
               id=""
               placeholder="Send a message to everyone"
+              value={value}
+              onChange={handleTyping}
+              onKeyDown={handleKeyDown}
             />
             <div className="flex items-center gap-4">
               <EmojiIcon className="h-6 w-6" />
-              <SendIcon className="h-6 w-6" />
+              <SendIcon onClick={sendMsg} className="h-6 w-6" />
             </div>
           </div>
         </div>

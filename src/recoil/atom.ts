@@ -39,6 +39,16 @@ export const participantCameraListState = atom<any>({
 });
 
 
+export const chatListState = atom<any>({
+  key: "chatListState",
+  default: [],
+});
+
+export const chatTypingListState = atom<any>({
+  key: "chatTypingListState",
+  default: [],
+});
+
 export const currentColorTheme = atom<{
   background: string;
   text: string;

@@ -6,7 +6,7 @@ import * as ServerInfo from './ServerInfo';
 import {generateRandomId} from "./ServerInfo";
 
 import {
-    authUserState,
+    authUserState, chatListState, chatTypingListState,
     connectionStatusState, participantCameraListState,
     participantListState,
     participantTalkingListState,
@@ -102,6 +102,8 @@ const Websocket = () => {
     const [participantCameraList, setParticipantCameraList] = useRecoilState(participantCameraListState);
     const [viewerscreenShareState, setViewerScreenShareState] = useRecoilState(viewerScreenSharingState);
     const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState);
+    const [chatList, setChatList] = useRecoilState(chatListState);
+    const [chatTypingList, setChatTypingList] = useRecoilState(chatTypingListState);
 
     // const connectionContext = useContext(ConnectionStatusContext)
     // const {websocket_connection, webSocketChanged} = connectionContext
@@ -160,12 +162,12 @@ const Websocket = () => {
                 console.log('Received message:', e.data);
                 const obj = JSON.parse(e.data);
                 const {collection} = obj;
-                // if (collection == "group-chat-msg") {
-                //     handleIncomingmsg(e.data)
-                // }
-                // if (collection == "users-typing") {
-                //     handleTyping(e.data)
-                // }
+                if (collection == "group-chat-msg") {
+                    handleIncomingmsg(e.data)
+                }
+                if (collection == "users-typing") {
+                    handleTyping(e.data)
+                }
                 if (collection == "users") {
                     handleUsers(e.data)
                 }
@@ -211,27 +213,29 @@ const Websocket = () => {
         }
     })
 
-    // const handleIncomingmsg = (eventData) => {
-    //     console.log('I got to handle incoming messages')
-    //     const obj = JSON.parse(eventData);
-    //     const {sender, message} = obj.fields;
-    //     console.log("Sender:", sender);
-    //     console.log("Message:", message);
-    //     // sendnewMessage(sender, message)
-    // }
-    //
-    // const handleTyping = (eventData) => {
-    //     console.log('I got to handle incoming messages')
-    //     const obj = JSON.parse(eventData);
-    //     const {msg, id} = obj;
-    //     if (msg == 'added') {
-    //         const {userId, id} = obj.fields;
-    //         addtypingUsers(userId)
-    //     } else {
-    //         removetypingUsers(id)
-    //     }
-    // }
-    //
+    const handleIncomingmsg = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {sender, senderName, timestamp, message, id} = obj.fields;
+        console.log("handleIncomingmsg:", obj.fields);
+        console.log("Sender:", sender);
+        console.log("Message:", message);
+        console.log("Message:", message);
+        addMessage(senderName,message,timestamp,id);
+    }
+
+    const handleTyping = (eventData) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id} = obj;
+        if (msg == 'added') {
+            const {userId, name} = obj.fields;
+            addtypingUsers(id,name)
+        } else {
+            removetypingUsers(id)
+        }
+    }
+
     const handleUsers = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
@@ -610,6 +614,53 @@ const Websocket = () => {
     //     }
     // };
 
+    const addMessage=(sender:string, message:string,timestamp:any,id:any)=>{
+        // Convert timestamp to Date object
+        const date = new Date(timestamp);
+
+        // Extract date components
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // Month is zero-based
+        const day = date.getDate();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+
+        // Create a formatted date string
+        const formattedDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day} ${hours}:${minutes}:${seconds}`;
+
+
+        let chat=  {
+            id: id,
+            name: sender,
+            message: message,
+            time: formattedDate,
+        }
+        setChatList([...chatList,chat])
+    }
+
+    const addtypingUsers=(id:any,name:string)=>{
+     let ishola = chatTypingList
+        let convertedUser={
+         id,name
+        };
+        console.log(ishola)
+        if (ishola.filter((item:any) => item.id == id).length < 1) {
+            setChatTypingList([...chatTypingList,convertedUser])
+        }
+
+
+    }
+    const removetypingUsers = (id:any) =>{
+        console.log('removing typing users' , id);
+
+        let ishola = chatTypingList;
+
+        let ur=ishola.filter((item:any) => item.id != id);
+        console.log("UserState: handleUsers ",ur)
+        setChatTypingList(ur);
+    }
+
 
     const findUserNamefromUserId = (userId:string) => {
         var ishola = participantList
@@ -643,6 +694,21 @@ const Websocket = () => {
 
 }
 
+export function websocketSendMessage(internalUserID:any,meetingTitle:any,sender:any,message:string) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"19\",\"method\":\"sendGroupChatMsg\",\"params\":[\"MAIN-PUBLIC-GROUP-CHAT\",{\"correlationId\":\"${internalUserID}-${Date.now()}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
+    websocketStopTyping();
+}
+
+export function websocketStartTyping() {
+    console.log('I am websocketStartTyping')
+    websocketSend(["{\"msg\":\"method\",\"id\":\"120\",\"method\":\"startUserTyping\",\"params\":[\"public\"]}"])
+}
+
+export function websocketStopTyping() {
+    console.log('I am websocketStopTyping')
+    websocketSend(["{\"msg\":\"method\",\"id\":\"57\",\"method\":\"stopUserTyping\",\"params\":[]}"])
+}
+
 export function websocketStopCamera(streamID:string) {
     console.log('I am websocketStopCamera')
     websocketSend([`{\"msg\":\"method\",\"id\":\"41\",\"method\":\"userUnshareWebcam\",\"params\":[\"${streamID}\"]}`])
@@ -673,11 +739,10 @@ export function websocketClear() {
 export function websocketMuteMic() {
     websocketSend(["{\"msg\":\"method\",\"id\":\"9\",\"method\":\"toggleVoice\",\"params\":[]}"])
 }
-export function websocketPresenter(){
-    // websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"assignPresenter\",\"params\":[\"${UserInfo.internalUserID}\"]}`])
+export function websocketPresenter(internalUserID:string){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"assignPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
 export function endMeeting(){
-
     websocketSend(["{\"msg\":\"method\",\"id\":\"27\",\"method\":\"endMeeting\",\"params\":[]}"])
 }
 export default Websocket
