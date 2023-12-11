@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 import settingsTabData from "~/data/settingsTabData";
-import {IConnectedUser, IMeetingDetails, IParticipant} from "~/types";
+import { IConnectedUser, IMeetingDetails, IParticipant } from "~/types";
 
 export const authUserState = atom<{
   id: number;
@@ -9,10 +9,15 @@ export const authUserState = atom<{
   passCode: string;
   meetingId: string;
   sessiontoken: string;
-  meetingDetails: IMeetingDetails|null;
+  meetingDetails: IMeetingDetails | null;
 } | null>({
   key: "authUserState",
   default: null,
+});
+
+export const newMessage = atom<boolean>({
+  key: "newMessage",
+  default: false,
 });
 
 export const connectionStatusState = atom<{
@@ -37,7 +42,6 @@ export const participantCameraListState = atom<any>({
   key: "participantCameraListState",
   default: [],
 });
-
 
 export const currentColorTheme = atom<{
   background: string;

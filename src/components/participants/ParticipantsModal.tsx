@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Sheet, SheetContent } from "../ui/sheet";
 import useScreenSize from "~/lib/useScreenSize";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {participantListState, participantsModalState} from "~/recoil/atom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { participantListState, participantsModalState } from "~/recoil/atom";
 import {
   Select,
   SelectContent,
@@ -21,8 +21,8 @@ import {
 import PeoplesIcon from "../icon/outline/PeoplesIcon";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import SearchIcon from "../icon/outline/SearchIcon";
-import DummyChat from "~/data/dummyChat";
 import SingleParticipant from "./SingleParticipant";
+import UsersData, { IUserParticipant } from "~/data/usersData";
 
 const DummyMenu = [
   {
@@ -36,20 +36,6 @@ const DummyMenu = [
     icon: <HandOnIcon className="h-5 w-5" />,
   },
 ];
-const DummyMenu2 = [
-  {
-    id: 3,
-    name: "Akanji Joseph (Host)",
-  },
-  {
-    id: 4,
-    name: "John Doe",
-  },
-  {
-    id: 5,
-    name: "Jane Doe",
-  },
-];
 
 function ParticipantsModal() {
   const [participantState, setParticipantState] = useRecoilState(
@@ -59,6 +45,26 @@ function ParticipantsModal() {
 
   const participantList = useRecoilValue(participantListState);
 
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filterTags, setFilterTags] = useState(
+    DummyMenu[0]?.name || "Everyone",
+  );
+
+  // const filteredParticipants = participantList.filter((item) =>
+  const filteredParticipants =
+    filterTags === "Everyone"
+      ? UsersData.filter((item) =>
+          item.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+      : UsersData.filter(
+          (item) =>
+            item.isHandRaised &&
+            item.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
   const screenSize = useScreenSize();
   return (
     <Sheet open={participantState} onOpenChange={setParticipantState}>
@@ -71,40 +77,20 @@ function ParticipantsModal() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="items-center rounded-lg border border-a11y/20 p-2 text-sm">
-                {selectedMenu?.name}
+                {filterTags}
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className=" mt-1 w-52  border-0 bg-primary text-a11y ">
-              <DropdownMenuGroup className="py-2 ">
+              <DropdownMenuGroup className=" divide-y divide-a11y/20">
                 {DummyMenu.map((menu, index) => (
                   <DropdownMenuItem
                     key={index}
-                    className="flex items-center gap-2 py-2"
-                    // onClick={() => {
-                    //   setRecordingState((prev) => ({
-                    //     ...prev,
-                    //     step: 1,
-                    //   }));
-                    // }}
+                    className="flex items-center gap-2 rounded-none py-4"
+                    onClick={() => {
+                      setFilterTags(menu.name)
+                    }}
                   >
                     {menu.icon}
-                    {menu.name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator className="bg-a11y/20" />
-              <DropdownMenuGroup className="py-2 ">
-                {DummyMenu2.map((menu, index) => (
-                  <DropdownMenuItem
-                    key={index}
-                    className="py-2"
-                    // onClick={() => {
-                    //   setRecordingState((prev) => ({
-                    //     ...prev,
-                    //     step: 1,
-                    //   }));
-                    // }}
-                  >
                     {menu.name}
                   </DropdownMenuItem>
                 ))}
@@ -116,16 +102,18 @@ function ParticipantsModal() {
           <SearchIcon className="h-6 w-6" />
           <input
             type="search"
-            name=""
-            id=""
+            value={searchTerm}
+            onChange={handleSearchChange}
             className="w-full rounded-md border-transparent bg-transparent pl-3 placeholder:text-a11y/60 focus:shadow-none focus:outline-none"
             placeholder="Find the person"
           />
         </div>
         <div className="no-scrollbar h-full overflow-y-scroll pb-20">
-          {participantList.map((participant:any, index:number) => (
-            <SingleParticipant key={index} participant={participant} />
-          ))}
+          {filteredParticipants.map(
+            (participant: IUserParticipant, index: number) => (
+              <SingleParticipant key={index} participant={participant} />
+            ),
+          )}
         </div>
       </SheetContent>
     </Sheet>

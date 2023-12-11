@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MovieColoredIcon from "~/components/icon/outline/MovieColoredIcon";
 import BotIcon from "~/components/icon/outline/BotIcon";
 import CCIcon from "~/components/icon/outline/CCIcon";
@@ -13,7 +13,7 @@ import { inter } from "~/lib/fonts";
 import { cn } from "~/lib/utils";
 import MoneyIcon from "~/components/icon/outline/MoneyIcon";
 import Settings from "~/components/settings/Settings";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   authUserState,
   ccModalState,
@@ -22,12 +22,15 @@ import {
   connectedUsersState,
   donationModalState,
   cameraOpenState,
-  cameraStreamState, connectionStatusState,
+  cameraStreamState,
+  connectionStatusState,
   micOpenState,
-  microphoneStreamState, participantListState,
+  microphoneStreamState,
+  participantListState,
   eCinemaModalState,
   participantsModalState,
   recordingModalState,
+  newMessage,
 } from "~/recoil/atom";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
 
@@ -39,7 +42,7 @@ import EndCallModal from "~/components/endCall/EndCallModal";
 import RecordOnIcon from "~/components/icon/outline/RecordOnIcon";
 import MiddleSide from "~/components/footer/MiddleSide";
 import DonationModal from "~/components/donation/DonationModal";
-import {websocketMuteMic} from "~/server/Websocket";
+import { websocketMuteMic } from "~/server/Websocket";
 import ChatModalKonn3ctAi from "~/components/chat/ChatModalKonn3ctAi";
 import ChatModalPrivateMessage from "~/components/chat/ChatModalPrivateMessage";
 import PollModal from "~/components/poll/PollModal";
@@ -48,6 +51,8 @@ import ECinemaModal from "~/components/eCinema/ECinemaModal";
 import CCModal from "~/components/cc/CCModal";
 import RemoveUserModal from "~/components/participants/RemoveUserModal";
 import LeaveRoomCallModal from "~/components/endCall/LeaveRoomCallModal";
+import { Howl } from 'howler';
+
 
 function Authenticated({ children }: { children: React.ReactNode }) {
   const [recordingState, setRecordingState] =
@@ -67,8 +72,24 @@ function Authenticated({ children }: { children: React.ReactNode }) {
     chatModalKonn3ctAiState,
   );
 
-  const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
+  const [connectionStatus, setConnection] = useRecoilState(
+    connectionStatusState,
+  );
   const participantList = useRecoilValue(participantListState);
+
+  const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
+
+  const sound = new Howl({
+    src: ['/message.mp3'],
+  });
+  
+  useEffect(() => {
+    if(isNewMessage) {
+      sound.play();
+    }
+  }, [isNewMessage])
+  
+
 
   return (
     <div
@@ -187,24 +208,24 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           )}
         </div>
         {/* right side */}
-         <div className="flex items-center gap-2 md:gap-5">
+        <div className="flex items-center gap-2 md:gap-5">
           {recordingState.isActive ? (
             <button
               onClick={() => {
-                if(user?.meetingDetails?.role == "MODERATOR") {
-
+                if (user?.meetingDetails?.role == "MODERATOR") {
                   setRecordingState((prev) => ({
                     ...prev,
                     step: 2,
                   }));
-
-              }else{
-              toast({
-                variant: "destructive",
-                title: "Uh oh! Something went wrong.",
-                description: 'You dont have the permission for this action. Kindly chat with the host or moderator',
-              });
-            }}}
+                } else {
+                  toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description:
+                      "You dont have the permission for this action. Kindly chat with the host or moderator",
+                  });
+                }
+              }}
               className="hidden items-center gap-2 rounded-lg bg-[#DF2622] px-3 py-2 md:flex"
             >
               <RecordOnIcon className="h-6 w-6" />
@@ -213,19 +234,20 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           ) : (
             <button
               onClick={() => {
-                if(user?.meetingDetails?.role == "MODERATOR") {
+                if (user?.meetingDetails?.role == "MODERATOR") {
                   setRecordingState((prev) => ({
                     ...prev,
                     step: 1,
                   }));
-
-              }else{
-              toast({
-                variant: "destructive",
-                title: "Uh oh! Something went wrong.",
-                description: 'You dont have the permission for this action. Kindly chat with the host or moderator',
-              });
-            }}}
+                } else {
+                  toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description:
+                      "You dont have the permission for this action. Kindly chat with the host or moderator",
+                  });
+                }
+              }}
               className="hidden items-center gap-2 rounded-lg border border-a11y/20 px-3 py-2 md:flex"
             >
               <RecordOnIcon className="h-6 w-6" />
@@ -363,10 +385,14 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           <button
             onClick={() => {
               setChatState(!chatState);
+              setIsNewMessage(false);
             }}
-            className="items-center rounded-full border border-a11y/20 bg-transparent p-2"
+            className="relative items-center rounded-full border border-a11y/20 bg-transparent p-2"
           >
             <ChatIcon className="h-6 w-6" />
+            {isNewMessage && (
+              <div className="absolute right-2 top-2 h-2 w-2 animate-pulse rounded-full bg-a11y"></div>
+            )}
           </button>
         </div>
       </div>

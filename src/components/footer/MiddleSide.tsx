@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   authUserState,
@@ -19,7 +19,10 @@ import {
   screenSharingState,
   screenSharingStreamState,
   settingsModalState,
-  whiteBoardOpenState, participantListState, connectionStatusState,
+  whiteBoardOpenState,
+  participantListState,
+  connectionStatusState,
+  newMessage,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -64,29 +67,39 @@ import ShareScreenOffIcon from "../icon/outline/ShareScreenOffIcon";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
-import {websocketMuteMic, websocketStopCamera} from "~/server/Websocket";
-import {IParticipant, IParticipantCamera} from "~/types";
+import { websocketMuteMic, websocketStopCamera } from "~/server/Websocket";
+import { IParticipant, IParticipantCamera } from "~/types";
 import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
   const [cameraStream, setCameraSteam] = useRecoilState(cameraStreamState);
-  const [microphoneStream, setMicrophoneStream] = useRecoilState(microphoneStreamState,);
-  const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState,);
-  const [recordingState, setRecordingState] = useRecoilState(recordingModalState);
+  const [microphoneStream, setMicrophoneStream] = useRecoilState(
+    microphoneStreamState,
+  );
+  const [screenSharingStream, setScreenSharingStream] = useRecoilState(
+    screenSharingStreamState,
+  );
+  const [recordingState, setRecordingState] =
+    useRecoilState(recordingModalState);
   const [donationState, setDonationState] = useRecoilState(donationModalState);
   const [chatState, setChatState] = useRecoilState(chatModalState);
   const [endCallModal, setEndCallModal] = useRecoilState(endCallModalState);
-  const [isWhiteboardOpen, setIsWhiteboardOpen] = useRecoilState(whiteBoardOpenState);
-  const [connectedUsers, setConnectedUsers] = useRecoilState(connectedUsersState);
+  const [isWhiteboardOpen, setIsWhiteboardOpen] =
+    useRecoilState(whiteBoardOpenState);
+  const [connectedUsers, setConnectedUsers] =
+    useRecoilState(connectedUsersState);
   const { toast } = useToast();
 
   const user = useRecoilValue(authUserState);
   const participantList = useRecoilValue(participantListState);
   const [micState, setMicState] = useRecoilState(micOpenState);
   const [videoState, setVideoState] = useRecoilState(cameraOpenState);
-  const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
-  const [participantCameraList, setParticipantCameraList] = useRecoilState(participantCameraListState);
+  const [screenShareState, setScreenShareState] =
+    useRecoilState(screenSharingState);
+  const [participantCameraList, setParticipantCameraList] = useRecoilState(
+    participantCameraListState,
+  );
 
   const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
@@ -97,6 +110,7 @@ function MiddleSide() {
     leaveRoomCallModalState,
   );
 
+  const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
 
   return (
     <div className=" flex w-full items-center justify-center gap-5">
@@ -190,42 +204,50 @@ function MiddleSide() {
             //   }),
             // );
             // setCameraSteam(null);
-            websocketStopCamera(`${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}${participantCameraList.filter((item:any) => item?.intId != user?.meetingDetails?.internalUserID)[0]?.deviceID}`);
+            websocketStopCamera(
+              `${user?.meetingDetails?.internalUserID}${user?.meetingDetails
+                ?.authToken}${participantCameraList.filter(
+                (item: any) =>
+                  item?.intId != user?.meetingDetails?.internalUserID,
+              )[0]?.deviceID}`,
+            );
             setVideoState(!videoState);
 
-            let ur=participantCameraList.filter((item:any) => item?.intId != user?.meetingDetails?.internalUserID);
-            console.log("setParticipantCameraList: remove stream ",ur)
+            let ur = participantCameraList.filter(
+              (item: any) =>
+                item?.intId != user?.meetingDetails?.internalUserID,
+            );
+            console.log("setParticipantCameraList: remove stream ", ur);
             setParticipantCameraList(ur);
 
             return;
           }
 
           navigator.mediaDevices
-              .getUserMedia({
-                video: true,
-                audio: false,
-              })
-              .then((cameraStream) => {
-                setVideoState(!videoState);
-                let newRecord:IParticipantCamera={
-                  intId:user?.meetingDetails?.internalUserID,
-                  streamID:'6776767',
-                  id:'55656',
-                  deviceID:'4444',
-                  stream:cameraStream
-                }
+            .getUserMedia({
+              video: true,
+              audio: false,
+            })
+            .then((cameraStream) => {
+              setVideoState(!videoState);
+              let newRecord: IParticipantCamera = {
+                intId: user?.meetingDetails?.internalUserID,
+                streamID: "6776767",
+                id: "55656",
+                deviceID: "4444",
+                stream: cameraStream,
+              };
 
-                setParticipantCameraList([...participantCameraList,newRecord])
-
-              })
-              .catch((error) => {
-                console.error('Error accessing camera:', error);
-                toast({
-                  variant: "destructive",
-                  title: "Uh oh! Something went wrong.",
-                  description: `Error accessing camera: ${error}`,
-                });
+              setParticipantCameraList([...participantCameraList, newRecord]);
+            })
+            .catch((error) => {
+              console.error("Error accessing camera:", error);
+              toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: `Error accessing camera: ${error}`,
               });
+            });
 
           // const video = await requestCameraAccess();
           // if (video) {
@@ -271,65 +293,75 @@ function MiddleSide() {
         )}
       </button>
 
-      { participantList.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter && <button
-        className={cn(
-          "rounded-full p-2",
-          screenShareState
-            ? "border border-a11y/20 bg-transparent"
-            : "bg-a11y/20",
+      {participantList
+        .filter(
+          (eachItem: IParticipant) =>
+            eachItem?.intId == user?.meetingDetails?.internalUserID,
+        )
+        .map(
+          (eachItem: IParticipant) =>
+            eachItem.presenter && (
+              <button
+                className={cn(
+                  "rounded-full p-2",
+                  screenShareState
+                    ? "border border-a11y/20 bg-transparent"
+                    : "bg-a11y/20",
+                )}
+                onClick={async () => {
+                  if (screenShareState && screenSharingStream) {
+                    stopScreenSharingStream(screenSharingStream);
+                    // update the connected users state for the user where the id is the same
+                    setConnectedUsers((prev) =>
+                      prev.map((prevUser) => {
+                        if (prevUser.id === user?.id) {
+                          return {
+                            ...prevUser,
+                            screenSharingFeed: null,
+                            isScreenSharing: false,
+                          };
+                        }
+                        return prevUser;
+                      }),
+                    );
+                    setScreenSharingStream(null);
+                    setScreenShareState(!screenShareState);
+                    return;
+                  }
+                  const screen = await requestScreenSharingAccess();
+                  if (screen) {
+                    setScreenSharingStream(screen);
+                    // update the connected users state for the user where the id is the same
+                    setConnectedUsers((prev) =>
+                      prev.map((prevUser) => {
+                        if (prevUser.id === user?.id) {
+                          return {
+                            ...prevUser,
+                            screenSharingFeed: screen,
+                            isScreenSharing: true,
+                          };
+                        }
+                        return prevUser;
+                      }),
+                    );
+                    setScreenShareState(!screenShareState);
+                  } else {
+                    toast({
+                      variant: "destructive",
+                      title: "Uh oh! Something went wrong.",
+                      description: "Kindly check your screen sharing settings.",
+                    });
+                  }
+                }}
+              >
+                {screenShareState ? (
+                  <ShareScreenOnIcon className="h-6 w-6 " />
+                ) : (
+                  <ShareScreenOffIcon className="h-6 w-6 " />
+                )}
+              </button>
+            ),
         )}
-        onClick={async () => {
-          if (screenShareState && screenSharingStream) {
-            stopScreenSharingStream(screenSharingStream);
-            // update the connected users state for the user where the id is the same
-            setConnectedUsers((prev) =>
-              prev.map((prevUser) => {
-                if (prevUser.id === user?.id) {
-                  return {
-                    ...prevUser,
-                    screenSharingFeed: null,
-                    isScreenSharing: false,
-                  };
-                }
-                return prevUser;
-              }),
-            );
-            setScreenSharingStream(null);
-            setScreenShareState(!screenShareState);
-            return;
-          }
-          const screen = await requestScreenSharingAccess();
-          if (screen) {
-            setScreenSharingStream(screen);
-            // update the connected users state for the user where the id is the same
-            setConnectedUsers((prev) =>
-              prev.map((prevUser) => {
-                if (prevUser.id === user?.id) {
-                  return {
-                    ...prevUser,
-                    screenSharingFeed: screen,
-                    isScreenSharing: true,
-                  };
-                }
-                return prevUser;
-              }),
-            );
-            setScreenShareState(!screenShareState);
-          } else {
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "Kindly check your screen sharing settings.",
-            });
-          }
-        }}
-      >
-        {screenShareState ? (
-          <ShareScreenOnIcon className="h-6 w-6 " />
-        ) : (
-          <ShareScreenOffIcon className="h-6 w-6 " />
-        )}
-      </button>))}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -372,11 +404,15 @@ function MiddleSide() {
             <DropdownMenuItem
               onClick={() => {
                 setChatState(!chatState);
+                setIsNewMessage(false)
               }}
-              className="py-2 md:hidden"
+              className="relative py-2 md:hidden"
             >
               <ChatIcon className="mr-2 h-5 w-5" />
               <span>Chat</span>
+              {isNewMessage && (
+                <div className="absolute left-5 top-2 h-2 w-2 animate-pulse rounded-full bg-a11y"></div>
+              )}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
