@@ -105,7 +105,7 @@ function PostSignIn() {
 
     useEffect(() => {
         console.log('setting up disabling back');
-        const disableBackButton = (event) => {
+        const disableBackButton = (event:any) => {
             console.log('trying to disable back');
             // Prevent navigating back using the browser's back button
             event.preventDefault();

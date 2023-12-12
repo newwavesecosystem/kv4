@@ -341,7 +341,7 @@ const Websocket = () => {
     }
 
 
-    const handleExternalVideo = (eventData) => {
+    const handleExternalVideo = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id, fields} = obj;
@@ -685,7 +685,7 @@ const Websocket = () => {
         setChatTypingList(ur);
     }
 
-    const receiveVideoLinkFromWebsocket =(link)=>{
+    const receiveVideoLinkFromWebsocket =(link:any)=>{
         console.log('receive Link', link)
         setECinemaModal({
             ...eCinemaModal,
@@ -695,7 +695,7 @@ const Websocket = () => {
     }
 
 
-    const stopVideoLinkFromWebsocket =(link)=>{
+    const stopVideoLinkFromWebsocket =(link:any)=>{
         console.log('receive Link', link)
         setECinemaModal({
             ...eCinemaModal,
