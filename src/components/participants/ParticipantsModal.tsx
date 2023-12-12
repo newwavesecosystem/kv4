@@ -23,6 +23,7 @@ import HandOnIcon from "../icon/outline/HandOnIcon";
 import SearchIcon from "../icon/outline/SearchIcon";
 import DummyChat from "~/data/dummyChat";
 import SingleParticipant from "./SingleParticipant";
+import {IParticipant} from "~/types";
 
 const DummyMenu = [
   {
@@ -123,7 +124,7 @@ function ParticipantsModal() {
           />
         </div>
         <div className="no-scrollbar h-full overflow-y-scroll pb-20">
-          {participantList.map((participant:any, index:number) => (
+          {participantList.map((participant:IParticipant, index:number) => (
             <SingleParticipant key={index} participant={participant} />
           ))}
         </div>

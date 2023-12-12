@@ -1,3 +1,5 @@
+import DateTimeFormat = Intl.DateTimeFormat;
+
 export interface IConnectedUser {
   id: number;
   fullName: string;
@@ -120,6 +122,13 @@ export interface IParticipantCamera {
     streamID: string;
     deviceID: string|null;
     stream:MediaStream | null
+}
+
+export interface IChat {
+    id: any,
+    name: string,
+    message:string,
+    time: Date,
 }
 
 export interface IChatMessage {
