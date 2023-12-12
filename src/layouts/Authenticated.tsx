@@ -48,6 +48,7 @@ import ECinemaModal from "~/components/eCinema/ECinemaModal";
 import CCModal from "~/components/cc/CCModal";
 import RemoveUserModal from "~/components/participants/RemoveUserModal";
 import LeaveRoomCallModal from "~/components/endCall/LeaveRoomCallModal";
+import {IParticipant} from "~/types";
 
 function Authenticated({ children }: { children: React.ReactNode }) {
   const [recordingState, setRecordingState] =
@@ -286,7 +287,8 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           >
             <ShareIcon className="h-6 w-6" />
           </button>
-          <button
+
+          {participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.presenter && (<button
             onClick={() => {
               setECinemaModal((prev) => ({
                 ...prev,
@@ -296,7 +298,8 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             className="items-center rounded-full border border-a11y/20 p-2"
           >
             <MovieColoredIcon className="h-6 w-6" />
-          </button>
+          </button>)}
+
           <button
             onClick={() => {
               setKonn3ctAiChatState(!konn3ctAiChatState);

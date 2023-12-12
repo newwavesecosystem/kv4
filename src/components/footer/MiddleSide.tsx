@@ -548,14 +548,14 @@ function MiddleSide() {
       <div className="hidden items-center gap-1 rounded-3xl border border-a11y/40 bg-[#DF2622] p-2 md:flex">
         <button
           onClick={() => {
-            setEndCallModal(true);
+            setRoomCallModal(true);
           }}
           className="px-1"
         >
           <PhoneEndIcon className="h-6 w-6" />
         </button>
         <Separator className=" bg-a11y/20 " orientation="vertical" />
-        <DropdownMenu>
+        {user?.meetingDetails?.role == "MODERATOR" && <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="px-1">
               <EllipsisIcon className="h-6 w-6" />
@@ -595,7 +595,7 @@ function MiddleSide() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>}
       </div>
     </div>
   );

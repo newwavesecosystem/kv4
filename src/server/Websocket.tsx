@@ -7,7 +7,7 @@ import {generateRandomId} from "./ServerInfo";
 
 import {
     authUserState, chatListState, chatTypingListState,
-    connectionStatusState, participantCameraListState,
+    connectionStatusState, eCinemaModalState, participantCameraListState,
     participantListState,
     participantTalkingListState,
     recordingModalState, screenSharingStreamState, viewerScreenSharingState
@@ -104,7 +104,7 @@ const Websocket = () => {
     const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState);
     const [chatList, setChatList] = useRecoilState(chatListState);
     const [chatTypingList, setChatTypingList] = useRecoilState(chatTypingListState);
-
+    const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
     // const connectionContext = useContext(ConnectionStatusContext)
     // const {websocket_connection, webSocketChanged} = connectionContext
 
@@ -178,9 +178,9 @@ const Websocket = () => {
                 // if(collection == "meetings"){
                 //     handleMeetings(e.data)
                 // }
-                // if(collection == "external-video-meetings"){
-                //     handleExternalVideo(e.data)
-                // }
+                if(collection == "external-video-meetings"){
+                    handleExternalVideo(e.data)
+                }
 
                 if(collection == "video-streams"){
                     handleRemoteVideo(e.data)
@@ -339,23 +339,23 @@ const Websocket = () => {
         }
 
     }
-    //
-    //
-    // const handleExternalVideo = (eventData) => {
-    //     console.log('I got to handle incoming messages')
-    //     const obj = JSON.parse(eventData);
-    //     const {msg, id, fields} = obj;
-    //     const {externalVideoUrl} = fields;
-    //
-    //     if(msg == "changed") {
-    //         if (externalVideoUrl != null) {
-    //             receiveVideoLinkFromWebsocket(externalVideoUrl)
-    //         } else {
-    //             stopVideoLinkFromWebsocket(null)
-    //         }
-    //     }
-    // }
-    //
+
+
+    const handleExternalVideo = (eventData) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id, fields} = obj;
+        const {externalVideoUrl} = fields;
+
+        if(msg == "changed") {
+            if (externalVideoUrl != null) {
+                receiveVideoLinkFromWebsocket(externalVideoUrl)
+            } else {
+                stopVideoLinkFromWebsocket(null)
+            }
+        }
+    }
+
     // const handleMeetings =(eventData)=>{
     //     console.log('Random User Handler')
     //     const obj = JSON.parse(eventData);
@@ -685,6 +685,26 @@ const Websocket = () => {
         setChatTypingList(ur);
     }
 
+    const receiveVideoLinkFromWebsocket =(link)=>{
+        console.log('receive Link', link)
+        setECinemaModal({
+            ...eCinemaModal,
+            source: link,
+            isActive:true
+        });
+    }
+
+
+    const stopVideoLinkFromWebsocket =(link)=>{
+        console.log('receive Link', link)
+        setECinemaModal({
+            ...eCinemaModal,
+            source: link,
+            isActive:false
+        });
+    }
+
+
 
     const findUserNamefromUserId = (userId:string) => {
         var ishola = participantList
@@ -780,7 +800,25 @@ export function websocketPresenter(internalUserID:string){
     websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"assignPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
 
-export function endMeeting(){
+export function websocketSendExternalVideo(link:string){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startWatchingExternalVideo\",\"params\":[\"${link}"]}`]);
+}
+
+export function websocketStopExternalVideo(){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"stopWatchingExternalVideo\",\"params\":[]}`]);
+}
+
+export function websocketLeaveMeeting(){
+    websocketSend(["{\"msg\":\"method\",\"id\":\"10\",\"method\":\"userLeftMeeting\",\"params\":[]}"])
+    websocketSend(["{\"msg\":\"method\",\"id\":\"11\",\"method\":\"setExitReason\",\"params\":[\"logout\"]}"])
+    websocketSend(["{\"msg\":\"unsub\",\"id\":\"mSxKqr4q4tGPLvXyN\"}"])
+    websocketSend(["{\"msg\":\"unsub\",\"id\":\"whbeWHhAFELhDD8Gn\"}"])
+}
+
+export function websocketEndMeeting(){
     websocketSend(["{\"msg\":\"method\",\"id\":\"27\",\"method\":\"endMeeting\",\"params\":[]}"])
+    websocketSend(["{\"msg\":\"method\",\"id\":\"15\",\"method\":\"setExitReason\",\"params\":[\"meetingEnded\"]}"])
+    websocketSend(["{\"msg\":\"unsub\",\"id\":\"8ADqKJeTX9KdLCY7u\"}"])
+    websocketSend(["{\"msg\":\"unsub\",\"id\":\"ZapBdy6HAuBvCRvqy\"}"])
 }
 export default Websocket

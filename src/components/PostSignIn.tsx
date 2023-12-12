@@ -12,7 +12,7 @@ import {
     participantListState,
     participantTalkingListState,
     participantCameraListState,
-    viewerScreenSharingState, screenSharingState, connectionStatusState, cameraOpenState,
+    viewerScreenSharingState, screenSharingState, connectionStatusState, cameraOpenState, postLeaveMeetingState,
 } from "~/recoil/atom";
 import Image from "next/image";
 import MicOnIcon from "./icon/outline/MicOnIcon";
@@ -54,6 +54,7 @@ function PostSignIn() {
     const screenShareState = useRecoilValue(screenSharingState);
     const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
     const [videoState, setVideoState] = useRecoilState(cameraOpenState);
+    const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(postLeaveMeetingState,);
 
   const validateToken= (token: string | null)=>{
         axios.get(`${ServerInfo.tokenValidationURL}?sessionToken=${token}`)
@@ -77,6 +78,7 @@ function PostSignIn() {
                         title: "Uh oh! Something went wrong.",
                         description: 'Invalid Session Token',
                     });
+                    setPostLeaveMeeting(true);
                 }
             })
             .catch(function (error) {
@@ -100,6 +102,28 @@ function PostSignIn() {
 
         validateToken(token);
     }, ['']);
+
+    useEffect(() => {
+        console.log('setting up disabling back');
+        const disableBackButton = (event) => {
+            console.log('trying to disable back');
+            // Prevent navigating back using the browser's back button
+            event.preventDefault();
+        };
+
+        // Listen for the 'popstate' event (back/forward button navigation)
+        window.addEventListener('popstate', disableBackButton);
+
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+
+        // Clean up the event listener when the component is unmounted
+        // return () => {
+        //     window.removeEventListener('popstate', disableBackButton);
+        // };
+    }, []); // Run the effect only once during component mount
+
 
     const findUserNamefromUserId = (userId:string) => {
         let ishola = participantList

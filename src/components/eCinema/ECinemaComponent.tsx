@@ -2,14 +2,20 @@ import React, { useState } from "react";
 import CloseIcon from "../icon/outline/CloseIcon";
 import { AlertDialog, AlertDialogContent } from "../ui/alert-dialog";
 import AlertTriangleIcon from "../icon/outline/AlertTriangleIcon";
-import { useRecoilState } from "recoil";
-import { eCinemaModalState } from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {authUserState, eCinemaModalState, participantListState} from "~/recoil/atom";
 import SpinnerIcon from "../icon/outline/SpinnerIcon";
+import ReactPlayer from "react-player";
+import {websocketStopExternalVideo} from "~/server/Websocket";
+import {IParticipant} from "~/types";
 
 function ECinemaComponent() {
   const [isOpen, setIsOpen] = useState(false);
   const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+    const user = useRecoilValue(authUserState);
+    const participantList = useRecoilValue(participantListState);
 
   return (
     <div className=" m-auto h-[calc(100vh-128px)] overflow-hidden rounded-lg p-4">
@@ -47,6 +53,7 @@ function ECinemaComponent() {
                     source: "",
                     step: 0,
                   });
+                    websocketStopExternalVideo();
                 }}
               >
                 End eCinema
@@ -55,22 +62,33 @@ function ECinemaComponent() {
           </div>
         </AlertDialogContent>
       </AlertDialog>
-      <video
-        autoPlay
-        playsInline
-        hidden={isLoading}
-        muted
-        className="h-full w-full flex-1 rounded-lg object-cover"
-        controls
-        controlsList="nodownload"
-        onCanPlay={() => {
-          setIsLoading(false);
-        }}
-      >
-        <source src={eCinemaModal.source} />
-        Your browser does not support the video tag.
-      </video>
-      <button
+
+        <ReactPlayer url={eCinemaModal.source}
+                     width="100%"
+                     height="100%"
+                     style={{marginTop: '3em'}}
+                     playing={true}
+                     controls={true}
+                     pip={true}
+        />
+
+      {/*<video*/}
+      {/*  autoPlay*/}
+      {/*  playsInline*/}
+      {/*  hidden={isLoading}*/}
+      {/*  muted*/}
+      {/*  className="h-full w-full flex-1 rounded-lg object-cover"*/}
+      {/*  controls*/}
+      {/*  controlsList="nodownload"*/}
+      {/*  onCanPlay={() => {*/}
+      {/*    setIsLoading(false);*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  <source src={eCinemaModal.source} />*/}
+      {/*  Your browser does not support the video tag.*/}
+      {/*</video>*/}
+        {participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.presenter &&
+        (<button
         onClick={() => {
           setIsOpen(true);
         }}
@@ -78,7 +96,8 @@ function ECinemaComponent() {
       >
         <CloseIcon className="h-5 w-5" />
         <span>Stop Broadcast</span>
-      </button>
+      </button>)}
+
     </div>
   );
 }
