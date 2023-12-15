@@ -175,9 +175,10 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 setDonationState((prev) => ({
                   ...prev,
                   // trigger admin view
-                  step: 2,
+                  // step: 2,
                   // trigger user view
                   // step: 3,
+                  step: participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.role =='MODERATOR' ? 2 : 3,
                 }));
               }}
               className="flex items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:hidden"
@@ -315,9 +316,10 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 setDonationState((prev) => ({
                   ...prev,
                   // trigger admin view
-                  step: 2,
+                  // step: 2,
                   // trigger user view
                   // step: 3,
+                  step: participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.role =='MODERATOR' ? 2 : 3,
                 }));
               }}
               className="hidden items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:flex"
