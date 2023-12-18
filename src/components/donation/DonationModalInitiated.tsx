@@ -5,6 +5,8 @@ import { authUserState, donationModalState } from "~/recoil/atom";
 import { Checkbox } from "../ui/checkbox";
 import { cn, formatNumber } from "~/lib/utils";
 import { useToast } from "../ui/use-toast";
+import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3'
+
 
 function DonationModalInitiated() {
   const [donationState, setDonationState] = useRecoilState(donationModalState);
@@ -24,6 +26,27 @@ function DonationModalInitiated() {
 
   const user = useRecoilValue(authUserState);
   const { toast } = useToast();
+
+  const config = {
+    public_key: 'FLWPUBK_TEST-f3450fbb82c4ba25f0554ae3e518df11-X',
+    tx_ref: 42342,
+    amount: donationState.donationAmount,
+    currency: 'NGN',
+    payment_options: 'card,mobilemoney,ussd',
+    customer: {
+      email: `${user?.meetingDetails?.externUserID}`,
+      phone_number:  `08166939205`,
+      name:`${user?.meetingDetails?.fullname}`,
+    },
+    customizations: {
+      title: `${donationState.donationName}`,
+      description: 'Payment for items in cart',
+      logo: 'https://konn3ct.com/assets/images/group99@2x.png',
+    },
+  };
+
+  const handleFlutterPayment = useFlutterwave(config);
+
 
   return (
     <Dialog
@@ -138,6 +161,15 @@ function DonationModalInitiated() {
                 // toast({
                 //   description: `${data.isAnonymous ? "Anonymous" : user?.fullName} donated ${data.donationAmount}`,
                 // })
+
+                handleFlutterPayment({
+                  callback: (response) => {
+                    console.log(response);
+                    closePaymentModal() // this will close the modal programmatically
+                  },
+                  onClose: () => {},
+                });
+
               }}
               className="rounded-md bg-a11y/20 px-6 py-2 text-sm disabled:opacity-40"
             >
