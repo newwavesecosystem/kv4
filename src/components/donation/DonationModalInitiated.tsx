@@ -27,10 +27,10 @@ function DonationModalInitiated() {
   const user = useRecoilValue(authUserState);
   const { toast } = useToast();
 
-  const config = {
+  const config : any = {
     public_key: 'FLWPUBK_TEST-f3450fbb82c4ba25f0554ae3e518df11-X',
-    tx_ref: 42342,
-    amount: donationState.donationAmount,
+    tx_ref: Date.now(),
+    amount: data.donationAmount,
     currency: 'NGN',
     payment_options: 'card,mobilemoney,ussd',
     customer: {
@@ -38,9 +38,10 @@ function DonationModalInitiated() {
       phone_number:  `08166939205`,
       name:`${user?.meetingDetails?.fullname}`,
     },
+    meta : { donation_id: donationState.donationCreatorId, uniqueNumber: data.uniqueNumber, description: data.description, isAnonymous: data.isAnonymous },
     customizations: {
       title: `${donationState.donationName}`,
-      description: 'Payment for items in cart',
+      description: 'Konn3ct Donation',
       logo: 'https://konn3ct.com/assets/images/group99@2x.png',
     },
   };

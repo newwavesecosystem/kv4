@@ -492,7 +492,7 @@ function MiddleSide() {
               <TextFormatIcon className="mr-2 h-5 w-5" />
               <span>Polls</span>
             </DropdownMenuItem>
-            <DropdownMenuItem
+            { !donationState.isActive &&  <DropdownMenuItem
               className="py-2"
               onClick={() => {
                 setDonationState((prev) => ({
@@ -503,7 +503,7 @@ function MiddleSide() {
             >
               <GiftIcon className="mr-2 h-5 w-5" />
               <span>Donation</span>
-            </DropdownMenuItem>
+            </DropdownMenuItem>}
             <DropdownMenuSeparator />
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="py-2">

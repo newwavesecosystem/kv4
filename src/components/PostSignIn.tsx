@@ -63,7 +63,7 @@ function PostSignIn() {
     const [donationState, setDonationState] = useRecoilState(donationModalState);
 
 
-    const checkDonation= (id)=>{
+    const checkDonation= (id:any)=>{
         axios.get(`${ServerInfo.laravelAppURL}/api/k4/donation/${id}`)
             .then(function (response) {
                 const responseData = response.data;
