@@ -1,12 +1,37 @@
 import React from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
-import { useRecoilState } from "recoil";
-import { donationModalState } from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {authUserState, donationModalState} from "~/recoil/atom";
 import dayjs from "dayjs";
 import { formatNumber } from "~/lib/utils";
+import axios from "axios";
+import * as ServerInfo from "~/server/ServerInfo";
 
 function DonationModalCreated() {
   const [donationState, setDonationState] = useRecoilState(donationModalState);
+  const user = useRecoilValue(authUserState);
+
+  const endDonation= ()=>{
+    axios.patch(`${ServerInfo.laravelAppURL}/api/k4/donation/${donationState.donationCreatorId}`, {
+      "status": 0
+    })
+        .then(function (response) {
+          const responseData = response.data;
+
+          console.log(responseData)
+          console.log(response);
+
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function () {
+          // always executed
+        })
+
+  }
+
 
   return (
     <Dialog
@@ -44,6 +69,8 @@ function DonationModalCreated() {
                   step: 0,
                   isActive: false,
                 }));
+
+                endDonation();
               }}
               className="rounded-md bg-a11y/20 px-5 py-2"
             >

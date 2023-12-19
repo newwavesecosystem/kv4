@@ -12,13 +12,14 @@ import {
   endCallModalState,
   leaveRoomCallModalState,
   micOpenState,
+  participantCameraListState,
   microphoneStreamState,
   pollModalState,
   recordingModalState,
   screenSharingState,
   screenSharingStreamState,
   settingsModalState,
-  whiteBoardOpenState,
+  whiteBoardOpenState, participantListState, connectionStatusState,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -63,43 +64,40 @@ import ShareScreenOffIcon from "../icon/outline/ShareScreenOffIcon";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
+import {websocketMuteMic, websocketStopCamera} from "~/server/Websocket";
+import {IParticipant, IParticipantCamera} from "~/types";
 import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
   const [cameraStream, setCameraSteam] = useRecoilState(cameraStreamState);
-  const [microphoneStream, setMicrophoneStream] = useRecoilState(
-    microphoneStreamState,
-  );
-  const [screenSharingStream, setScreenSharingStream] = useRecoilState(
-    screenSharingStreamState,
-  );
-  const [recordingState, setRecordingState] =
-    useRecoilState(recordingModalState);
+  const [microphoneStream, setMicrophoneStream] = useRecoilState(microphoneStreamState,);
+  const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState,);
+  const [recordingState, setRecordingState] = useRecoilState(recordingModalState);
   const [donationState, setDonationState] = useRecoilState(donationModalState);
   const [chatState, setChatState] = useRecoilState(chatModalState);
   const [endCallModal, setEndCallModal] = useRecoilState(endCallModalState);
-  const [isWhiteboardOpen, setIsWhiteboardOpen] =
-    useRecoilState(whiteBoardOpenState);
-  const [connectedUsers, setConnectedUsers] =
-    useRecoilState(connectedUsersState);
+  const [isWhiteboardOpen, setIsWhiteboardOpen] = useRecoilState(whiteBoardOpenState);
+  const [connectedUsers, setConnectedUsers] = useRecoilState(connectedUsersState);
   const { toast } = useToast();
+
   const user = useRecoilValue(authUserState);
+  const participantList = useRecoilValue(participantListState);
   const [micState, setMicState] = useRecoilState(micOpenState);
   const [videoState, setVideoState] = useRecoilState(cameraOpenState);
-  const [screenShareState, setScreenShareState] =
-    useRecoilState(screenSharingState);
+  const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
+  const [participantCameraList, setParticipantCameraList] = useRecoilState(participantCameraListState);
+
   const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
-
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
-
   const [konn3ctAiChatState, setKonn3ctAiChatState] = useRecoilState(
     chatModalKonn3ctAiState,
   );
-
   const [leaveRoomCallModal, setRoomCallModal] = useRecoilState(
     leaveRoomCallModalState,
   );
+
+
   return (
     <div className=" flex w-full items-center justify-center gap-5">
       <div className="flex items-center gap-1 rounded-3xl border border-a11y/40 bg-[#DF2622] p-2 md:hidden">
@@ -157,56 +155,14 @@ function MiddleSide() {
       <button
         className={cn(
           "rounded-full p-2",
-          micState ? "border border-a11y/20 bg-transparent" : "bg-a11y/20",
+          !micState ? "border border-a11y/20 bg-transparent" : "bg-a11y/20",
         )}
         onClick={async () => {
-          if (micState && microphoneStream) {
-            stopMicrophoneStream(microphoneStream);
-            // update the connected users state for the user where the id is the same
-            setConnectedUsers((prev) =>
-              prev.map((prevUser) => {
-                if (prevUser.id === user?.id) {
-                  return {
-                    ...prevUser,
-                    microphoneFeed: null,
-                    isMicOpen: false,
-                  };
-                }
-                return prevUser;
-              }),
-            );
-            setMicrophoneStream(null);
-            setMicState(!micState);
-            return;
-          }
-
-          const mic = await requestMicrophoneAccess();
-          if (mic) {
-            setMicrophoneStream(mic);
-            // update the connected users state for the user where the id is the same
-            setConnectedUsers((prev) =>
-              prev.map((prevUser) => {
-                if (prevUser.id === user?.id) {
-                  return {
-                    ...prevUser,
-                    microphoneFeed: mic,
-                    isMicOpen: true,
-                  };
-                }
-                return prevUser;
-              }),
-            );
-            setMicState(!micState);
-          } else {
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "Kindly check your microphone settings.",
-            });
-          }
+          setMicState(!micState);
+          websocketMuteMic();
         }}
       >
-        {micState ? (
+        {!micState ? (
           <MicOnIcon className="h-6 w-6 " />
         ) : (
           <MicOffIcon className="h-6 w-6 " />
@@ -218,49 +174,94 @@ function MiddleSide() {
           videoState ? "border border-a11y/20 bg-transparent" : "bg-a11y/20",
         )}
         onClick={async () => {
-          if (videoState && cameraStream) {
-            stopCameraStream(cameraStream);
+          if (videoState) {
+            // stopCameraStream(cameraStream);
             // update the connected users state for the user where the id is the same
-            setConnectedUsers((prev) =>
-              prev.map((prevUser) => {
-                if (prevUser.id === user?.id) {
-                  return {
-                    ...prevUser,
-                    cameraFeed: null,
-                    isCameraOpen: false,
-                  };
-                }
-                return prevUser;
-              }),
-            );
-            setCameraSteam(null);
+            // setConnectedUsers((prev) =>
+            //   prev.map((prevUser) => {
+            //     if (prevUser.id === user?.id) {
+            //       return {
+            //         ...prevUser,
+            //         cameraFeed: null,
+            //         isCameraOpen: false,
+            //       };
+            //     }
+            //     return prevUser;
+            //   }),
+            // );
+            // setCameraSteam(null);
+            websocketStopCamera(`${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}${participantCameraList.filter((item:any) => item?.intId != user?.meetingDetails?.internalUserID)[0]?.deviceID}`);
             setVideoState(!videoState);
+
+            let ur=participantCameraList.filter((item:any) => item?.intId != user?.meetingDetails?.internalUserID);
+            console.log("setParticipantCameraList: remove stream ",ur)
+            setParticipantCameraList(ur);
+
             return;
           }
-          const video = await requestCameraAccess();
-          if (video) {
-            setCameraSteam(video);
-            // update the connected users state for the user where the id is the same
-            setConnectedUsers((prev) =>
-              prev.map((prevUser) => {
-                if (prevUser.id === user?.id) {
-                  return {
-                    ...prevUser,
-                    cameraFeed: video,
-                    isCameraOpen: true,
-                  };
+
+          navigator.mediaDevices
+              .getUserMedia({
+                video: true,
+                audio: false,
+              })
+              .then((cameraStream) => {
+                setVideoState(!videoState);
+                let newRecord:IParticipantCamera={
+                  intId:user?.meetingDetails?.internalUserID,
+                  streamID:'6776767',
+                  id:'55656',
+                  deviceID:'4444',
+                  stream:cameraStream
                 }
-                return prevUser;
-              }),
-            );
-            setVideoState(!videoState);
-          } else {
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "Kindly check your camera settings.",
-            });
-          }
+
+                setParticipantCameraList([...participantCameraList,newRecord])
+
+              })
+              .catch((error) => {
+                console.error('Error accessing camera:', error);
+                toast({
+                  variant: "destructive",
+                  title: "Uh oh! Something went wrong.",
+                  description: `Error accessing camera: ${error}`,
+                });
+              });
+
+          // const video = await requestCameraAccess();
+          // if (video) {
+          //   console.log('Camera is on');
+          //   setCameraSteam(video);
+          //   // update the connected users state for the user where the id is the same
+          //   setConnectedUsers((prev) =>
+          //     prev.map((prevUser) => {
+          //       if (prevUser.id === user?.id) {
+          //         return {
+          //           ...prevUser,
+          //           cameraFeed: video,
+          //           isCameraOpen: true,
+          //         };
+          //       }
+          //       return prevUser;
+          //     }),
+          //   );
+          //   setVideoState(!videoState);
+          //   let newRecord:IParticipantCamera={
+          //     intId:user?.meetingDetails.internalUserID,
+          //     streamID:'6776767',
+          //     id:'55656',
+          //     deviceID:'4444',
+          //     stream:video
+          //   }
+          //
+          //   setParticipantCameraList([...participantCameraList,newRecord])
+          //
+          // } else {
+          //   toast({
+          //     variant: "destructive",
+          //     title: "Uh oh! Something went wrong.",
+          //     description: "Kindly check your camera settings.",
+          //   });
+          // }
         }}
       >
         {videoState ? (
@@ -269,7 +270,8 @@ function MiddleSide() {
           <VideoOffIcon className="h-6 w-6 " />
         )}
       </button>
-      <button
+
+      { participantList.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter && <button
         className={cn(
           "rounded-full p-2",
           screenShareState
@@ -327,7 +329,7 @@ function MiddleSide() {
         ) : (
           <ShareScreenOffIcon className="h-6 w-6 " />
         )}
-      </button>
+      </button>))}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -490,7 +492,7 @@ function MiddleSide() {
               <TextFormatIcon className="mr-2 h-5 w-5" />
               <span>Polls</span>
             </DropdownMenuItem>
-            <DropdownMenuItem
+            { !donationState.isActive &&  <DropdownMenuItem
               className="py-2"
               onClick={() => {
                 setDonationState((prev) => ({
@@ -501,7 +503,7 @@ function MiddleSide() {
             >
               <GiftIcon className="mr-2 h-5 w-5" />
               <span>Donation</span>
-            </DropdownMenuItem>
+            </DropdownMenuItem>}
             <DropdownMenuSeparator />
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="py-2">
@@ -546,14 +548,14 @@ function MiddleSide() {
       <div className="hidden items-center gap-1 rounded-3xl border border-a11y/40 bg-[#DF2622] p-2 md:flex">
         <button
           onClick={() => {
-            setEndCallModal(true);
+            setRoomCallModal(true);
           }}
           className="px-1"
         >
           <PhoneEndIcon className="h-6 w-6" />
         </button>
         <Separator className=" bg-a11y/20 " orientation="vertical" />
-        <DropdownMenu>
+        {user?.meetingDetails?.role == "MODERATOR" && <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="px-1">
               <EllipsisIcon className="h-6 w-6" />
@@ -593,7 +595,7 @@ function MiddleSide() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>}
       </div>
     </div>
   );

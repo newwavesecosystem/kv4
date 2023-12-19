@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 import settingsTabData from "~/data/settingsTabData";
-import { IConnectedUser } from "~/types";
+import {IConnectedUser, IMeetingDetails, IParticipant} from "~/types";
 
 export const authUserState = atom<{
   id: number;
@@ -8,9 +8,45 @@ export const authUserState = atom<{
   email: string;
   passCode: string;
   meetingId: string;
+  sessiontoken: string;
+  meetingDetails: IMeetingDetails|null;
 } | null>({
   key: "authUserState",
   default: null,
+});
+
+export const connectionStatusState = atom<{
+  websocket_connection: boolean;
+  audio_connection: boolean;
+} | null>({
+  key: "connectionStatusState",
+  default: null,
+});
+
+export const participantListState = atom<any>({
+  key: "participantListState",
+  default: [],
+});
+
+export const participantTalkingListState = atom<any>({
+  key: "participantTalkingListState",
+  default: [],
+});
+
+export const participantCameraListState = atom<any>({
+  key: "participantCameraListState",
+  default: [],
+});
+
+
+export const chatListState = atom<any>({
+  key: "chatListState",
+  default: [],
+});
+
+export const chatTypingListState = atom<any>({
+  key: "chatTypingListState",
+  default: [],
 });
 
 export const currentColorTheme = atom<{
@@ -72,6 +108,11 @@ export const cameraOpenState = atom<boolean>({
 });
 export const screenSharingState = atom<boolean>({
   key: "screenSharingState",
+  default: false,
+});
+
+export const viewerScreenSharingState = atom<boolean>({
+  key: "viewerScreenSharingState",
   default: false,
 });
 
@@ -140,14 +181,14 @@ export const eCinemaModalState = atom<{
 
 export const removeUserModalState = atom<{
   isActive: boolean;
-  userId: number;
+  userId: string;
   userFullName: string;
   isBan: boolean;
 }>({
   key: "removeUserModalState",
   default: {
     isActive: false,
-    userId: 0,
+    userId: '0',
     userFullName: "",
     isBan: false,
   },

@@ -24,6 +24,8 @@ import { useToast } from "./ui/use-toast";
 import requestCameraAccess from "~/lib/camera/requestCameraAccess";
 import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
 import stopCameraStream from "~/lib/camera/stopCameraStream";
+import axios from "axios";
+import * as ServerInfo from '../server/ServerInfo';
 
 export default function PreSignIn() {
   const [micState, setMicState] = useRecoilState(micOpenState);
@@ -55,6 +57,47 @@ export default function PreSignIn() {
   ) => {
     setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  const joinRoom=()=>{
+    axios.post(`${ServerInfo.joinURL}join-room`,{
+      "room": "tesss",
+      "name": data.fullName,
+      "email": data.email
+    })
+        .then(function (response) {
+          const responseData = response.data;
+
+          console.log(responseData)
+          console.log(response);
+          if (responseData?.success) {
+            localStorage.setItem("meetingDetails", JSON.stringify(responseData?.response));
+            // localStorage.setItem("sessiontoken", sessiontoken);
+            // navigate("/call");
+            // window.location.reload()
+
+            setUser({
+              meetingDetails: null, sessiontoken: "",
+              ...data,
+              id: Math.floor(Math.random() * 100)
+            })
+          } else {
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: responseData?.message,
+            });
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function () {
+          // always executed
+        })
+
+  }
+
   const { toast } = useToast();
   return (
     <Guest>
@@ -227,8 +270,9 @@ export default function PreSignIn() {
                   const id = Math.floor(Math.random() * 100);
                   // login user
                   setUser({
+                    meetingDetails: null, sessiontoken: "",
                     ...data,
-                    id,
+                    id
                   });
 
                   // add user to connected list array

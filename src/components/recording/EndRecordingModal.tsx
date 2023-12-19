@@ -8,6 +8,7 @@ import {
   AlertDialogContent,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import {websocketRecord} from "~/server/Websocket";
 
 function EndRecordingModal() {
   const [recordingState, setRecordingState] =
@@ -53,6 +54,7 @@ function EndRecordingModal() {
                   isActive: false,
                   step: 0,
                 }));
+                websocketRecord();
               }}
             >
               End Recording

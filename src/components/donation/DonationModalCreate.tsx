@@ -4,6 +4,9 @@ import { authUserState, donationModalState } from "~/recoil/atom";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Checkbox } from "../ui/checkbox";
+import {websocketSendMessage} from "~/server/Websocket";
+import axios from "axios";
+import * as ServerInfo from "~/server/ServerInfo";
 
 function DonationModalCreate() {
   const [donationState, setDonationState] = useRecoilState(donationModalState);
@@ -17,6 +20,33 @@ function DonationModalCreate() {
       [name]: value,
     }));
   };
+
+  const createDonation= ()=>{
+    axios.post(`${ServerInfo.laravelAppURL}/api/k4/donation`,{
+      "name": donationState.donationName,
+      "type": donationState.donationAmountType,
+      "amount": donationState.donationAmount,
+      "id": user?.meetingDetails?.externMeetingID
+    })
+        .then(function (response) {
+          const responseData = response.data;
+
+          console.log(responseData)
+          console.log(response);
+
+          if (responseData?.success) {
+            websocketSendMessage(user?.meetingDetails?.internalUserID,user?.meetingDetails?.confname,user?.meetingDetails?.internalUserID,`Donation created|${donationState.donationName}|${donationState.donationAmountType}|${donationState.donationAmount}|${responseData?.data}`);
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function () {
+          // always executed
+        })
+  }
+
 
   return (
     <Dialog
@@ -103,6 +133,9 @@ function DonationModalCreate() {
                   donationCreatorId: user?.id as number,
                   donationCreatorName: user?.fullName as string,
                 }));
+
+                createDonation();
+
               }}
               disabled={
                 !donationState.donationName ||

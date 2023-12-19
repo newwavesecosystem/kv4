@@ -3,6 +3,8 @@
  * for Docker builds.
  */
 await import("./src/env.mjs");
+await import('@babel/polyfill');
+
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -16,6 +18,28 @@ const config = {
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'dev.konn3ct.ng',
+        port: '',
+        pathname: '/storage/profile-photos/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'konn3ct.com',
+        port: '',
+        pathname: '/storage/profile-photos/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'konn3ct.com',
+        port: '',
+        pathname: '/assets/**',
+      },
+    ],
   },
 };
 

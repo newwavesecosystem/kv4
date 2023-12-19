@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Sheet, SheetContent } from "../ui/sheet";
 import useScreenSize from "~/lib/useScreenSize";
-import { useRecoilState } from "recoil";
-import { participantsModalState } from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {participantListState, participantsModalState} from "~/recoil/atom";
 import {
   Select,
   SelectContent,
@@ -23,6 +23,7 @@ import HandOnIcon from "../icon/outline/HandOnIcon";
 import SearchIcon from "../icon/outline/SearchIcon";
 import DummyChat from "~/data/dummyChat";
 import SingleParticipant from "./SingleParticipant";
+import {IParticipant} from "~/types";
 
 const DummyMenu = [
   {
@@ -56,6 +57,8 @@ function ParticipantsModal() {
     participantsModalState,
   );
   const [selectedMenu, setSelectedMenu] = useState(DummyMenu[0]);
+
+  const participantList = useRecoilValue(participantListState);
 
   const screenSize = useScreenSize();
   return (
@@ -121,7 +124,7 @@ function ParticipantsModal() {
           />
         </div>
         <div className="no-scrollbar h-full overflow-y-scroll pb-20">
-          {DummyChat.map((participant, index) => (
+          {participantList.map((participant:IParticipant, index:number) => (
             <SingleParticipant key={index} participant={participant} />
           ))}
         </div>

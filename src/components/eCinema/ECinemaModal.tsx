@@ -2,6 +2,7 @@ import React from "react";
 import { useRecoilState } from "recoil";
 import { eCinemaModalState } from "~/recoil/atom";
 import { Dialog, DialogContent } from "../ui/dialog";
+import {websocketSendExternalVideo} from "~/server/Websocket";
 
 function ECinemaModal() {
   const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
@@ -38,6 +39,8 @@ function ECinemaModal() {
                 isActive: true,
                 step: 0,
               });
+
+                websocketSendExternalVideo(eCinemaModal.source);
             }}
           >
             Broadcast

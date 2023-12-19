@@ -13,7 +13,10 @@ export default function Home() {
       {postLeaveMeeting ? (
         <PostLeave />
       ) : (
-        <>{user ? <PostSignIn /> : <PreSignIn />}</>
+        <>{
+          // user ? <PostSignIn /> : <PreSignIn />
+          <PostSignIn />
+        }</>
       )}
     </>
   );

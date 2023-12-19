@@ -13,7 +13,7 @@ import { inter } from "~/lib/fonts";
 import { cn } from "~/lib/utils";
 import MoneyIcon from "~/components/icon/outline/MoneyIcon";
 import Settings from "~/components/settings/Settings";
-import { useRecoilState, useRecoilValue } from "recoil";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {
   authUserState,
   ccModalState,
@@ -21,10 +21,16 @@ import {
   chatModalState,
   connectedUsersState,
   donationModalState,
+  cameraOpenState,
+  cameraStreamState, connectionStatusState,
+  micOpenState,
+  microphoneStreamState, participantListState,
   eCinemaModalState,
   participantsModalState,
   recordingModalState,
 } from "~/recoil/atom";
+import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
+
 import ResolutionModal from "~/components/recording/ResolutionModal";
 import EndRecordingModal from "~/components/recording/EndRecordingModal";
 import ParticipantsModal from "~/components/participants/ParticipantsModal";
@@ -33,6 +39,7 @@ import EndCallModal from "~/components/endCall/EndCallModal";
 import RecordOnIcon from "~/components/icon/outline/RecordOnIcon";
 import MiddleSide from "~/components/footer/MiddleSide";
 import DonationModal from "~/components/donation/DonationModal";
+import {websocketMuteMic} from "~/server/Websocket";
 import ChatModalKonn3ctAi from "~/components/chat/ChatModalKonn3ctAi";
 import ChatModalPrivateMessage from "~/components/chat/ChatModalPrivateMessage";
 import PollModal from "~/components/poll/PollModal";
@@ -41,6 +48,7 @@ import ECinemaModal from "~/components/eCinema/ECinemaModal";
 import CCModal from "~/components/cc/CCModal";
 import RemoveUserModal from "~/components/participants/RemoveUserModal";
 import LeaveRoomCallModal from "~/components/endCall/LeaveRoomCallModal";
+import {IParticipant} from "~/types";
 
 function Authenticated({ children }: { children: React.ReactNode }) {
   const [recordingState, setRecordingState] =
@@ -59,6 +67,9 @@ function Authenticated({ children }: { children: React.ReactNode }) {
   const [konn3ctAiChatState, setKonn3ctAiChatState] = useRecoilState(
     chatModalKonn3ctAiState,
   );
+
+  const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
+  const participantList = useRecoilValue(participantListState);
 
   return (
     <div
@@ -96,7 +107,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             orientation="vertical"
           />
           <div className="hidden flex-col md:flex">
-            <span>Lagos State Tech Summit 2023</span>
+            <span>{user?.meetingDetails?.confname}</span>
             <p>{new Date().toDateString()}</p>
           </div>
           <button
@@ -164,9 +175,10 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 setDonationState((prev) => ({
                   ...prev,
                   // trigger admin view
-                  step: 2,
+                  // step: 2,
                   // trigger user view
                   // step: 3,
+                  step: participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.role =='MODERATOR' ? 2 : 3,
                 }));
               }}
               className="flex items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:hidden"
@@ -177,15 +189,24 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           )}
         </div>
         {/* right side */}
-        <div className="flex items-center gap-2 md:gap-5">
+         <div className="flex items-center gap-2 md:gap-5">
           {recordingState.isActive ? (
             <button
               onClick={() => {
-                setRecordingState((prev) => ({
-                  ...prev,
-                  step: 2,
-                }));
-              }}
+                if(user?.meetingDetails?.role == "MODERATOR") {
+
+                  setRecordingState((prev) => ({
+                    ...prev,
+                    step: 2,
+                  }));
+
+              }else{
+              toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: 'You dont have the permission for this action. Kindly chat with the host or moderator',
+              });
+            }}}
               className="hidden items-center gap-2 rounded-lg bg-[#DF2622] px-3 py-2 md:flex"
             >
               <RecordOnIcon className="h-6 w-6" />
@@ -194,11 +215,19 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           ) : (
             <button
               onClick={() => {
-                setRecordingState((prev) => ({
-                  ...prev,
-                  step: 1,
-                }));
-              }}
+                if(user?.meetingDetails?.role == "MODERATOR") {
+                  setRecordingState((prev) => ({
+                    ...prev,
+                    step: 1,
+                  }));
+
+              }else{
+              toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: 'You dont have the permission for this action. Kindly chat with the host or moderator',
+              });
+            }}}
               className="hidden items-center gap-2 rounded-lg border border-a11y/20 px-3 py-2 md:flex"
             >
               <RecordOnIcon className="h-6 w-6" />
@@ -225,7 +254,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             className="flex items-center gap-2 rounded-lg border-a11y/20 bg-a11y/20 px-3 py-2 text-a11y md:border "
           >
             <PeoplesIcon className="h-5 w-5" />
-            <span>5</span>
+            <span>{participantList.length}</span>
           </button>
         </div>
       </div>
@@ -259,7 +288,8 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           >
             <ShareIcon className="h-6 w-6" />
           </button>
-          <button
+
+          {participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.presenter && (<button
             onClick={() => {
               setECinemaModal((prev) => ({
                 ...prev,
@@ -269,7 +299,8 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             className="items-center rounded-full border border-a11y/20 p-2"
           >
             <MovieColoredIcon className="h-6 w-6" />
-          </button>
+          </button>)}
+
           <button
             onClick={() => {
               setKonn3ctAiChatState(!konn3ctAiChatState);
@@ -285,9 +316,10 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 setDonationState((prev) => ({
                   ...prev,
                   // trigger admin view
-                  step: 2,
+                  // step: 2,
                   // trigger user view
                   // step: 3,
+                  step: participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.role =='MODERATOR' ? 2 : 3,
                 }));
               }}
               className="hidden items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:flex"

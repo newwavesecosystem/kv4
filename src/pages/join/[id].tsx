@@ -225,8 +225,12 @@ function JoinId() {
                   const id = Math.floor(Math.random() * 100);
                   // login user
                   setUser({
-                    ...data,
-                    id,
+                    meetingDetails: null,
+                    sessiontoken: "", id: id,
+                    fullName: data.fullName,
+                    email: data.email,
+                    passCode: data.passCode,
+                    meetingId: id.toString()
                   });
 
                   // add user to connected list array

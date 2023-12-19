@@ -3,6 +3,7 @@ import { Dialog, DialogContent } from "../ui/dialog";
 import { useRecoilState } from "recoil";
 import { removeUserModalState } from "~/recoil/atom";
 import { Checkbox } from "../ui/checkbox";
+import {websocketRemoveUser} from "~/server/Websocket";
 
 function RemoveUserModal() {
   const [removeParticipant, setRemoveParticipant] =
@@ -15,7 +16,7 @@ function RemoveUserModal() {
         setRemoveParticipant({
           ...removeParticipant,
           isActive: !removeParticipant.isActive,
-          userId: 0,
+          userId: '0',
           isBan: false,
         });
       }}
@@ -52,9 +53,11 @@ function RemoveUserModal() {
                 setRemoveParticipant({
                   ...removeParticipant,
                   isActive: !removeParticipant.isActive,
-                  userId: 0,
+                  userId: '0',
                   isBan: false,
                 });
+
+                websocketRemoveUser(removeParticipant.userId,removeParticipant.isBan);
               }}
             >
               Yes

@@ -16,23 +16,23 @@ function ScreenSharingComponent() {
 
   useEffect(() => {
     setIsLoading(false);
-    // if (videoRef.current) {
-    //   videoRef.current.srcObject = screenSharingStream;
-    // }
+    if (videoRef.current) {
+      videoRef.current.srcObject = screenSharingStream;
+    }
     // Clean up when the component unmounts
-    return () => {
-      const tracks = screenSharingStream?.getTracks();
-      tracks?.forEach((track) => track.stop());
-    };
+    // return () => {
+    //   const tracks = screenSharingStream?.getTracks();
+    //   tracks?.forEach((track) => track.stop());
+    // };
   }, []);
 
-  if (videoRef.current) {
-    // get the user from the connected users state and attach the stream to the video element
-    const user = connectedUsers.find((user) => user.isScreenSharing === true);
-    if (!user) return null;
-
-    videoRef.current.srcObject = user.screenSharingFeed;
-  }
+  // if (videoRef.current) {
+  //   // get the user from the connected users state and attach the stream to the video element
+  //   const user = connectedUsers.find((user) => user.isScreenSharing === true);
+  //   if (!user) return null;
+  //
+  //   videoRef.current.srcObject = user.screenSharingFeed;
+  // }
 
   return (
     <div
