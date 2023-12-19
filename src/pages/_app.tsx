@@ -6,6 +6,7 @@ import NextNProgress from "nextjs-progressbar";
 import "~/styles/globals.css";
 import { Toaster } from "~/components/ui/toaster";
 import Header from "~/components/header/Header";
+import 'regenerator-runtime/runtime';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (

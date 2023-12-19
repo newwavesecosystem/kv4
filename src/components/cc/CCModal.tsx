@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useRecoilState } from "recoil";
 import { ccModalState } from "~/recoil/atom";
 import CloseIcon from "../icon/outline/CloseIcon";
@@ -7,9 +7,66 @@ import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
 import SearchIcon from "../icon/outline/SearchIcon";
 import CCLanguageData from "~/data/ccLanguageData";
 import { cn } from "~/lib/utils";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import axios from "axios";
+import * as ServerInfo from "~/server/ServerInfo";
 
 function CCModal() {
   const [ccModal, setCCModal] = useRecoilState(ccModalState);
+
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+
+
+  const [transcriptTranslated, setTranscriptTranslated] = useState("");
+
+
+  // When a new transcript is received, add it to the lines array
+  useEffect(() => {
+    SpeechRecognition.startListening({ continuous: true });
+
+    if (transcript) {
+      if(ccModal.language != "en" ) {
+        console.log("working on translation")
+        translate().then();
+      }else {
+        setTranscriptTranslated(transcript);
+      }
+    }
+  }, [transcript]);
+
+
+  async function translate() {
+    console.log("Translate API")
+    let data = JSON.stringify({
+      "message": transcript,
+      "target": ccModal.language
+    });
+
+    const response = await axios({
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${ServerInfo.extRegisterURL}/translator/w_wuwuuww`,
+      headers: {
+        'apikey': 'AJSAel5d4cSwAqopPs19LEIqZ42kX1TEnnUJRpb6',
+        'Content-Type': 'application/json'
+      },
+      data: data
+    });
+
+    const responseData = response.data;
+
+    console.log("response", responseData);
+
+    setTranscriptTranslated(responseData?.data)
+
+    setTimeout(resetTranscript,30000)
+  }
+
 
   return (
     <>
@@ -17,8 +74,7 @@ function CCModal() {
         <div className="fixed bottom-20 z-10 mx-auto flex w-full justify-center px-4">
           <div className="flex h-20 w-full items-center rounded-md bg-primary md:max-w-xl ">
             <span className="truncate px-4">
-              Konn3ct
-              是一個企業解決方案，具有功能和管理模組，使其適合高度結構化的
+              {transcriptTranslated}
             </span>
             <div className="flex h-full flex-col items-center divide-y divide-a11y border-l-2 border-a11y/70">
               <button
@@ -91,7 +147,7 @@ function CCModal() {
                     onClick={() => {
                       setCCModal((prev) => ({
                         ...prev,
-                        language: language.name,
+                        language: language.shortCode,
                       }));
                     }}
                     key={index}
