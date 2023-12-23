@@ -146,3 +146,13 @@ export interface IParticipantsState {
   participants: IConnectedUser[];
 }
 
+export interface IColumnBreakOutRoom {
+  id: string;
+  title: string;
+}
+
+export interface IUserBreakOutRoom {
+  id: string;
+  columnId: string;
+  name: string;
+}

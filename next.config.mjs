@@ -3,7 +3,6 @@
  * for Docker builds.
  */
 await import("./src/env.mjs");
-await import('@babel/polyfill');
 
 
 /** @type {import("next").NextConfig} */
