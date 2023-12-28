@@ -163,7 +163,12 @@ export const presentationSlideState = atom<{
   id: String;
 }>({
   key: "presentationSlideState",
-  default: null,
+  default: {  pages: [],
+    current: false,
+    downloadable: false,
+    name: '',
+    podId: '',
+    id: ''},
 });
 
 export const recordingModalState = atom<{
@@ -305,7 +310,7 @@ export const pollModalState = atom<{
     isUserHost: false,
     pollQuestion: "",
     pollCreatorName: "",
-    pollCreatorId: 0,
+    pollCreatorId: "0",
     pollCreatedAt: new Date(),
     pollOptions: [],
     totalVotes: 0,

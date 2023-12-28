@@ -398,7 +398,7 @@ const Websocket = () => {
                 isActive: true,
                 step: 2,
                 pollQuestion: question,
-                pollOptions: answers.map((option, index) => {
+                pollOptions: answers.map((option:any, index:number) => {
                     return {
                         id: option.id,
                         option: option.key,
@@ -442,7 +442,7 @@ const Websocket = () => {
 
 
             if(responses != null){
-                let vUsers=[];
+                let vUsers:any=[];
 
                 for (let i = 0; i < responses.length; i++) {
                     let vUser= {
@@ -912,8 +912,43 @@ export function websocketMuteAllParticipants(internalUserID:any) {
     websocketSend([`{\"msg\":\"method\",\"id\":\"11\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
 }
 
+export function websocketMuteParticipants(internalUserID:any) {
+    console.log('Muted all')
+    websocketSend([`{\"msg\":\"method\",\"id\":\"11\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
+}
+
 export function websocketMuteParticipantsePresenter(internalUserID:any) {
+    console.log('Muted all except preseter')
     websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"muteAllExceptPresenter\",\"params\":[\"${internalUserID}\"]}`])
+}
+
+export function websocketLockViewers(internalUserID:any) {
+    console.log('LockViewers')
+    websocketSend(["{\"msg\":\"method\",\"id\":\"85\",\"method\":\"toggleLockSettings\",\"params\":[{\"disableCam\":true,\"disableMic\":true,\"disableNotes\":true,\"disablePrivateChat\":true,\"disablePublicChat\":true,\"hideUserList\":true,\"hideViewersAnnotation\":true,\"hideViewersCursor\":true,\"lockOnJoin\":true,\"lockOnJoinConfigurable\":false,\"setBy\":\"temp\"}]}"])
+    websocketSend(["{\"msg\":\"method\",\"id\":\"86\",\"method\":\"toggleWebcamsOnlyForModerator\",\"params\":[true]}"])
+}
+
+export function websocketUnLockViewers(internalUserID:any) {
+    console.log('unLockViewers')
+    websocketSend(["{\"msg\":\"method\",\"id\":\"124\",\"method\":\"toggleLockSettings\",\"params\":[{\"disableCam\":false,\"disableMic\":false,\"disablePrivateChat\":false,\"disablePublicChat\":false,\"disableNotes\":false,\"hideUserList\":false,\"lockOnJoin\":true,\"lockOnJoinConfigurable\":false,\"hideViewersCursor\":false,\"hideViewersAnnotation\":false,\"setBy\":\"w_gmo5zeyaswun\"}]}"])
+    websocketSend(["{\"msg\":\"method\",\"id\":\"125\",\"method\":\"toggleWebcamsOnlyForModerator\",\"params\":[false]}"])
+}
+
+export function websocketSetWaitingRoom(type:number) {
+    console.log('SetWaitingRoom')
+    // ALWAYS_ACCEPT
+    // ASK_MODERATOR
+    // ALWAYS_DENY
+
+    let eType='ALWAYS_DENY';
+
+    if(type==1){
+        eType='ALWAYS_ACCEPT';
+    }else if(type==2){
+        eType='ASK_MODERATOR';
+    }
+
+    websocketSend([`{\"msg\":\"method\",\"id\":\"168\",\"method\":\"changeGuestPolicy\",\"params\":[\"${eType}\"]}`])
 }
 
 export function websocketClear() {
@@ -932,11 +967,11 @@ export function websocketSendExternalVideo(link:string){
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startWatchingExternalVideo\",\"params\":[\"${link}"]}`]);
 }
 
-export function websocketStartPoll(id,question,answers){
+export function websocketStartPoll(id:any,question:any,answers:any){
     websocketSend([`{"msg":"method","id":"41","method":"startPoll","params":[{"YesNo":"YN","YesNoAbstention":"YNA","TrueFalse":"TF","Letter":"A-","A2":"A-2","A3":"A-3","A4":"A-4","A5":"A-5","Custom":"CUSTOM","Response":"R-"},"CUSTOM","${id}",false,"${question}",false,${answers}]}`]);
 }
 
-export function websocketVotePoll(id,answerID){
+export function websocketVotePoll(id:any,answerID:any){
     websocketSend([`{\"msg\":\"method\",\"id\":\"53\",\"method\":\"publishVote\",\"params\":[\"${id}\",[${answerID}]]}`]);
 }
 

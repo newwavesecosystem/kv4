@@ -16,7 +16,7 @@ import {
   authUserState,
   privateChatModalState,
   removeUserModalState,
-  participantTalkingListState
+  participantTalkingListState, participantListState
 } from "~/recoil/atom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import VolumeOnIcon from "../icon/outline/VolumeOnIcon";
@@ -42,6 +42,7 @@ function SingleParticipant({
   const [removeParticipant, setRemoveParticipant] =
     useRecoilState(removeUserModalState);
   const [privateChat, setPrivateChat] = useRecoilState(privateChatModalState);
+  const participantList = useRecoilValue(participantListState);
 
   const displayActions=(item:any,index:number)=>{
     return (<DropdownMenuItem onClick={()=>{
@@ -87,6 +88,7 @@ function SingleParticipant({
           ))}
         </button>
 
+        {participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.role=='MODERATOR' && (
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
             <button>
@@ -173,6 +175,9 @@ function SingleParticipant({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        )}
+
+
         </div>}
     </div>
   );
