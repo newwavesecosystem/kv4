@@ -2,19 +2,21 @@ import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import useScreenSize from "~/lib/useScreenSize";
 import { cn } from "~/lib/utils";
-import { currentTabState, settingsModalMetaState } from "~/recoil/atom";
+import {currentTabState, settingsModalMetaState, waitingRoomUsersState} from "~/recoil/atom";
 import { SettingsSheetClose } from "../ui/settingsSheet";
 import CloseIcon from "../icon/outline/CloseIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
 import TickIcon from "../icon/outline/TickIcon";
 import ChatIcon from "../icon/outline/ChatIcon";
 import {websocketSetWaitingRoom} from "~/server/Websocket";
+import {IWaitingUser} from "~/types";
 
 function WaitingRoomSettings() {
   const currentTab = useRecoilValue(currentTabState);
   const [settingsMeta, setSettingsMeta] = useRecoilState(
     settingsModalMetaState,
   );
+  const [waitingRoomUsers, setWaitingRoomUsers] = useRecoilState(waitingRoomUsersState);
 
   const screenSize = useScreenSize();
 
@@ -82,34 +84,23 @@ function WaitingRoomSettings() {
         </div>
 
         <div className="flex flex-col gap-2 py-5">
-          {/*<div className="flex items-center justify-between py-2">*/}
-          {/*  <div className="flex items-center gap-2">*/}
-          {/*    <div className="h-7 w-7 rounded-full border-[1px] border-secondary/20 bg-secondary"></div>*/}
-          {/*    <span>Samuel Odejinmi</span>*/}
-          {/*  </div>*/}
-          {/*  <div className="flex items-center gap-2">*/}
-          {/*    <button>*/}
-          {/*      <ChatIcon className="h-7 w-7" />*/}
-          {/*    </button>*/}
-          {/*    <button className="border-a11y/20 rounded-2xl border px-4 py-1 text-sm">*/}
-          {/*      Allow*/}
-          {/*    </button>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-          {/*<div className="flex items-center justify-between py-2">*/}
-          {/*  <div className="flex items-center gap-2">*/}
-          {/*    <div className="h-7 w-7 rounded-full border-[1px] border-secondary/20 bg-secondary/60"></div>*/}
-          {/*    <span>Femi Williams</span>*/}
-          {/*  </div>*/}
-          {/*  <div className="flex items-center gap-2">*/}
-          {/*    <button>*/}
-          {/*      <ChatIcon className="h-7 w-7" />*/}
-          {/*    </button>*/}
-          {/*    <button className="border-a11y/20 rounded-2xl border px-4 py-1 text-sm">*/}
-          {/*      Allow*/}
-          {/*    </button>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
+          {waitingRoomUsers.map((item:IWaitingUser,index:number)=>{
+            return (<div className="flex items-center justify-between py-2">
+              <div className="flex items-center gap-2">
+                <div className="h-7 w-7 rounded-full border-[1px] border-secondary/20 bg-secondary"></div>
+                <span>{item.name}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button>
+                  <ChatIcon className="h-7 w-7" />
+                </button>
+                <button className="border-a11y/20 rounded-2xl border px-4 py-1 text-sm">
+                  Allow
+                </button>
+              </div>
+            </div>)
+
+          })}
         </div>
       </div>
     </div>

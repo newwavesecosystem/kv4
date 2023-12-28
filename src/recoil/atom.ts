@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 import settingsTabData from "~/data/settingsTabData";
-import {IConnectedUser, IMeetingDetails, IParticipant} from "~/types";
+import {IConnectedUser, IMeetingDetails, IParticipant, IWaitingUser} from "~/types";
 
 export const authUserState = atom<{
   id: number;
@@ -46,6 +46,11 @@ export const chatListState = atom<any>({
 
 export const chatTypingListState = atom<any>({
   key: "chatTypingListState",
+  default: [],
+});
+
+export const waitingRoomUsersState = atom<IWaitingUser[]>({
+  key: "waitingRoomUsersState",
   default: [],
 });
 

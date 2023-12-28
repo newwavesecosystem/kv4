@@ -115,6 +115,15 @@ export interface IParticipant {
     id: string;
 }
 
+export interface IWaitingUser {
+    name:string;
+    intId:string;
+    role:string;
+    avatar:string;
+    guest:boolean;
+    authenticated:boolean;
+}
+
 
 export interface IParticipantCamera {
     id: string;
