@@ -3,6 +3,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { authUserState, pollModalState } from "~/recoil/atom";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { cn } from "~/lib/utils";
+import {websocketVotePoll} from "~/server/Websocket";
 
 function PollModalParticipantLiveView() {
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
@@ -41,6 +42,7 @@ function PollModalParticipantLiveView() {
             <button
               onClick={() => {
                 setData(poll);
+                websocketVotePoll(pollModal.pollCreatorId,poll.id);
               }}
               className={cn(
                 "rounded-md bg-a11y/20 px-4 py-3 capitalize",

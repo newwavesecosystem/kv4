@@ -387,12 +387,14 @@ function PostSignIn() {
 
         {/* {screenSharingStream && screenShareState && <ScreenSharingComponent />} */}
           {user?.sessiontoken != '' && <Websocket/>}
-          {connectionStatus && <KurentoAudio/>}
+          {user?.sessiontoken != '' && connectionStatus && <KurentoAudio/>}
 
-           <KurentoVideo/>
-          {participantCameraList.map((cItem:IParticipantCamera,index:number)=>{
-              return <KurentoVideoViewer streamID={cItem.streamID}/>
+          {user?.sessiontoken != '' && connectionStatus && <KurentoVideo/>}
+
+          {participantCameraList?.map((cItem:IParticipantCamera,index:number)=>{
+              return <KurentoVideoViewer streamID={cItem?.streamID}/>
           })}
+
           {screenShareState && <KurentoScreenShare/>}
           {viewerscreenShareState && <KurentoScreenShareViewer/>}
 

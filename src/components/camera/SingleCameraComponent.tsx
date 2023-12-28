@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
   authUserState,
   connectedUsersState,
@@ -41,13 +41,16 @@ function SingleCameraComponent({
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   let userCamera=participantCameraList.filter((cItem:any) => cItem?.intId == participant.intId);
-  // Attach the new stream to the video element
-  if(userCamera.length>0){
-    if (videoRef.current) {
-      videoRef.current.srcObject = userCamera[0].stream;
-    }
-  }
 
+
+  // useEffect(() => {
+  //   // Attach the new stream to the video element
+    if(userCamera.length>0){
+      if (videoRef.current) {
+        videoRef.current.srcObject = userCamera[0].stream;
+      }
+    }
+  // });
 
   return (
     <div

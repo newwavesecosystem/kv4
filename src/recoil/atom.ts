@@ -154,6 +154,18 @@ export const currentTabState = atom<{
   default: settingsTabData[0],
 });
 
+export const presentationSlideState = atom<{
+  pages: [];
+  current: boolean;
+  downloadable: boolean;
+  name: String;
+  podId: String;
+  id: String;
+}>({
+  key: "presentationSlideState",
+  default: null,
+});
+
 export const recordingModalState = atom<{
   isActive: boolean;
   step: number;
@@ -264,10 +276,11 @@ export const pollModalState = atom<{
   isActive: boolean;
   isEnded: boolean;
   isEdit: boolean;
+  isUserHost: boolean;
   step: number;
   pollQuestion: string;
   pollCreatorName: string;
-  pollCreatorId: number;
+  pollCreatorId: string;
   pollCreatedAt: Date;
   pollOptions: {
     id: number;
@@ -276,7 +289,7 @@ export const pollModalState = atom<{
   }[];
   totalVotes: number;
   usersVoted: {
-    id: number;
+    id: string;
     fullName: string | null;
     email: string | null;
     votedOption: string;
@@ -289,6 +302,7 @@ export const pollModalState = atom<{
     isActive: false,
     isEnded: false,
     isEdit: false,
+    isUserHost: false,
     pollQuestion: "",
     pollCreatorName: "",
     pollCreatorId: 0,

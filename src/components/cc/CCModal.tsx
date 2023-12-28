@@ -27,7 +27,7 @@ function CCModal() {
 
   // When a new transcript is received, add it to the lines array
   useEffect(() => {
-    SpeechRecognition.startListening({ continuous: true });
+    // SpeechRecognition.startListening({ continuous: true });
 
     if (transcript) {
       if(ccModal.language != "en" ) {

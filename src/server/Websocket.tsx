@@ -9,7 +9,7 @@ import {
     authUserState, chatListState, chatTypingListState,
     connectionStatusState, donationModalState, eCinemaModalState, participantCameraListState,
     participantListState,
-    participantTalkingListState,
+    participantTalkingListState, pollModalState, presentationSlideState,
     recordingModalState, screenSharingStreamState, viewerScreenSharingState
 } from "~/recoil/atom";
 import {useRecoilState, useRecoilValue} from "recoil";
@@ -106,6 +106,8 @@ const Websocket = () => {
     const [chatTypingList, setChatTypingList] = useRecoilState(chatTypingListState);
     const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
     const [donationState, setDonationState] = useRecoilState(donationModalState);
+    const [pollModal, setPollModal] = useRecoilState(pollModalState);
+    const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
 
 
     useEffect(() => {
@@ -191,6 +193,14 @@ const Websocket = () => {
 
                 if(collection == "screenshare"){
                     handleRemoteScreenShare(e.data)
+                }
+
+                if(collection == "polls" || collection == "current-poll" ){
+                    handlePolls(e.data)
+                }
+
+                if(collection == "presentations"){
+                    handlePresentations(e.data)
                 }
 
 
@@ -373,6 +383,104 @@ const Websocket = () => {
             } else {
                 stopVideoLinkFromWebsocket(null)
             }
+        }
+    }
+
+    const handlePolls = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id, fields} = obj;
+
+        if(msg == "added") {
+            const {question,answers,requester,id} = fields;
+            setPollModal((prev) => ({
+                ...prev,
+                isActive: true,
+                step: 2,
+                pollQuestion: question,
+                pollOptions: answers.map((option, index) => {
+                    return {
+                        id: option.id,
+                        option: option.key,
+                        votes: 0,
+                    };
+                }),
+                pollCreatedAt: new Date(),
+                pollCreatorId: id,
+                pollCreatorName: findUserNamefromUserId(requester),
+            }));
+        }
+
+        if(msg == "changed") {
+            // ["{\"msg\":\"changed\",\"collection\":\"current-poll\",\"id\":\"YdpwudAXrkR2kNcYN\",\"fields\":{\"answers\":[{\"id\":0,\"key\":\"Samji\",\"numVotes\":0},{\"id\":1,\"key\":\"baddest\",\"numVotes\":0},{\"id\":2,\"key\":\"Olawale\",\"numVotes\":1},{\"id\":3,\"key\":\"Jesus\",\"numVotes\":0}],\"numRespondents\":1,\"numResponders\":1,\"questionText\":\"What is your name?\",\"questionType\":\"CUSTOM\"}}"]
+            const {answers,responses} = fields;
+
+            if(answers != null){
+                let tVote=0;
+                let answ=answers.map((option: any, index:number) => {
+                    tVote+=option.numVotes as number;
+                    return {
+                        id: option.id,
+                        option: option.key,
+                        votes: option.numVotes,
+                    };
+                });
+
+                console.log(`vote answers : ${tVote} `)
+                console.log(`vote answers : ${answ} `)
+
+                setPollModal((prev) => ({
+                    ...prev,
+                    pollOptions: answ,
+                }));
+
+                setPollModal((prev) => ({
+                    ...prev,
+                    totalVotes: tVote
+                }));
+            }
+
+
+            if(responses != null){
+                let vUsers=[];
+
+                for (let i = 0; i < responses.length; i++) {
+                    let vUser= {
+                        id: responses[i].userId,
+                        fullName: findUserNamefromUserId(responses[i].userId),
+                        email: null,
+                        votedOption: "NA",
+                        votedOptionId: responses[i].answerIds,
+                    };
+
+                    vUsers.push(vUser);
+                }
+
+                setPollModal((prev) => ({
+                    ...prev,
+                    usersVoted:vUsers,
+                }));
+            }
+
+        }
+    }
+
+    const handlePresentations = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id, fields} = obj;
+
+        if(msg == "added") {
+            const {pages,current,downloadable,name,podId,id} = fields;
+
+            setPresentationSlide({
+                pages: pages,
+                current: current,
+                downloadable: downloadable,
+                name: name,
+                podId: podId,
+                id: id,
+            })
         }
     }
 
@@ -799,7 +907,7 @@ export function websocketParticipantsChangeRole(internalUserID:any,type:number) 
     websocketSend([`{\"msg\":\"method\",\"id\":\"39\",\"method\":\"changeRole\",\"params\":[\"${internalUserID}\",\"${role}\"]}`])
 }
 
-export function websocketMuteParticipants(internalUserID:any) {
+export function websocketMuteAllParticipants(internalUserID:any) {
     console.log('Muted all')
     websocketSend([`{\"msg\":\"method\",\"id\":\"11\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
 }
@@ -822,6 +930,18 @@ export function websocketPresenter(internalUserID:string){
 
 export function websocketSendExternalVideo(link:string){
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startWatchingExternalVideo\",\"params\":[\"${link}"]}`]);
+}
+
+export function websocketStartPoll(id,question,answers){
+    websocketSend([`{"msg":"method","id":"41","method":"startPoll","params":[{"YesNo":"YN","YesNoAbstention":"YNA","TrueFalse":"TF","Letter":"A-","A2":"A-2","A3":"A-3","A4":"A-4","A5":"A-5","Custom":"CUSTOM","Response":"R-"},"CUSTOM","${id}",false,"${question}",false,${answers}]}`]);
+}
+
+export function websocketVotePoll(id,answerID){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"53\",\"method\":\"publishVote\",\"params\":[\"${id}\",[${answerID}]]}`]);
+}
+
+export function websocketStopPoll(){
+    websocketSend(["{\"msg\":\"method\",\"id\":\"66\",\"method\":\"stopPoll\",\"params\":[]}"]);
 }
 
 export function websocketStopExternalVideo(){

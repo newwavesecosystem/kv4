@@ -64,7 +64,7 @@ import ShareScreenOffIcon from "../icon/outline/ShareScreenOffIcon";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
-import {websocketMuteMic, websocketStopCamera} from "~/server/Websocket";
+import {websocketMuteAllParticipants, websocketMuteMic, websocketStopCamera} from "~/server/Websocket";
 import {IParticipant, IParticipantCamera} from "~/types";
 import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
 
@@ -381,6 +381,12 @@ function MiddleSide() {
             <DropdownMenuItem
               onClick={() => {
                 // setChatState(!chatState);
+                window.location.reload();
+                toast({
+                  title: "Rekonn3ct",
+                  description:
+                      "Re-konn3cting, Please wait for few moment",
+                });
               }}
               className="py-2"
             >
@@ -457,6 +463,8 @@ function MiddleSide() {
               <FolderOpenIcon className="mr-2 h-5 w-5" />
               <span>Upload Files</span>
             </DropdownMenuItem>
+
+            { participantList.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
             <DropdownMenuItem
               onClick={() => {
                 if (eCinemaModal.isActive)
@@ -475,10 +483,20 @@ function MiddleSide() {
               <MovieColoredIcon className="mr-2 h-5 w-5" />
               <span>ECinema</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="py-2">
+            )))}
+
+            { participantList.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
+                <DropdownMenuItem
+                    onClick={() => {
+                      websocketMuteAllParticipants(user?.meetingDetails?.internalUserID);
+                    }}
+                    className="py-2">
               <MicOffIcon className="mr-2 h-5 w-5" />
               <span>Mute All</span>
             </DropdownMenuItem>
+            )))}
+
+            { participantList.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
             <DropdownMenuItem
               onClick={() => {
                 if (pollModal.isActive || pollModal.isEnded) return;
@@ -492,6 +510,8 @@ function MiddleSide() {
               <TextFormatIcon className="mr-2 h-5 w-5" />
               <span>Polls</span>
             </DropdownMenuItem>
+            )))}
+
             { !donationState.isActive &&  <DropdownMenuItem
               className="py-2"
               onClick={() => {
