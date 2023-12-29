@@ -8,7 +8,7 @@ import CloseIcon from "../icon/outline/CloseIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
 import TickIcon from "../icon/outline/TickIcon";
 import ChatIcon from "../icon/outline/ChatIcon";
-import {websocketSetWaitingRoom} from "~/server/Websocket";
+import {websocketAllowAllWaitingUser, websocketDenyAllWaitingUser, websocketSetWaitingRoom} from "~/server/Websocket";
 import {IWaitingUser} from "~/types";
 
 function WaitingRoomSettings() {
@@ -17,6 +17,8 @@ function WaitingRoomSettings() {
     settingsModalMetaState,
   );
   const [waitingRoomUsers, setWaitingRoomUsers] = useRecoilState(waitingRoomUsersState);
+
+  console.log("waitingRoomUsers:",waitingRoomUsers);
 
   const screenSize = useScreenSize();
 
@@ -72,11 +74,17 @@ function WaitingRoomSettings() {
         </div>
 
         <div className="flex items-center justify-between py-3 text-sm">
-          <button className="bg-a11y/40 flex items-center rounded-lg p-2">
+          <button className="bg-a11y/40 flex items-center rounded-lg p-2"  onClick={()=>{
+            websocketAllowAllWaitingUser(waitingRoomUsers);
+            setWaitingRoomUsers([]);
+          }}>
             <TickIcon className="h-6 w-6" />
             <span className="ml-2">Allow Everyone</span>
           </button>
-          <button className="bg-a11y/20 flex items-center rounded-lg p-2">
+          <button className="bg-a11y/20 flex items-center rounded-lg p-2" onClick={()=>{
+            websocketDenyAllWaitingUser(waitingRoomUsers);
+            setWaitingRoomUsers([]);
+          }}>
             {" "}
             <CloseIcon className="h-6 w-6" />
             <span className="ml-2">Deny Everyone</span>
@@ -94,8 +102,23 @@ function WaitingRoomSettings() {
                 <button>
                   <ChatIcon className="h-7 w-7" />
                 </button>
-                <button className="border-a11y/20 rounded-2xl border px-4 py-1 text-sm">
+                <button className="border-a11y/20 rounded-2xl border px-4 py-1 text-sm" onClick={()=>{
+                  websocketAllowAllWaitingUser([item]);
+
+                  let ur=waitingRoomUsers.filter((item:IWaitingUser) => item?._id != item._id);
+                  console.log("waitingRoomUsers: handleRemoval ",ur)
+                  setWaitingRoomUsers(ur);
+                }}>
                   Allow
+                </button>
+                <button className="border-a11y/20 rounded-2xl border px-4 py-1 text-sm" onClick={()=>{
+                  websocketDenyAllWaitingUser([item]);
+
+                  let ur=waitingRoomUsers.filter((item:IWaitingUser) => item?._id != item._id);
+                  console.log("waitingRoomUsers: handleRemoval ",ur)
+                  setWaitingRoomUsers(ur);
+                }}>
+                  Deny
                 </button>
               </div>
             </div>)

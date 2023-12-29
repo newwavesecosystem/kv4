@@ -116,6 +116,7 @@ export interface IParticipant {
 }
 
 export interface IWaitingUser {
+    _id:string;
     name:string;
     intId:string;
     role:string;

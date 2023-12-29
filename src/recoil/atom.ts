@@ -299,9 +299,9 @@ export const pollModalState = atom<{
   }[];
   totalVotes: number;
   usersVoted: {
-    id: string;
-    fullName: string | null;
-    email: string | null;
+    id: string | null | undefined;
+    fullName: string | null | undefined;
+    email: string | null | undefined;
     votedOption: string;
     votedOptionId: number;
   }[];

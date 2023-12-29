@@ -13,7 +13,7 @@ import {
     recordingModalState, screenSharingStreamState, viewerScreenSharingState, waitingRoomUsersState
 } from "~/recoil/atom";
 import {useRecoilState, useRecoilValue} from "recoil";
-import {IParticipant, IParticipantCamera} from "~/types";
+import {IParticipant, IParticipantCamera, IWaitingUser} from "~/types";
 
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
@@ -496,8 +496,13 @@ const Websocket = () => {
 
         if(msg == "added") {
             const {name,intId,role,avatar,guest,authenticated} = fields;
+            setWaitingRoomUsers([...waitingRoomUsers,{name,intId,role,avatar,guest,authenticated,"_id":id}]);
+        }
 
-            setWaitingRoomUsers({name,intId,role,avatar,guest,authenticated});
+        if(msg == "removed") {
+            let ur=waitingRoomUsers.filter((item:IWaitingUser) => item?._id != id);
+            console.log("waitingRoomUsers: handleRemoval ",ur)
+            setWaitingRoomUsers(ur);
         }
     }
 
@@ -968,12 +973,20 @@ export function websocketSetWaitingRoom(type:number) {
     websocketSend([`{\"msg\":\"method\",\"id\":\"168\",\"method\":\"changeGuestPolicy\",\"params\":[\"${eType}\"]}`])
 }
 
-export function websocketDenyAllWaitingUser() {
-    websocketSend(["{\"msg\":\"method\",\"id\":\"37\",\"method\":\"allowPendingUsers\",\"params\":[[{\"subscriptionId\":\"\",\"approved\":false,\"denied\":false,\"intId\":\"w_ekro7vzcih9j\",\"name\":\"avatar\",\"role\":\"VIEWER\",\"guest\":false,\"avatar\":\"https://dev.konn3ct.ng/storage/profile-photos/26wlZMlsGVuMMxJHbiV9wg0eaBCZm2ZA1sUw3kBV.jpg\",\"color\":\"#1976d2\",\"authenticated\":true,\"registeredOn\":1703752041007,\"meetingId\":\"d02560dd9d7db4467627745bd6701e809ffca6e3-1703746554406\",\"loginTime\":1703752041007,\"privateGuestLobbyMessage\":\"\",\"referenceId\":\"y2JmJkEW47qXsPF6j\",\"_id\":\"wmG7jmiaeSnujvkjd\"}],\"DENY\"]}"])
+export function websocketDenyAllWaitingUser(user:any) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"37\",\"method\":\"allowPendingUsers\",\"params\":[${JSON.stringify(user)},\"DENY\"]}`])
 }
 
-export function websocketAllowAllWaitingUser() {
-    websocketSend(["{\"msg\":\"method\",\"id\":\"101\",\"method\":\"allowPendingUsers\",\"params\":[[{\"subscriptionId\":\"\",\"approved\":false,\"denied\":false,\"intId\":\"w_fjwgmznechzk\",\"name\":\"Garba\",\"role\":\"VIEWER\",\"guest\":false,\"avatar\":\"https://konn3ct.com/assets/images/konn3ctIcon.png\",\"color\":\"#7b1fa2\",\"authenticated\":true,\"registeredOn\":1703752451693,\"meetingId\":\"d02560dd9d7db4467627745bd6701e809ffca6e3-1703746554406\",\"loginTime\":1703752451693,\"privateGuestLobbyMessage\":\"\",\"referenceId\":\"ypRJG4sZFyYGtSY34\",\"_id\":\"gyQqwapZEsTncc7AB\"}],\"ALLOW\"]}"])
+export function websocketAllowAllWaitingUser(user:any) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"101\",\"method\":\"allowPendingUsers\",\"params\":[${JSON.stringify(user)},\"ALLOW\"]}`])
+}
+
+export function websocketSendMessage2AllWaitingUser(message:string) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"55\",\"method\":\"setGuestLobbyMessage\",\"params\":[\"${message}\"]}`])
+}
+
+export function websocketSendMessage2PrivateWaitingUser(message:string,internalUserID:string) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"69\",\"method\":\"setPrivateGuestLobbyMessage\",\"params\":[\"${message}\",\"${internalUserID}\"]}`])
 }
 
 
