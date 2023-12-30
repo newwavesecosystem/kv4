@@ -16,23 +16,38 @@ const CCLanguageData = [
   },
   {
     id: 4,
-    name: "Igbo",
-    shortCode: "igbo",
+    name: "Arabic",
+    shortCode: "ar",
   },
   {
     id: 5,
-    name: "Yoruba",
-    shortCode: "yoruba",
+    name: "Chinese",
+    shortCode: "zh",
   },
   {
     id: 6,
-    name: "Hausa",
-    shortCode: "hausa",
+    name: "Dutch",
+    shortCode: "nl",
   },
   {
     id: 7,
     name: "Espanol",
     shortCode: "esp",
+  },
+  {
+    id: 8,
+    name: "Portuguese",
+    shortCode: "pt",
+  },
+  {
+    id: 9,
+    name: "Swedish",
+    shortCode: "sv",
+  },
+  {
+    id: 10,
+    name: "Russian",
+    shortCode: "ru",
   },
 ];
 

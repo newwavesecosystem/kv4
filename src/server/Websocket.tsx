@@ -156,13 +156,19 @@ const Websocket = () => {
             };
 
             sock.onmessage = (e) => {
-                setConnection({
-                    audio_connection: false,
-                    websocket_connection:true
-                })
+
                 console.log('Received message:', e.data);
                 const obj = JSON.parse(e.data);
                 const {collection} = obj;
+
+                if (obj.msg == "connected") {
+                    // a["{\"msg\":\"connected\",\"session\":\"4qajGwWr4bziuofh9\"}"]
+                    setConnection({
+                        audio_connection: false,
+                        websocket_connection:true
+                    })
+                }
+
                 if (collection == "group-chat-msg") {
                     handleIncomingmsg(e.data)
                 }
@@ -746,12 +752,12 @@ const Websocket = () => {
 
     };
 
-    const closeRemoteCamera = (streamID:string) => {
+    const closeRemoteCamera = (id:string) => {
         console.log('Hi, im here')
 
         let ishola = participantCameraList;
 
-        let ur=ishola.filter((item:any) => item?.streamID != streamID);
+        let ur=ishola.filter((item:any) => item?.id != id);
         console.log("setParticipantCameraList: remove stream ",ur)
         setParticipantCameraList(ur);
     };

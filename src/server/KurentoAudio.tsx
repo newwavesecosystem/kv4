@@ -22,10 +22,11 @@ const KurentoAudio = () => {
 
     useEffect(() => {
 
-        if(!audioState){
+        if(!audioState && user?.sessiontoken !=null ){
             console.log("websocket_connection is active")
             ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
         }
+
         if (ws != null) {
 
             // Add event listeners for various socket events
@@ -71,9 +72,10 @@ const KurentoAudio = () => {
 
             ws.onclose = () => {
                 console.log('Kurento Socket connection closed');
-                // setConnection({
-                //     audio_connection:false
-                // })
+                setConnection({
+                    websocket_connection: true,
+                    audio_connection:false
+                })
             };
         }
     // },[ ])
@@ -99,11 +101,6 @@ const KurentoAudio = () => {
             this.generateOffer(onOffer);
         });
 
-
-        // webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function (error) {
-        //     if (error) return onError(error)
-        //     this.generateOffer(onOffer)
-        // });
     }
 
     function onOffer(error:any, offerSdp:any) {

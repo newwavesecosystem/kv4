@@ -387,10 +387,8 @@ function PostSignIn() {
 
         {/* {screenSharingStream && screenShareState && <ScreenSharingComponent />} */}
           {user?.sessiontoken != '' && <Websocket/>}
-          {user?.sessiontoken != '' && connectionStatus && <KurentoAudio/>}
-
-          {user?.sessiontoken != '' && connectionStatus && <KurentoVideo/>}
-
+          <KurentoAudio/>
+          <KurentoVideo/>
           {participantCameraList?.map((cItem:IParticipantCamera,index:number)=>{
               return <KurentoVideoViewer streamID={cItem?.streamID}/>
           })}

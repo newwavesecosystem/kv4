@@ -43,14 +43,14 @@ function SingleCameraComponent({
   let userCamera=participantCameraList.filter((cItem:any) => cItem?.intId == participant.intId);
 
 
-  // useEffect(() => {
+  useEffect(() => {
   //   // Attach the new stream to the video element
     if(userCamera.length>0){
       if (videoRef.current) {
         videoRef.current.srcObject = userCamera[0].stream;
       }
     }
-  // });
+  },[userCamera]);
 
   return (
     <div
