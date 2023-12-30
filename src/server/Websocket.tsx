@@ -291,7 +291,7 @@ const Websocket = () => {
         }
 
         if (msg == 'changed') {
-            const {presenter, role} = fields;
+            const {presenter, role, raiseHand} = fields;
 
             if(presenter != null){
                 console.log("UserState: handling presenter change",obj);
@@ -301,6 +301,11 @@ const Websocket = () => {
             if(role != null){
                 console.log("UserState: handling role change",obj);
                 modifyRoleStateUser(id,role)
+            }
+
+            if(raiseHand != null){
+                console.log("UserState: handling role change",obj);
+                modifyRaiseHandStateUser(id,raiseHand)
             }
         }
 
@@ -727,6 +732,25 @@ const Websocket = () => {
         setParticipantList(updatedArray)
     }
 
+    const modifyRaiseHandStateUser = (id:any, raiseHand:boolean) => {
+
+        const updatedArray = participantList?.map((item:IParticipant) => {
+            if (item.id === id) {
+                if (item.userId == user?.meetingDetails?.internalUserID) {
+                    console.log(`UserState: You have raise hand ${raiseHand}`);
+                }
+                return {...item, raiseHand: raiseHand};
+            }
+            return item;
+        });
+
+        console.log(updatedArray);
+
+        console.log("UserState: updatedArray", updatedArray);
+
+        setParticipantList(updatedArray)
+    }
+
 
     const removeTalkingUser = (user:any) => {
         var ishola = participantTalkingList;
@@ -1026,6 +1050,10 @@ export function websocketStopPoll(){
 
 export function websocketStopExternalVideo(){
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"stopWatchingExternalVideo\",\"params\":[]}`]);
+}
+
+export function websocketRaiseHand(internalUserID:any){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"51\",\"method\":\"setEmojiStatus\",\"params\":[\"${internalUserID}\",\"raiseHand\"]}`]);
 }
 
 export function websocketLeaveMeeting(){

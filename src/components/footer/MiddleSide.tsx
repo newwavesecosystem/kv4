@@ -64,7 +64,12 @@ import ShareScreenOffIcon from "../icon/outline/ShareScreenOffIcon";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
-import {websocketMuteAllParticipants, websocketMuteMic, websocketStopCamera} from "~/server/Websocket";
+import {
+  websocketMuteAllParticipants,
+  websocketMuteMic,
+  websocketRaiseHand,
+  websocketStopCamera
+} from "~/server/Websocket";
 import {IParticipant, IParticipantCamera} from "~/types";
 import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
 
@@ -82,7 +87,7 @@ function MiddleSide() {
   const { toast } = useToast();
 
   const user = useRecoilValue(authUserState);
-  const participantList = useRecoilValue(participantListState);
+  const [participantList, setParticipantList] = useRecoilValue(participantListState);
   const [micState, setMicState] = useRecoilState(micOpenState);
   const [videoState, setVideoState] = useRecoilState(cameraOpenState);
   const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
@@ -443,6 +448,21 @@ function MiddleSide() {
                     return prevUser;
                   }),
                 );
+
+                const updatedArray = participantList?.map((item:IParticipant) => {
+                  if (item.userId == user?.meetingDetails?.internalUserID) {
+                    return {...item, raiseHand: !item.raiseHand};
+                  }
+                  return item;
+                });
+
+                console.log(updatedArray);
+
+                console.log("UserState: updatedArray", updatedArray);
+
+                setParticipantList(updatedArray)
+
+                websocketRaiseHand(user?.meetingDetails?.internalUserID);
               }}
               className="py-2 md:hidden"
             >
