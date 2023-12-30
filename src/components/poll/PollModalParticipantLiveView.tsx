@@ -42,7 +42,6 @@ function PollModalParticipantLiveView() {
             <button
               onClick={() => {
                 setData(poll);
-                websocketVotePoll(pollModal.pollCreatorId,poll.id);
               }}
               className={cn(
                 "rounded-md bg-a11y/20 px-4 py-3 capitalize",
@@ -66,9 +65,9 @@ function PollModalParticipantLiveView() {
                 usersVoted: [
                   ...prev.usersVoted,
                   {
-                    email: user.email,
-                    fullName: user.fullName,
-                    id: user.id,
+                    email: user.meetingDetails?.externUserID,
+                    fullName: user.meetingDetails?.fullname,
+                    id: user.meetingDetails?.internalUserID,
                     votedOption: data.option,
                     votedOptionId: data.id,
                   },
@@ -84,6 +83,8 @@ function PollModalParticipantLiveView() {
                   return option;
                 }),
               }));
+
+              websocketVotePoll(pollModal.pollCreatorId,data.id);
             }}
             className="rounded-md border border-a11y/50 bg-a11y/20 px-10 py-2 disabled:opacity-40"
           >

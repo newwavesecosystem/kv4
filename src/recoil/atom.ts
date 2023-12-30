@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 import settingsTabData from "~/data/settingsTabData";
-import {IConnectedUser, IMeetingDetails, IParticipant} from "~/types";
+import {IConnectedUser, IMeetingDetails, IParticipant, IWaitingUser} from "~/types";
 
 export const authUserState = atom<{
   id: number;
@@ -46,6 +46,11 @@ export const chatListState = atom<any>({
 
 export const chatTypingListState = atom<any>({
   key: "chatTypingListState",
+  default: [],
+});
+
+export const waitingRoomUsersState = atom<IWaitingUser[]>({
+  key: "waitingRoomUsersState",
   default: [],
 });
 
@@ -163,7 +168,12 @@ export const presentationSlideState = atom<{
   id: String;
 }>({
   key: "presentationSlideState",
-  default: null,
+  default: {  pages: [],
+    current: false,
+    downloadable: false,
+    name: '',
+    podId: '',
+    id: ''},
 });
 
 export const recordingModalState = atom<{
@@ -289,9 +299,9 @@ export const pollModalState = atom<{
   }[];
   totalVotes: number;
   usersVoted: {
-    id: string;
-    fullName: string | null;
-    email: string | null;
+    id: string | null | undefined;
+    fullName: string | null | undefined;
+    email: string | null | undefined;
     votedOption: string;
     votedOptionId: number;
   }[];
@@ -305,7 +315,7 @@ export const pollModalState = atom<{
     isUserHost: false,
     pollQuestion: "",
     pollCreatorName: "",
-    pollCreatorId: 0,
+    pollCreatorId: "0",
     pollCreatedAt: new Date(),
     pollOptions: [],
     totalVotes: 0,
