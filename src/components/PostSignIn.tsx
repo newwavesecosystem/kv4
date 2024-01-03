@@ -12,7 +12,12 @@ import {
     participantListState,
     participantTalkingListState,
     participantCameraListState,
-    viewerScreenSharingState, screenSharingState, connectionStatusState, cameraOpenState, postLeaveMeetingState,
+    viewerScreenSharingState,
+    screenSharingState,
+    connectionStatusState,
+    cameraOpenState,
+    postLeaveMeetingState,
+    donationModalState,
 } from "~/recoil/atom";
 import Image from "next/image";
 import MicOnIcon from "./icon/outline/MicOnIcon";
@@ -54,7 +59,48 @@ function PostSignIn() {
     const screenShareState = useRecoilValue(screenSharingState);
     const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
     const [videoState, setVideoState] = useRecoilState(cameraOpenState);
-    const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(postLeaveMeetingState,);
+    const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(postLeaveMeetingState);
+    const [donationState, setDonationState] = useRecoilState(donationModalState);
+
+
+    const checkDonation= (id:any)=>{
+        axios.get(`${ServerInfo.laravelAppURL}/api/k4/donation/${id}`)
+            .then(function (response) {
+                const responseData = response.data;
+
+                console.log(responseData)
+                console.log(response);
+
+                if (responseData?.success) {
+                    console.log('checkDonation data length');
+                    if(responseData?.data.length > 0){
+                        console.log('checkDonation data length');
+                        setDonationState({
+                            donationAmount: responseData.data[0].amount,
+                            donationAmountType: responseData.data[0].type,
+                            donationName: responseData.data[0].name,
+                            enableFlashNotification: false,
+                            totalAmountDonatated: 0,
+                            usersDonated: [],
+                            step: 0,
+                            isActive: true,
+                            donationCreatedAt:responseData.data[0].created_at,
+                            donationCreatorId: responseData.data[0].id as number,
+                            donationCreatorName: user?.fullName as string
+                        });
+                    }
+
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .finally(function () {
+                // always executed
+            })
+
+    }
 
   const validateToken= (token: string | null)=>{
         axios.get(`${ServerInfo.tokenValidationURL}?sessionToken=${token}`)
@@ -72,6 +118,7 @@ function PostSignIn() {
                         meetingDetails: responseData?.response,
                         sessiontoken: token ?? ' '
                     })
+                    checkDonation(responseData?.response?.externMeetingID);
                 } else {
                     toast({
                         variant: "destructive",

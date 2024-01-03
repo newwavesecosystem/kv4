@@ -7,7 +7,7 @@ import {generateRandomId} from "./ServerInfo";
 
 import {
     authUserState, chatListState, chatTypingListState,
-    connectionStatusState, eCinemaModalState, participantCameraListState,
+    connectionStatusState, donationModalState, eCinemaModalState, participantCameraListState,
     participantListState,
     participantTalkingListState,
     recordingModalState, screenSharingStreamState, viewerScreenSharingState
@@ -105,8 +105,7 @@ const Websocket = () => {
     const [chatList, setChatList] = useRecoilState(chatListState);
     const [chatTypingList, setChatTypingList] = useRecoilState(chatTypingListState);
     const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
-    // const connectionContext = useContext(ConnectionStatusContext)
-    // const {websocket_connection, webSocketChanged} = connectionContext
+    const [donationState, setDonationState] = useRecoilState(donationModalState);
 
 
     useEffect(() => {
@@ -221,6 +220,27 @@ const Websocket = () => {
         console.log("Sender:", sender);
         console.log("Message:", message);
         console.log("Message:", message);
+
+        if(message.toString().includes('Donation created')){
+            let dn=message.toString().split('|');
+
+            setDonationState({
+                donationAmount: dn[3] as number,
+                donationAmountType: dn[2],
+                donationName: dn[1],
+                enableFlashNotification: false,
+                totalAmountDonatated: 0,
+                usersDonated: [],
+                step: 0,
+                isActive: true,
+                donationCreatedAt: new Date(),
+                donationCreatorId: dn[4] as number,
+                donationCreatorName: user?.fullName as string
+            });
+            addMessage(senderName,dn[0],timestamp,id);
+            return;
+        }
+
         addMessage(senderName,message,timestamp,id);
     }
 

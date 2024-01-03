@@ -19,7 +19,7 @@ import {
   screenSharingState,
   screenSharingStreamState,
   settingsModalState,
-  whiteBoardOpenState, participantListState, connectionStatusState,
+  whiteBoardOpenState, participantListState, connectionStatusState, breakOutModalState,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -74,6 +74,7 @@ function MiddleSide() {
   const [microphoneStream, setMicrophoneStream] = useRecoilState(microphoneStreamState,);
   const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState,);
   const [recordingState, setRecordingState] = useRecoilState(recordingModalState);
+  const [breakOutRoomState, setBreakOutRoomState] = useRecoilState(breakOutModalState);
   const [donationState, setDonationState] = useRecoilState(donationModalState);
   const [chatState, setChatState] = useRecoilState(chatModalState);
   const [endCallModal, setEndCallModal] = useRecoilState(endCallModalState);
@@ -339,7 +340,36 @@ function MiddleSide() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="mb-2 w-52 rounded-b-none border-0 bg-primary text-a11y md:mb-3 md:rounded-b-md">
           <div className="absolute bottom-0 right-[45%] hidden h-0 w-0 border-l-[10px] border-r-[10px] border-t-[15px] border-l-transparent border-r-transparent border-t-primary md:block"></div>
-          <DropdownMenuGroup className="py-2 md:hidden">
+          <DropdownMenuGroup className="py-1">
+            {breakOutRoomState.isActive ? (
+              <DropdownMenuItem
+                onClick={() => {
+                  setBreakOutRoomState((prev) => ({
+                    ...prev,
+                    step: 2,
+                  }));
+                }}
+                className="bg-[#DF2622]"
+              >
+                <RecordOnIcon className="mr-2 h-5 w-5" />
+                <span>View Breakout Rooms</span>
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem
+                onClick={() => {
+                  setBreakOutRoomState((prev) => ({
+                    ...prev,
+                    step: 1,
+                  }));
+                }}
+              >
+                <RecordOnIcon className="mr-2 h-5 w-5" />
+                <span>Breakout Rooms</span>
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator className="" />
+          <DropdownMenuGroup className="py-1 md:hidden">
             {recordingState.isActive ? (
               <DropdownMenuItem
                 onClick={() => {
@@ -492,7 +522,7 @@ function MiddleSide() {
               <TextFormatIcon className="mr-2 h-5 w-5" />
               <span>Polls</span>
             </DropdownMenuItem>
-            <DropdownMenuItem
+            { !donationState.isActive &&  <DropdownMenuItem
               className="py-2"
               onClick={() => {
                 setDonationState((prev) => ({
@@ -503,7 +533,7 @@ function MiddleSide() {
             >
               <GiftIcon className="mr-2 h-5 w-5" />
               <span>Donation</span>
-            </DropdownMenuItem>
+            </DropdownMenuItem>}
             <DropdownMenuSeparator />
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="py-2">

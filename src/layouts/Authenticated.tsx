@@ -49,6 +49,7 @@ import CCModal from "~/components/cc/CCModal";
 import RemoveUserModal from "~/components/participants/RemoveUserModal";
 import LeaveRoomCallModal from "~/components/endCall/LeaveRoomCallModal";
 import {IParticipant} from "~/types";
+import BreakOutModal from "~/components/breakout/BreakOutModal";
 
 function Authenticated({ children }: { children: React.ReactNode }) {
   const [recordingState, setRecordingState] =
@@ -92,6 +93,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       <PollModal />
       <ECinemaModal />
       <CCModal />
+      <BreakOutModal />
       <div className="sticky top-0 z-50 flex h-16 w-full justify-between border-b border-a11y/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:py-4">
         {/* left side */}
         <div className=" flex items-center gap-2 md:gap-5">
@@ -175,9 +177,10 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 setDonationState((prev) => ({
                   ...prev,
                   // trigger admin view
-                  step: 2,
+                  // step: 2,
                   // trigger user view
                   // step: 3,
+                  step: participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.role =='MODERATOR' ? 2 : 3,
                 }));
               }}
               className="flex items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:hidden"
@@ -315,9 +318,10 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 setDonationState((prev) => ({
                   ...prev,
                   // trigger admin view
-                  step: 2,
+                  // step: 2,
                   // trigger user view
                   // step: 3,
+                  step: participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.role =='MODERATOR' ? 2 : 3,
                 }));
               }}
               className="hidden items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:flex"
