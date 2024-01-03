@@ -162,7 +162,7 @@ export interface IColumnBreakOutRoom {
 }
 
 export interface IUserBreakOutRoom {
-  id: string;
-  columnId: string;
-  name: string;
+  id: string | undefined;
+  columnId: string | undefined;
+  name: string | undefined;
 }

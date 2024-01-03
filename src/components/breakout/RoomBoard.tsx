@@ -133,23 +133,23 @@ function RoomBoard() {
         (t) => t.id === overId,
       );
 
-      if (
-        breakOutRoomState.users[activeIndex].columnId !==
-        breakOutRoomState.users[overIndex].columnId
-      ) {
-        setBreakOutRoomState((prev) => ({
-          ...prev,
-          users: [
-            ...prev.users.slice(0, activeIndex),
-            {
-              ...prev.users[activeIndex],
-              columnId: prev.users[overIndex].columnId,
-            },
-            ...prev.users.slice(activeIndex + 1),
-          ],
-        }));
-        return;
-      }
+      // if (
+      //   breakOutRoomState.users[activeIndex].columnId !==
+      //   breakOutRoomState.users[overIndex].columnId
+      // ) {
+      //   setBreakOutRoomState((prev) => ({
+      //     ...prev,
+      //     users: [
+      //       ...prev.users.slice(0, activeIndex),
+      //       {
+      //         ...prev.users[activeIndex],
+      //         columnId: prev.users[overIndex].columnId,
+      //       },
+      //       ...prev.users.slice(activeIndex + 1),
+      //     ],
+      //   }));
+      //   return;
+      // }
     }
 
     const isOverAColumn = over.data.current?.type === "Column";
@@ -159,17 +159,17 @@ function RoomBoard() {
       const activeIndex = breakOutRoomState.users.findIndex(
         (t) => t.id === activeId,
       );
-      setBreakOutRoomState((prev) => ({
-        ...prev,
-        users: [
-          ...prev.users.slice(0, activeIndex),
-          {
-            ...prev.users[activeIndex],
-            columnId: overId.toString(),
-          },
-          ...prev.users.slice(activeIndex + 1),
-        ],
-      }));
+      // setBreakOutRoomState((prev) => ({
+      //   ...prev,
+      //   users: [
+      //     ...prev.users.slice(0, activeIndex),
+      //     {
+      //       ...prev.users[activeIndex],
+      //       columnId: overId.toString(),
+      //     },
+      //     ...prev.users.slice(activeIndex + 1),
+      //   ],
+      // }));
     }
   }
 
