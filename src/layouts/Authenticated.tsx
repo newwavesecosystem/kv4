@@ -49,6 +49,7 @@ import CCModal from "~/components/cc/CCModal";
 import RemoveUserModal from "~/components/participants/RemoveUserModal";
 import LeaveRoomCallModal from "~/components/endCall/LeaveRoomCallModal";
 import {IParticipant} from "~/types";
+import BreakOutModal from "~/components/breakout/BreakOutModal";
 
 function Authenticated({ children }: { children: React.ReactNode }) {
   const [recordingState, setRecordingState] =
@@ -93,6 +94,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       <PollModal />
       <ECinemaModal />
       <CCModal />
+      <BreakOutModal />
       <div className="sticky top-0 z-50 flex h-16 w-full justify-between border-b border-a11y/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:py-4">
         {/* left side */}
         <div className=" flex items-center gap-2 md:gap-5">

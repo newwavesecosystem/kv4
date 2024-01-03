@@ -1,6 +1,7 @@
 import { atom } from "recoil";
+import { UsersData } from "~/data/UsersData";
 import settingsTabData from "~/data/settingsTabData";
-import {IConnectedUser, IMeetingDetails, IParticipant, IWaitingUser} from "~/types";
+import { IColumnBreakOutRoom, IConnectedUser, IMeetingDetails, IParticipant, IWaitingUser, IUserBreakOutRoom} from "~/types";
 
 export const authUserState = atom<{
   id: number;
@@ -9,7 +10,7 @@ export const authUserState = atom<{
   passCode: string;
   meetingId: string;
   sessiontoken: string;
-  meetingDetails: IMeetingDetails|null;
+  meetingDetails: IMeetingDetails | null;
 } | null>({
   key: "authUserState",
   default: null,
@@ -37,7 +38,6 @@ export const participantCameraListState = atom<any>({
   key: "participantCameraListState",
   default: [],
 });
-
 
 export const chatListState = atom<any>({
   key: "chatListState",
@@ -210,7 +210,7 @@ export const removeUserModalState = atom<{
   key: "removeUserModalState",
   default: {
     isActive: false,
-    userId: '0',
+    userId: "0",
     userFullName: "",
     isBan: false,
   },
@@ -279,6 +279,64 @@ export const donationModalState = atom<{
     enableFlashNotification: false,
     totalAmountDonatated: 0,
     usersDonated: [],
+  },
+});
+
+const defaultUsers: IUserBreakOutRoom[] = [
+  ...UsersData.map((user) => ({
+    id: user.id,
+    columnId: "users",
+    name: user.name,
+  })),
+];
+
+export const breakOutModalState = atom<{
+  isActive: boolean;
+  step: number;
+  rooms: IColumnBreakOutRoom[];
+  users: IUserBreakOutRoom[];
+  isAllowUsersToChooseRooms: boolean;
+  isSendInvitationToAssignedModerators: boolean;
+  duration: number;
+  isSaveWhiteBoard: boolean;
+  isSaveSharedNotes: boolean;
+  createdAt: Date | null;
+  creatorName: string;
+  creatorId: number;
+  isEnded: boolean;
+  activatedAt: Date | null;
+  endedAt: Date | null;
+}>({
+  key: "breakOutModalState",
+  default: {
+    step: 0,
+    isActive: false,
+    rooms: [
+      {
+        id: "users",
+        title: "Not Assigned",
+      },
+      {
+        id: "room1",
+        title: "Room 1",
+      },
+      {
+        id: "room2",
+        title: "Room 2",
+      },
+    ],
+    users: defaultUsers,
+    isAllowUsersToChooseRooms: false,
+    isSendInvitationToAssignedModerators: false,
+    duration: 15,
+    isSaveWhiteBoard: false,
+    isSaveSharedNotes: false,
+    createdAt: null,
+    creatorName: "",
+    creatorId: 0,
+    isEnded: false,
+    activatedAt: null,
+    endedAt: null,
   },
 });
 

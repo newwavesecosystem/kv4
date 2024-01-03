@@ -56,7 +56,7 @@ const SettingsSheetContent = React.forwardRef<
   SheetContentProps
 >(({ side = "right", className, children, ...props }, ref) => (
   <SettingsSheetPortal>
-    <SheetOverlay />
+    {/* <SheetOverlay /> */}
     <SheetPrimitive.Content
       ref={ref}
       className={cn(sheetVariants({ side }), className)}

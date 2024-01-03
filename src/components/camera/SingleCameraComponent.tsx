@@ -57,9 +57,11 @@ function SingleCameraComponent({
         key={key}
       className={cn(
         "relative aspect-square h-full w-full overflow-hidden rounded-lg bg-a11y/20",
+        participantList.length === 2 && "md:h-auto md:w-auto xl:w-full xl:h-full",
+        participantList.length === 3 && "lg:h-auto lg:w-auto",
         (participantList.length === 3 || participantList.length === 5) &&
           index === 0 &&
-          "col-span-2 md:col-auto",
+          "col-span-2 lg:col-auto",
           participantTalkingList.filter((eachItem:any) => eachItem?.intId == participant.intId).map((eachItem:any) => (
                   eachItem?.joined && !eachItem?.muted &&
           "ring-2 ring-primary ring-offset-2 ring-offset-primary"))
@@ -132,7 +134,7 @@ function SingleCameraComponent({
               participantList.length === 2 && "w-screen md:w-full",
           )}
         >
-          <div className="flex aspect-square h-32 items-center justify-center rounded-full bg-primary/80 text-3xl font-extrabold uppercase">
+          <div className="flex aspect-square p-4 lg:p-8 items-center justify-center rounded-full bg-primary/80 text-3xl font-semibold uppercase">
             {participant?.name?.split(" ")[0]?.slice(0, 1)}
             {participant?.name?.split(" ")[1]?.slice(0, 1)}
           </div>
