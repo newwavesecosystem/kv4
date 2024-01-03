@@ -87,7 +87,7 @@ function MiddleSide() {
   const { toast } = useToast();
 
   const user = useRecoilValue(authUserState);
-  const [participantList, setParticipantList] = useRecoilValue(participantListState);
+  const [participantList, setParticipantList] = useRecoilState(participantListState);
   const [micState, setMicState] = useRecoilState(micOpenState);
   const [videoState, setVideoState] = useRecoilState(cameraOpenState);
   const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
@@ -101,6 +101,8 @@ function MiddleSide() {
   const [leaveRoomCallModal, setRoomCallModal] = useRecoilState(
     leaveRoomCallModalState,
   );
+
+  console.log("UserState: middle", participantList)
 
 
   return (
@@ -276,7 +278,7 @@ function MiddleSide() {
         )}
       </button>
 
-      { participantList.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter && <button
+      { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter && <button
         className={cn(
           "rounded-full p-2",
           screenShareState
@@ -484,7 +486,7 @@ function MiddleSide() {
               <span>Upload Files</span>
             </DropdownMenuItem>
 
-            { participantList.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
+            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
             <DropdownMenuItem
               onClick={() => {
                 if (eCinemaModal.isActive)
@@ -505,7 +507,7 @@ function MiddleSide() {
             </DropdownMenuItem>
             )))}
 
-            { participantList.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
+            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
                 <DropdownMenuItem
                     onClick={() => {
                       websocketMuteAllParticipants(user?.meetingDetails?.internalUserID);
@@ -516,7 +518,7 @@ function MiddleSide() {
             </DropdownMenuItem>
             )))}
 
-            { participantList.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
+            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
             <DropdownMenuItem
               onClick={() => {
                 if (pollModal.isActive || pollModal.isEnded) return;
