@@ -352,7 +352,7 @@ function PostSignIn() {
           !eCinemaModal.isActive && (
             <div
               className={cn(
-                " m-auto h-[calc(100vh-128px)] p-4 ",
+                " m-auto h-[calc(100vh-128px)] p-4 items-center justify-center ",
                 (isWhiteboardOpen || screenSharingStream) &&
                 participantTalkingList.filter((eachItem:any) => !eachItem.muted)
                     ?.length > 0 &&
@@ -362,7 +362,7 @@ function PostSignIn() {
                 participantList.length === 2 &&
                 "grid justify-center gap-2 md:grid-cols-2",
                 participantList.length === 3 &&
-                "grid grid-cols-2 gap-2 md:grid-cols-3",
+                "grid grid-cols-2 gap-2 lg:grid-cols-3 ",
                 participantList.length >= 4 && "grid grid-cols-2 gap-2",
                 participantList.length >= 5 && "grid gap-2 md:grid-cols-3",
                 participantList.length >= 7 && "grid gap-2 md:grid-cols-4",
