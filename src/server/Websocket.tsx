@@ -344,7 +344,7 @@ const Websocket = () => {
         }
 
         if(msg == "removed"){
-            setViewerScreenShareState(true);
+            setViewerScreenShareState(false);
             setScreenSharingStream(null);
         }
     }

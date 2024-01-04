@@ -119,8 +119,20 @@ const KurentoScreenShareViewer = () => {
             setWsStarted(true)
             KurentoScreenShareViewerConnect();
         }else{
-            console.log('KurentoScreenShareViewer continued on existing protocol ');
-            startProcess();
+            if(viewerscreenShareState) {
+                console.log('KurentoScreenShareViewer continued on existing protocol ');
+                setTimeout(()=>{
+                    startProcess();
+                }, 2000);
+            }else{
+                // Cleanup: Close WebSocket and release WebRTC resources
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.close();
+                }
+                if (webRtcPeer) {
+                    webRtcPeer.dispose();
+                }
+            }
         }
 
 
@@ -143,7 +155,9 @@ const KurentoScreenShareViewer = () => {
         if (ws != null) {
             ws.onopen = () => {
                 console.log('KurentoScreenShareViewer Socket connection established');
-                startProcess();
+                setTimeout(()=>{
+                    startProcess();
+                }, 2000);
             };
 
             ws.onmessage = (message) => {
