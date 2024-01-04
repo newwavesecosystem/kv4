@@ -270,7 +270,7 @@ function BreakOutModalCreate() {
                         columnId: room?.id ?? "users",
                       },
                       ...newUsers.slice(usersIndex + 1),
-                    ];
+                    ] as any
                     usersIndex++;
                     roomsIndex++;
                   }

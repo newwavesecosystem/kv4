@@ -3,7 +3,7 @@ import { AlertDialog, AlertDialogContent } from "../ui/alert-dialog";
 import { useRecoilState } from "recoil";
 import { endCallModalState, postLeaveMeetingState } from "~/recoil/atom";
 import AlertTriangleIcon from "../icon/outline/AlertTriangleIcon";
-import {websocketEndMeeting} from "~/server/Websocket";
+import { websocketEndMeeting } from "~/server/Websocket";
 
 function EndCallModal() {
   const [endCallModal, setEndCallModal] = useRecoilState(endCallModalState);
@@ -36,7 +36,10 @@ function EndCallModal() {
               className="w-full rounded-md bg-a11y/20 py-3"
               onClick={() => {
                 setEndCallModal(false);
-                setPostLeaveMeeting(true);
+                setPostLeaveMeeting({
+                  ...postLeaveMeeting,
+                  isEndCall: true,
+                });
                 websocketEndMeeting();
               }}
             >
