@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   authUserState,
@@ -66,7 +66,7 @@ import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
 import {
   websocketMuteAllParticipants,
-  websocketMuteMic,
+  websocketMuteMic, websocketPresenter,
   websocketRaiseHand,
   websocketStopCamera
 } from "~/server/Websocket";
@@ -103,8 +103,7 @@ function MiddleSide() {
     leaveRoomCallModalState,
   );
 
-  console.log("UserState: middle", participantList)
-
+  const [ssscreen, setScreen] = useState(null);
 
   return (
     <div className=" flex w-full items-center justify-center gap-5">
@@ -288,7 +287,7 @@ function MiddleSide() {
         )}
         onClick={async () => {
           if (screenShareState && screenSharingStream) {
-            stopScreenSharingStream(screenSharingStream);
+            stopScreenSharingStream(ssscreen);
             // update the connected users state for the user where the id is the same
             setConnectedUsers((prev) =>
               prev.map((prevUser) => {
@@ -304,9 +303,19 @@ function MiddleSide() {
             );
             setScreenSharingStream(null);
             setScreenShareState(!screenShareState);
+
+            websocketPresenter(participantList[0].intId);
+
+            setTimeout(()=>{
+              websocketPresenter(user?.meetingDetails?.internalUserID);
+            }, 1000);
+
             return;
           }
           const screen = await requestScreenSharingAccess();
+
+          setScreen(screen);
+
           if (screen) {
             setScreenSharingStream(screen);
             // update the connected users state for the user where the id is the same

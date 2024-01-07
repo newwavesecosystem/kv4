@@ -1,9 +1,9 @@
 import SockJS from 'sockjs-client';
-import {useContext, useEffect} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import * as UserInfo from './UserInfo';
 import * as ServerInfo from './ServerInfo';
 
-import {generateRandomId} from "./ServerInfo";
+import {generateRandomId, generatesSmallId} from "./ServerInfo";
 
 import {
     authUserState, chatListState, chatTypingListState,
@@ -109,6 +109,12 @@ const Websocket = () => {
     const [pollModal, setPollModal] = useRecoilState(pollModalState);
     const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
     const [waitingRoomUsers, setWaitingRoomUsers] = useRecoilState(waitingRoomUsersState);
+    const [num, setNum] = useState(1);
+
+    const getNum=()=>{
+        setNum(num+1);
+        return num;
+    }
 
 
     useEffect(() => {
@@ -1028,8 +1034,8 @@ export function websocketMuteMic() {
     websocketSend(["{\"msg\":\"method\",\"id\":\"9\",\"method\":\"toggleVoice\",\"params\":[]}"])
 }
 
-export function websocketPresenter(internalUserID:string){
-    websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"assignPresenter\",\"params\":[\"${internalUserID}\"]}`])
+export function websocketPresenter(internalUserID:string|undefined){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${generatesSmallId()}\",\"method\":\"assignPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
 
 export function websocketSendExternalVideo(link:string){
