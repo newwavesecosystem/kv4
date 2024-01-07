@@ -7,12 +7,12 @@ import {generateRandomId, generatesSmallId} from "./ServerInfo";
 
 import {
     authUserState, chatListState, chatTypingListState,
-    connectionStatusState, donationModalState, eCinemaModalState, participantCameraListState,
+    connectionStatusState, donationModalState, eCinemaModalState, micOpenState, participantCameraListState,
     participantListState,
     participantTalkingListState, pollModalState, presentationSlideState,
     recordingModalState, screenSharingStreamState, viewerScreenSharingState, waitingRoomUsersState
 } from "~/recoil/atom";
-import {useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {IParticipant, IParticipantCamera, IWaitingUser} from "~/types";
 
 // var sock = null;
@@ -109,6 +109,7 @@ const Websocket = () => {
     const [pollModal, setPollModal] = useRecoilState(pollModalState);
     const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
     const [waitingRoomUsers, setWaitingRoomUsers] = useRecoilState(waitingRoomUsersState);
+    const [micState, setMicState] = useRecoilState(micOpenState);
     const [num, setNum] = useState(1);
 
     const getNum=()=>{
@@ -688,6 +689,10 @@ const Websocket = () => {
         // Update the 'muted' property to 'true' for the object with id '7J2pQrMaH5C58ZsHj' for Audio
         const updatedArray = participantTalkingList?.map((item:any) => {
             if (item.id === id) {
+
+                if(item.intId == user?.meetingDetails?.internalUserID){
+                    setMicState(!micState);
+                }
                 return {...item, muted: state};
             }
             return item;
@@ -925,33 +930,33 @@ const Websocket = () => {
 }
 
 export function websocketSendMessage(internalUserID:any,meetingTitle:any,sender:any,message:string) {
-    websocketSend([`{\"msg\":\"method\",\"id\":\"19\",\"method\":\"sendGroupChatMsg\",\"params\":[\"MAIN-PUBLIC-GROUP-CHAT\",{\"correlationId\":\"${internalUserID}-${Date.now()}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"sendGroupChatMsg\",\"params\":[\"MAIN-PUBLIC-GROUP-CHAT\",{\"correlationId\":\"${internalUserID}-${Date.now()}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
     websocketStopTyping();
 }
 
 export function websocketStartTyping() {
     console.log('I am websocketStartTyping')
-    websocketSend(["{\"msg\":\"method\",\"id\":\"120\",\"method\":\"startUserTyping\",\"params\":[\"public\"]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startUserTyping\",\"params\":[\"public\"]`])
 }
 
 export function websocketStopTyping() {
     console.log('I am websocketStopTyping')
-    websocketSend(["{\"msg\":\"method\",\"id\":\"57\",\"method\":\"stopUserTyping\",\"params\":[]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"stopUserTyping\",\"params\":[]}`])
 }
 
 export function websocketRemoveUser(internalUserID:any,preventRejoin:boolean) {
     console.log('I am websocketRemoveUser')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"19\",\"method\":\"removeUser\",\"params\":[\"${internalUserID}\",${preventRejoin}]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"removeUser\",\"params\":[\"${internalUserID}\",${preventRejoin}]}`])
 }
 
 export function websocketStopCamera(streamID:string) {
     console.log('I am websocketStopCamera')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"41\",\"method\":\"userUnshareWebcam\",\"params\":[\"${streamID}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"userUnshareWebcam\",\"params\":[\"${streamID}\"]}`])
 }
 
 export function websocketRecord() {
     console.log('I am Websockets')
-    websocketSend(["{\"msg\":\"method\",\"id\":\"273\",\"method\":\"toggleRecording\",\"params\":[]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleRecording\",\"params\":[]}`])
 }
 
 export function websocketParticipantsChangeRole(internalUserID:any,type:number) {
@@ -962,34 +967,34 @@ export function websocketParticipantsChangeRole(internalUserID:any,type:number) 
     if(type==1){
         role='MODERATOR';
     }
-    websocketSend([`{\"msg\":\"method\",\"id\":\"39\",\"method\":\"changeRole\",\"params\":[\"${internalUserID}\",\"${role}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"changeRole\",\"params\":[\"${internalUserID}\",\"${role}\"]}`])
 }
 
 export function websocketMuteAllParticipants(internalUserID:any) {
     console.log('Muted all')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"11\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
 }
 
 export function websocketMuteParticipants(internalUserID:any) {
     console.log('Muted all')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"11\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
 }
 
 export function websocketMuteParticipantsePresenter(internalUserID:any) {
     console.log('Muted all except preseter')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"muteAllExceptPresenter\",\"params\":[\"${internalUserID}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"muteAllExceptPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
 
 export function websocketLockViewers(internalUserID:any) {
     console.log('LockViewers')
-    websocketSend(["{\"msg\":\"method\",\"id\":\"85\",\"method\":\"toggleLockSettings\",\"params\":[{\"disableCam\":true,\"disableMic\":true,\"disableNotes\":true,\"disablePrivateChat\":true,\"disablePublicChat\":true,\"hideUserList\":true,\"hideViewersAnnotation\":true,\"hideViewersCursor\":true,\"lockOnJoin\":true,\"lockOnJoinConfigurable\":false,\"setBy\":\"temp\"}]}"])
-    websocketSend(["{\"msg\":\"method\",\"id\":\"86\",\"method\":\"toggleWebcamsOnlyForModerator\",\"params\":[true]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleLockSettings\",\"params\":[{\"disableCam\":true,\"disableMic\":true,\"disableNotes\":true,\"disablePrivateChat\":true,\"disablePublicChat\":true,\"hideUserList\":true,\"hideViewersAnnotation\":true,\"hideViewersCursor\":true,\"lockOnJoin\":true,\"lockOnJoinConfigurable\":false,\"setBy\":\"temp\"}]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleWebcamsOnlyForModerator\",\"params\":[true]}`])
 }
 
 export function websocketUnLockViewers(internalUserID:any) {
     console.log('unLockViewers')
-    websocketSend(["{\"msg\":\"method\",\"id\":\"124\",\"method\":\"toggleLockSettings\",\"params\":[{\"disableCam\":false,\"disableMic\":false,\"disablePrivateChat\":false,\"disablePublicChat\":false,\"disableNotes\":false,\"hideUserList\":false,\"lockOnJoin\":true,\"lockOnJoinConfigurable\":false,\"hideViewersCursor\":false,\"hideViewersAnnotation\":false,\"setBy\":\"w_gmo5zeyaswun\"}]}"])
-    websocketSend(["{\"msg\":\"method\",\"id\":\"125\",\"method\":\"toggleWebcamsOnlyForModerator\",\"params\":[false]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleLockSettings\",\"params\":[{\"disableCam\":false,\"disableMic\":false,\"disablePrivateChat\":false,\"disablePublicChat\":false,\"disableNotes\":false,\"hideUserList\":false,\"lockOnJoin\":true,\"lockOnJoinConfigurable\":false,\"hideViewersCursor\":false,\"hideViewersAnnotation\":false,\"setBy\":\"w_gmo5zeyaswun\"}]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleWebcamsOnlyForModerator\",\"params\":[false]}`])
 }
 
 export function websocketSetWaitingRoom(type:number) {
@@ -1006,23 +1011,23 @@ export function websocketSetWaitingRoom(type:number) {
         eType='ALWAYS_ACCEPT';
     }
 
-    websocketSend([`{\"msg\":\"method\",\"id\":\"168\",\"method\":\"changeGuestPolicy\",\"params\":[\"${eType}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"changeGuestPolicy\",\"params\":[\"${eType}\"]}`])
 }
 
 export function websocketDenyAllWaitingUser(user:any) {
-    websocketSend([`{\"msg\":\"method\",\"id\":\"37\",\"method\":\"allowPendingUsers\",\"params\":[${JSON.stringify(user)},\"DENY\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"allowPendingUsers\",\"params\":[${JSON.stringify(user)},\"DENY\"]}`])
 }
 
 export function websocketAllowAllWaitingUser(user:any) {
-    websocketSend([`{\"msg\":\"method\",\"id\":\"101\",\"method\":\"allowPendingUsers\",\"params\":[${JSON.stringify(user)},\"ALLOW\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"allowPendingUsers\",\"params\":[${JSON.stringify(user)},\"ALLOW\"]}`])
 }
 
 export function websocketSendMessage2AllWaitingUser(message:string) {
-    websocketSend([`{\"msg\":\"method\",\"id\":\"55\",\"method\":\"setGuestLobbyMessage\",\"params\":[\"${message}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setGuestLobbyMessage\",\"params\":[\"${message}\"]}`])
 }
 
 export function websocketSendMessage2PrivateWaitingUser(message:string,internalUserID:string) {
-    websocketSend([`{\"msg\":\"method\",\"id\":\"69\",\"method\":\"setPrivateGuestLobbyMessage\",\"params\":[\"${message}\",\"${internalUserID}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setPrivateGuestLobbyMessage\",\"params\":[\"${message}\",\"${internalUserID}\"]}`])
 }
 
 
@@ -1031,11 +1036,11 @@ export function websocketClear() {
 }
 
 export function websocketMuteMic() {
-    websocketSend(["{\"msg\":\"method\",\"id\":\"9\",\"method\":\"toggleVoice\",\"params\":[]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleVoice\",\"params\":[]}`])
 }
 
-export function websocketPresenter(internalUserID:string|undefined){
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${generatesSmallId()}\",\"method\":\"assignPresenter\",\"params\":[\"${internalUserID}\"]}`])
+export function websocketPresenter(internalUserID:string){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"assignPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
 
 export function websocketSendExternalVideo(link:string){
@@ -1043,15 +1048,15 @@ export function websocketSendExternalVideo(link:string){
 }
 
 export function websocketStartPoll(id:any,question:any,answers:any){
-    websocketSend([`{"msg":"method","id":"41","method":"startPoll","params":[{"YesNo":"YN","YesNoAbstention":"YNA","TrueFalse":"TF","Letter":"A-","A2":"A-2","A3":"A-3","A4":"A-4","A5":"A-5","Custom":"CUSTOM","Response":"R-"},"CUSTOM","${id}",false,"${question}",false,${answers}]}`]);
+    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"startPoll","params":[{"YesNo":"YN","YesNoAbstention":"YNA","TrueFalse":"TF","Letter":"A-","A2":"A-2","A3":"A-3","A4":"A-4","A5":"A-5","Custom":"CUSTOM","Response":"R-"},"CUSTOM","${id}",false,"${question}",false,${answers}]}`]);
 }
 
 export function websocketVotePoll(id:any,answerID:any){
-    websocketSend([`{\"msg\":\"method\",\"id\":\"53\",\"method\":\"publishVote\",\"params\":[\"${id}\",[${answerID}]]}`]);
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"publishVote\",\"params\":[\"${id}\",[${answerID}]]}`]);
 }
 
 export function websocketStopPoll(){
-    websocketSend(["{\"msg\":\"method\",\"id\":\"66\",\"method\":\"stopPoll\",\"params\":[]}"]);
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"stopPoll\",\"params\":[]}`]);
 }
 
 export function websocketStopExternalVideo(){
@@ -1059,19 +1064,19 @@ export function websocketStopExternalVideo(){
 }
 
 export function websocketRaiseHand(internalUserID:any){
-    websocketSend([`{\"msg\":\"method\",\"id\":\"51\",\"method\":\"setEmojiStatus\",\"params\":[\"${internalUserID}\",\"raiseHand\"]}`]);
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setEmojiStatus\",\"params\":[\"${internalUserID}\",\"raiseHand\"]}`]);
 }
 
 export function websocketLeaveMeeting(){
-    websocketSend(["{\"msg\":\"method\",\"id\":\"10\",\"method\":\"userLeftMeeting\",\"params\":[]}"])
-    websocketSend(["{\"msg\":\"method\",\"id\":\"11\",\"method\":\"setExitReason\",\"params\":[\"logout\"]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"userLeftMeeting\",\"params\":[]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setExitReason\",\"params\":[\"logout\"]}`])
     websocketSend(["{\"msg\":\"unsub\",\"id\":\"mSxKqr4q4tGPLvXyN\"}"])
     websocketSend(["{\"msg\":\"unsub\",\"id\":\"whbeWHhAFELhDD8Gn\"}"])
 }
 
 export function websocketEndMeeting(){
-    websocketSend(["{\"msg\":\"method\",\"id\":\"27\",\"method\":\"endMeeting\",\"params\":[]}"])
-    websocketSend(["{\"msg\":\"method\",\"id\":\"15\",\"method\":\"setExitReason\",\"params\":[\"meetingEnded\"]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"endMeeting\",\"params\":[]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setExitReason\",\"params\":[\"meetingEnded\"]}`])
     websocketSend(["{\"msg\":\"unsub\",\"id\":\"8ADqKJeTX9KdLCY7u\"}"])
     websocketSend(["{\"msg\":\"unsub\",\"id\":\"ZapBdy6HAuBvCRvqy\"}"])
 }
