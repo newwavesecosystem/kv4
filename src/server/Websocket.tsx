@@ -1033,7 +1033,7 @@ export function websocketMuteMic() {
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleVoice\",\"params\":[]}`])
 }
 
-export function websocketPresenter(internalUserID:string){
+export function websocketPresenter(internalUserID:string|undefined){
     websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"assignPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
 

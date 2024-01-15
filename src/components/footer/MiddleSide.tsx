@@ -103,7 +103,7 @@ function MiddleSide() {
     leaveRoomCallModalState,
   );
 
-  const [ssscreen, setScreen] = useState(null);
+  const [ssscreen, setScreen] = useState<null|MediaStream>(null);
 
   return (
     <div className=" flex w-full items-center justify-center gap-5">
