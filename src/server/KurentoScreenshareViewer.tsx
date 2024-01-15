@@ -123,7 +123,7 @@ const KurentoScreenShareViewer = () => {
                 console.log('KurentoScreenShareViewer continued on existing protocol ');
                 setTimeout(()=>{
                     startProcess();
-                }, 2000);
+                }, 20);
             }else{
                 // Cleanup: Close WebSocket and release WebRTC resources
                 if (ws && ws.readyState === WebSocket.OPEN) {

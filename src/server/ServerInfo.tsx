@@ -23,3 +23,8 @@ export function generateSmallId() {
     const characters = new Date();
     return characters.getSeconds() + characters.getMilliseconds();
 }
+
+export function generatesSmallId() {
+    const characters = new Date();
+    return characters.getMilliseconds().toPrecision(3);
+}

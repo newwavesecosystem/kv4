@@ -99,16 +99,22 @@ const KurentoScreenShare = () => {
             setWsStarted(true)
             KurentoScreenShareConnect();
         }else{
-            console.log('KurentoScreenShare continued on existing protocol ');
+            if(screenShareState) {
+                console.log('KurentoScreenShare continued on existing protocol ');
 
-            // const timerId = setInterval(() => {
-            //     if (screenshare?.localScreenshareStream != null) {
-            //         clearInterval(timerId); // Disable the timer
-            startProcess();
-            //     }else {
-            //         console.log("localScreenshareStream is null");
-            //     }
-            // }, 1000); // Check every second
+                startProcess();
+            }else{
+                console.log('KurentoScreenShare time to close');
+            // Cleanup: Close WebSocket and release WebRTC resources
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                console.log('KurentoScreenShare trying to close');
+                ws.close();
+            }
+            if (webRtcPeer) {
+                webRtcPeer.dispose();
+            }
+        }
+
 
         }
 

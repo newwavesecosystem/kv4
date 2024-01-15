@@ -394,7 +394,7 @@ function PostSignIn() {
           })}
 
           {screenShareState && <KurentoScreenShare/>}
-          {viewerscreenShareState && <KurentoScreenShareViewer/>}
+          {viewerscreenShareState && !screenShareState && <KurentoScreenShareViewer/>}
 
       </div>
     </Authenticated>
