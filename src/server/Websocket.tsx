@@ -184,9 +184,10 @@ const Websocket = () => {
                     handleRecording(e.data)
                 }
 
-                // if(collection == "meetings"){
-                //     handleMeetings(e.data)
-                // }
+                if(collection == "meetings"){
+                    handleMeetings(e.data)
+                }
+
                 if(collection == "external-video-meetings"){
                     handleExternalVideo(e.data)
                 }
@@ -518,20 +519,27 @@ const Websocket = () => {
         }
     }
 
-    // const handleMeetings =(eventData)=>{
-    //     console.log('Random User Handler')
-    //     const obj = JSON.parse(eventData);
-    //     const {msg, randomlySelectedUser, meetingEnded} = obj.fields
-    //
-    //     if(meetingEnded != null && meetingEnded){
-    //         endCall();
-    //     }
-    //
-    //     if(randomlySelectedUser != null){
-    //         handleRandomUsers(eventData)
-    //     }
-    // }
-    //
+    const handleMeetings =(eventData:any)=>{
+        console.log('Random User Handler')
+        const obj = JSON.parse(eventData);
+        const {msg, randomlySelectedUser, meetingEnded, voiceProp} = obj.fields
+
+        if(meetingEnded != null && meetingEnded){
+            // endCall();
+        }
+
+        if(randomlySelectedUser != null){
+            // handleRandomUsers(eventData)
+        }
+
+        if(voiceProp != null){
+            if(!voiceProp.muteOnStart){
+                setMicState(voiceProp.muteOnStart);
+            }
+
+        }
+    }
+
     // const handleRandomUsers =(eventData)=>{
     //     console.log('Random User Handler')
     //     const obj = JSON.parse(eventData);
@@ -551,21 +559,7 @@ const Websocket = () => {
     //     randomlyselectedUser(userName)
     // }
     //
-    // const handleRecording = (eventData) => {
-    //     console.log('I got to handle incoming messages')
-    //     const obj = JSON.parse(eventData);
-    //     const {recording, time,} = obj.fields;
-    //     if (recording == null) {
-    //         recordingTiming(time)
-    //     } else {
-    //         if (recording) {
-    //             // startRecording()
-    //         } else {
-    //             stopRecording()
-    //         }
-    //     }
-    // }
-    //
+
     // const handlePresentationPreUpload = (eventData) => {
     //     console.log('I got to handle incoming messages')
     //     const obj = JSON.parse(eventData);

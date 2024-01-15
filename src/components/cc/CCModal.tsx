@@ -10,6 +10,8 @@ import { cn } from "~/lib/utils";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";
+// import io from 'socket.io-client';
+import socket from '../../server/socket';
 
 function CCModal() {
   const [ccModal, setCCModal] = useRecoilState(ccModalState);
@@ -24,12 +26,54 @@ function CCModal() {
 
   const [transcriptTranslated, setTranscriptTranslated] = useState("");
 
+  const broadcastCaption=(text:any)=>{
+    console.log("send_captions", text); // world
+    socket.emit("send_captions", {
+      "text": text,
+      "user": "samdo",
+      "meetingID": "535353",
+      "date": "2024-01-13"
+    });
+  }
+
+
+  useEffect(() => {
+    // client-side
+    socket.on("connect", () => {
+      console.log("Socket Connected"); // x8WIv7-mJelg7on_ALbx
+      console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+
+      socket.emit("join_room", "535353");
+    });
+
+    socket.on("disconnect", () => {
+      console.log(socket.id); // undefined
+    });
+
+    socket.on("receive_captions", (arg) => {
+      console.log("receive_captions", arg); // world
+      console.log("receive_captions", arg.user); // world
+
+      let displayText=`${arg.user}: ${arg.text}`;
+
+      console.log("receive_captions displayText", displayText); // world
+      setTranscriptTranslated(displayText);
+    });
+
+    // return () => {
+    //   // Clean up socket connections when the component unmounts
+    //   socket.disconnect();
+    // };
+
+  }, []);
+
 
   // When a new transcript is received, add it to the lines array
   useEffect(() => {
     SpeechRecognition.startListening({ continuous: true });
 
     if (transcript) {
+      broadcastCaption(transcript);
       if(ccModal.language != "en" ) {
         console.log("working on translation")
         translate().then();

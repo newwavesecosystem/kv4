@@ -103,9 +103,6 @@ function MiddleSide() {
     leaveRoomCallModalState,
   );
 
-  console.log("UserState: middle", participantList)
-
-
   return (
     <div className=" flex w-full items-center justify-center gap-5">
       <div className="flex items-center gap-1 rounded-3xl border border-a11y/40 bg-[#DF2622] p-2 md:hidden">
