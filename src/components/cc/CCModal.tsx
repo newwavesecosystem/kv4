@@ -57,7 +57,7 @@ function CCModal() {
       let displayText=`${arg.user}: ${arg.text}`;
 
       console.log("receive_captions displayText", displayText); // world
-      setTranscriptTranslated(displayText);
+      setTranscriptTranslated(`${transcriptTranslated} <br /> ${displayText}`);
     });
 
     // return () => {

@@ -684,9 +684,9 @@ const Websocket = () => {
         const updatedArray = participantTalkingList?.map((item:any) => {
             if (item.id === id) {
 
-                if(item.intId == user?.meetingDetails?.internalUserID){
-                    setMicState(!micState);
-                }
+                // if(item.intId == user?.meetingDetails?.internalUserID){
+                //     setMicState(!micState);
+                // }
                 return {...item, muted: state};
             }
             return item;
