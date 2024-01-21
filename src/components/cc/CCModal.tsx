@@ -70,6 +70,7 @@ function CCModal() {
 
   // When a new transcript is received, add it to the lines array
   useEffect(() => {
+    console.log("transcript useEffect ");
     SpeechRecognition.startListening({ continuous: true });
 
     if (transcript) {
