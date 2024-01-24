@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import { useRecoilState } from "recoil";
-import { ccModalState } from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {authUserState, ccModalState} from "~/recoil/atom";
 import CloseIcon from "../icon/outline/CloseIcon";
 import EllipsisIcon from "../icon/outline/EllipsisIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
@@ -25,13 +25,14 @@ function CCModal() {
 
 
   const [transcriptTranslated, setTranscriptTranslated] = useState("");
+  const user = useRecoilValue(authUserState);
 
   const broadcastCaption=(text:any)=>{
     console.log("send_captions", text); // world
     socket.emit("send_captions", {
       "text": text,
-      "user": "samdo",
-      "meetingID": "535353",
+      "user": user?.meetingDetails?.fullname,
+      "meetingID": user?.meetingDetails?.meetingID,
       "date": "2024-01-13"
     });
   }
@@ -43,10 +44,13 @@ function CCModal() {
       console.log("Socket Connected"); // x8WIv7-mJelg7on_ALbx
       console.log(socket.id); // x8WIv7-mJelg7on_ALbx
 
-      socket.emit("join_room", "535353");
+      if(user?.meetingDetails?.meetingID != null){
+        socket.emit("join_room", user?.meetingDetails?.meetingID);
+      }
+
     });
 
-    socket.on("disconnect", () => {
+    socket.on("disconnect", ( ) => {
       console.log(socket.id); // undefined
     });
 
@@ -57,7 +61,7 @@ function CCModal() {
       let displayText=`${arg.user}: ${arg.text}`;
 
       console.log("receive_captions displayText", displayText); // world
-      setTranscriptTranslated(`${transcriptTranslated} <br /> ${displayText}`);
+      setTranscriptTranslated(`${transcriptTranslated} \n ${displayText}`);
     });
 
     // return () => {
@@ -65,15 +69,16 @@ function CCModal() {
     //   socket.disconnect();
     // };
 
-  }, []);
+  }, [""]);
 
 
   // When a new transcript is received, add it to the lines array
   useEffect(() => {
     console.log("transcript useEffect ");
-    SpeechRecognition.startListening({ continuous: true });
+    SpeechRecognition.startListening();
 
     if (transcript) {
+      setTimeout(resetTranscript,30000)
       broadcastCaption(transcript);
       if(ccModal.language != "en" ) {
         console.log("working on translation")
@@ -108,8 +113,6 @@ function CCModal() {
     console.log("response", responseData);
 
     setTranscriptTranslated(responseData?.data)
-
-    setTimeout(resetTranscript,30000)
   }
 
 
@@ -118,7 +121,8 @@ function CCModal() {
       {ccModal.isActive && (
         <div className="fixed bottom-20 z-10 mx-auto flex w-full justify-center px-4">
           <div className="flex h-20 w-full items-center rounded-md bg-primary md:max-w-xl ">
-            <span className="truncate px-4">
+            <span className="px-4">
+            {/*<span className="truncate px-4">*/}
               {transcriptTranslated}
             </span>
             <div className="flex h-full flex-col items-center divide-y divide-a11y border-l-2 border-a11y/70">
