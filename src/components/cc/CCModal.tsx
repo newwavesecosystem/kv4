@@ -75,7 +75,7 @@ function CCModal() {
   // When a new transcript is received, add it to the lines array
   useEffect(() => {
     console.log("transcript useEffect ");
-    SpeechRecognition.startListening();
+    SpeechRecognition.startListening({ continuous: true });
 
     if (transcript) {
       setTimeout(resetTranscript,30000)
