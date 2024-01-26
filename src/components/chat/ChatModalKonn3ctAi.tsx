@@ -46,7 +46,7 @@ function ChatModalKonn3ctAi() {
   async function highlights() {
     console.log("highlights API")
 
-    setKaiChatList((prev)=>([
+    setKaiChatList((prev:any)=>([
         ...prev,
           {
             id: 1,
@@ -93,7 +93,7 @@ function ChatModalKonn3ctAi() {
   async function summary() {
     console.log("summary API")
 
-    setKaiChatList((prev)=>([
+    setKaiChatList((prev:any)=>([
         ...prev,
           {
             id: 1,
@@ -140,7 +140,7 @@ function ChatModalKonn3ctAi() {
   async function transcript() {
     console.log("transcript API")
 
-    setKaiChatList((prev)=>([
+    setKaiChatList((prev:any)=>([
         ...prev,
           {
             id: 1,
