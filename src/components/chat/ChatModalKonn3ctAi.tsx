@@ -206,7 +206,7 @@ function ChatModalKonn3ctAi() {
         <div
           className={cn(" no-scrollbar h-[calc(100vh-192px)] overflow-y-auto")}
         >
-          {kaiChatList.map((chat, index) => (
+          {kaiChatList.map((chat:any, index) => (
             <SingleKonn3ctAiChat key={index} chat={chat} />
           ))}
           {kaiChatList.length === 0 && (
