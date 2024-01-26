@@ -44,6 +44,11 @@ export const chatListState = atom<any>({
   default: [],
 });
 
+export const kaiChatListState = atom<any>({
+  key: "kaiChatListState",
+  default: [],
+});
+
 export const chatTypingListState = atom<any>({
   key: "chatTypingListState",
   default: [],
