@@ -70,7 +70,7 @@ function ChatModalKonn3ctAi() {
         console.log(this.responseText);
         var jresp=JSON.parse(this.responseText);
 
-        setKaiChatList((prev)=>([
+        setKaiChatList((prev:any)=>([
               ...prev,
               {
                 id: 1,
@@ -117,7 +117,7 @@ function ChatModalKonn3ctAi() {
         console.log(this.responseText);
         var jresp=JSON.parse(this.responseText);
 
-        setKaiChatList((prev)=>([
+        setKaiChatList((prev:any)=>([
               ...prev,
               {
                 id: 1,
@@ -164,7 +164,7 @@ function ChatModalKonn3ctAi() {
         console.log(this.responseText);
         var jresp=JSON.parse(this.responseText);
 
-        setKaiChatList((prev)=>([
+        setKaiChatList((prev:any)=>([
               ...prev,
               {
                 id: 1,
