@@ -77,11 +77,11 @@ function SingleCameraComponent({
               : "rounded-full bg-primary/80"
           )))}
         >
-          {participantTalkingList.filter((eachItem:any) => eachItem?.intId == participant.intId).map((eachItem:any) => (
+          {participantTalkingList.filter((eachItem:any, index:number) => eachItem?.intId == participant.intId).map((eachItem:any) => (
                eachItem?.joined && !eachItem?.muted  ? (
-            <MicOnIcon className="h-5 w-5 " />
+            <MicOnIcon key={index} className="h-5 w-5 " />
           ) : (
-            <MicOffIcon className="h-5 w-5 " />
+            <MicOffIcon key={index} className="h-5 w-5 " />
           )))}
         </button>
         <DropdownMenu>

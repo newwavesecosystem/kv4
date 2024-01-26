@@ -390,7 +390,7 @@ function PostSignIn() {
           <KurentoAudio/>
           <KurentoVideo/>
           {participantCameraList?.map((cItem:IParticipantCamera,index:number)=>{
-              return <KurentoVideoViewer streamID={cItem?.streamID}/>
+              return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>
           })}
 
           {screenShareState && <KurentoScreenShare/>}

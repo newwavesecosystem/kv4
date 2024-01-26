@@ -93,7 +93,7 @@ function WaitingRoomSettings() {
 
         <div className="flex flex-col gap-2 py-5">
           {waitingRoomUsers.map((item:IWaitingUser,index:number)=>{
-            return (<div className="flex items-center justify-between py-2">
+            return (<div key={index} className="flex items-center justify-between py-2">
               <div className="flex items-center gap-2">
                 <div className="h-7 w-7 rounded-full border-[1px] border-secondary/20 bg-secondary"></div>
                 <span>{item.name}</span>

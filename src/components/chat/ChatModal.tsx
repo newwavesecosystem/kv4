@@ -168,8 +168,8 @@ function ChatModal() {
           ))}
         </div>
 
-        {chatTypingList.map((text:any) =>(
-            <div>
+        {chatTypingList.map((text:any, index:number) =>(
+            <div key={index}>
               {text.name}, is typing
             </div>
         ))}

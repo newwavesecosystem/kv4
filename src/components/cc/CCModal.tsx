@@ -69,7 +69,7 @@ function CCModal() {
     //   socket.disconnect();
     // };
 
-  }, [""]);
+  }, []);
 
 
   // When a new transcript is received, add it to the lines array
