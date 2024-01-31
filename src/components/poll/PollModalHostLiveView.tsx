@@ -4,6 +4,7 @@ import { connectedUsersState, pollModalState } from "~/recoil/atom";
 import { Dialog, DialogContent } from "../ui/dialog";
 import PlayIcon from "../icon/outline/PlayIcon";
 import PauseIcon from "../icon/outline/PauseIcon";
+import {websocketStopPoll} from "~/server/Websocket";
 
 function PollModalHostLiveView() {
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
@@ -84,6 +85,8 @@ function PollModalHostLiveView() {
                 isEnded: true,
                 step: 0,
               }));
+
+              websocketStopPoll();
             }}
             className="rounded-md bg-a11y/20 px-4 py-2"
           >

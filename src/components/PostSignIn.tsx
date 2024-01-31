@@ -507,17 +507,16 @@ function PostSignIn() {
           eCinemaModal.isActive && <ECinemaComponent />}
 
         {/* {screenSharingStream && screenShareState && <ScreenSharingComponent />} */}
-        {user?.sessiontoken != "" && <Websocket />}
-        {connectionStatus && <KurentoAudio />}
+          {user?.sessiontoken != '' && <Websocket/>}
+          <KurentoAudio/>
+          <KurentoVideo/>
+          {participantCameraList?.map((cItem:IParticipantCamera,index:number)=>{
+              return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>
+          })}
 
-        <KurentoVideo />
-        {participantCameraList.map(
-          (cItem: IParticipantCamera, index: number) => {
-            return <KurentoVideoViewer streamID={cItem.streamID} />;
-          },
-        )}
-        {screenShareState && <KurentoScreenShare />}
-        {viewerscreenShareState && <KurentoScreenShareViewer />}
+          {screenShareState && <KurentoScreenShare/>}
+          {viewerscreenShareState && !screenShareState && <KurentoScreenShareViewer/>}
+
       </div>
     </Authenticated>
   );

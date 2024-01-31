@@ -41,7 +41,7 @@ import EndCallModal from "~/components/endCall/EndCallModal";
 import RecordOnIcon from "~/components/icon/outline/RecordOnIcon";
 import MiddleSide from "~/components/footer/MiddleSide";
 import DonationModal from "~/components/donation/DonationModal";
-import { websocketMuteMic } from "~/server/Websocket";
+import { websocketMuteMic , websocketRaiseHand} from "~/server/Websocket";
 import ChatModalKonn3ctAi from "~/components/chat/ChatModalKonn3ctAi";
 import ChatModalPrivateMessage from "~/components/chat/ChatModalPrivateMessage";
 import PollModal from "~/components/poll/PollModal";
@@ -75,8 +75,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
   const [connectionStatus, setConnection] = useRecoilState(
     connectionStatusState,
   );
-  const [participantList, setParticipantList] =
-    useRecoilState(participantListState);
+  const [participantList, setParticipantList] = useRecoilState(participantListState);
 
   return (
     <div
@@ -374,6 +373,22 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                   return prevUser;
                 }),
               );
+
+
+              const updatedArray = participantList?.map((item:IParticipant) => {
+                if (item.userId == user?.meetingDetails?.internalUserID) {
+                  return {...item, raiseHand: !item.raiseHand};
+                }
+                return item;
+              });
+
+              console.log(updatedArray);
+
+              console.log("UserState: updatedArray", updatedArray);
+
+              setParticipantList(updatedArray)
+
+              websocketRaiseHand(user?.meetingDetails?.internalUserID);
             }}
             className={cn(
               "items-center rounded-full border border-a11y/20 bg-transparent p-2",

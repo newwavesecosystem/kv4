@@ -6,6 +6,8 @@ export const joinURL = `http://127.0.0.1:8000/api/k4/`;
 export const sfuURL = `wss://${engineBaseURL}/bbb-webrtc-sfu`;
 export const websocketURL = `https://${engineBaseURL}/html5client/sockjs`;
 export const aiBotURL = `${extRegisterURL}/ai-bot-message`;
+// export const aiEnginesURL = `http://34.207.102.15:3131/konn3ctai`;
+export const aiEnginesURL = `https://k4aiengine.konn3ct.ng/konn3ctai`;
 
 export function generateRandomId(length:number) {
     let result = '';
@@ -22,4 +24,9 @@ export function generateRandomId(length:number) {
 export function generateSmallId() {
     const characters = new Date();
     return characters.getSeconds() + characters.getMilliseconds();
+}
+
+export function generatesSmallId() {
+    const characters = new Date();
+    return characters.getMilliseconds().toPrecision(3);
 }

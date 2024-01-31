@@ -115,6 +115,17 @@ export interface IParticipant {
   id: string;
 }
 
+export interface IWaitingUser {
+    _id:string;
+    name:string;
+    intId:string;
+    role:string;
+    avatar:string;
+    guest:boolean;
+    authenticated:boolean;
+}
+
+
 export interface IParticipantCamera {
   id: string;
   intId: string | undefined;
@@ -151,9 +162,9 @@ export interface IColumnBreakOutRoom {
 }
 
 export interface IUserBreakOutRoom {
-  id: string;
-  columnId: string;
-  name: string;
+  id: string | undefined;
+  columnId: string | undefined;
+  name: string | undefined;
 }
 
 export interface IEmojiMart {

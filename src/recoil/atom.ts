@@ -1,13 +1,7 @@
 import { atom } from "recoil";
 import { UsersData } from "~/data/UsersData";
 import settingsTabData from "~/data/settingsTabData";
-import {
-  IColumnBreakOutRoom,
-  IConnectedUser,
-  IMeetingDetails,
-  IParticipant,
-  IUserBreakOutRoom,
-} from "~/types";
+import { IColumnBreakOutRoom, IConnectedUser, IMeetingDetails, IParticipant, IWaitingUser, IUserBreakOutRoom} from "~/types";
 
 export const authUserState = atom<{
   id: number;
@@ -50,8 +44,18 @@ export const chatListState = atom<any>({
   default: [],
 });
 
+export const kaiChatListState = atom<any>({
+  key: "kaiChatListState",
+  default: [],
+});
+
 export const chatTypingListState = atom<any>({
   key: "chatTypingListState",
+  default: [],
+});
+
+export const waitingRoomUsersState = atom<IWaitingUser[]>({
+  key: "waitingRoomUsersState",
   default: [],
 });
 
@@ -172,6 +176,23 @@ export const currentTabState = atom<{
 }>({
   key: "currentTabState",
   default: settingsTabData[0],
+});
+
+export const presentationSlideState = atom<{
+  pages: [];
+  current: boolean;
+  downloadable: boolean;
+  name: String;
+  podId: String;
+  id: String;
+}>({
+  key: "presentationSlideState",
+  default: {  pages: [],
+    current: false,
+    downloadable: false,
+    name: '',
+    podId: '',
+    id: ''},
 });
 
 export const recordingModalState = atom<{
@@ -342,10 +363,11 @@ export const pollModalState = atom<{
   isActive: boolean;
   isEnded: boolean;
   isEdit: boolean;
+  isUserHost: boolean;
   step: number;
   pollQuestion: string;
   pollCreatorName: string;
-  pollCreatorId: number;
+  pollCreatorId: string;
   pollCreatedAt: Date;
   pollOptions: {
     id: number;
@@ -354,9 +376,9 @@ export const pollModalState = atom<{
   }[];
   totalVotes: number;
   usersVoted: {
-    id: number;
-    fullName: string | null;
-    email: string | null;
+    id: string | null | undefined;
+    fullName: string | null | undefined;
+    email: string | null | undefined;
     votedOption: string;
     votedOptionId: number;
   }[];
@@ -367,9 +389,10 @@ export const pollModalState = atom<{
     isActive: false,
     isEnded: false,
     isEdit: false,
+    isUserHost: false,
     pollQuestion: "",
     pollCreatorName: "",
-    pollCreatorId: 0,
+    pollCreatorId: "0",
     pollCreatedAt: new Date(),
     pollOptions: [],
     totalVotes: 0,

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import useScreenSize from "~/lib/useScreenSize";
 import { cn } from "~/lib/utils";
-import { currentTabState, settingsModalMetaState } from "~/recoil/atom";
+import {authUserState, currentTabState, settingsModalMetaState} from "~/recoil/atom";
 import { SettingsSheetClose } from "../ui/settingsSheet";
 import CloseIcon from "../icon/outline/CloseIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
@@ -10,6 +10,11 @@ import { Switch } from "../ui/switch";
 import MicOffIcon from "../icon/outline/MicOffIcon";
 import PeopleSpeakIcon from "../icon/outline/PeopleSpeakIcon";
 import LockOffIcon from "../icon/outline/LockOffIcon";
+import {
+  websocketLockViewers,
+  websocketMuteAllParticipants,
+  websocketMuteParticipantsePresenter, websocketUnLockViewers
+} from "~/server/Websocket";
 
 function ManageUserSettings() {
   const currentTab = useRecoilValue(currentTabState);
@@ -24,6 +29,8 @@ function ManageUserSettings() {
   });
 
   const screenSize = useScreenSize();
+
+  const user = useRecoilValue(authUserState);
 
   return (
     <div
@@ -62,9 +69,11 @@ function ManageUserSettings() {
           </div>
           <Switch
             checked={data.muteAllUsers}
-            onCheckedChange={(checked) =>
+            onCheckedChange={(checked) =>{
               setData({ ...data, muteAllUsers: checked })
-            }
+
+              websocketMuteAllParticipants(user?.meetingDetails?.internalUserID);
+            }}
             id="muteAllUsers"
           />
         </div>
@@ -82,9 +91,11 @@ function ManageUserSettings() {
           </div>
           <Switch
             checked={data.muteAllUsersExceptPresenter}
-            onCheckedChange={(checked) =>
-              setData({ ...data, muteAllUsersExceptPresenter: checked })
-            }
+            onCheckedChange={(checked) => {
+              setData({...data, muteAllUsersExceptPresenter: checked});
+
+              websocketMuteParticipantsePresenter(user?.meetingDetails?.internalUserID);
+            }}
             id="muteAllUsersExceptPresenter"
           />
         </div>
@@ -95,9 +106,16 @@ function ManageUserSettings() {
           </div>
           <Switch
             checked={data.lockViewers}
-            onCheckedChange={(checked) =>
+            onCheckedChange={(checked) =>{
               setData({ ...data, lockViewers: checked })
-            }
+
+              if(checked){
+                websocketLockViewers(user?.meetingDetails?.internalUserID);
+              }else{
+                websocketUnLockViewers(user?.meetingDetails?.internalUserID);
+              }
+
+            }}
             id="lockViewers"
           />
         </div>

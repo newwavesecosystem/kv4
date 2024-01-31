@@ -18,7 +18,7 @@ function UsersCard({ user, deleteUser }: Props) {
     transition,
     isDragging,
   } = useSortable({
-    id: user.id,
+    id: user?.id ?? '66666',
     data: {
       type: "User",
       user,
@@ -59,7 +59,7 @@ function UsersCard({ user, deleteUser }: Props) {
       {user.columnId !== "users" && (
         <button
           onClick={() => {
-            deleteUser(user.id);
+            // deleteUser(user.id);
           }}
           className="stroke-white pl-2"
         >

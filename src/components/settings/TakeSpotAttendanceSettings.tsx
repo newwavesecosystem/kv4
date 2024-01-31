@@ -2,18 +2,65 @@ import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import useScreenSize from "~/lib/useScreenSize";
 import { cn } from "~/lib/utils";
-import { currentTabState, settingsModalMetaState } from "~/recoil/atom";
+import {authUserState, currentTabState, participantListState, settingsModalMetaState} from "~/recoil/atom";
 import { SettingsSheetClose } from "../ui/settingsSheet";
 import CloseIcon from "../icon/outline/CloseIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
+import {IParticipant} from "~/types";
+import {websocketAllowAllWaitingUser} from "~/server/Websocket";
+import TickIcon from "~/components/icon/outline/TickIcon";
+import ArrowChevronDownIcon from "~/components/icon/outline/ArrowChevronDownIcon";
 
 function TakeSpotAttendanceSettings() {
   const currentTab = useRecoilValue(currentTabState);
   const [settingsMeta, setSettingsMeta] = useRecoilState(
     settingsModalMetaState,
   );
+  const participantList= useRecoilValue(participantListState);
+  const user = useRecoilValue(authUserState);
 
   const screenSize = useScreenSize();
+
+
+  const getDateTime = () => {
+    var today = new Date();
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+    return date + ' ' + time;
+  }
+
+
+
+  const takeAttendance = () => {
+    let docTitle = `Attendance for the meeting, ${user?.meetingDetails?.confname} @ ${getDateTime()}`
+    let allNames = ''
+
+    participantList.map((user:IParticipant, index:number) => {
+      if (allNames == '') {
+        allNames = user.name
+      } else {
+        allNames = `${allNames}, ${user.name}`
+      }
+      return console.log(user.name)
+
+    })
+    let total = allNames.split(',').length
+    console.log(total)
+
+
+    console.log(allNames)
+    const mimeType = 'text/plain';
+    const content = `${docTitle}\r\n\r\n ${allNames.replaceAll(',', '\n')}\n\n\n Auto-Generated from Konn3ct\n\n\n Total Number of Attendees: ${total}`
+    const link = document.createElement('a');
+    link.setAttribute('download', `attendance_${user?.meetingDetails?.confname}_${Date.now()}.txt`);
+    link.setAttribute(
+        'href',
+        `data: ${mimeType};charset=utf-16,${encodeURIComponent(content)}`)
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 
   return (
     <div
@@ -44,7 +91,19 @@ function TakeSpotAttendanceSettings() {
           <span className="sr-only">Close</span>
         </SettingsSheetClose>
       </div>
-      <div className="py-6">main</div>
+      <div className="py-6">
+
+        <div className="flex items-center gap-2 mb-4">
+          <span> Total Number of Spot Attendees: {participantList.length}</span>
+        </div>
+
+        <button className="bg-a11y/40 flex items-center rounded-lg p-2"  onClick={()=>{
+          takeAttendance()
+        }}>
+          <ArrowChevronDownIcon className="h-6 w-6" />
+          <span className="ml-2">Download</span>
+        </button>
+      </div>
     </div>
   );
 }

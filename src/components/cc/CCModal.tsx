@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import { ccModalState } from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {authUserState, ccModalState} from "~/recoil/atom";
 import CloseIcon from "../icon/outline/CloseIcon";
 import EllipsisIcon from "../icon/outline/EllipsisIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
@@ -13,6 +13,8 @@ import SpeechRecognition, {
 import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+// import io from 'socket.io-client';
+import socket from '../../server/socket';
 
 function CCModal() {
   const [ccModal, setCCModal] = useRecoilState(ccModalState);
@@ -28,12 +30,61 @@ function CCModal() {
   } = useSpeechRecognition();
 
   const [transcriptTranslated, setTranscriptTranslated] = useState("");
+  const user = useRecoilValue(authUserState);
+
+  const broadcastCaption=(text:any)=>{
+    console.log("send_captions", text); // world
+    socket.emit("send_captions", {
+      "text": text,
+      "user": user?.meetingDetails?.fullname,
+      "meetingID": user?.meetingDetails?.meetingID,
+      "date": "2024-01-13"
+    });
+  }
+
+
+  useEffect(() => {
+    // client-side
+    socket.on("connect", () => {
+      console.log("Socket Connected"); // x8WIv7-mJelg7on_ALbx
+      console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+
+      if(user?.meetingDetails?.meetingID != null){
+        console.log("join_room");
+        socket.emit("join_room", user?.meetingDetails?.meetingID);
+      }
+
+    });
+
+    socket.on("disconnect", ( ) => {
+      console.log(socket.id); // undefined
+    });
+
+    socket.on("receive_captions", (arg) => {
+      console.log("receive_captions", arg); // world
+      console.log("receive_captions", arg.user); // world
+
+      let displayText=`${arg.user}: ${arg.text}`;
+
+      console.log("receive_captions displayText", displayText); // world
+      setTranscriptTranslated(`${transcriptTranslated} \n ${displayText}`);
+    });
+
+    // return () => {
+    //   // Clean up socket connections when the component unmounts
+    //   socket.disconnect();
+    // };
+
+  }, []);
 
   // When a new transcript is received, add it to the lines array
   useEffect(() => {
+    console.log("transcript useEffect ");
     SpeechRecognition.startListening({ continuous: true });
 
     if (transcript) {
+      setTimeout(resetTranscript,30000)
+      broadcastCaption(transcript);
       if (ccModal.language != "en") {
         console.log("working on translation");
         translate().then();
@@ -75,7 +126,10 @@ function CCModal() {
       {ccModal.isActive && (
         <div className="fixed bottom-20 z-10 mx-auto flex w-full justify-center px-4">
           <div className="flex h-20 w-full items-center justify-between rounded-md bg-primary md:max-w-xl ">
-            <span className="truncate px-4">{transcriptTranslated}</span>
+            <span className="px-4">
+            {/*<span className="truncate px-4">*/}
+              {transcriptTranslated}
+            </span>
             <div className="flex h-full flex-col items-center divide-y divide-a11y border-l-2 border-a11y/70">
               <button
                 onClick={() => {

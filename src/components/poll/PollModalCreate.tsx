@@ -1,13 +1,18 @@
 import React, { use, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { authUserState, pollModalState } from "~/recoil/atom";
+import {authUserState, pollModalState, presentationSlideState} from "~/recoil/atom";
 import { Dialog, DialogContent } from "../ui/dialog";
 import AddIcon from "../icon/outline/AddIcon";
 import MinusIcon from "../icon/outline/MinusIcon";
 import { cn } from "~/lib/utils";
+import {websocketStartPoll} from "~/server/Websocket";
+import {randomInt} from "crypto";
+import {generateSmallId} from "~/server/ServerInfo";
 
 function PollModalCreate() {
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
+  const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
+
   const [data, setData] = useState({
     pollQuestion: "",
   });
@@ -118,6 +123,7 @@ function PollModalCreate() {
                 setPollModal((prev) => ({
                   ...prev,
                   isActive: true,
+                  isUserHost: true,
                   step: 0,
                   pollQuestion: data.pollQuestion,
                   pollOptions: options.map((option, index) => {
@@ -128,9 +134,11 @@ function PollModalCreate() {
                     };
                   }),
                   pollCreatedAt: new Date(),
-                  pollCreatorId: user?.id as number,
+                  pollCreatorId: `${presentationSlide.id}/1`,
                   pollCreatorName: user?.fullName as string,
                 }));
+
+                websocketStartPoll(`${presentationSlide.id}/1`,data.pollQuestion,JSON.stringify(options.map(item => item.option)));
               }}
             >
               Publish Polls

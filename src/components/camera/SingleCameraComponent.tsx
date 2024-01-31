@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
   authUserState,
   connectedUsersState,
@@ -44,15 +44,17 @@ function SingleCameraComponent({
     useRecoilState(pinnedUsersState);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  let userCamera = participantCameraList.filter(
-    (cItem: any) => cItem?.intId == participant.intId,
-  );
-  // Attach the new stream to the video element
-  if (userCamera.length > 0) {
-    if (videoRef.current) {
-      videoRef.current.srcObject = userCamera[0].stream;
+  let userCamera=participantCameraList.filter((cItem:any) => cItem?.intId == participant.intId);
+
+
+  useEffect(() => {
+  //   // Attach the new stream to the video element
+    if(userCamera.length>0){
+      if (videoRef.current) {
+        videoRef.current.srcObject = userCamera[0].stream;
+      }
     }
-  }
+  },[userCamera]);
 
   return (
     <div
@@ -113,12 +115,12 @@ function SingleCameraComponent({
           )}
         >
           {participantTalkingList
-            .filter((eachItem: any) => eachItem?.intId == participant.intId)
+            .filter((eachItem: any, index:number) => eachItem?.intId == participant.intId)
             .map((eachItem: any) =>
               eachItem?.joined && !eachItem?.muted ? (
-                <MicOnIcon className="h-5 w-5 " />
+                <MicOnIcon key={index} className="h-5 w-5 " />
               ) : (
-                <MicOffIcon className="h-5 w-5 " />
+                <MicOffIcon key={index} className="h-5 w-5 " />
               ),
             )}
         </button>

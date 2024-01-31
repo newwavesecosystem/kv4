@@ -35,7 +35,7 @@ const KurentoVideo = () => {
             ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
         };
 
-        if (!videoStateWS) {
+        if (!videoStateWS && videoState && user?.sessiontoken !=null) {
             setVideoStateWS(true)
             kurentoConnect();
         }else{

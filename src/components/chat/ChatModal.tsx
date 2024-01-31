@@ -180,8 +180,8 @@ function ChatModal() {
           ))}
         </div>
 
-        {chatTypingList.map((text: any) => (
-          <div>{text.name}, is typing</div>
+        {chatTypingList.map((text: any, index:number) => (
+          <div key={index}>{text.name}, is typing</div>
         ))}
         <div className="sticky bottom-0 h-16 w-full border-t border-a11y/20 bg-primary/20 px-4 md:sticky">
           <div className=" flex w-full items-center rounded-xl bg-transparent py-4 ">

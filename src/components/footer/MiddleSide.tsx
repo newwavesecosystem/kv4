@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   authUserState,
@@ -64,8 +64,13 @@ import ShareScreenOffIcon from "../icon/outline/ShareScreenOffIcon";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
-import {websocketMuteMic, websocketStopCamera} from "~/server/Websocket";
-import {IParticipant, IParticipantCamera} from "~/types";
+import {
+  websocketMuteAllParticipants,
+  websocketMuteMic, websocketPresenter,
+  websocketRaiseHand,
+  websocketStopCamera
+} from "~/server/Websocket";
+import {IChat, IParticipant, IParticipantCamera} from "~/types";
 import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
 
 function MiddleSide() {
@@ -83,7 +88,7 @@ function MiddleSide() {
   const { toast } = useToast();
 
   const user = useRecoilValue(authUserState);
-  const participantList = useRecoilValue(participantListState);
+  const [participantList, setParticipantList] = useRecoilState(participantListState);
   const [micState, setMicState] = useRecoilState(micOpenState);
   const [videoState, setVideoState] = useRecoilState(cameraOpenState);
   const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
@@ -98,6 +103,7 @@ function MiddleSide() {
     leaveRoomCallModalState,
   );
 
+  const [ssscreen, setScreen] = useState<null|MediaStream>(null);
 
   return (
     <div className=" flex w-full items-center justify-center gap-5">
@@ -272,7 +278,8 @@ function MiddleSide() {
         )}
       </button>
 
-      { participantList.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter && <button
+      { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant, index:number) => ( eachItem.presenter && <button
+          key={index}
         className={cn(
           "rounded-full p-2",
           screenShareState
@@ -281,7 +288,7 @@ function MiddleSide() {
         )}
         onClick={async () => {
           if (screenShareState && screenSharingStream) {
-            stopScreenSharingStream(screenSharingStream);
+            stopScreenSharingStream(ssscreen);
             // update the connected users state for the user where the id is the same
             setConnectedUsers((prev) =>
               prev.map((prevUser) => {
@@ -297,9 +304,19 @@ function MiddleSide() {
             );
             setScreenSharingStream(null);
             setScreenShareState(!screenShareState);
+
+            websocketPresenter(participantList[0].intId);
+
+            setTimeout(()=>{
+              websocketPresenter(user?.meetingDetails?.internalUserID);
+            }, 1000);
+
             return;
           }
           const screen = await requestScreenSharingAccess();
+
+          setScreen(screen);
+
           if (screen) {
             setScreenSharingStream(screen);
             // update the connected users state for the user where the id is the same
@@ -411,6 +428,12 @@ function MiddleSide() {
             <DropdownMenuItem
               onClick={() => {
                 // setChatState(!chatState);
+                window.location.reload();
+                toast({
+                  title: "Rekonn3ct",
+                  description:
+                      "Re-konn3cting, Please wait for few moment",
+                });
               }}
               className="py-2"
             >
@@ -467,6 +490,21 @@ function MiddleSide() {
                     return prevUser;
                   }),
                 );
+
+                const updatedArray = participantList?.map((item:IParticipant) => {
+                  if (item.userId == user?.meetingDetails?.internalUserID) {
+                    return {...item, raiseHand: !item.raiseHand};
+                  }
+                  return item;
+                });
+
+                console.log(updatedArray);
+
+                console.log("UserState: updatedArray", updatedArray);
+
+                setParticipantList(updatedArray)
+
+                websocketRaiseHand(user?.meetingDetails?.internalUserID);
               }}
               className="py-2 md:hidden"
             >
@@ -487,7 +525,10 @@ function MiddleSide() {
               <FolderOpenIcon className="mr-2 h-5 w-5" />
               <span>Upload Files</span>
             </DropdownMenuItem>
+
+            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant, index:number) => ( eachItem.presenter &&(
             <DropdownMenuItem
+                key={index}
               onClick={() => {
                 if (eCinemaModal.isActive)
                   return toast({
@@ -505,11 +546,23 @@ function MiddleSide() {
               <MovieColoredIcon className="mr-2 h-5 w-5" />
               <span>ECinema</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="py-2">
+            )))}
+
+            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant,index:number) => ( eachItem.presenter &&(
+                <DropdownMenuItem
+                    key={index}
+                    onClick={() => {
+                      websocketMuteAllParticipants(user?.meetingDetails?.internalUserID);
+                    }}
+                    className="py-2">
               <MicOffIcon className="mr-2 h-5 w-5" />
               <span>Mute All</span>
             </DropdownMenuItem>
+            )))}
+
+            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant,index:number) => ( eachItem.presenter &&(
             <DropdownMenuItem
+                key={index}
               onClick={() => {
                 if (pollModal.isActive || pollModal.isEnded) return;
                 setPollModal((prev) => ({
@@ -522,6 +575,8 @@ function MiddleSide() {
               <TextFormatIcon className="mr-2 h-5 w-5" />
               <span>Polls</span>
             </DropdownMenuItem>
+            )))}
+
             { !donationState.isActive &&  <DropdownMenuItem
               className="py-2"
               onClick={() => {
