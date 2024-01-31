@@ -85,9 +85,23 @@ export const leaveRoomCallModalState = atom<boolean>({
   default: false,
 });
 
-export const postLeaveMeetingState = atom<boolean>({
+export const postLeaveMeetingState = atom<{
+  isLeave: boolean;
+  isEndCall: boolean;
+  isLeaveRoomCall: boolean;
+  isKicked: boolean;
+  isSessionExpired: boolean;
+  isOthers: boolean;
+}>({
   key: "postLeaveMeetingState",
-  default: false,
+  default: {
+    isLeave: false,
+    isEndCall: false,
+    isKicked: false,
+    isLeaveRoomCall: false,
+    isSessionExpired: false,
+    isOthers: false,
+  },
 });
 
 export const cameraStreamState = atom<MediaStream | null>({
@@ -419,4 +433,26 @@ export const selectedSpeakersState = atom<string | null>({
 export const connectedUsersState = atom<IConnectedUser[]>({
   key: "connectedUsersState",
   default: [],
+});
+
+export const pinnedUsersState = atom<IParticipant[]>({
+  key: "pinnedUsersState",
+  default: [],
+});
+
+export const LayoutSettingsState = atom<{
+  speakerMode: boolean;
+  audioMode: boolean;
+  maxTiles: number[];
+  layout: string;
+  layoutName: string;
+}>({
+  key: "LayoutSettingsState",
+  default: {
+    speakerMode: false,
+    audioMode: false,
+    maxTiles: [6],
+    layout: "1",
+    layoutName: "",
+  },
 });

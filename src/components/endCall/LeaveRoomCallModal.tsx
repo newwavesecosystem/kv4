@@ -3,7 +3,7 @@ import { AlertDialog, AlertDialogContent } from "../ui/alert-dialog";
 import { useRecoilState } from "recoil";
 import { leaveRoomCallModalState, postLeaveMeetingState } from "~/recoil/atom";
 import AlertTriangleIcon from "../icon/outline/AlertTriangleIcon";
-import {websocketLeaveMeeting} from "~/server/Websocket";
+import { websocketLeaveMeeting } from "~/server/Websocket";
 
 function LeaveRoomCallModal() {
   const [leaveRoomCallModal, setRoomCallModal] = useRecoilState(
@@ -37,7 +37,10 @@ function LeaveRoomCallModal() {
               className="w-full rounded-md bg-a11y/20 py-3"
               onClick={() => {
                 setRoomCallModal(false);
-                setPostLeaveMeeting(true);
+                setPostLeaveMeeting({
+                  ...postLeaveMeeting,
+                  isLeaveRoomCall: true,
+                });
                 websocketLeaveMeeting();
               }}
             >

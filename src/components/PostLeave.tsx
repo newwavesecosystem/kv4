@@ -23,19 +23,36 @@ function PostLeave() {
       </div>
       <div className="flex h-[calc(100vh-64px)] flex-col items-center justify-center bg-primary/80 ">
         <HandOnIcon className="h-20 w-20 rotate-45" />
-        <span className="text-2xl font-bold">You left the session</span>
+        <span className="text-2xl font-bold">
+          {postLeaveMeeting.isLeave && "You left the session"}
+          {postLeaveMeeting.isLeaveRoomCall && "You left the session"}
+          {postLeaveMeeting.isEndCall && "You ended the session"}
+          {postLeaveMeeting.isKicked && "You were kicked from the session"}
+          {postLeaveMeeting.isSessionExpired && "Session expired"}
+          {postLeaveMeeting.isOthers && "You left the session"}
+        </span>
         <p className=" mt-2 text-sm">Have a nice day, {user?.fullName}</p>
         <div className="mt-10 flex items-center gap-2">
           <span className="text-sm text-a11y/40">Left by mistake?</span>
-          <button
-            onClick={() => {
-              setPostLeaveMeeting(false);
-            }}
-            className="flex items-center gap-2 rounded-md bg-primary px-4 py-1"
-          >
-            <ExitIcon className="h-4 w-4" />
-            <span>Rejoin</span>
-          </button>
+          {!postLeaveMeeting.isKicked && (
+            <button
+              onClick={() => {
+                if (postLeaveMeeting.isKicked) return;
+                setPostLeaveMeeting({
+                  isLeave: false,
+                  isLeaveRoomCall: false,
+                  isEndCall: false,
+                  isKicked: false,
+                  isSessionExpired: false,
+                  isOthers: false,
+                });
+              }}
+              className="flex items-center gap-2 rounded-md bg-primary px-4 py-1"
+            >
+              <ExitIcon className="h-4 w-4" />
+              <span>Rejoin</span>
+            </button>
+          )}
         </div>
         <div className="fixed bottom-5">
           <button className="rounded-md border border-a11y px-4 py-1 text-sm">

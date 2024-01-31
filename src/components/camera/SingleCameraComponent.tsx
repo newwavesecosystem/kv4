@@ -4,9 +4,10 @@ import {
   connectedUsersState,
   participantCameraListState,
   participantListState,
-  participantTalkingListState
+  participantTalkingListState,
+  pinnedUsersState,
 } from "~/recoil/atom";
-import {IAuthUser, IConnectedUser, IParticipant} from "~/types";
+import { IAuthUser, IConnectedUser, IParticipant } from "~/types";
 import MicOnIcon from "../icon/outline/MicOnIcon";
 import MicOffIcon from "../icon/outline/MicOffIcon";
 import EllipsisIcon from "../icon/outline/EllipsisIcon";
@@ -18,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { cn } from "~/lib/utils";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import PinIcon from "../icon/outline/PinIcon";
 import VideoConfOffIcon from "../icon/outline/VideoConfOffIcon";
 import HandOnIcon from "../icon/outline/HandOnIcon";
@@ -33,11 +34,14 @@ function SingleCameraComponent({
   key: number;
   index: number;
 }) {
-  const [connectedUsers, setConnectedUsers] = useRecoilState(connectedUsersState);
+  const [connectedUsers, setConnectedUsers] =
+    useRecoilState(connectedUsersState);
   // const user = useRecoilValue(authUserState);
   const participantList = useRecoilValue(participantListState);
   const participantTalkingList = useRecoilValue(participantTalkingListState);
   const participantCameraList = useRecoilValue(participantCameraListState);
+  const [pinnedParticipant, setPinnedParticipant] =
+    useRecoilState(pinnedUsersState);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   let userCamera=participantCameraList.filter((cItem:any) => cItem?.intId == participant.intId);
@@ -54,35 +58,71 @@ function SingleCameraComponent({
 
   return (
     <div
-        key={key}
+      key={key}
       className={cn(
         "relative aspect-square h-full w-full overflow-hidden rounded-lg bg-a11y/20",
-        participantList.length === 2 && "md:h-auto md:w-auto xl:w-full xl:h-full",
-        participantList.length === 3 && "lg:h-auto lg:w-auto",
+        participantList.length === 2 &&
+          "md:h-auto md:w-auto xl:h-full xl:w-full",
+        participantList.length === 3 &&
+          pinnedParticipant.length < 1 &&
+          "lg:h-auto lg:w-auto",
+        participantList.length >= 3 &&
+          participant.intId === pinnedParticipant[0]?.intId
+          ? "md:col-span-2 md:row-span-2"
+          : " ",
         (participantList.length === 3 || participantList.length === 5) &&
           index === 0 &&
-          "col-span-2 lg:col-auto",
-          participantTalkingList.filter((eachItem:any) => eachItem?.intId == participant.intId).map((eachItem:any) => (
-                  eachItem?.joined && !eachItem?.muted &&
-          "ring-2 ring-primary ring-offset-2 ring-offset-primary"))
+          pinnedParticipant.length < 1 &&
+          "col-span-2 md:col-auto",
+        participantTalkingList
+          .filter((eachItem: any) => eachItem?.intId == participant.intId)
+          .map(
+            (eachItem: any) =>
+              eachItem?.joined &&
+              !eachItem?.muted &&
+              "ring-2 ring-primary ring-offset-2 ring-offset-primary",
+          ),
       )}
     >
       <div className=" absolute right-3 top-3 flex items-center gap-1">
+        {pinnedParticipant.filter(
+          (eachItem: any) => eachItem?.intId == participant.intId,
+        ).length > 0 && (
+          <button
+            onClick={() => {
+              // remove selected participant from pinned list
+              setPinnedParticipant(
+                pinnedParticipant.filter(
+                  (eachItem: any) => eachItem?.intId != participant.intId,
+                ),
+              );
+            }}
+            className="rounded-full bg-primary/80 p-1 "
+          >
+            <PinIcon className=" h-5 w-5" />
+          </button>
+        )}
         <button
           className={cn(
             "p-1 ",
-              participantTalkingList.filter((eachItem:any) => eachItem?.intId == participant.intId).map((eachItem:any) => (
-                  eachItem?.joined && eachItem?.muted
-              ? "rounded-full border border-a11y/20 bg-primary/40"
-              : "rounded-full bg-primary/80"
-          )))}
+            participantTalkingList
+              .filter((eachItem: any) => eachItem?.intId == participant.intId)
+              .map((eachItem: any) =>
+                eachItem?.joined && eachItem?.muted
+                  ? "rounded-full border border-a11y/20 bg-primary/40"
+                  : "rounded-full bg-primary/80",
+              ),
+          )}
         >
-          {participantTalkingList.filter((eachItem:any, index:number) => eachItem?.intId == participant.intId).map((eachItem:any) => (
-               eachItem?.joined && !eachItem?.muted  ? (
-            <MicOnIcon key={index} className="h-5 w-5 " />
-          ) : (
-            <MicOffIcon key={index} className="h-5 w-5 " />
-          )))}
+          {participantTalkingList
+            .filter((eachItem: any, index:number) => eachItem?.intId == participant.intId)
+            .map((eachItem: any) =>
+              eachItem?.joined && !eachItem?.muted ? (
+                <MicOnIcon key={index} className="h-5 w-5 " />
+              ) : (
+                <MicOffIcon key={index} className="h-5 w-5 " />
+              ),
+            )}
         </button>
         <DropdownMenu>
           <DropdownMenuTrigger>
@@ -94,9 +134,26 @@ function SingleCameraComponent({
             align="end"
             className="border-0 bg-primary text-a11y"
           >
-            <DropdownMenuItem className="py-2">
+            <DropdownMenuItem
+              onClick={() => {
+                if (pinnedParticipant.length > 0) {
+                  setPinnedParticipant(
+                    pinnedParticipant.filter(
+                      (eachItem: any) => eachItem?.intId != participant.intId,
+                    ),
+                  );
+                } else {
+                  setPinnedParticipant([participant]);
+                }
+              }}
+              className="py-2"
+            >
               <PinIcon className="mr-2 h-5 w-5" />
-              Pin to screen
+              {pinnedParticipant.filter(
+                (eachItem: any) => eachItem?.intId == participant.intId,
+              ).length > 0
+                ? "Unpin to screen"
+                : "Pin to screen"}
             </DropdownMenuItem>
             <DropdownMenuSeparator className="h-0.5" />
             <DropdownMenuItem className="py-2">
@@ -107,8 +164,8 @@ function SingleCameraComponent({
         </DropdownMenu>
       </div>
       {participant?.raiseHand && (
-        <div className="absolute left-3 top-3 flex items-center gap-1">
-          <HandOnIcon className="h-8 w-8 " />
+        <div className="animate-wave absolute left-3 top-3 flex items-center gap-1">
+          <HandOnIcon className="h-8 w-8" />
         </div>
       )}
       <video
@@ -131,10 +188,10 @@ function SingleCameraComponent({
         <div
           className={cn(
             " flex h-full w-full flex-col items-center justify-center bg-a11y/20 ",
-              participantList.length === 2 && "w-screen md:w-full",
+            participantList.length === 2 && "w-screen md:w-full",
           )}
         >
-          <div className="flex aspect-square p-4 lg:p-8 items-center justify-center rounded-full bg-primary/80 text-3xl font-semibold uppercase">
+          <div className="flex aspect-square items-center justify-center rounded-full bg-primary/80 p-4 text-3xl font-semibold uppercase lg:p-8">
             {participant?.name?.split(" ")[0]?.slice(0, 1)}
             {participant?.name?.split(" ")[1]?.slice(0, 1)}
           </div>

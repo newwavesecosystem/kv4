@@ -134,10 +134,10 @@ function RoomBoard() {
       );
 
       // if (
-      //   breakOutRoomState.users[activeIndex].columnId !==
-      //   breakOutRoomState.users[overIndex].columnId
+      //   breakOutRoomState.users[activeIndex]!.columnId !==
+      //   breakOutRoomState.users[overIndex]?.columnId
       // ) {
-      //   setBreakOutRoomState((prev) => ({
+      //   setBreakOutRoomState((prev: any) => ({
       //     ...prev,
       //     users: [
       //       ...prev.users.slice(0, activeIndex),
@@ -159,7 +159,7 @@ function RoomBoard() {
       const activeIndex = breakOutRoomState.users.findIndex(
         (t) => t.id === activeId,
       );
-      // setBreakOutRoomState((prev) => ({
+      // setBreakOutRoomState((prev: any) => ({
       //   ...prev,
       //   users: [
       //     ...prev.users.slice(0, activeIndex),

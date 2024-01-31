@@ -10,13 +10,20 @@ export default function Home() {
   const postLeaveMeeting = useRecoilValue(postLeaveMeetingState);
   return (
     <>
-      {postLeaveMeeting ? (
+      {postLeaveMeeting.isLeave ||
+      postLeaveMeeting.isLeaveRoomCall ||
+      postLeaveMeeting.isEndCall ||
+      postLeaveMeeting.isKicked ||
+      postLeaveMeeting.isSessionExpired ||
+      postLeaveMeeting.isOthers ? (
         <PostLeave />
       ) : (
-        <>{
-          // user ? <PostSignIn /> : <PreSignIn />
-          <PostSignIn />
-        }</>
+        <>
+          {
+            // user ? <PostSignIn /> : <PreSignIn />
+            <PostSignIn />
+          }
+        </>
       )}
     </>
   );
