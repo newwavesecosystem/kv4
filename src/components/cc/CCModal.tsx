@@ -45,6 +45,7 @@ function CCModal() {
       console.log(socket.id); // x8WIv7-mJelg7on_ALbx
 
       if(user?.meetingDetails?.meetingID != null){
+        console.log("join_room");
         socket.emit("join_room", user?.meetingDetails?.meetingID);
       }
 
