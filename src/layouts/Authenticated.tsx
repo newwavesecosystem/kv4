@@ -75,9 +75,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
   const [connectionStatus, setConnection] = useRecoilState(
     connectionStatusState,
   );
-  const [participantList, setParticipantList] =
-    useRecoilState(participantListState);
-  const setParticipantList = useSetRecoilState(participantListState);
+  const [participantList, setParticipantList] = useRecoilState(participantListState);
 
   return (
     <div
