@@ -1,7 +1,14 @@
 import { atom } from "recoil";
 import { UsersData } from "~/data/UsersData";
 import settingsTabData from "~/data/settingsTabData";
-import { IColumnBreakOutRoom, IConnectedUser, IMeetingDetails, IParticipant, IWaitingUser, IUserBreakOutRoom} from "~/types";
+import {
+  IColumnBreakOutRoom,
+  IConnectedUser,
+  IMeetingDetails,
+  IParticipant,
+  IWaitingUser,
+  IUserBreakOutRoom,
+} from "~/types";
 
 export const authUserState = atom<{
   id: number;
@@ -187,12 +194,14 @@ export const presentationSlideState = atom<{
   id: String;
 }>({
   key: "presentationSlideState",
-  default: {  pages: [],
+  default: {
+    pages: [],
     current: false,
     downloadable: false,
-    name: '',
-    podId: '',
-    id: ''},
+    name: "",
+    podId: "",
+    id: "",
+  },
 });
 
 export const recordingModalState = atom<{
@@ -308,6 +317,23 @@ const defaultUsers: IUserBreakOutRoom[] = [
     name: user.name,
   })),
 ];
+
+export const fileUploadModalState = atom<{
+  step: number;
+  isMinimized: boolean;
+  isFull: boolean;
+  files: File[];
+  filesToUpload: string[];
+}>({
+  key: "fileUploadModalState",
+  default: {
+    step: 0,
+    isMinimized: false,
+    isFull: false,
+    files: [],
+    filesToUpload: [],
+  },
+});
 
 export const breakOutModalState = atom<{
   isActive: boolean;
