@@ -70,7 +70,7 @@ import {
   websocketRaiseHand,
   websocketStopCamera
 } from "~/server/Websocket";
-import {IParticipant, IParticipantCamera} from "~/types";
+import {IChat, IParticipant, IParticipantCamera} from "~/types";
 import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
 
 function MiddleSide() {
@@ -278,7 +278,8 @@ function MiddleSide() {
         )}
       </button>
 
-      { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter && <button
+      { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant, index:number) => ( eachItem.presenter && <button
+          key={index}
         className={cn(
           "rounded-full p-2",
           screenShareState
@@ -525,8 +526,9 @@ function MiddleSide() {
               <span>Upload Files</span>
             </DropdownMenuItem>
 
-            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
+            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant, index:number) => ( eachItem.presenter &&(
             <DropdownMenuItem
+                key={index}
               onClick={() => {
                 if (eCinemaModal.isActive)
                   return toast({
@@ -546,8 +548,9 @@ function MiddleSide() {
             </DropdownMenuItem>
             )))}
 
-            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
+            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant,index:number) => ( eachItem.presenter &&(
                 <DropdownMenuItem
+                    key={index}
                     onClick={() => {
                       websocketMuteAllParticipants(user?.meetingDetails?.internalUserID);
                     }}
@@ -557,8 +560,9 @@ function MiddleSide() {
             </DropdownMenuItem>
             )))}
 
-            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant) => ( eachItem.presenter &&(
+            { participantList?.filter((eachItem:IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID).map((eachItem:IParticipant,index:number) => ( eachItem.presenter &&(
             <DropdownMenuItem
+                key={index}
               onClick={() => {
                 if (pollModal.isActive || pollModal.isEnded) return;
                 setPollModal((prev) => ({

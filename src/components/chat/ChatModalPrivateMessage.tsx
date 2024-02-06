@@ -9,6 +9,10 @@ import DummyChat from "~/data/dummyChat";
 import EmojiIcon from "../icon/outline/EmojiIcon";
 import SendIcon from "../icon/outline/SendIcon";
 import { cn } from "~/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import Picker from "@emoji-mart/react";
+import emojiData from "@emoji-mart/data";
+import { IEmojiMart } from "~/types";
 
 function ChatModalPrivateMessage() {
   const [chatState, setChatState] = useRecoilState(privateChatModalState);
@@ -70,7 +74,22 @@ function ChatModalPrivateMessage() {
               placeholder="Send a message to everyone"
             />
             <div className="flex items-center gap-4">
-              <EmojiIcon className="h-6 w-6" />
+              <Popover>
+                <PopoverTrigger>
+                  <EmojiIcon className="h-6 w-6" />
+                </PopoverTrigger>
+                <PopoverContent
+                  className="mb-5 mr-3 w-full border-none bg-transparent p-0 md:mr-4"
+                  side="bottom"
+                >
+                  <Picker
+                    data={emojiData}
+                    onEmojiSelect={(e: IEmojiMart) => {
+                      // setValue(value + e.native);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
               <SendIcon className="h-6 w-6" />
             </div>
           </div>

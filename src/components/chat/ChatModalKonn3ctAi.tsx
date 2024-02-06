@@ -138,7 +138,101 @@ function ChatModalKonn3ctAi() {
   }
 
   async function transcript() {
-    console.log("transcript API")
+    console.log("messageBot")
+
+    setKaiChatList((prev:any)=>([
+        ...prev,
+          {
+            id: 1,
+            name: "ai",
+            message: "Getting Meeting Transcript for you...",
+            time: new Date().toLocaleDateString(),
+            from: "ai",
+          }
+          ]
+    ));
+
+    var data = JSON.stringify({
+      "meetingID": user?.meetingDetails?.meetingID
+    });
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function() {
+      if(this.readyState === 4) {
+        console.log(this.responseText);
+        var jresp=JSON.parse(this.responseText);
+
+        setKaiChatList((prev:any)=>([
+              ...prev,
+              {
+                id: 1,
+                name: "ai",
+                message: jresp.message,
+                time: new Date().toLocaleDateString(),
+                from: "ai",
+              }
+            ]
+        ));
+      }
+    });
+
+    xhr.open("POST", `${ServerInfo.aiEnginesURL}/bot`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send(data);
+  }
+
+  async function messageBot() {
+    console.log("messageBot")
+
+    setKaiChatList((prev:any)=>([
+        ...prev,
+          {
+            id: 1,
+            name: "ai",
+            message: "Getting Meeting Transcript for you...",
+            time: new Date().toLocaleDateString(),
+            from: "ai",
+          }
+          ]
+    ));
+
+    var data = JSON.stringify({
+      "meetingID": user?.meetingDetails?.meetingID
+    });
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function() {
+      if(this.readyState === 4) {
+        console.log(this.responseText);
+        var jresp=JSON.parse(this.responseText);
+
+        setKaiChatList((prev:any)=>([
+              ...prev,
+              {
+                id: 1,
+                name: "ai",
+                message: jresp.message,
+                time: new Date().toLocaleDateString(),
+                from: "ai",
+              }
+            ]
+        ));
+      }
+    });
+
+    xhr.open("POST", `${ServerInfo.aiEnginesURL}/bot`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send(data);
+  }
+
+  async function botMessages() {
+    console.log("botMessages")
 
     setKaiChatList((prev:any)=>([
         ...prev,
