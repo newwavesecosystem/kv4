@@ -8,6 +8,7 @@ export const websocketURL = `https://${engineBaseURL}/html5client/sockjs`;
 export const aiBotURL = `${extRegisterURL}/ai-bot-message`;
 // export const aiEnginesURL = `http://34.207.102.15:3131/konn3ctai`;
 export const aiEnginesURL = `https://k4aiengine.konn3ct.ng/konn3ctai`;
+// export const aiEnginesURL = `http://localhost:3002/konn3ctai`;
 
 export function generateRandomId(length:number) {
     let result = '';

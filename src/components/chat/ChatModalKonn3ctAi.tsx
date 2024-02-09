@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Sheet, SheetContent } from "../ui/sheet";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {authUserState, chatListState, chatModalKonn3ctAiState, kaiChatListState} from "~/recoil/atom";
@@ -18,6 +18,7 @@ import {
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
 import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";
+import {websocketStartTyping} from "~/server/Websocket";
 
 const ChatTypesData = [
   {
@@ -43,6 +44,29 @@ function ChatModalKonn3ctAi() {
 
   const [chatType, setChatType] = useState("Highlights");
 
+  const [value, setValue] = useState("");
+
+
+  useEffect(() => {
+    if(user?.meetingDetails?.meetingID != undefined){
+      fetchBotMessages();
+    }
+  },[user?.meetingDetails?.meetingID]);
+
+
+  const handleKeyDown = (e: any) => {
+    if (e.key !== "Enter") return;
+    const value = e.target.value;
+    console.log("Well");
+    if (!value.trim()) return;
+    messageBot();
+  };
+
+  const handleTyping = (e: any) => {
+    websocketStartTyping();
+    setValue(e.target.value);
+  };
+
   async function highlights() {
     console.log("highlights API")
 
@@ -52,7 +76,7 @@ function ChatModalKonn3ctAi() {
             id: 1,
             name: "ai",
             message: "Getting Meeting Highlights for you...",
-            time: new Date().toLocaleDateString(),
+            time: new Date().toLocaleString(),
             from: "ai",
           }
           ]
@@ -76,7 +100,7 @@ function ChatModalKonn3ctAi() {
                 id: 1,
                 name: "ai",
                 message: jresp.message,
-                time: new Date().toLocaleDateString(),
+                time: new Date().toLocaleString(),
                 from: "ai",
               }
             ]
@@ -99,7 +123,7 @@ function ChatModalKonn3ctAi() {
             id: 1,
             name: "ai",
             message: "Getting Meeting Summary for you...",
-            time: new Date().toLocaleDateString(),
+            time: new Date().toLocaleString(),
             from: "ai",
           }
           ]
@@ -123,7 +147,7 @@ function ChatModalKonn3ctAi() {
                 id: 1,
                 name: "ai",
                 message: jresp.message,
-                time: new Date().toLocaleDateString(),
+                time: new Date().toLocaleString(),
                 from: "ai",
               }
             ]
@@ -146,7 +170,7 @@ function ChatModalKonn3ctAi() {
             id: 1,
             name: "ai",
             message: "Getting Meeting Transcript for you...",
-            time: new Date().toLocaleDateString(),
+            time: new Date().toLocaleString(),
             from: "ai",
           }
           ]
@@ -170,7 +194,7 @@ function ChatModalKonn3ctAi() {
                 id: 1,
                 name: "ai",
                 message: jresp.message,
-                time: new Date().toLocaleDateString(),
+                time: new Date().toLocaleString(),
                 from: "ai",
               }
             ]
@@ -191,17 +215,20 @@ function ChatModalKonn3ctAi() {
         ...prev,
           {
             id: 1,
-            name: "ai",
-            message: "Getting Meeting Transcript for you...",
-            time: new Date().toLocaleDateString(),
-            from: "ai",
+            name: user?.meetingDetails?.fullname,
+            message: value,
+            time: new Date().toLocaleString(),
+            from: "client",
           }
           ]
     ));
 
     var data = JSON.stringify({
-      "meetingID": user?.meetingDetails?.meetingID
+      "uuid": `${user?.meetingDetails?.meetingID}%${user?.meetingDetails?.internalUserID}`,
+      "message": value
     });
+
+    setValue("");
 
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
@@ -217,7 +244,7 @@ function ChatModalKonn3ctAi() {
                 id: 1,
                 name: "ai",
                 message: jresp.message,
-                time: new Date().toLocaleDateString(),
+                time: new Date().toLocaleString(),
                 from: "ai",
               }
             ]
@@ -231,24 +258,8 @@ function ChatModalKonn3ctAi() {
     xhr.send(data);
   }
 
-  async function botMessages() {
-    console.log("botMessages")
-
-    setKaiChatList((prev:any)=>([
-        ...prev,
-          {
-            id: 1,
-            name: "ai",
-            message: "Getting Meeting Transcript for you...",
-            time: new Date().toLocaleDateString(),
-            from: "ai",
-          }
-          ]
-    ));
-
-    var data = JSON.stringify({
-      "meetingID": user?.meetingDetails?.meetingID
-    });
+  async function fetchBotMessages() {
+    console.log("fetchBotMessages")
 
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
@@ -258,24 +269,27 @@ function ChatModalKonn3ctAi() {
         console.log(this.responseText);
         var jresp=JSON.parse(this.responseText);
 
-        setKaiChatList((prev:any)=>([
-              ...prev,
-              {
-                id: 1,
-                name: "ai",
-                message: jresp.message,
-                time: new Date().toLocaleDateString(),
-                from: "ai",
-              }
-            ]
-        ));
+        for (let i = 0; i < jresp.data.length; i++) {
+          console.log(jresp.data[i].message);
+          setKaiChatList((prev:any)=>([
+                ...prev,
+                {
+                  id: 1,
+                  name: jresp.data[i].type != "ai" ? user?.meetingDetails?.fullname: jresp.data[i].type,
+                  message: jresp.data[i].message,
+                  time: jresp.data[i].date,
+                  from: jresp.data[i].type,
+                }
+              ]
+          ));
+        }
       }
     });
 
-    xhr.open("POST", `${ServerInfo.aiEnginesURL}/transcript`);
+    xhr.open("GET", `${ServerInfo.aiEnginesURL}/bot?uuid=${user?.meetingDetails?.meetingID}%${user?.meetingDetails?.internalUserID}`);
     xhr.setRequestHeader("Content-Type", "application/json");
 
-    xhr.send(data);
+    xhr.send();
   }
 
 
@@ -396,9 +410,12 @@ function ChatModalKonn3ctAi() {
               className="w-full bg-transparent pl-3 placeholder:text-a11y/80  focus:shadow-none focus:outline-none"
               id=""
               placeholder="Ask anything about the meeting..."
+              value={value}
+              onChange={handleTyping}
+              onKeyDown={handleKeyDown}
             />
             <div className="flex items-center gap-4">
-              <SendIcon className="h-6 w-6" />
+              <SendIcon onClick={messageBot} className="h-6 w-6" />
             </div>
           </div>
         </div>
