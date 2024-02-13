@@ -592,7 +592,7 @@ const Websocket = () => {
     const handleMeetings =(eventData:any)=>{
         console.log('Random User Handler')
         const obj = JSON.parse(eventData);
-        const {msg, randomlySelectedUser, meetingEnded, voiceProp} = obj.fields
+        const {randomlySelectedUser, meetingEnded, voiceProp} = obj.fields
 
         if(meetingEnded != null && meetingEnded){
             // endCall();
