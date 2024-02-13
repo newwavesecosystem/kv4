@@ -109,7 +109,7 @@ function SingleCameraComponent({
               .filter((eachItem: any) => eachItem?.intId == participant.intId)
               .map((eachItem: any) =>
                 eachItem?.joined && eachItem?.muted
-                  ? "rounded-full border border-a11y/20 bg-primary/40"
+                  ? "rounded-full border border-a11y/20 bg-konn3ct-red"
                   : "rounded-full bg-primary/80",
               ),
           )}
