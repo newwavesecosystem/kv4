@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MovieColoredIcon from "~/components/icon/outline/MovieColoredIcon";
 import BotIcon from "~/components/icon/outline/BotIcon";
 import CCIcon from "~/components/icon/outline/CCIcon";
@@ -30,6 +30,7 @@ import {
   eCinemaModalState,
   participantsModalState,
   recordingModalState,
+  newMessage,
 } from "~/recoil/atom";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
 
@@ -54,6 +55,8 @@ import { IParticipant } from "~/types";
 import BreakOutModal from "~/components/breakout/BreakOutModal";
 import HandOffIcon from "~/components/icon/outline/HandOffIcon";
 import FileUploadModal from "~/components/fileUpload/FileUploadModal";
+import { Howl } from 'howler';
+
 
 function Authenticated({ children }: { children: React.ReactNode }) {
   const [recordingState, setRecordingState] =
@@ -76,7 +79,22 @@ function Authenticated({ children }: { children: React.ReactNode }) {
   const [connectionStatus, setConnection] = useRecoilState(
     connectionStatusState,
   );
+
   const [participantList, setParticipantList] = useRecoilState(participantListState);
+
+  const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
+
+  const sound = new Howl({
+    src: ['/message.mp3'],
+  });
+
+  useEffect(() => {
+    if(isNewMessage) {
+      sound.play();
+    }
+  }, [isNewMessage])
+
+
 
   return (
     <div
@@ -424,10 +442,14 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           <button
             onClick={() => {
               setChatState(!chatState);
+              setIsNewMessage(false);
             }}
-            className="items-center rounded-full border border-a11y/20 bg-transparent p-2"
+            className="relative items-center rounded-full border border-a11y/20 bg-transparent p-2"
           >
             <ChatIcon className="h-6 w-6" />
+            {isNewMessage && (
+              <div className="absolute right-2 top-2 h-2 w-2 animate-pulse rounded-full bg-a11y"></div>
+            )}
           </button>
         </div>
       </div>

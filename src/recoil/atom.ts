@@ -24,6 +24,11 @@ export const authUserState = atom<{
   default: null,
 });
 
+export const newMessage = atom<boolean>({
+  key: "newMessage",
+  default: false,
+});
+
 export const connectionStatusState = atom<{
   websocket_connection: boolean;
   audio_connection: boolean;

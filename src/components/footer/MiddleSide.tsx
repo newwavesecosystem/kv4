@@ -25,6 +25,7 @@ import {
   breakOutModalState,
   selectedCameraState,
   fileUploadModalState,
+  newMessage,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -129,6 +130,7 @@ function MiddleSide() {
   );
 
   const [ssscreen, setScreen] = useState<null|MediaStream>(null);
+  const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
 
   return (
     <div className=" flex w-full items-center justify-center gap-5">
@@ -428,11 +430,15 @@ function MiddleSide() {
             <DropdownMenuItem
               onClick={() => {
                 setChatState(!chatState);
+                setIsNewMessage(false)
               }}
-              className="py-2 md:hidden"
+              className="relative py-2 md:hidden"
             >
               <ChatIcon className="mr-2 h-5 w-5" />
               <span>Chat</span>
+              {isNewMessage && (
+                <div className="absolute left-5 top-2 h-2 w-2 animate-pulse rounded-full bg-a11y"></div>
+              )}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
