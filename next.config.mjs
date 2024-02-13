@@ -28,9 +28,21 @@ const config = {
       },
       {
         protocol: 'https',
+        hostname: 'dev.konn3ct.ng',
+        port: '',
+        pathname: '/myroombanner/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'konn3ct.com',
         port: '',
         pathname: '/storage/profile-photos/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'konn3ct.com',
+        port: '',
+        pathname: '/myroombanner/**',
       },
       {
         protocol: 'https',

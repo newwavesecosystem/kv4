@@ -7,7 +7,7 @@ import {
   participantTalkingListState,
   pinnedUsersState,
 } from "~/recoil/atom";
-import { IAuthUser, IConnectedUser, IParticipant } from "~/types";
+import {IAuthUser, IConnectedUser, IParticipant, IParticipantCamera} from "~/types";
 import MicOnIcon from "../icon/outline/MicOnIcon";
 import MicOffIcon from "../icon/outline/MicOffIcon";
 import EllipsisIcon from "../icon/outline/EllipsisIcon";
@@ -44,11 +44,13 @@ function SingleCameraComponent({
     useRecoilState(pinnedUsersState);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  let userCamera=participantCameraList.filter((cItem:any) => cItem?.intId == participant.intId);
+  let userCamera=participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId);
 
 
   useEffect(() => {
-  //   // Attach the new stream to the video element
+  // Attach the new stream to the video element
+
+    console.log("userCamera",userCamera);
     if(userCamera.length>0){
       if (videoRef.current) {
         videoRef.current.srcObject = userCamera[0].stream;

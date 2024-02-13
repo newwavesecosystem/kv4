@@ -46,11 +46,11 @@ function ColumnContainer({ column, users, deleteUser }: Props) {
 
       {/* Column User container */}
       <div className="mt-3 flex flex-grow flex-col gap-2 overflow-y-auto overflow-x-hidden border border-a11y/40 p-2">
-        <SortableContext items={usersIds}>
+        {/*<SortableContext items={usersIds}>*/}
           {users.map((user) => (
             <UsersCard key={user.id} user={user} deleteUser={deleteUser} />
           ))}
-        </SortableContext>
+        {/*</SortableContext>*/}
       </div>
     </div>
   );

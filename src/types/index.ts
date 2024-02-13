@@ -127,10 +127,10 @@ export interface IWaitingUser {
 
 
 export interface IParticipantCamera {
-  id: string;
+  id: string | undefined;
   intId: string | undefined;
-  streamID: string;
-  deviceID: string | null;
+  streamID: string | null;
+  deviceID: string | undefined;
   stream: MediaStream | null;
 }
 

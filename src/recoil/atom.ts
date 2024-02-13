@@ -411,17 +411,17 @@ export const availableSpeakersState = atom<Array<MediaDeviceInfo>>({
   default: [],
 });
 
-export const selectedCameraState = atom<string | null>({
+export const selectedCameraState = atom<MediaDeviceInfo | null>({
   key: "selectedCameraState",
   default: null,
 });
 
-export const selectedMicrophoneState = atom<string | null>({
+export const selectedMicrophoneState = atom<MediaDeviceInfo | null>({
   key: "selectedMicrophoneState",
   default: null,
 });
 
-export const selectedSpeakersState = atom<string | null>({
+export const selectedSpeakersState = atom<MediaDeviceInfo | null>({
   key: "selectedSpeakersState",
   default: null,
 });

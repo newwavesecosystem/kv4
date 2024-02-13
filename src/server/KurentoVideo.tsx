@@ -10,6 +10,7 @@ import {
     connectionStatusState,
     participantCameraListState
 } from "~/recoil/atom";
+import {IParticipantCamera} from "~/types";
 
 
 const KurentoVideo = () => {
@@ -20,13 +21,15 @@ const KurentoVideo = () => {
     const participantCameraList = useRecoilValue(participantCameraListState);
     const [videoStateWS, setVideoStateWS] = useState(false);
 
-    let userCamera=participantCameraList.filter((cItem:any) => cItem?.intId == user?.meetingDetails?.internalUserID);
-
     let ws: WebSocket | null = null;
     let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
 
 
     useEffect(() => {
+
+        let userCamera=participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == user?.meetingDetails?.internalUserID)[0];
+
+        console.log("KurentoVideo userCamera",userCamera)
 
         console.log("effect changes in KurentoVideo")
 
@@ -35,16 +38,9 @@ const KurentoVideo = () => {
             ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
         };
 
-        if (!videoStateWS && videoState && user?.sessiontoken !=null) {
-            setVideoStateWS(true)
-            kurentoConnect();
-        }else{
-            ws?.close();
-        }
-
         const startProcess = () => {
             console.log('Creating WebRtcPeer and generating local sdp offer ...');
-            const videoElement = document.getElementById('videoElement');
+
             const constraints = {
                 audio: false,
                 video: {
@@ -66,6 +62,7 @@ const KurentoVideo = () => {
                 this.generateOffer(onOffer);
             });
         };
+
 
         const onOffer = (error:any, offerSdp:any) => {
             if (error) return onError(error);
@@ -115,6 +112,16 @@ const KurentoVideo = () => {
             console.log('Sending this data via kurento websocket');
         };
 
+
+        // if (!videoStateWS && videoState && user?.sessiontoken !=null) {
+        //     setVideoStateWS(true)
+        //     kurentoConnect();
+        // }
+
+        if(videoState && user?.sessiontoken !=null){
+            setVideoStateWS(true)
+            kurentoConnect();
+        }
 
         if (ws != null) {
             ws.onopen = () => {

@@ -575,7 +575,7 @@ const Websocket = () => {
             // ["{\"msg\":\"changed\",\"collection\":\"breakouts\",\"id\":\"dF7ZMsFdC7zvFANbr\",\"fields\":{\"url_w_flxa3jsczb7i\":{\"redirectToHtml5JoinURL\":\"https://meet.konn3ct.ng/bigbluebutton/api/join?fullName=Odejinmi+Samuel&isBreakout=true&joinViaHtml5=true&meetingID=4d3cc89d80677808207417d4aa82a5868f6c75de-1707763221040&password=moderator&redirect=true&userID=w_flxa3jsczb7i-2&checksum=4f0e6f1b3f1ef8db8b3795f7f94eeb1bbef15cee1296f47acede66bd45439572\",\"insertedTime\":1707763310590}}}"]
 
             // Extracting redirectToHtml5JoinURL dynamically
-            const dynamicKey = Object.keys(fields)[0]; // Assuming there's only one dynamic key, adjust accordingly
+            const dynamicKey = Object.keys(fields)[0] ?? "0"; // Assuming there's only one dynamic key, adjust accordingly
             const redirectToHtml5JoinURL = fields[dynamicKey]?.redirectToHtml5JoinURL;
 
             console.log("redirectToHtml5JoinURL",redirectToHtml5JoinURL);
@@ -592,7 +592,7 @@ const Websocket = () => {
     const handleMeetings =(eventData:any)=>{
         console.log('Random User Handler')
         const obj = JSON.parse(eventData);
-        const {msg, randomlySelectedUser, meetingEnded, voiceProp} = obj.fields
+        const {randomlySelectedUser, meetingEnded, voiceProp} = obj.fields
 
         if(meetingEnded != null && meetingEnded){
             // endCall();
@@ -854,7 +854,7 @@ const Websocket = () => {
     const openRemoteCamera = (id:string,intId:string, streamID:string) => {
         console.log('Hi, im here')
 
-        let newRecord:IParticipantCamera={
+        let newRecord:{ intId: string; streamID: string; stream: null; id: string; deviceID: null }={
             deviceID: null, stream: null,
             intId,streamID,id
         }
