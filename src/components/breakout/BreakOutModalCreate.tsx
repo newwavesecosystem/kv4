@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Dialog, DialogClose, DialogContent } from "../ui/dialog";
-import { breakOutModalState } from "~/recoil/atom";
-import { useRecoilState } from "recoil";
+import {authUserState, breakOutModalState, participantListState} from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { Checkbox } from "../ui/checkbox";
 import RoomBoard from "./RoomBoard";
 import InformationIcon from "../icon/outline/InformationIcon";
 import dayjs from "dayjs";
+import {websocketCreateBreakoutRoom} from "~/server/Websocket";
+import {IParticipant, IUserBreakOutRoom} from "~/types";
+import {UsersData} from "~/data/UsersData";
 
 function BreakOutModalCreate() {
-  const [breakOutRoomState, setBreakOutRoomState] =
-    useRecoilState(breakOutModalState);
+  const [breakOutRoomState, setBreakOutRoomState] = useRecoilState(breakOutModalState);
+
+  const [participantList, setParticipantList] = useRecoilState(participantListState);
+  const [user, setUser] = useRecoilState(authUserState);
 
   const maxRooms = 16;
   const minRooms = 2;
@@ -20,6 +25,46 @@ function BreakOutModalCreate() {
   );
 
   const [selectedRoom, setSelectedRoom] = useState("2");
+
+  useEffect(()=>{
+    console.log("IUserBreakOutRoom");
+    const defaultUsers: IUserBreakOutRoom[] = [
+    ...participantList.map((user:IParticipant, index:number) => ({
+        id: "1",
+        columnId: "users",
+        name: user.name,
+        userId: user.userId,
+      }))
+    ];
+
+    console.log("IUserBreakOutRoom 2",defaultUsers);
+
+    setBreakOutRoomState((prev) => ({
+      ...prev,
+      users: defaultUsers,
+      rooms:[
+        {
+          id: "users",
+          title: "Not Assigned",
+          users: [],
+          breakoutId: "",
+        },
+        {
+          users: [],
+          id: "room1",
+          title: "Room 1",
+          breakoutId: "",
+        },
+        {
+          users: [],
+          id: "room2",
+          title: "Room 2",
+          breakoutId: "",
+        },
+      ]
+    }));
+
+  },[""]);
 
   return (
     <Dialog
@@ -45,13 +90,17 @@ function BreakOutModalCreate() {
               <button
                 disabled={
                   //  ensure that there is at least one user in all rooms
-                  breakOutRoomState.rooms
-                    .filter((room) => room.id !== "users")
-                    .every((room) =>
-                      breakOutRoomState.users.find(
-                        (user) => user.columnId === room.id,
-                      ),
-                    ) === false || breakOutRoomState.duration < 15
+                  // breakOutRoomState.rooms
+                  //   .filter((room) => room.id !== "users")
+                  //   .every((room) =>
+                  //     breakOutRoomState.users.find(
+                  //       (user) => user.columnId === room.id,
+                  //     ),
+                  //   ) === false || breakOutRoomState.duration < 15
+
+                    //Allow users to choose rooms must be enabled & time is >=15
+
+                    !breakOutRoomState.isAllowUsersToChooseRooms || breakOutRoomState.duration < 15
                 }
                 onClick={() => {
                   setBreakOutRoomState((prev) => ({
@@ -64,6 +113,16 @@ function BreakOutModalCreate() {
                       .add(breakOutRoomState.duration, "minute")
                       .toDate(),
                   }));
+
+                  websocketCreateBreakoutRoom({
+                    rooms: breakOutRoomState.rooms,
+                    time: breakOutRoomState.duration,
+                    freeRoom: breakOutRoomState.isAllowUsersToChooseRooms,
+                    saveWhiteBoard: breakOutRoomState.isSaveWhiteBoard,
+                    saveSharedNote: breakOutRoomState.isSaveSharedNotes,
+                    sendInvite: breakOutRoomState.isSendInvitationToAssignedModerators,
+                    roomName: user?.meetingDetails?.confname
+                  });
                 }}
                 className="rounded-md bg-a11y/20 px-4 py-1 disabled:opacity-50 md:px-6"
               >
@@ -121,6 +180,8 @@ function BreakOutModalCreate() {
                             .map((room) => ({
                               id: room,
                               title: `Room ${room.split("room")[1]}`,
+                              users: [],
+                              breakoutId: "",
                             })),
                         ],
                       }));

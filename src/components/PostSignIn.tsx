@@ -236,32 +236,32 @@ function PostSignIn() {
           </button>
         )}
         {/* temp button to stimulate ppl joining */}
-        <div className={"fixed right-[50%] top-0 z-[999] flex gap-2 "}>
-          <button
-            className="  rounded-md bg-orange-400 p-1"
-            onClick={() => {
-              setParticipantList((prev: any) => [
-                ...prev,
-                {
-                  id: prev[0].id + `${Math.floor(Math.random() * 100)}`,
-                  intId: prev[0].id + `${Math.floor(Math.random() * 100)}`,
-                },
-              ]);
-            }}
-          >
-            add
-          </button>
-          <button
-            className="  rounded-md bg-orange-400 p-1"
-            onClick={() => {
-              if (participantList.length === 1) return;
-              setParticipantList((prev: any) => prev.slice(0, -1));
-            }}
-          >
-            remove
-          </button>
-          {participantList.length}
-        </div>
+        {/*<div className={"fixed right-[50%] top-0 z-[999] flex gap-2 "}>*/}
+        {/*  <button*/}
+        {/*    className="  rounded-md bg-orange-400 p-1"*/}
+        {/*    onClick={() => {*/}
+        {/*      setParticipantList((prev: any) => [*/}
+        {/*        ...prev,*/}
+        {/*        {*/}
+        {/*          id: prev[0].id + `${Math.floor(Math.random() * 100)}`,*/}
+        {/*          intId: prev[0].id + `${Math.floor(Math.random() * 100)}`,*/}
+        {/*        },*/}
+        {/*      ]);*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    add*/}
+        {/*  </button>*/}
+        {/*  <button*/}
+        {/*    className="  rounded-md bg-orange-400 p-1"*/}
+        {/*    onClick={() => {*/}
+        {/*      if (participantList.length === 1) return;*/}
+        {/*      setParticipantList((prev: any) => prev.slice(0, -1));*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    remove*/}
+        {/*  </button>*/}
+        {/*  {participantList.length}*/}
+        {/*</div>*/}
 
         {/* show active people talking */}
         {/*        {connectedUsers.filter((user) => user.isMicOpen === true)?.length >

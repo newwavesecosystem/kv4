@@ -158,13 +158,39 @@ export interface IParticipantsState {
 
 export interface IColumnBreakOutRoom {
   id: string;
+  breakoutId: string|null;
   title: string;
+  users: string[];
 }
+
+export interface IBreakoutRoom {
+  users: string[];
+  name: string;
+  captureNotesFilename: string;
+  captureSlidesFilename: string;
+  shortName: string;
+  isDefaultName: boolean;
+  freeJoin: boolean;
+  sequence: number;
+}
+
+// {
+//   users: ["w_0pknu2mdlwg3"],
+//       name: "Odejinmi Room (Room 1)",
+//     captureNotesFilename: "Room_01_Notes",
+//     captureSlidesFilename: "Room_01_Whiteboard",
+//     shortName: "Room 1",
+//     isDefaultName: true,
+//     freeJoin: true,
+//     sequence: 1,
+//     id: "1",
+// },
 
 export interface IUserBreakOutRoom {
   id: string | undefined;
   columnId: string | undefined;
   name: string | undefined;
+  userId: string | undefined;
 }
 
 export interface IEmojiMart {

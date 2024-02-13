@@ -38,7 +38,7 @@ function CCModal() {
       "text": text,
       "user": user?.meetingDetails?.fullname,
       "meetingID": user?.meetingDetails?.meetingID,
-      "date": "2024-01-13"
+      "date": new Date().toLocaleString()
     });
   }
 

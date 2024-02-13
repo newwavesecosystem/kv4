@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import SendIcon from "../icon/outline/SendIcon";
 import { Separator } from "../ui/separator";
+import {websocketRequest2JoinBreakoutRoom} from "~/server/Websocket";
 dayjs.extend(duration);
 function BreakOutModalView() {
   const [breakOutRoomState, setBreakOutRoomState] =
@@ -95,9 +96,11 @@ function BreakOutModalView() {
                     <button>View</button>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <button className="">Join Room</button>
-                    <Separator className="h-3" orientation="vertical" />
-                    <button className="">Join Audio</button>
+                    <button onClick={()=>{
+                      websocketRequest2JoinBreakoutRoom(room.breakoutId);
+                    }} className="">Join Room</button>
+                    {/*<Separator className="h-3" orientation="vertical" />*/}
+                    {/*<button className="">Join Audio</button>*/}
                   </div>
                 </div>
               ))}

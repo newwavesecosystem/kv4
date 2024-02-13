@@ -1,7 +1,15 @@
 import { atom } from "recoil";
 import { UsersData } from "~/data/UsersData";
 import settingsTabData from "~/data/settingsTabData";
-import { IColumnBreakOutRoom, IConnectedUser, IMeetingDetails, IParticipant, IWaitingUser, IUserBreakOutRoom} from "~/types";
+import {
+  IColumnBreakOutRoom,
+  IConnectedUser,
+  IMeetingDetails,
+  IParticipant,
+  IWaitingUser,
+  IUserBreakOutRoom,
+  IBreakoutRoom
+} from "~/types";
 
 export const authUserState = atom<{
   id: number;
@@ -306,6 +314,7 @@ const defaultUsers: IUserBreakOutRoom[] = [
     id: user.id,
     columnId: "users",
     name: user.name,
+    userId: user.name,
   })),
 ];
 
@@ -330,22 +339,9 @@ export const breakOutModalState = atom<{
   default: {
     step: 0,
     isActive: false,
-    rooms: [
-      {
-        id: "users",
-        title: "Not Assigned",
-      },
-      {
-        id: "room1",
-        title: "Room 1",
-      },
-      {
-        id: "room2",
-        title: "Room 2",
-      },
-    ],
-    users: defaultUsers,
-    isAllowUsersToChooseRooms: false,
+    rooms: [],
+    users: [],
+    isAllowUsersToChooseRooms: true,
     isSendInvitationToAssignedModerators: false,
     duration: 15,
     isSaveWhiteBoard: false,

@@ -45,6 +45,7 @@
     "react-dom": "18.2.0",
     "react-draggable": "^4.4.6",
     "react-resizable-panels": "^1.0.7",
+    "react-speech-kit": "^3.0.1",
     "react-speech-recognition": "^3.10.0",
     "recoil": "^0.7.7",
     "regenerator-runtime": "^0.14.1",
