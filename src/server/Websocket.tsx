@@ -6,14 +6,15 @@ import * as ServerInfo from './ServerInfo';
 import {generateRandomId, generatesSmallId} from "./ServerInfo";
 
 import {
-    authUserState, chatListState, chatTypingListState,
+    authUserState, breakOutModalState, chatListState, chatTypingListState,
     connectionStatusState, donationModalState, eCinemaModalState, micOpenState, participantCameraListState,
     participantListState,
     participantTalkingListState, pollModalState, presentationSlideState,
     recordingModalState, screenSharingStreamState, viewerScreenSharingState, waitingRoomUsersState
 } from "~/recoil/atom";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {IParticipant, IParticipantCamera, IWaitingUser} from "~/types";
+import {IBreakoutRoom, IColumnBreakOutRoom, IParticipant, IParticipantCamera, IWaitingUser} from "~/types";
+import dayjs from "dayjs";
 
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
@@ -110,6 +111,8 @@ const Websocket = () => {
     const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
     const [waitingRoomUsers, setWaitingRoomUsers] = useRecoilState(waitingRoomUsersState);
     const [micState, setMicState] = useRecoilState(micOpenState);
+    const [breakOutRoomState, setBreakOutRoomState] = useRecoilState(breakOutModalState);
+
     const [num, setNum] = useState(1);
 
     const getNum=()=>{
@@ -220,6 +223,10 @@ const Websocket = () => {
 
                 if(collection == "guestUsers"){
                     handleGuestUsers(e.data)
+                }
+
+                if(collection == "breakouts"){
+                    handleBreakout(e.data)
                 }
 
 
@@ -524,6 +531,63 @@ const Websocket = () => {
             setWaitingRoomUsers(ur);
         }
     }
+
+    const handleBreakout = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id, fields} = obj;
+
+        if(msg == "added") {
+            // ["{\"msg\":\"added\",\"collection\":\"breakouts\",\"id\":\"dF7ZMsFdC7zvFANbr\",\"fields\":{\"breakoutId\":\"60b5008f1dbdb7f487ab51c637cd80f757f8c9be-1707763221040\",\"captureNotes\":false,\"captureSlides\":false,\"externalId\":\"4d3cc89d80677808207417d4aa82a5868f6c75de-1707763221040\",\"freeJoin\":true,\"isDefaultName\":true,\"joinedUsers\":[],\"name\":\"Odejinmi Room (Room 2)\",\"parentMeetingId\":\"d02560dd9d7db4467627745bd6701e809ffca6e3-1707762025148\",\"sendInviteToModerators\":false,\"sequence\":2,\"shortName\":\"Room 2\",\"timeRemaining\":0}}"]
+
+            const {breakoutId,joinedUsers,shortName,name,sendInviteToModerators,sequence} = fields;
+
+            console.log('breakoutId',breakoutId);
+            console.log('breakoutId',fields);
+
+            setBreakOutRoomState((prev) => ({
+                ...prev,
+                rooms: [
+                    ...prev.rooms,
+                    {
+                        id: sequence,
+                        breakoutId: breakoutId,
+                        title: shortName,
+                        users: joinedUsers,
+                    }
+                ],
+            }));
+
+            setBreakOutRoomState((prev) => ({
+                ...prev,
+                step: 2,
+                activatedAt: new Date(),
+                createdAt: new Date(),
+                isActive: true,
+                endedAt: dayjs()
+                    .add(breakOutRoomState.duration, "minute")
+                    .toDate(),
+            }));
+        }
+
+
+        if(msg == "changed") {
+            // ["{\"msg\":\"changed\",\"collection\":\"breakouts\",\"id\":\"dF7ZMsFdC7zvFANbr\",\"fields\":{\"url_w_flxa3jsczb7i\":{\"redirectToHtml5JoinURL\":\"https://meet.konn3ct.ng/bigbluebutton/api/join?fullName=Odejinmi+Samuel&isBreakout=true&joinViaHtml5=true&meetingID=4d3cc89d80677808207417d4aa82a5868f6c75de-1707763221040&password=moderator&redirect=true&userID=w_flxa3jsczb7i-2&checksum=4f0e6f1b3f1ef8db8b3795f7f94eeb1bbef15cee1296f47acede66bd45439572\",\"insertedTime\":1707763310590}}}"]
+
+            // Extracting redirectToHtml5JoinURL dynamically
+            const dynamicKey = Object.keys(fields)[0]; // Assuming there's only one dynamic key, adjust accordingly
+            const redirectToHtml5JoinURL = fields[dynamicKey]?.redirectToHtml5JoinURL;
+
+            console.log("redirectToHtml5JoinURL",redirectToHtml5JoinURL);
+
+            if(redirectToHtml5JoinURL != null){
+                window.open(redirectToHtml5JoinURL, '_blank');
+            }
+
+        }
+
+    }
+
 
     const handleMeetings =(eventData:any)=>{
         console.log('Random User Handler')
@@ -1059,6 +1123,48 @@ export function websocketStopExternalVideo(){
 
 export function websocketRaiseHand(internalUserID:any){
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setEmojiStatus\",\"params\":[\"${internalUserID}\",\"raiseHand\"]}`]);
+}
+
+interface BreakoutRoomOptions {
+    rooms: IColumnBreakOutRoom[];
+    time: number;
+    freeRoom: boolean;
+    saveWhiteBoard: boolean;
+    saveSharedNote: boolean;
+    sendInvite: boolean;
+    roomName: string | undefined;
+}
+
+export function websocketCreateBreakoutRoom(options: BreakoutRoomOptions): void {
+    const { rooms, time, freeRoom, saveWhiteBoard, saveSharedNote, sendInvite, roomName } = options;
+
+    const record=true;
+
+    const roomParams: IBreakoutRoom[]=[
+    ...rooms.slice(1).map((item:IColumnBreakOutRoom, number)=>({
+        users: [],
+        name: `${roomName} (${item.title})`,
+        captureNotesFilename: `Room_${number}_Notes`,
+        captureSlidesFilename: `Room_${number}_Whiteboard`,
+        shortName: item.title,
+        isDefaultName: true,
+        freeJoin: freeRoom,
+        sequence: number+1,
+    }))
+    ]
+
+    const breakoutRoomParams = [roomParams, time, record, saveWhiteBoard, saveSharedNote, sendInvite];
+
+    const jsonString = JSON.stringify(breakoutRoomParams);
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"createBreakoutRoom\",\"params\":${jsonString}}`]);
+}
+
+export function websocketEndBreakoutRoom(){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"endAllBreakouts\",\"params\":[]}`]);
+}
+
+export function websocketRequest2JoinBreakoutRoom(breakoutId: string | null){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"requestJoinURL\",\"params\":[{\"breakoutId\":\"${breakoutId}\"}]}`]);
 }
 
 export function websocketLeaveMeeting(){
