@@ -195,12 +195,14 @@ export const presentationSlideState = atom<{
   id: String;
 }>({
   key: "presentationSlideState",
-  default: {  pages: [],
+  default: {
+    pages: [],
     current: false,
     downloadable: false,
-    name: '',
-    podId: '',
-    id: ''},
+    name: "",
+    podId: "",
+    id: "",
+  },
 });
 
 export const recordingModalState = atom<{
@@ -317,6 +319,23 @@ const defaultUsers: IUserBreakOutRoom[] = [
     userId: user.name,
   })),
 ];
+
+export const fileUploadModalState = atom<{
+  step: number;
+  isMinimized: boolean;
+  isFull: boolean;
+  files: File[];
+  filesToUpload: string[];
+}>({
+  key: "fileUploadModalState",
+  default: {
+    step: 0,
+    isMinimized: false,
+    isFull: false,
+    files: [],
+    filesToUpload: [],
+  },
+});
 
 export const breakOutModalState = atom<{
   isActive: boolean;
