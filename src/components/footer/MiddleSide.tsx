@@ -19,7 +19,7 @@ import {
   screenSharingState,
   screenSharingStreamState,
   settingsModalState,
-  whiteBoardOpenState, participantListState, connectionStatusState, breakOutModalState,
+  whiteBoardOpenState, participantListState, connectionStatusState, breakOutModalState, selectedCameraState,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -103,6 +103,10 @@ function MiddleSide() {
     leaveRoomCallModalState,
   );
 
+  const [selectedCamera, setSelectedCamera] = useRecoilState(
+      selectedCameraState,
+  );
+
   const [ssscreen, setScreen] = useState<null|MediaStream>(null);
 
   return (
@@ -182,22 +186,9 @@ function MiddleSide() {
         )}
         onClick={async () => {
           if (videoState) {
-            // stopCameraStream(cameraStream);
-            // update the connected users state for the user where the id is the same
-            // setConnectedUsers((prev) =>
-            //   prev.map((prevUser) => {
-            //     if (prevUser.id === user?.id) {
-            //       return {
-            //         ...prevUser,
-            //         cameraFeed: null,
-            //         isCameraOpen: false,
-            //       };
-            //     }
-            //     return prevUser;
-            //   }),
-            // );
-            // setCameraSteam(null);
-            websocketStopCamera(`${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}${participantCameraList.filter((item:any) => item?.intId != user?.meetingDetails?.internalUserID)[0]?.deviceID}`);
+            websocketStopCamera(`${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}${participantCameraList.filter((item:any) => item?.intId == user?.meetingDetails?.internalUserID)[0]?.deviceID}`);
+
+            stopCameraStream(cameraStream);
             setVideoState(!videoState);
 
             let ur=participantCameraList.filter((item:any) => item?.intId != user?.meetingDetails?.internalUserID);
@@ -207,68 +198,46 @@ function MiddleSide() {
             return;
           }
 
-          navigator.mediaDevices
-              .getUserMedia({
-                video: true,
-                audio: false,
-              })
-              .then((cameraStream) => {
-                setVideoState(!videoState);
-                let newRecord:IParticipantCamera={
-                  intId:user?.meetingDetails?.internalUserID,
-                  streamID:'6776767',
-                  id:'55656',
-                  deviceID:'4444',
-                  stream:cameraStream
-                }
+          const devices = await navigator.mediaDevices.enumerateDevices();
+          const desiredCamera = devices.filter((device) => device.kind === "videoinput");
 
-                setParticipantCameraList([...participantCameraList,newRecord])
+          if(desiredCamera.length < 1){
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: `No camera device detected. Kindly check if you need to grant permission`,
+            });
+            return;
+          }
 
-              })
-              .catch((error) => {
-                console.error('Error accessing camera:', error);
-                toast({
-                  variant: "destructive",
-                  title: "Uh oh! Something went wrong.",
-                  description: `Error accessing camera: ${error}`,
-                });
-              });
+          const video = await requestCameraAccess(selectedCamera == null ? desiredCamera[0] : selectedCamera);
+          if (video) {
+            console.log('Camera is on');
+            setCameraSteam(video);
+            setVideoState(!videoState);
 
-          // const video = await requestCameraAccess();
-          // if (video) {
-          //   console.log('Camera is on');
-          //   setCameraSteam(video);
-          //   // update the connected users state for the user where the id is the same
-          //   setConnectedUsers((prev) =>
-          //     prev.map((prevUser) => {
-          //       if (prevUser.id === user?.id) {
-          //         return {
-          //           ...prevUser,
-          //           cameraFeed: video,
-          //           isCameraOpen: true,
-          //         };
-          //       }
-          //       return prevUser;
-          //     }),
-          //   );
-          //   setVideoState(!videoState);
-          //   let newRecord:IParticipantCamera={
-          //     intId:user?.meetingDetails.internalUserID,
-          //     streamID:'6776767',
-          //     id:'55656',
-          //     deviceID:'4444',
-          //     stream:video
-          //   }
-          //
-          //   setParticipantCameraList([...participantCameraList,newRecord])
-          //
-          // } else {
-          //   toast({
-          //     variant: "destructive",
-          //     title: "Uh oh! Something went wrong.",
-          //     description: "Kindly check your camera settings.",
-          //   });
-          // }
+            if(selectedCamera == null && desiredCamera[0] != undefined){
+              setSelectedCamera(desiredCamera[0]);
+            }
+
+            // update the connected users state for the user where the id is the same
+            let newRecord:IParticipantCamera={
+              intId:user?.meetingDetails?.internalUserID,
+              streamID:`${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}${selectedCamera == null ? desiredCamera[0]?.deviceId : selectedCamera.deviceId}`,
+              id:desiredCamera[0]?.groupId,
+              deviceID: desiredCamera[0]?.deviceId,
+              stream:video
+            }
+
+            setParticipantCameraList([...participantCameraList,newRecord])
+
+          } else {
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: "Kindly check your camera settings.",
+            });
+          }
         }}
       >
         {videoState ? (

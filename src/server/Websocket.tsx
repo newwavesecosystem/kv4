@@ -854,7 +854,7 @@ const Websocket = () => {
     const openRemoteCamera = (id:string,intId:string, streamID:string) => {
         console.log('Hi, im here')
 
-        let newRecord:IParticipantCamera={
+        let newRecord:{ intId: string; streamID: string; stream: null; id: string; deviceID: null }={
             deviceID: null, stream: null,
             intId,streamID,id
         }
