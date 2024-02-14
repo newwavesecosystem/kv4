@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { UsersData } from "~/data/UsersData";
+// import { UsersData } from "~/data/UsersData";
 import settingsTabData from "~/data/settingsTabData";
 import {
   IColumnBreakOutRoom,
@@ -22,6 +22,11 @@ export const authUserState = atom<{
 } | null>({
   key: "authUserState",
   default: null,
+});
+
+export const newMessage = atom<boolean>({
+  key: "newMessage",
+  default: false,
 });
 
 export const connectionStatusState = atom<{
@@ -195,12 +200,14 @@ export const presentationSlideState = atom<{
   id: String;
 }>({
   key: "presentationSlideState",
-  default: {  pages: [],
+  default: {
+    pages: [],
     current: false,
     downloadable: false,
-    name: '',
-    podId: '',
-    id: ''},
+    name: "",
+    podId: "",
+    id: "",
+  },
 });
 
 export const recordingModalState = atom<{
@@ -309,14 +316,31 @@ export const donationModalState = atom<{
   },
 });
 
-const defaultUsers: IUserBreakOutRoom[] = [
-  ...UsersData.map((user) => ({
-    id: user.id,
-    columnId: "users",
-    name: user.name,
-    userId: user.name,
-  })),
-];
+// const defaultUsers: IUserBreakOutRoom[] = [
+//   ...UsersData.map((user) => ({
+//     id: user.id,
+//     columnId: "users",
+//     name: user.name,
+//     userId: user.name,
+//   })),
+// ];
+
+export const fileUploadModalState = atom<{
+  step: number;
+  isMinimized: boolean;
+  isFull: boolean;
+  files: File[];
+  filesToUpload: string[];
+}>({
+  key: "fileUploadModalState",
+  default: {
+    step: 0,
+    isMinimized: false,
+    isFull: false,
+    files: [],
+    filesToUpload: [],
+  },
+});
 
 export const breakOutModalState = atom<{
   isActive: boolean;

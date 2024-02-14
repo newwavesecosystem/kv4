@@ -7,7 +7,7 @@ import {generateRandomId, generatesSmallId} from "./ServerInfo";
 
 import {
     authUserState, breakOutModalState, chatListState, chatTypingListState,
-    connectionStatusState, donationModalState, eCinemaModalState, micOpenState, participantCameraListState,
+    connectionStatusState, donationModalState, eCinemaModalState, micOpenState, newMessage, participantCameraListState,
     participantListState,
     participantTalkingListState, pollModalState, presentationSlideState,
     recordingModalState, screenSharingStreamState, viewerScreenSharingState, waitingRoomUsersState
@@ -112,6 +112,7 @@ const Websocket = () => {
     const [waitingRoomUsers, setWaitingRoomUsers] = useRecoilState(waitingRoomUsersState);
     const [micState, setMicState] = useRecoilState(micOpenState);
     const [breakOutRoomState, setBreakOutRoomState] = useRecoilState(breakOutModalState);
+    const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
 
     const [num, setNum] = useState(1);
 
@@ -910,6 +911,7 @@ const Websocket = () => {
             time: formattedDate,
         }
         setChatList([...chatList,chat])
+        setIsNewMessage(true);
     }
 
     const addtypingUsers=(id:any,name:string)=>{
@@ -994,7 +996,7 @@ export function websocketSendMessage(internalUserID:any,meetingTitle:any,sender:
 
 export function websocketStartTyping() {
     console.log('I am websocketStartTyping')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startUserTyping\",\"params\":[\"public\"]`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startUserTyping\",\"params\":[\"public\"]}`])
 }
 
 export function websocketStopTyping() {
