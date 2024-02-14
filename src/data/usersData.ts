@@ -1,84 +1,163 @@
 export const UsersData = [
-    {
-      id: "1",
-      name: "BMO",
-    },
-    {
-      id: "2",
-      name: "jake",
-    },
-    {
-      id: "3",
-      name: "jake 2",
-    },
-    {
-      id: "4",
-      name: "finn",
-    },
-    {
-      id: "5",
-      name: "finn 2",
-    },
-    {
-      id: "1",
-      name: "BMO",
-    },
-    {
-      id: "2",
-      name: "jake",
-    },
-    {
-      id: "3",
-      name: "jake 2",
-    },
-    {
-      id: "4",
-      name: "finn",
-    },
-    {
-      id: "5",
-      name: "finn 2",
-    },
-    {
-      id: "1",
-      name: "BMO",
-    },
-    {
-      id: "2",
-      name: "jake",
-    },
-    {
-      id: "3",
-      name: "jake 2",
-    },
-    {
-      id: "4",
-      name: "finn",
-    },
-    {
-      id: "5",
-      name: "finn 2",
-    },
-    {
-      id: "1",
-      name: "BMO",
-    },
-    {
-      id: "2",
-      name: "jake",
-    },
-    {
-      id: "3",
-      name: "jake 2",
-    },
-    {
-      id: "4",
-      name: "finn",
-    },
-    {
-      id: "5",
-      name: "finn 2",
-    },
-    
-  ];
-  
+  {
+    id: 1,
+    name: "John Doe1",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "Host",
+  },
+  {
+    id: 2,
+    name: "Alice Johnson",
+    email: "test@test.com",
+    isHandRaised: true,
+    role: "guest",
+  },
+  {
+    id: 3,
+    name: "Bob Smith",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 4,
+    name: "Emily White",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 5,
+    name: "Daniel Brown",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 6,
+    name: "Sophia Davis",
+    email: "test@test.com",
+    isHandRaised: true,
+    role: "guest",
+  },
+  {
+    id: 7,
+    name: "Michael Miller",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 8,
+    name: "dev init",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 9,
+    name: "Ethan Taylor",
+    email: "test@test.com",
+    isHandRaised: true,
+    role: "guest",
+  },
+  {
+    id: 10,
+    name: "Ava Martinez",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 11,
+    name: "Liam Anderson",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 12,
+    name: "Emma Thompson",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 13,
+    name: "Noah Garcia",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 14,
+    name: "Mia Hernandez",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 15,
+    name: "James Turner",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 16,
+    name: "Grace Baker",
+    email: "test@test.com",
+    isHandRaised: true,
+    role: "guest",
+  },
+  {
+    id: 17,
+    name: "Benjamin Evans",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 18,
+    name: "Chloe Hill",
+    email: "test@test.com",
+    isHandRaised: true,
+    role: "guest",
+  },
+  {
+    id: 19,
+    name: "Logan Foster",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 20,
+    name: "Avery Reed",
+    email: "test@test.com",
+    isHandRaised: true,
+    role: "guest",
+  },
+  {
+    id: 21,
+    name: "Katy Perry",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 22,
+    name: "John Doe",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+  {
+    id: 23,
+    name: "dev init",
+    email: "test@test.com",
+    isHandRaised: false,
+    role: "guest",
+  },
+];

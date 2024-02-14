@@ -22,7 +22,6 @@ import PeoplesIcon from "../icon/outline/PeoplesIcon";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import SearchIcon from "../icon/outline/SearchIcon";
 import SingleParticipant from "./SingleParticipant";
-import UsersData, { IUserParticipant } from "~/data/usersData";
 import {IParticipant} from "~/types";
 
 const DummyMenu = [
