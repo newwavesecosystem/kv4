@@ -55,20 +55,17 @@ function ChatModal() {
   const [infoMessageStatus, setInfoMessageStatus] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const [usersTyping, setUsersTyping] = useState<number[]>([]);
+  const [usersTyping, setUsersTyping] = useState<string[]>([]);
   const user = useRecoilValue(authUserState);
-  // const user = {
-  //   id: 1,
-  // };
   const [message, setMessage] = useState("");
-  const isUserTyping = usersTyping.filter((typing) => typing === user.id);
+  const isUserTyping = usersTyping.filter((typing) => typing === user?.meetingDetails?.internalUserID);
 
   useEffect(() => {
     // Simulate users typing (replace with your actual implementation)
     const typingTimeout = setTimeout(() => {
       // check if user is in typing list if so remove the user
       if (isUserTyping) {
-        setUsersTyping((prev) => prev.filter((typing) => typing !== user.id));
+        setUsersTyping((prev) => prev.filter((typing) => typing !== user?.meetingDetails?.internalUserID));
       }
     }, 2000);
 
@@ -76,21 +73,17 @@ function ChatModal() {
   }, [usersTyping]);
 
   const handleTyping = (e: ChangeEvent<HTMLInputElement>) => {
-    if (user && !isUserTyping.length) {
-      setUsersTyping((prev) => [...prev, user.id]);
-    }
+    websocketStartTyping();
     setMessage(e.target.value);
   };
 
   const sendMsg = () => {
     let sender = user?.meetingDetails?.internalUserID;
-    let message = value;
     let ishola = chatList;
     console.log("sendingMsg");
     console.log(ishola);
 
     if (message != "") {
-      setValue("");
       console.log("sendingMsg : ", message);
       websocketSendMessage(
         sender,
@@ -98,6 +91,7 @@ function ChatModal() {
         sender,
         message,
       );
+      setMessage("");
     }
   };
 
@@ -105,14 +99,10 @@ function ChatModal() {
     if (e.key !== "Enter") return;
     const value = e.target.value;
     console.log("Well");
-    if (!value.trim()) return;
+    if (!message.trim()) return;
     sendMsg();
   };
 
-  const handleTypingSamji = (e: any) => {
-    websocketStartTyping();
-    setValue(e.target.value);
-  };
 
   const screenSize = useScreenSize();
   return (
@@ -183,13 +173,16 @@ function ChatModal() {
             </Popover>
           </div>
 
-          {usersTyping.length > 0 && (
+          {chatTypingList.length > 0 && (
             <p className="">
-              {usersTyping.join(", ")} {usersTyping.length > 1 ? "are" : "is"}{" "}
+              {chatTypingList.map((text: any, index:number) => (
+                  <span key={index}>{text.name}, </span>
+              ))} {chatTypingList.length > 1 ? "are" : "is"}{" "}
               typing...
             </p>
           )}
-          {!infoMessageStatus && !usersTyping.length && (
+
+          {!infoMessageStatus && !chatTypingList.length && (
             <div className=" mt-5 flex items-center gap-2 rounded-lg border border-a11y/20 bg-primary p-2 text-xs shadow-sm">
               <InformationIcon className="h-5 w-5" />
               <span className="w-full">
@@ -218,9 +211,6 @@ function ChatModal() {
           ))}
         </div>
 
-        {chatTypingList.map((text: any, index:number) => (
-          <div key={index}>{text.name}, is typing</div>
-        ))}
         <div className="sticky bottom-0 h-16 w-full border-t border-a11y/20 bg-primary/20 px-4 md:sticky">
           <div className=" flex w-full items-center rounded-xl bg-transparent py-4 ">
             <input
@@ -229,8 +219,6 @@ function ChatModal() {
               className="w-full bg-transparent px-3 placeholder:text-a11y/80  focus:shadow-none focus:outline-none"
               onChange={handleTyping}
               placeholder="Send a message to everyone"
-              value={value}
-              onChange={handleTyping}
               onKeyDown={handleKeyDown}
             />
             <div className="flex items-center gap-4">
@@ -245,7 +233,7 @@ function ChatModal() {
                   <Picker
                     data={emojiData}
                     onEmojiSelect={(e: IEmojiMart) => {
-                      setValue(value + e.native);
+                      setMessage(message + e.native);
                     }}
                   />
                 </PopoverContent>

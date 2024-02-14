@@ -37,26 +37,26 @@ function SingleChat({
             {dayjs(chat.time).fromNow()}
           </span>
         </div>
-        <DropdownMenu open={open} onOpenChange={setOpen}>
-          <DropdownMenuTrigger asChild>
-            <button>
-              <EllipsisIcon className="h-5 w-5 rotate-90" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="border border-a11y/20 bg-primary text-a11y shadow-lg"
-          >
-            <DropdownMenuItem className="">
-              <InformationIcon className="mr-2 h-4 w-4" />
-              Info
-            </DropdownMenuItem>
-            <DropdownMenuItem className="">
-              <DeleteIcon className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {/*<DropdownMenu open={open} onOpenChange={setOpen}>*/}
+        {/*  <DropdownMenuTrigger asChild>*/}
+        {/*    <button>*/}
+        {/*      <EllipsisIcon className="h-5 w-5 rotate-90" />*/}
+        {/*    </button>*/}
+        {/*  </DropdownMenuTrigger>*/}
+        {/*  <DropdownMenuContent*/}
+        {/*    align="end"*/}
+        {/*    className="border border-a11y/20 bg-primary text-a11y shadow-lg"*/}
+        {/*  >*/}
+        {/*    <DropdownMenuItem className="">*/}
+        {/*      <InformationIcon className="mr-2 h-4 w-4" />*/}
+        {/*      Info*/}
+        {/*    </DropdownMenuItem>*/}
+        {/*    <DropdownMenuItem className="">*/}
+        {/*      <DeleteIcon className="mr-2 h-4 w-4" />*/}
+        {/*      Delete*/}
+        {/*    </DropdownMenuItem>*/}
+        {/*  </DropdownMenuContent>*/}
+        {/*</DropdownMenu>*/}
       </div>
       <span>{chat.message}</span>
     </div>

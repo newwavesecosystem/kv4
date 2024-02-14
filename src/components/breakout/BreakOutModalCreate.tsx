@@ -9,7 +9,6 @@ import InformationIcon from "../icon/outline/InformationIcon";
 import dayjs from "dayjs";
 import {websocketCreateBreakoutRoom} from "~/server/Websocket";
 import {IParticipant, IUserBreakOutRoom} from "~/types";
-import {UsersData} from "~/data/UsersData";
 
 function BreakOutModalCreate() {
   const [breakOutRoomState, setBreakOutRoomState] = useRecoilState(breakOutModalState);

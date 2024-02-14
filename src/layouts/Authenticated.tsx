@@ -90,6 +90,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if(isNewMessage) {
+
       sound.play();
     }
   }, [isNewMessage])

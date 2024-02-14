@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { UsersData } from "~/data/UsersData";
+// import { UsersData } from "~/data/UsersData";
 import settingsTabData from "~/data/settingsTabData";
 import {
   IColumnBreakOutRoom,
@@ -316,14 +316,14 @@ export const donationModalState = atom<{
   },
 });
 
-const defaultUsers: IUserBreakOutRoom[] = [
-  ...UsersData.map((user) => ({
-    id: user.id,
-    columnId: "users",
-    name: user.name,
-    userId: user.name,
-  })),
-];
+// const defaultUsers: IUserBreakOutRoom[] = [
+//   ...UsersData.map((user) => ({
+//     id: user.id,
+//     columnId: "users",
+//     name: user.name,
+//     userId: user.name,
+//   })),
+// ];
 
 export const fileUploadModalState = atom<{
   step: number;

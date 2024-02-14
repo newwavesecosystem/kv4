@@ -23,6 +23,7 @@ import HandOnIcon from "../icon/outline/HandOnIcon";
 import SearchIcon from "../icon/outline/SearchIcon";
 import SingleParticipant from "./SingleParticipant";
 import UsersData, { IUserParticipant } from "~/data/usersData";
+import {IParticipant} from "~/types";
 
 const DummyMenu = [
   {
@@ -53,12 +54,12 @@ function ParticipantsModal() {
   // const filteredParticipants = participantList.filter((item) =>
   const filteredParticipants =
     filterTags === "Everyone"
-      ? UsersData.filter((item) =>
+      ? participantList.filter((item:IParticipant) =>
           item.name.toLowerCase().includes(searchTerm.toLowerCase()),
         )
-      : UsersData.filter(
-          (item) =>
-            item.isHandRaised &&
+      : participantList.filter(
+          (item:IParticipant) =>
+            item.raiseHand &&
             item.name.toLowerCase().includes(searchTerm.toLowerCase()),
         );
 
@@ -110,7 +111,7 @@ function ParticipantsModal() {
         </div>
         <div className="no-scrollbar h-full overflow-y-scroll pb-20">
           {filteredParticipants.map(
-            (participant: IUserParticipant, index: number) => (
+            (participant: IParticipant, index: number) => (
               <SingleParticipant key={index} participant={participant} />
             ),
           )}
