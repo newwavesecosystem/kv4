@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   authUserState,
@@ -25,7 +25,7 @@ import {
   breakOutModalState,
   selectedCameraState,
   fileUploadModalState,
-  newMessage,
+  newMessage, selectedMicrophoneState,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -129,8 +129,48 @@ function MiddleSide() {
       selectedCameraState,
   );
 
+  const [selectedMicrophone, setSelectedMicrophone] = useRecoilState(
+      selectedMicrophoneState,
+  );
+
+
   const [ssscreen, setScreen] = useState<null|MediaStream>(null);
   const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
+
+  const setMicStream=async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const desiredMic = devices.filter((device) => device.kind === "audioinput");
+
+    if (desiredMic.length < 1) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: `No microphone device detected. Kindly check if you need to grant permission`,
+      });
+      return;
+    }
+
+    const mic = await requestMicrophoneAccess(desiredMic[0]);
+    if (mic) {
+      setMicrophoneStream(mic);
+      setMicState(true);
+
+      if(desiredMic[0] != undefined){
+        setSelectedMicrophone(desiredMic[0])
+      }
+
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Kindly check your microphone settings.",
+      });
+    }
+  }
+
+  useEffect(()=>{
+    setMicStream();
+  },[""]);
 
   return (
     <div className=" flex w-full items-center justify-center gap-5">

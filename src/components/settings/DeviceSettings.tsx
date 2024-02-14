@@ -6,8 +6,8 @@ import {
   authUserState,
   availableCamerasState,
   availableMicrophonesState,
-  availableSpeakersState, cameraOpenState, cameraStreamState,
-  currentTabState, participantCameraListState, participantListState,
+  availableSpeakersState, cameraOpenState, cameraStreamState, connectionStatusState,
+  currentTabState, microphoneStreamState, participantCameraListState, participantListState,
   selectedCameraState,
   selectedMicrophoneState,
   selectedSpeakersState,
@@ -30,6 +30,8 @@ import {websocketStopCamera} from "~/server/Websocket";
 import requestCameraAccess from "~/lib/camera/requestCameraAccess";
 import {IParticipantCamera} from "~/types";
 import {useToast} from "~/components/ui/use-toast";
+import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
+import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
 
 const VideoQuality = [
   {
@@ -86,6 +88,10 @@ function DeviceSettings() {
   const [participantCameraList, setParticipantCameraList] = useRecoilState(participantCameraListState);
 
   const [cameraStream, setCameraSteam] = useRecoilState(cameraStreamState);
+
+  const [microphoneStream, setMicrophoneStream] = useRecoilState(microphoneStreamState);
+
+  const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
 
   const screenSize = useScreenSize();
 
@@ -164,11 +170,12 @@ function DeviceSettings() {
         <div className="flex flex-col gap-3">
           <span>Video</span>
           <Select
-              onValueChange={(value) => {
+              onValueChange={(value:string) => {
 
                 var vidvalue:MediaDeviceInfo|undefined=availableCameras.filter((item:MediaDeviceInfo) =>item.deviceId == value)[0];
 
                 if (videoState) {
+                  stopCameraStream(cameraStream);
                   setVideoState(!videoState);
                   console.log("change_device videoState",videoState)
                   let ur = participantCameraList.filter((item: any) => item?.intId == user?.meetingDetails?.internalUserID)[0];
@@ -266,11 +273,30 @@ function DeviceSettings() {
         <div className="flex flex-col gap-3">
           <span>Microphone</span>
           <Select
-              onValueChange={(value) => {
+              onValueChange={(value: string) => {
 
-                var vidvalue:MediaDeviceInfo|undefined=availableMicrophones.filter((item:MediaDeviceInfo) => item.deviceId == value )[0];
-
+                var vidvalue: MediaDeviceInfo | undefined = availableMicrophones.filter((item: MediaDeviceInfo) => item.deviceId == value)[0];
                 setSelectedMicrophone(vidvalue as MediaDeviceInfo)
+
+                stopMicrophoneStream(microphoneStream);
+
+                setTimeout(async()=> {
+                  const mic = await requestMicrophoneAccess(vidvalue);
+                  if (mic) {
+                    setMicrophoneStream(mic);
+                    setConnection({
+                      websocket_connection: true,
+                      audio_connection: false
+                    })
+                  } else {
+                    toast({
+                      variant: "destructive",
+                      title: "Uh oh! Something went wrong.",
+                      description: "Kindly check your microphone settings.",
+                    });
+                  }
+                },3000);
+
               }}>
             <SelectTrigger className="bg-a11y/20">
               <div className="flex items-center gap-4">
