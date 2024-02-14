@@ -189,7 +189,7 @@ function MiddleSide() {
       <button
         className={cn(
           "rounded-full p-2",
-          !micState ? "border border-a11y/20 bg-transparent" : "bg-a11y/20",
+          !micState ? "border border-a11y/20 bg-transparent" : "bg-konn3ct-red",
         )}
         onClick={async () => {
           setMicState(!micState);

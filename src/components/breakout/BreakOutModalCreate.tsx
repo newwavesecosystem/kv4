@@ -93,7 +93,7 @@ function BreakOutModalCreate() {
                   //   .filter((room) => room.id !== "users")
                   //   .every((room) =>
                   //     breakOutRoomState.users.find(
-                  //       (user) => user.columnId === room.id,
+                  //       (user) => user.columnId === room.id && room.title.length > 0,
                   //     ),
                   //   ) === false || breakOutRoomState.duration < 15
 
