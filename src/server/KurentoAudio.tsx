@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import * as kurentoUtils from "kurento-utils";
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, connectionStatusState, microphoneStreamState} from "~/recoil/atom";
+import {authUserState, connectionStatusState, microphoneStreamState, selectedSpeakersState} from "~/recoil/atom";
 
 
 const KurentoAudio = () => {
@@ -14,7 +14,14 @@ const KurentoAudio = () => {
         microphoneStreamState,
     );
 
+    const [selectedSpeaker, setSelectedSpeaker] = useRecoilState(
+        selectedSpeakersState,
+    );
+
+
     const [audioState, setAudioState] = useState(false);
+
+    const audioRef = useRef<HTMLAudioElement>(null);
 
     let ws: WebSocket | null = null;
     let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
@@ -24,6 +31,28 @@ const KurentoAudio = () => {
         ws?.send(JSON.stringify(data))
         console.log('Sending this data via kurento websocket')
     }
+
+    useEffect(() => {
+        const changeAudioOutput = async () => {
+            try {
+                if (audioRef.current) {
+                    // Use type assertion to tell TypeScript that audioRef.current has the setSinkId method
+                    (audioRef.current as any).setSinkId(selectedSpeaker?.deviceId);
+                    console.log(`Audio output set to: ${selectedSpeaker?.label}`);
+                    console.log('Audio output set successfully.');
+                } else {
+                    console.error('Audio element not found.');
+                }
+            } catch (error) {
+                console.error('Error changing audio output:', error);
+            }
+        };
+
+        // Change the audio output when the selectedSpeaker change
+        changeAudioOutput();
+
+    },[selectedSpeaker])
+
 
     useEffect(() => {
 
@@ -147,7 +176,7 @@ const KurentoAudio = () => {
 
     return (
         <div style={{height: 1}}>
-            <audio id="audioElement" autoPlay/>
+            <audio ref={audioRef} id="audioElement" autoPlay/>
         </div>
     )
 
