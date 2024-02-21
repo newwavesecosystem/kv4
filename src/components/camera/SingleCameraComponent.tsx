@@ -42,6 +42,7 @@ function SingleCameraComponent({
   const participantCameraList = useRecoilValue(participantCameraListState);
   const [pinnedParticipant, setPinnedParticipant] =
     useRecoilState(pinnedUsersState);
+  const [camOn, setCamOn] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   let userCamera=participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId);
@@ -50,10 +51,12 @@ function SingleCameraComponent({
   useEffect(() => {
   // Attach the new stream to the video element
 
-    console.log("userCamera",userCamera);
-    if(userCamera.length>0){
-      if (videoRef.current) {
+    console.log("userCamera",userCamera,userCamera[0]?.intId);
+    console.log("userCamera camOn",camOn);
+    if(userCamera.length > 0 && userCamera[0]?.stream){
+      if (videoRef.current && !camOn) {
         videoRef.current.srcObject = userCamera[0].stream;
+        setCamOn(true);
       }
     }
   },[userCamera]);
