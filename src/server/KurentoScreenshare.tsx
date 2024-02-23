@@ -74,6 +74,10 @@ const KurentoScreenShare = () => {
                 }
             };
 
+            const onStreamEnded = () => {
+                console.log('Screenshare Ended');
+            };
+
 
             const options = {
                 localVideo: videoElement,
@@ -81,6 +85,7 @@ const KurentoScreenShare = () => {
                 videoStream:screenSharingStream,
                 onicecandidate: onIceCandidate,
                 mediaConstraints: constraints,
+                onstreamended:onStreamEnded
             };
 
             webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(this: any, error) {

@@ -331,6 +331,7 @@ export const fileUploadModalState = atom<{
   isFull: boolean;
   files: File[];
   filesToUpload: string[];
+  filesUploadInProgress: any[];
 }>({
   key: "fileUploadModalState",
   default: {
@@ -339,6 +340,7 @@ export const fileUploadModalState = atom<{
     isFull: false,
     files: [],
     filesToUpload: [],
+    filesUploadInProgress: [],
   },
 });
 

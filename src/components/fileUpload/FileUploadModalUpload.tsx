@@ -15,6 +15,8 @@ import EllipsisIcon from "../icon/outline/EllipsisIcon";
 import InformationIcon from "../icon/outline/InformationIcon";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "~/lib/utils";
+import * as ServerInfo from "~/server/ServerInfo";
+import {handleRequestPresentationUploadToken} from "~/server/Websocket";
 
 function FileUploadModalUpload() {
   const [fileUploadModal, setFileUploadModal] =
@@ -65,11 +67,37 @@ function FileUploadModalUpload() {
               </button>
               <button
                 onClick={() => {
+
+                  fileUploadModal.files.map((file, index) => {
+                    if (fileUploadModal.filesToUpload?.includes(file.name)) {
+
+                      var id =ServerInfo.generateRandomId(24);
+
+                      var fil={
+                        id,
+                        file,
+                      }
+
+                      console.log("settingfunction: saving file to upload ",fil)
+
+                      setFileUploadModal((prev) => ({
+                        ...prev,
+                        filesUploadInProgress: [...prev.filesUploadInProgress, fil],
+                      }));
+
+                      handleRequestPresentationUploadToken(id,file);
+
+                    }
+
+                  })
+
                   setFileUploadModal((prev) => ({
                     ...prev,
                     step: 2,
                     isFull: true,
                   }));
+
+
                 }}
                 className="rounded-lg bg-a11y/20 px-6 py-2 text-xs disabled:opacity-30"
                 disabled={fileUploadModal.filesToUpload.length === 0}
@@ -122,13 +150,13 @@ function FileUploadModalUpload() {
                         id={`${file.name}`}
                         className="h-5 w-5 rounded-full"
                       />
-                      
+
                       <label
                         htmlFor={`${file.name}`}
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
                         {file.name}
-                        
+
                       </label>
                     </div>
                     <div className="flex gap-2">
