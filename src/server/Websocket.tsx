@@ -251,6 +251,10 @@ const Websocket = () => {
                     handlePresentationPreUpload(e.data)
                 }
 
+                if(collection == "connection-status"){
+                    handleConnectionStatus(e.data)
+                }
+
             };
             sock.onclose = () => {
                 console.log('Socket connection closed');
@@ -317,6 +321,7 @@ const Websocket = () => {
         if (msg == 'added') {
             let urecord={
                 ...fields,
+                connection_status:'normal',
                 id
             }
             addtoUserlist(urecord)
@@ -414,6 +419,35 @@ const Websocket = () => {
             if(muted != null ){
                 modifyMutedUser(id,muted);
             }
+        }
+
+        if(msg == "removed"){
+            removeVoiceUser(id);
+        }
+
+    }
+
+    const handleConnectionStatus = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id} = obj;
+
+        if(msg == "changed"){
+            // a["{\"msg\":\"changed\",\"collection\":\"connection-status\",\"id\":\"BKJN47DdYthRg4nPp\",\"fields\":{\"status\":\"warning\",\"statusUpdatedAt\":1708676997324}}"]
+
+            const {status} = obj.fields;
+
+            const updatedArray = participantList?.map((item:any) => {
+                if (item.id === id) {
+                    return {...item, connection_status: status};
+                }
+                return item;
+            });
+
+            // 'updatedArray' now contains the modified object
+            console.log(updatedArray);
+
+            setParticipantTalkingList(updatedArray)
         }
 
     }
@@ -676,7 +710,7 @@ const Websocket = () => {
 
         const formData = new FormData();
         if (find) {
-            formData.append("fileUpload", find[0]);
+            formData.append("fileUpload", find[0].file);
         }
         formData.append("conference", meetingId);
         formData.append("room", meetingId);
@@ -694,6 +728,10 @@ const Websocket = () => {
 
             console.log("settingfunction: upload response",response);
             const responseData = response.data;
+
+            if (find) {
+                handlePresentationUploaded(find[0].name, id);
+            }
 
         } catch (error) {
             console.log(error)
@@ -833,6 +871,16 @@ const Websocket = () => {
         console.log(updatedArray);
 
         setParticipantTalkingList(updatedArray)
+    }
+
+    const removeVoiceUser = (id:number) => {
+        console.log('Hi, im here')
+
+        let ishola = participantTalkingList;
+
+        let ur=ishola.filter((item:any) => item?.id != id);
+        console.log("setParticipantTalkingList: remove Voice User",id)
+        setParticipantTalkingList(ur);
     }
 
 

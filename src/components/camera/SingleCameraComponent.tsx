@@ -186,7 +186,7 @@ function SingleCameraComponent({
       {userCamera.length > 0 && (
         <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg  bg-primary/60 px-2 py-1 text-sm">
           <span className=" max-w-[150px] truncate ">{participant?.name}</span>
-          <WifiOnIcon className="hidden h-6 w-6 md:block" />
+          <WifiOnIcon signal={participant.connection_status == "critical"? 1 : participant.connection_status == "danger"? 2 :  participant.connection_status == "warning"? 3 : 4} className="hidden h-6 w-6 md:block" color={participant.connection_status == "critical"? '#ff0000' : participant.connection_status == "danger"? '#f68322' :  participant.connection_status == "warning"? '#fcd104' : '#004800'}  />
         </div>
       )}
       {userCamera.length == 0 && (
