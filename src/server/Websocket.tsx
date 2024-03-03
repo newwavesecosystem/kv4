@@ -20,7 +20,7 @@ import {
     participantListState,
     participantTalkingListState,
     pollModalState,
-    presentationSlideState,
+    presentationSlideState, privateChatModalState,
     recordingModalState,
     screenSharingStreamState,
     viewerScreenSharingState,
@@ -129,6 +129,7 @@ const Websocket = () => {
     const [breakOutRoomState, setBreakOutRoomState] = useRecoilState(breakOutModalState);
     const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
     const [fileUploadModal, setFileUploadModal] = useRecoilState(fileUploadModalState);
+    const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
 
     const [num, setNum] = useState(1);
 
@@ -199,6 +200,10 @@ const Websocket = () => {
 
                 if (collection == "group-chat-msg") {
                     handleIncomingmsg(e.data)
+                }
+
+                if (collection == "group-chat") {
+                    handleGroupChat(e.data)
                 }
                 if (collection == "users-typing") {
                     handleTyping(e.data)
@@ -272,7 +277,7 @@ const Websocket = () => {
     const handleIncomingmsg = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
-        const {sender, senderName, timestamp, message, id} = obj.fields;
+        const {sender, senderName, timestamp, message, id, chatId} = obj.fields;
         console.log("handleIncomingmsg:", obj.fields);
         console.log("Sender:", sender);
         console.log("Message:", message);
@@ -298,7 +303,33 @@ const Websocket = () => {
             return;
         }
 
-        addMessage(senderName,message,timestamp,id);
+        if(chatId == "MAIN-PUBLIC-GROUP-CHAT"){
+            addMessage(senderName,message,timestamp,id);
+            return;
+        }
+
+        addPrivateMessage(senderName,message,timestamp,id, chatId);
+
+    }
+
+    const handleGroupChat = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {chatId, meetingId, access} = obj.fields;
+
+        if(chatId == "MAIN-PUBLIC-GROUP-CHAT"){
+            return;
+        }
+
+        // a["{"msg":"added","collection":"group-chat","id":"QNz7Est4eYr895e4M","fields":{"chatId":"1709041032349-4hb295a9","meetingId":"6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2-1709040921995","access":"PRIVATE_ACCESS","createdBy":"w_yqu0qgo2gbps","participants":[{"id":"w_4amx2midtfcd","name":"Odejinmi Samuel","role":"MODERATOR"},{"id":"w_yqu0qgo2gbps","name":"Odejinmi Samuel","role":"MODERATOR"}],"users":["w_4amx2midtfcd","w_yqu0qgo2gbps"]}}"]
+
+        setPrivateChatState((prev)=>({
+            ...prev,
+            chatRooms: [...prev.chatRooms,obj.fields],
+            isActive: true,
+            id: chatId,
+        }));
+
     }
 
     const handleTyping = (eventData:any) => {
@@ -1034,6 +1065,42 @@ const Websocket = () => {
         setIsNewMessage(true);
     }
 
+    const addPrivateMessage=(sender:string, message:string,timestamp:any,id:any,chatId:any)=>{
+        // Convert timestamp to Date object
+        const date = new Date(timestamp);
+
+        // Extract date components
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // Month is zero-based
+        const day = date.getDate();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+
+        // Create a formatted date string
+        const formattedDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day} ${hours}:${minutes}:${seconds}`;
+
+
+        let chat=  {
+            id: id as string,
+            name: sender,
+            message: message,
+            chatId: chatId as string,
+            time: formattedDate as unknown as Date,
+        }
+
+        setPrivateChatState((prev)=>({
+            ...prev,
+            chatMessages: [...prev.chatMessages,chat],
+            isActive: true,
+            id: chatId,
+        }));
+
+
+
+        setIsNewMessage(true);
+    }
+
     const addtypingUsers=(id:any,name:string)=>{
      let ishola = chatTypingList
         let convertedUser={
@@ -1112,6 +1179,10 @@ const Websocket = () => {
 export function websocketSendMessage(internalUserID:any,meetingTitle:any,sender:any,message:string) {
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"sendGroupChatMsg\",\"params\":[\"MAIN-PUBLIC-GROUP-CHAT\",{\"correlationId\":\"${internalUserID}-${Date.now()}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
     websocketStopTyping();
+}
+
+export function websocketSendPrivateMessage(internalUserID:any,message:string,chatID:string) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"sendGroupChatMsg\",\"params\":[\"${chatID}\",{\"correlationId\":\"${internalUserID}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
 }
 
 export function websocketStartTyping() {
@@ -1245,6 +1316,13 @@ export function websocketStopExternalVideo(){
 
 export function websocketRaiseHand(internalUserID:any){
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setEmojiStatus\",\"params\":[\"${internalUserID}\",\"raiseHand\"]}`]);
+}
+
+export function websocketStartPrivateChat(participant:IParticipant){
+    const pparams = [{'subscriptionId':ServerInfo.generateRandomId(17), ...participant,}];
+
+    const jsonString = JSON.stringify(pparams);
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"createGroupChat\",\"params\":${jsonString}}`]);
 }
 
 interface BreakoutRoomOptions {
