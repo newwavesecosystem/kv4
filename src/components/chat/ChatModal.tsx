@@ -72,11 +72,6 @@ function ChatModal() {
     return () => clearTimeout(typingTimeout);
   }, [usersTyping]);
 
-  const handleTyping = (e: ChangeEvent<HTMLInputElement>) => {
-    websocketStartTyping();
-    setMessage(e.target.value);
-  };
-
   const sendMsg = () => {
     let sender = user?.meetingDetails?.internalUserID;
     let ishola = chatList;
@@ -93,6 +88,11 @@ function ChatModal() {
       );
       setMessage("");
     }
+  };
+
+  const handleTyping = (e: ChangeEvent<HTMLInputElement>) => {
+    websocketStartTyping();
+    setMessage(e.target.value);
   };
 
   const handleKeyDown = (e: any) => {

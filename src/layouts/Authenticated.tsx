@@ -145,7 +145,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
               if (navigator.clipboard) {
                 navigator.clipboard.writeText(
-                  `https://konn3ct.com/join/${meetingId}`,
+                  user?.meetingDetails?.customdata[0]?.meetingLink,
                 );
                 toast({
                   title: "Copied",
@@ -304,7 +304,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
               if (navigator.clipboard) {
                 navigator.clipboard.writeText(
-                  `https://konn3ct.com/join/${meetingId}`,
+                    user?.meetingDetails?.customdata[0]?.meetingLink,
                 );
                 toast({
                   title: "Copied",

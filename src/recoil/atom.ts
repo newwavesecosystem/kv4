@@ -252,18 +252,39 @@ export const removeUserModalState = atom<{
 
 export const privateChatModalState = atom<{
   isActive: boolean;
-  id: number;
+  id: string;
   users: {
-    id: number;
+    id: string;
     fullName: string;
     email: string;
   }[];
+  chatRooms:{
+    "chatId": string,
+    "meetingId": string,
+    "access": string,
+    "createdBy": string,
+    "participants": {
+      "id": string,
+      "name": string,
+      "role": string
+    }[],
+    "users": string []
+  }[]
+  chatMessages:{
+    id: string,
+    name: string,
+    message: string,
+    chatId: string,
+    time: Date,
+  }[]
 }>({
   key: "privateChatModalState",
   default: {
     isActive: false,
-    id: 0,
+    id: "0",
     users: [],
+    chatRooms: [],
+    chatMessages: [],
   },
 });
 
@@ -331,6 +352,7 @@ export const fileUploadModalState = atom<{
   isFull: boolean;
   files: File[];
   filesToUpload: string[];
+  filesUploadInProgress: any[];
 }>({
   key: "fileUploadModalState",
   default: {
@@ -339,6 +361,7 @@ export const fileUploadModalState = atom<{
     isFull: false,
     files: [],
     filesToUpload: [],
+    filesUploadInProgress: [],
   },
 });
 

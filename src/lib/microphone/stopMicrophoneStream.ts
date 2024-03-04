@@ -1,7 +1,7 @@
-const stopMicrophoneStream = (microphoneStream: MediaStream) => {
-  const audioTracks = microphoneStream.getAudioTracks();
+const stopMicrophoneStream = (microphoneStream: MediaStream|null) => {
+  const audioTracks = microphoneStream?.getAudioTracks();
 
-  audioTracks.forEach((track) => {
+  audioTracks?.forEach((track) => {
     track.stop();
   });
 };

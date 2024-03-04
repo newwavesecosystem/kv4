@@ -6,15 +6,30 @@ import * as ServerInfo from './ServerInfo';
 import {generateRandomId, generatesSmallId} from "./ServerInfo";
 
 import {
-    authUserState, breakOutModalState, chatListState, chatTypingListState,
-    connectionStatusState, donationModalState, eCinemaModalState, micOpenState, newMessage, participantCameraListState,
+    authUserState,
+    breakOutModalState,
+    chatListState,
+    chatTypingListState,
+    connectionStatusState,
+    donationModalState,
+    eCinemaModalState,
+    fileUploadModalState,
+    micOpenState,
+    newMessage,
+    participantCameraListState,
     participantListState,
-    participantTalkingListState, pollModalState, presentationSlideState,
-    recordingModalState, screenSharingStreamState, viewerScreenSharingState, waitingRoomUsersState
+    participantTalkingListState,
+    pollModalState,
+    presentationSlideState, privateChatModalState,
+    recordingModalState,
+    screenSharingStreamState,
+    viewerScreenSharingState,
+    waitingRoomUsersState
 } from "~/recoil/atom";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {IBreakoutRoom, IColumnBreakOutRoom, IParticipant, IParticipantCamera, IWaitingUser} from "~/types";
 import dayjs from "dayjs";
+import axios from "axios";
 
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
@@ -113,6 +128,8 @@ const Websocket = () => {
     const [micState, setMicState] = useRecoilState(micOpenState);
     const [breakOutRoomState, setBreakOutRoomState] = useRecoilState(breakOutModalState);
     const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
+    const [fileUploadModal, setFileUploadModal] = useRecoilState(fileUploadModalState);
+    const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
 
     const [num, setNum] = useState(1);
 
@@ -184,6 +201,10 @@ const Websocket = () => {
                 if (collection == "group-chat-msg") {
                     handleIncomingmsg(e.data)
                 }
+
+                if (collection == "group-chat") {
+                    handleGroupChat(e.data)
+                }
                 if (collection == "users-typing") {
                     handleTyping(e.data)
                 }
@@ -231,9 +252,13 @@ const Websocket = () => {
                 }
 
 
-                // if(collection == "presentation-upload-token"){
-                //     handlePresentationPreUpload(e.data)
-                // }
+                if(collection == "presentation-upload-token"){
+                    handlePresentationPreUpload(e.data)
+                }
+
+                if(collection == "connection-status"){
+                    handleConnectionStatus(e.data)
+                }
 
             };
             sock.onclose = () => {
@@ -252,7 +277,7 @@ const Websocket = () => {
     const handleIncomingmsg = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
-        const {sender, senderName, timestamp, message, id} = obj.fields;
+        const {sender, senderName, timestamp, message, id, chatId} = obj.fields;
         console.log("handleIncomingmsg:", obj.fields);
         console.log("Sender:", sender);
         console.log("Message:", message);
@@ -278,7 +303,33 @@ const Websocket = () => {
             return;
         }
 
-        addMessage(senderName,message,timestamp,id);
+        if(chatId == "MAIN-PUBLIC-GROUP-CHAT"){
+            addMessage(senderName,message,timestamp,id);
+            return;
+        }
+
+        addPrivateMessage(senderName,message,timestamp,id, chatId);
+
+    }
+
+    const handleGroupChat = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {chatId, meetingId, access} = obj.fields;
+
+        if(chatId == "MAIN-PUBLIC-GROUP-CHAT"){
+            return;
+        }
+
+        // a["{"msg":"added","collection":"group-chat","id":"QNz7Est4eYr895e4M","fields":{"chatId":"1709041032349-4hb295a9","meetingId":"6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2-1709040921995","access":"PRIVATE_ACCESS","createdBy":"w_yqu0qgo2gbps","participants":[{"id":"w_4amx2midtfcd","name":"Odejinmi Samuel","role":"MODERATOR"},{"id":"w_yqu0qgo2gbps","name":"Odejinmi Samuel","role":"MODERATOR"}],"users":["w_4amx2midtfcd","w_yqu0qgo2gbps"]}}"]
+
+        setPrivateChatState((prev)=>({
+            ...prev,
+            chatRooms: [...prev.chatRooms,obj.fields],
+            isActive: true,
+            id: chatId,
+        }));
+
     }
 
     const handleTyping = (eventData:any) => {
@@ -301,6 +352,7 @@ const Websocket = () => {
         if (msg == 'added') {
             let urecord={
                 ...fields,
+                connection_status:'normal',
                 id
             }
             addtoUserlist(urecord)
@@ -398,6 +450,35 @@ const Websocket = () => {
             if(muted != null ){
                 modifyMutedUser(id,muted);
             }
+        }
+
+        if(msg == "removed"){
+            removeVoiceUser(id);
+        }
+
+    }
+
+    const handleConnectionStatus = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id} = obj;
+
+        if(msg == "changed"){
+            // a["{\"msg\":\"changed\",\"collection\":\"connection-status\",\"id\":\"BKJN47DdYthRg4nPp\",\"fields\":{\"status\":\"warning\",\"statusUpdatedAt\":1708676997324}}"]
+
+            const {status} = obj.fields;
+
+            const updatedArray = participantList?.map((item:any) => {
+                if (item.id === id) {
+                    return {...item, connection_status: status};
+                }
+                return item;
+            });
+
+            // 'updatedArray' now contains the modified object
+            console.log(updatedArray);
+
+            setParticipantTalkingList(updatedArray)
         }
 
     }
@@ -631,18 +712,78 @@ const Websocket = () => {
     // }
     //
 
-    // const handlePresentationPreUpload = (eventData) => {
-    //     console.log('I got to handle incoming messages')
-    //     const obj = JSON.parse(eventData);
-    //
-    //     console.log("settingfunction: webhook received")
-    //
-    //     if (obj.msg == "added") {
-    //         const {authzToken, temporaryPresentationId, filename, userId,podId,meetingId} = obj.fields;
-    //
-    //         handleUploadTCP(obj.id,authzToken,podId,temporaryPresentationId,meetingId);
-    //     }
-    // }
+    const handlePresentationPreUpload = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+
+        console.log("settingfunction: webhook received")
+
+        if (obj.msg == "added") {
+            const {authzToken, temporaryPresentationId, filename, userId,podId,meetingId} = obj.fields;
+
+            handleUploadTCP(obj.id,authzToken,podId,temporaryPresentationId,meetingId);
+        }
+    }
+
+    const handleUploadTCP = async (id:string,authToken:string,podId:string,temporaryPresentationId:string,meetingId:string) => {
+
+        console.log("websocket: handling tcpUpload")
+        console.log("websocket: handler receive request",id,authToken,podId,temporaryPresentationId,meetingId)
+        console.log("websocket: available files",fileUploadModal.filesUploadInProgress)
+        let find = fileUploadModal?.filesUploadInProgress.filter(item => item.id == temporaryPresentationId);
+
+        if(find.length < 1){
+            console.log("settingfunction: file to upload not found");
+            return;
+        }
+
+        console.log("settingfunction: file to upload found",find);
+
+        const formData = new FormData();
+        if (find) {
+            formData.append("fileUpload", find[0].file);
+        }
+        formData.append("conference", meetingId);
+        formData.append("room", meetingId);
+        formData.append("temporaryPresentationId", temporaryPresentationId);
+        formData.append("pod_id", podId);
+        formData.append("is_downloadable", "false");
+
+        try {
+            const response = await axios({
+                method: "post",
+                url: `https://${ServerInfo.engineBaseURL}/bigbluebutton/presentation/${authToken}/upload`,
+                data: formData,
+                headers: {"Content-Type": "multipart/form-data"},
+            });
+
+            console.log("settingfunction: upload response",response);
+            const responseData = response.data;
+
+            if (find) {
+                handlePresentationUploaded(find[0].name, id);
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+
+
+
+
+        // POST: https://meet.konn3ct.com/bigbluebutton/presentation/PresUploadToken-gsm839h8DEFAULT_PRESENTATION_POD-w_xhlpo015vbrv/upload
+        //     Content-Type:multipart/form-data
+        //
+        // Payload:
+        //     fileUpload: (binary)
+        // conference: 490ad150b2b18ea8eab01401ceea403bcd523765-1692191722847
+        // room: 490ad150b2b18ea8eab01401ceea403bcd523765-1692191722847
+        // temporaryPresentationId: xya7XwDywsgzb3QFJGpL272
+        // pod_id: DEFAULT_PRESENTATION_POD
+        // is_downloadable: false
+
+
+    }
 
     const addtoUserlist = (user:any) => {
         let ishola = participantList;
@@ -761,6 +902,16 @@ const Websocket = () => {
         console.log(updatedArray);
 
         setParticipantTalkingList(updatedArray)
+    }
+
+    const removeVoiceUser = (id:number) => {
+        console.log('Hi, im here')
+
+        let ishola = participantTalkingList;
+
+        let ur=ishola.filter((item:any) => item?.id != id);
+        console.log("setParticipantTalkingList: remove Voice User",id)
+        setParticipantTalkingList(ur);
     }
 
 
@@ -914,6 +1065,42 @@ const Websocket = () => {
         setIsNewMessage(true);
     }
 
+    const addPrivateMessage=(sender:string, message:string,timestamp:any,id:any,chatId:any)=>{
+        // Convert timestamp to Date object
+        const date = new Date(timestamp);
+
+        // Extract date components
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // Month is zero-based
+        const day = date.getDate();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+
+        // Create a formatted date string
+        const formattedDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day} ${hours}:${minutes}:${seconds}`;
+
+
+        let chat=  {
+            id: id as string,
+            name: sender,
+            message: message,
+            chatId: chatId as string,
+            time: formattedDate as unknown as Date,
+        }
+
+        setPrivateChatState((prev)=>({
+            ...prev,
+            chatMessages: [...prev.chatMessages,chat],
+            isActive: true,
+            id: chatId,
+        }));
+
+
+
+        setIsNewMessage(true);
+    }
+
     const addtypingUsers=(id:any,name:string)=>{
      let ishola = chatTypingList
         let convertedUser={
@@ -992,6 +1179,10 @@ const Websocket = () => {
 export function websocketSendMessage(internalUserID:any,meetingTitle:any,sender:any,message:string) {
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"sendGroupChatMsg\",\"params\":[\"MAIN-PUBLIC-GROUP-CHAT\",{\"correlationId\":\"${internalUserID}-${Date.now()}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
     websocketStopTyping();
+}
+
+export function websocketSendPrivateMessage(internalUserID:any,message:string,chatID:string) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"sendGroupChatMsg\",\"params\":[\"${chatID}\",{\"correlationId\":\"${internalUserID}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
 }
 
 export function websocketStartTyping() {
@@ -1127,6 +1318,13 @@ export function websocketRaiseHand(internalUserID:any){
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setEmojiStatus\",\"params\":[\"${internalUserID}\",\"raiseHand\"]}`]);
 }
 
+export function websocketStartPrivateChat(participant:IParticipant){
+    const pparams = [{'subscriptionId':ServerInfo.generateRandomId(17), ...participant,}];
+
+    const jsonString = JSON.stringify(pparams);
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"createGroupChat\",\"params\":${jsonString}}`]);
+}
+
 interface BreakoutRoomOptions {
     rooms: IColumnBreakOutRoom[];
     time: number;
@@ -1163,6 +1361,17 @@ export function websocketCreateBreakoutRoom(options: BreakoutRoomOptions): void 
 
 export function websocketEndBreakoutRoom(){
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"endAllBreakouts\",\"params\":[]}`]);
+}
+
+
+export function handleRequestPresentationUploadToken(uniqueID:string,file:File){
+    console.log("settingfunction: saving file to upload with ",uniqueID)
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"requestPresentationUploadToken\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${file?.name}\",\"${uniqueID}\"]}`])
+    websocketSend([`{\"msg\":\"sub\",\"id\":\"${ServerInfo.generateRandomId(17)}\",\"name\":\"presentation-upload-token\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${file?.name}\",\"${uniqueID}\"]}`])
+}
+
+const handlePresentationUploaded = (name:string,id:string)=>{
+    websocketSend([`{\"msg\":\"sub\",\"id\":\"Sx77Jii9BsBNh5GpG\",\"name\":\"presentation-upload-token\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${name}\",\"${id}\"]}`])
 }
 
 export function websocketRequest2JoinBreakoutRoom(breakoutId: string | null){

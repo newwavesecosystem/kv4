@@ -113,6 +113,7 @@ export interface IParticipant {
   connectionIdUpdateTime: number;
   currentConnectionId: string;
   id: string;
+  connection_status: string;
 }
 
 export interface IWaitingUser {
