@@ -1,7 +1,7 @@
 export const laravelAppURL = "https://dev.konn3ct.ng";
 export const extRegisterURL = "https://k40.konn3ct.ng";
-export const engineBaseURL = "meet.konn3ct.ng";
-export const tokenValidationURL = `${extRegisterURL}/enter`;
+export const engineBaseURL = "devmeet.konn3ct.ng";
+export const tokenValidationURL = `https://${engineBaseURL}/bigbluebutton/api/enter`;
 export const joinURL = `http://127.0.0.1:8000/api/k4/`;
 export const sfuURL = `wss://${engineBaseURL}/bbb-webrtc-sfu`;
 export const websocketURL = `https://${engineBaseURL}/html5client/sockjs`;
