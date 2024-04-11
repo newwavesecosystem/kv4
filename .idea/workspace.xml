@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:samji" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c6f36ad9-e612-4265-a48e-677eb3b45711" name="Default Changelist" comment="-Chnage token validation url" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="samji" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="0fd223af-77ad-413b-be4b-8d3ea30098cf" />
+  </component>
+  <component name="ProjectId" id="2YQg4XvOOfoS4APkzqaHxr92Lj0" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/server" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\odeji\WebstormProjects\kv4\node_modules\prettier" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2020.2.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\odeji\WebstormProjects\kv4\src\server" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.dev" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c6f36ad9-e612-4265-a48e-677eb3b45711" name="Default Changelist" comment="" />
+      <created>1700463026942</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1700463026942</updated>
+      <workItem from="1700463028089" duration="890000" />
+      <workItem from="1700468173454" duration="707000" />
+      <workItem from="1700634233607" duration="6051000" />
+      <workItem from="1701026659128" duration="2636000" />
+      <workItem from="1701326252278" duration="4312000" />
+      <workItem from="1701673005998" duration="15089000" />
+      <workItem from="1702720502850" duration="50000" />
+      <workItem from="1702748417004" duration="3129000" />
+      <workItem from="1702883573025" duration="19916000" />
+      <workItem from="1703155183385" duration="5725000" />
+      <workItem from="1703703782924" duration="8792000" />
+      <workItem from="1703891000908" duration="5442000" />
+      <workItem from="1703928566518" duration="10942000" />
+      <workItem from="1704268089953" duration="1985000" />
+      <workItem from="1704358356359" duration="13000" />
+      <workItem from="1704359049232" duration="438000" />
+      <workItem from="1704383158764" duration="8854000" />
+      <workItem from="1704496054496" duration="1664000" />
+      <workItem from="1705302952335" duration="49000" />
+      <workItem from="1705663146700" duration="11929000" />
+      <workItem from="1705996115803" duration="36720000" />
+      <workItem from="1707073921175" duration="44000" />
+      <workItem from="1707473855110" duration="81765000" />
+      <workItem from="1708063939804" duration="74000" />
+      <workItem from="1708375418257" duration="20429000" />
+      <workItem from="1708502126865" duration="3837000" />
+      <workItem from="1708607007421" duration="14623000" />
+      <workItem from="1709032959741" duration="30233000" />
+      <workItem from="1709557745422" duration="86000" />
+      <workItem from="1710447645023" duration="612000" />
+      <workItem from="1710799614630" duration="30000" />
+      <workItem from="1711922536572" duration="3929000" />
+      <workItem from="1712404825789" duration="6475000" />
+    </task>
+    <task id="LOCAL-00001" summary="push">
+      <created>1701028942152</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1701028942152</updated>
+    </task>
+    <task id="LOCAL-00002" summary="push changes on camera sharing and receiving">
+      <created>1701330555168</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1701330555168</updated>
+    </task>
+    <task id="LOCAL-00003" summary="push changes on screensharing and receiving screen sharing">
+      <created>1701699143483</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1701699143483</updated>
+    </task>
+    <task id="LOCAL-00004" summary="push changes">
+      <created>1702884130414</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1702884130414</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Phase 3: Captions">
+      <created>1702982378690</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1702982378690</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Phase 3: Captions">
+      <created>1705868290135</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1705868290135</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Phase 3: Captions">
+      <created>1706101156331</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1706101156331</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Phase 3: Konn3ct AI">
+      <created>1706191295682</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1706191295682</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Phase 3: Konn3ct AI">
+      <created>1706256329521</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1706256329521</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Phase 3: Konn3ct AI">
+      <created>1706256650357</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1706256650357</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Phase 3: Konn3ct AI">
+      <created>1706256784787</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1706256784787</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Phase 3: Konn3ct AI">
+      <created>1706256857235</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1706256857235</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Phase 3: Konn3ct AI">
+      <created>1706262835622</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1706262835622</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Phase 3: Konn3ct AI">
+      <created>1706293336640</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1706293336640</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Phase 3: Konn3ct AI">
+      <created>1706702660224</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1706702660224</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Push collaborate merge">
+      <created>1706703181074</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1706703181074</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Phase3: Breakout room">
+      <created>1707808551220</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1707808551220</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Phase3: Added Branding">
+      <created>1707811473861</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1707811473861</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Fix Build Issues">
+      <created>1707814928042</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1707814928042</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Added functionality of Change Camera device in the device settings">
+      <created>1707846392629</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1707846392629</updated>
+    </task>
+    <task id="LOCAL-00021" summary="-Fix send message with Emoji ✅&#10;-Fix typing message notification ✅&#10;-Fix Filter participant based on Raised hands or search bar ✅&#10;-Fix new message notification (sound &amp; bubble) ✅">
+      <created>1707891958128</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1707891958128</updated>
+    </task>
+    <task id="LOCAL-00022" summary="fix">
+      <created>1707892519672</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1707892519672</updated>
+    </task>
+    <task id="LOCAL-00023" summary="fix">
+      <created>1707892702950</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1707892702950</updated>
+    </task>
+    <task id="LOCAL-00024" summary="fix">
+      <created>1707892988797</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1707892988797</updated>
+    </task>
+    <task id="LOCAL-00025" summary="fix">
+      <created>1707893063617</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1707893063617</updated>
+    </task>
+    <task id="LOCAL-00026" summary="fix">
+      <created>1707893561315</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1707893561315</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Changing of Microphone device">
+      <created>1707911194075</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1707911194075</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Changing of Audio outpu device">
+      <created>1707990043980</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1707990043980</updated>
+    </task>
+    <task id="LOCAL-00029" summary="-Fix Camera Flickering&#10;Working on WhiteboardComponent.tsxoard">
+      <created>1708548651740</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1708548651740</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Phase3: Working on Presentation Upload">
+      <created>1708682033219</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1708682033219</updated>
+    </task>
+    <task id="LOCAL-00031" summary="-Implement Signal strength functionality&#10;-Fix multiple mic for users">
+      <created>1709038388176</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1709038388177</updated>
+    </task>
+    <task id="LOCAL-00032" summary="-Implement private chat">
+      <created>1709491640963</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1709491640963</updated>
+    </task>
+    <task id="LOCAL-00033" summary="-Implement noise suppression">
+      <created>1712218207219</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1712218207219</updated>
+    </task>
+    <task id="LOCAL-00034" summary="-Chnage token validation url">
+      <created>1712563192841</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1712563192841</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/src/types/index.d.ts" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="samji" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="push" />
+    <MESSAGE value="push changes on camera sharing and receiving" />
+    <MESSAGE value="push changes on screensharing and receiving screen sharing" />
+    <MESSAGE value="push changes" />
+    <MESSAGE value="Phase 3: Captions" />
+    <MESSAGE value="Phase 3: Konn3ct AI" />
+    <MESSAGE value="Push collaborate merge" />
+    <MESSAGE value="Phase3: Breakout room" />
+    <MESSAGE value="Phase3: Added Branding" />
+    <MESSAGE value="Fix Build Issues" />
+    <MESSAGE value="Added functionality of Change Camera device in the device settings" />
+    <MESSAGE value="-Fix send message with Emoji ✅&#10;-Fix typing message notification ✅&#10;-Fix Filter participant based on Raised hands or search bar ✅&#10;-Fix new message notification (sound &amp; bubble) ✅" />
+    <MESSAGE value="Update" />
+    <MESSAGE value="fix" />
+    <MESSAGE value="Changing of Microphone device" />
+    <MESSAGE value="Changing of Audio outpu device" />
+    <MESSAGE value="-Fix Camera Flickering&#10;Working on WhiteboardComponent.tsxoard" />
+    <MESSAGE value="Phase3: Working on Presentation Upload" />
+    <MESSAGE value="-Implement Signal strength functionality&#10;-Fix multiple mic for users" />
+    <MESSAGE value="-Implement private chat" />
+    <MESSAGE value="-Implement noise suppression" />
+    <MESSAGE value="-Chnage token validation url" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Chnage token validation url" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="488" y="75" key="#com.intellij.ide.util.MemberChooser" timestamp="1708421772262">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state x="488" y="75" key="#com.intellij.ide.util.MemberChooser/0.0.1366.720@0.0.1366.720" timestamp="1708421772262" />
+    <state x="100" y="100" width="1166" height="520" key="DiffContextDialog" timestamp="1707892531582">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state x="100" y="100" width="1166" height="520" key="DiffContextDialog/0.0.1366.720@0.0.1366.720" timestamp="1707892531582" />
+    <state width="1323" height="157" key="GridCell.Tab.0.bottom" timestamp="1712822825036">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state width="1323" height="157" key="GridCell.Tab.0.bottom/0.0.1366.720@0.0.1366.720" timestamp="1712822825036" />
+    <state width="1323" height="157" key="GridCell.Tab.0.center" timestamp="1712822825035">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state width="1323" height="157" key="GridCell.Tab.0.center/0.0.1366.720@0.0.1366.720" timestamp="1712822825035" />
+    <state width="1323" height="157" key="GridCell.Tab.0.left" timestamp="1712822825035">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state width="1323" height="157" key="GridCell.Tab.0.left/0.0.1366.720@0.0.1366.720" timestamp="1712822825035" />
+    <state width="1323" height="157" key="GridCell.Tab.0.right" timestamp="1712822825036">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state width="1323" height="157" key="GridCell.Tab.0.right/0.0.1366.720@0.0.1366.720" timestamp="1712822825036" />
+    <state x="18" y="54" width="1219" height="613" key="MergeDialog" timestamp="1707892381622">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state x="18" y="54" width="1219" height="613" key="MergeDialog/0.0.1366.720@0.0.1366.720" timestamp="1707892381622" />
+    <state x="321" y="121" key="MultipleFileMergeDialog" timestamp="1707892381633">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state x="321" y="121" key="MultipleFileMergeDialog/0.0.1366.720@0.0.1366.720" timestamp="1707892381633" />
+    <state x="473" y="62" key="RollbackChangesDialog" timestamp="1708417794531">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state x="473" y="62" key="RollbackChangesDialog/0.0.1366.720@0.0.1366.720" timestamp="1708417794531" />
+    <state x="275" y="79" key="Vcs.Push.Dialog.v2" timestamp="1712563196762">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state x="275" y="79" key="Vcs.Push.Dialog.v2/0.0.1366.720@0.0.1366.720" timestamp="1712563196762" />
+    <state x="500" y="273" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1707473868295">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state x="500" y="273" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.720@0.0.1366.720" timestamp="1707473868295" />
+    <state x="164" y="96" width="587" height="534" key="find.popup" timestamp="1709300083174">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state x="164" y="96" width="587" height="534" key="find.popup/0.0.1366.720@0.0.1366.720" timestamp="1709300083174" />
+    <state x="339" y="160" key="run.anything.popup" timestamp="1709332809690">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state x="339" y="160" key="run.anything.popup/0.0.1366.720@0.0.1366.720" timestamp="1709332809690" />
+    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup" timestamp="1709039020332">
+      <screen x="0" y="0" width="1366" height="720" />
+    </state>
+    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup/0.0.1366.720@0.0.1366.720" timestamp="1709039020332" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/recoil/atom.ts</url>
+          <line>10</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/layouts/Authenticated.tsx</url>
+          <line>101</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/chat/ChatModal.tsx</url>
+          <line>165</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

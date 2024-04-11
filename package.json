@@ -33,6 +33,7 @@
     "@tldraw/tldraw": "^2.0.0-canary.699502d8c479",
     "@types/socket.io": "^3.0.2",
     "axios": "^1.4.0",
+    "babel-polyfill": "^6.26.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
