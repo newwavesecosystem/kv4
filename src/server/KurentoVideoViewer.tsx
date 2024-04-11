@@ -154,7 +154,9 @@ const KurentoVideoViewer = (props:any) => {
         if (ws != null) {
             ws.onopen = () => {
                 console.log('KurentoVideoViewer Socket connection established');
-                startProcess();
+                setTimeout(()=>{
+                    startProcess();
+                }, 2000);
             };
 
             ws.onmessage = (message) => {

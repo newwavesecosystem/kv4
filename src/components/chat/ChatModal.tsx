@@ -1,8 +1,14 @@
-import React, {ChangeEventHandler, useState} from "react";
+import React, { ChangeEventHandler, ChangeEvent, useEffect, useState } from "react";
 import { Sheet, SheetContent } from "../ui/sheet";
 import useScreenSize from "~/lib/useScreenSize";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, chatListState, chatModalState, chatTypingListState, participantsModalState} from "~/recoil/atom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  authUserState,
+  chatListState,
+  chatModalState,
+  chatTypingListState,
+  participantsModalState,
+} from "~/recoil/atom";
 import PeoplesIcon from "../icon/outline/PeoplesIcon";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import CloseIcon from "../icon/outline/CloseIcon";
@@ -23,8 +29,10 @@ import {
 } from "../ui/command";
 import TickIcon from "../icon/outline/TickIcon";
 import { cn } from "~/lib/utils";
-import {websocketSendMessage, websocketStartTyping} from "~/server/Websocket";
-import {IChat} from "~/types";
+import { websocketSendMessage, websocketStartTyping } from "~/server/Websocket";
+import { IChat, IEmojiMart } from "~/types";
+import Picker from "@emoji-mart/react";
+import emojiData from "@emoji-mart/data";
 
 const DummyMenu = [
   {
@@ -42,39 +50,58 @@ const DummyMenu = [
 function ChatModal() {
   const [chatState, setChatState] = useRecoilState(chatModalState);
   const [chatList, setChatList] = useRecoilState(chatListState);
-  const [chatTypingList, setChatTypingList] = useRecoilState(chatTypingListState);
-  const user = useRecoilValue(authUserState);
+  const [chatTypingList, setChatTypingList] =
+    useRecoilState(chatTypingListState);
   const [infoMessageStatus, setInfoMessageStatus] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+  const [usersTyping, setUsersTyping] = useState<string[]>([]);
+  const user = useRecoilValue(authUserState);
+  const [message, setMessage] = useState("");
+  const isUserTyping = usersTyping.filter((typing) => typing === user?.meetingDetails?.internalUserID);
 
-  const sendMsg=()=>{
-    let sender=user?.meetingDetails?.internalUserID;
-    let message=value;
+  useEffect(() => {
+    // Simulate users typing (replace with your actual implementation)
+    const typingTimeout = setTimeout(() => {
+      // check if user is in typing list if so remove the user
+      if (isUserTyping) {
+        setUsersTyping((prev) => prev.filter((typing) => typing !== user?.meetingDetails?.internalUserID));
+      }
+    }, 2000);
+
+    return () => clearTimeout(typingTimeout);
+  }, [usersTyping]);
+
+  const sendMsg = () => {
+    let sender = user?.meetingDetails?.internalUserID;
     let ishola = chatList;
-    console.log('sendingMsg')
-    console.log(ishola)
+    console.log("sendingMsg");
+    console.log(ishola);
 
-    if(message!=""){
-      setValue("");
-      console.log('sendingMsg : ',message);
-      websocketSendMessage(sender,user?.meetingDetails?.confname,sender,message);
+    if (message != "") {
+      console.log("sendingMsg : ", message);
+      websocketSendMessage(
+        sender,
+        user?.meetingDetails?.confname,
+        sender,
+        message,
+      );
+      setMessage("");
     }
+  };
 
-  }
-
-  const handleKeyDown =(e:any)=>{
-    if(e.key !== 'Enter') return
-    const value = e.target.value
-    console.log('Well');
-    if(!value.trim()) return
-    sendMsg();
-  }
-
-  const handleTyping =(e:any)=>{
+  const handleTyping = (e: ChangeEvent<HTMLInputElement>) => {
     websocketStartTyping();
-    setValue(e.target.value)
-  }
+    setMessage(e.target.value);
+  };
+
+  const handleKeyDown = (e: any) => {
+    if (e.key !== "Enter") return;
+    const value = e.target.value;
+    console.log("Well");
+    if (!message.trim()) return;
+    sendMsg();
+  };
 
 
   const screenSize = useScreenSize();
@@ -84,7 +111,12 @@ function ChatModal() {
         className="m-h-screen w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
         side={"right"}
       >
-        <div className="sticky top-0 flex max-h-32 flex-col gap-2 p-4">
+        <div
+          className={cn(
+            "sticky top-0 flex max-h-32 flex-col gap-2 border-b border-a11y/20 px-4 pb-1 pt-4",
+            infoMessageStatus && !usersTyping.length && "py-5",
+          )}
+        >
           <div className="flex items-center gap-2">
             <span className="text-xl font-bold">Chat</span>
             <Popover open={open} onOpenChange={setOpen}>
@@ -121,7 +153,7 @@ function ChatModal() {
                       <TickIcon className={cn("mr-2 h-4 w-4")} />
                       Everyone
                     </CommandItem>
-                    {chatList.map((chat:IChat, index:number) => (
+                    {chatList.map((chat: IChat, index: number) => (
                       <CommandItem
                         className="text-a11y"
                         key={index}
@@ -140,7 +172,17 @@ function ChatModal() {
               </PopoverContent>
             </Popover>
           </div>
-          {!infoMessageStatus && (
+
+          {chatTypingList.length > 0 && (
+            <p className="">
+              {chatTypingList.map((text: any, index:number) => (
+                  <span key={index}>{text.name}, </span>
+              ))} {chatTypingList.length > 1 ? "are" : "is"}{" "}
+              typing...
+            </p>
+          )}
+
+          {!infoMessageStatus && !chatTypingList.length && (
             <div className=" mt-5 flex items-center gap-2 rounded-lg border border-a11y/20 bg-primary p-2 text-xs shadow-sm">
               <InformationIcon className="h-5 w-5" />
               <span className="w-full">
@@ -160,33 +202,43 @@ function ChatModal() {
         <div
           className={cn(
             " no-scrollbar h-[calc(100vh-192px)] overflow-y-auto",
-            infoMessageStatus && "h-[calc(100vh-130px)]",
+            infoMessageStatus && !usersTyping.length && "h-[calc(100vh-130px)]",
+            usersTyping.length > 0 && "h-[calc(100vh-150px)]",
           )}
         >
-          {chatList.map((chat:IChat, index:number) => (
+          {chatList.map((chat: IChat, index: number) => (
             <SingleChat key={index} chat={chat} />
           ))}
         </div>
 
-        {chatTypingList.map((text:any) =>(
-            <div>
-              {text.name}, is typing
-            </div>
-        ))}
         <div className="sticky bottom-0 h-16 w-full border-t border-a11y/20 bg-primary/20 px-4 md:sticky">
           <div className=" flex w-full items-center rounded-xl bg-transparent py-4 ">
             <input
               type="text"
-              name=""
-              className="w-full bg-transparent pl-3 placeholder:text-a11y/80  focus:shadow-none focus:outline-none"
-              id=""
-              placeholder="Send a message to everyone"
-              value={value}
+              value={message}
+              className="w-full bg-transparent px-3 placeholder:text-a11y/80  focus:shadow-none focus:outline-none"
               onChange={handleTyping}
+              placeholder="Send a message to everyone"
               onKeyDown={handleKeyDown}
             />
             <div className="flex items-center gap-4">
-              <EmojiIcon className="h-6 w-6" />
+              <Popover>
+                <PopoverTrigger>
+                  <EmojiIcon className="h-6 w-6" />
+                </PopoverTrigger>
+                <PopoverContent
+                  className="mb-5 mr-3 w-full border-none bg-transparent p-0 md:mr-4"
+                  side="bottom"
+                >
+                  <Picker
+                    data={emojiData}
+                    onEmojiSelect={(e: IEmojiMart) => {
+                      setMessage(message + e.native);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+
               <SendIcon onClick={sendMsg} className="h-6 w-6" />
             </div>
           </div>

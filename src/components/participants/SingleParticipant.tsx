@@ -16,7 +16,7 @@ import {
   authUserState,
   privateChatModalState,
   removeUserModalState,
-  participantTalkingListState
+  participantTalkingListState, participantListState
 } from "~/recoil/atom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import VolumeOnIcon from "../icon/outline/VolumeOnIcon";
@@ -26,7 +26,12 @@ import PeopleRemove from "../icon/outline/PeopleRemove";
 import RepeatIcon from "../icon/outline/RepeatIcon";
 import MicOnIcon from "~/components/icon/outline/MicOnIcon";
 import userRolesData from "~/data/userRolesData";
-import {websocketMuteParticipants, websocketParticipantsChangeRole, websocketPresenter} from "~/server/Websocket";
+import {
+  websocketMuteParticipants,
+  websocketParticipantsChangeRole,
+  websocketPresenter,
+  websocketStartPrivateChat
+} from "~/server/Websocket";
 import {IParticipant} from "~/types";
 
 function SingleParticipant({
@@ -42,6 +47,7 @@ function SingleParticipant({
   const [removeParticipant, setRemoveParticipant] =
     useRecoilState(removeUserModalState);
   const [privateChat, setPrivateChat] = useRecoilState(privateChatModalState);
+  const participantList = useRecoilValue(participantListState);
 
   const displayActions=(item:any,index:number)=>{
     return (<DropdownMenuItem onClick={()=>{
@@ -87,6 +93,7 @@ function SingleParticipant({
           ))}
         </button>
 
+        {participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.role=='MODERATOR' && (
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
             <button>
@@ -132,32 +139,54 @@ function SingleParticipant({
                 Mute User
               </DropdownMenuItem>
 
-              <DropdownMenuItem
-                // onClick={() => {
-                //   if (!user) return;
-                //   setPrivateChat({
-                //     ...privateChat,
-                //     isActive: !privateChat.isActive,
-                //     users: [
-                //       {
-                //         email: user.email,
-                //         fullName: user.fullName,
-                //         id: user.id,
-                //       },
-                //       {
-                //         email: "",
-                //         fullName: participant.name,
-                //         id: participant.id,
-                //       },
-                //     ],
-                //   });
-                // }}
+            {user?.meetingDetails?.internalUserID == participant.intId ? null :<DropdownMenuItem
+                onClick={() => {
+                  if (!user) return;
+
+                  if(privateChat.users.filter((item)=> item.id == participant.intId).length > 0){
+                    privateChat.chatRooms.map((citem)=>{
+                      citem.participants.map((ccitem)=>{
+                        if(ccitem.id == participant.intId){
+                          setPrivateChat((prev)=>({
+                            ...prev,
+                            isActive: true,
+                            id: citem.chatId,
+                          }));
+
+                          return;
+                        }
+                      });
+                    });
+
+                    return;
+                  }
+
+                  websocketStartPrivateChat(participant);
+                  setPrivateChat({
+                    ...privateChat,
+                    // isActive: !privateChat.isActive,
+                    users: [
+                      // {
+                      //   email: user.email,
+                      //   fullName: user.fullName,
+                      //   id: user.id,
+                      // },
+                        ...privateChat.users,
+                      {
+                        email: participant.extId,
+                        fullName: participant.name,
+                        id: participant.intId,
+                      },
+                    ],
+                  });
+                }}
                 className="py-4"
               >
                 <ChatIcon className="mr-2 h-5 w-5" />
-                private chat
-              </DropdownMenuItem>
-              <DropdownMenuItem
+                Private Chat
+              </DropdownMenuItem>}
+
+            {user?.meetingDetails?.internalUserID == participant.intId ? null : <DropdownMenuItem
                 onClick={() => {
                   setRemoveParticipant({
                     ...removeParticipant,
@@ -170,9 +199,13 @@ function SingleParticipant({
               >
                 <PeopleRemove className="mr-2 h-5 w-5" />
                 Remove User
-              </DropdownMenuItem>
+              </DropdownMenuItem>}
+
             </DropdownMenuContent>
           </DropdownMenu>
+        )}
+
+
         </div>}
     </div>
   );

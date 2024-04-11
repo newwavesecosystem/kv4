@@ -1,19 +1,35 @@
 import SockJS from 'sockjs-client';
-import {useContext, useEffect} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import * as UserInfo from './UserInfo';
 import * as ServerInfo from './ServerInfo';
 
-import {generateRandomId} from "./ServerInfo";
+import {generateRandomId, generatesSmallId} from "./ServerInfo";
 
 import {
-    authUserState, chatListState, chatTypingListState,
-    connectionStatusState, donationModalState, eCinemaModalState, participantCameraListState,
+    authUserState,
+    breakOutModalState,
+    chatListState,
+    chatTypingListState,
+    connectionStatusState,
+    donationModalState,
+    eCinemaModalState,
+    fileUploadModalState,
+    micOpenState,
+    newMessage,
+    participantCameraListState,
     participantListState,
     participantTalkingListState,
-    recordingModalState, screenSharingStreamState, viewerScreenSharingState
+    pollModalState,
+    presentationSlideState, privateChatModalState,
+    recordingModalState,
+    screenSharingStreamState,
+    viewerScreenSharingState,
+    waitingRoomUsersState
 } from "~/recoil/atom";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {IParticipant, IParticipantCamera} from "~/types";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {IBreakoutRoom, IColumnBreakOutRoom, IParticipant, IParticipantCamera, IWaitingUser} from "~/types";
+import dayjs from "dayjs";
+import axios from "axios";
 
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
@@ -106,6 +122,21 @@ const Websocket = () => {
     const [chatTypingList, setChatTypingList] = useRecoilState(chatTypingListState);
     const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
     const [donationState, setDonationState] = useRecoilState(donationModalState);
+    const [pollModal, setPollModal] = useRecoilState(pollModalState);
+    const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
+    const [waitingRoomUsers, setWaitingRoomUsers] = useRecoilState(waitingRoomUsersState);
+    const [micState, setMicState] = useRecoilState(micOpenState);
+    const [breakOutRoomState, setBreakOutRoomState] = useRecoilState(breakOutModalState);
+    const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
+    const [fileUploadModal, setFileUploadModal] = useRecoilState(fileUploadModalState);
+    const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
+
+    const [num, setNum] = useState(1);
+
+    const getNum=()=>{
+        setNum(num+1);
+        return num;
+    }
 
 
     useEffect(() => {
@@ -154,15 +185,25 @@ const Websocket = () => {
             };
 
             sock.onmessage = (e) => {
-                setConnection({
-                    audio_connection: false,
-                    websocket_connection:true
-                })
+
                 console.log('Received message:', e.data);
                 const obj = JSON.parse(e.data);
                 const {collection} = obj;
+
+                if (obj.msg == "connected") {
+                    // a["{\"msg\":\"connected\",\"session\":\"4qajGwWr4bziuofh9\"}"]
+                    setConnection({
+                        audio_connection: false,
+                        websocket_connection:true
+                    })
+                }
+
                 if (collection == "group-chat-msg") {
                     handleIncomingmsg(e.data)
+                }
+
+                if (collection == "group-chat") {
+                    handleGroupChat(e.data)
                 }
                 if (collection == "users-typing") {
                     handleTyping(e.data)
@@ -174,9 +215,10 @@ const Websocket = () => {
                     handleRecording(e.data)
                 }
 
-                // if(collection == "meetings"){
-                //     handleMeetings(e.data)
-                // }
+                if(collection == "meetings"){
+                    handleMeetings(e.data)
+                }
+
                 if(collection == "external-video-meetings"){
                     handleExternalVideo(e.data)
                 }
@@ -193,10 +235,30 @@ const Websocket = () => {
                     handleRemoteScreenShare(e.data)
                 }
 
+                if(collection == "polls" || collection == "current-poll" ){
+                    handlePolls(e.data)
+                }
 
-                // if(collection == "presentation-upload-token"){
-                //     handlePresentationPreUpload(e.data)
-                // }
+                if(collection == "presentations"){
+                    handlePresentations(e.data)
+                }
+
+                if(collection == "guestUsers"){
+                    handleGuestUsers(e.data)
+                }
+
+                if(collection == "breakouts"){
+                    handleBreakout(e.data)
+                }
+
+
+                if(collection == "presentation-upload-token"){
+                    handlePresentationPreUpload(e.data)
+                }
+
+                if(collection == "connection-status"){
+                    handleConnectionStatus(e.data)
+                }
 
             };
             sock.onclose = () => {
@@ -215,7 +277,7 @@ const Websocket = () => {
     const handleIncomingmsg = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
-        const {sender, senderName, timestamp, message, id} = obj.fields;
+        const {sender, senderName, timestamp, message, id, chatId} = obj.fields;
         console.log("handleIncomingmsg:", obj.fields);
         console.log("Sender:", sender);
         console.log("Message:", message);
@@ -241,7 +303,33 @@ const Websocket = () => {
             return;
         }
 
-        addMessage(senderName,message,timestamp,id);
+        if(chatId == "MAIN-PUBLIC-GROUP-CHAT"){
+            addMessage(senderName,message,timestamp,id);
+            return;
+        }
+
+        addPrivateMessage(senderName,message,timestamp,id, chatId);
+
+    }
+
+    const handleGroupChat = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {chatId, meetingId, access} = obj.fields;
+
+        if(chatId == "MAIN-PUBLIC-GROUP-CHAT"){
+            return;
+        }
+
+        // a["{"msg":"added","collection":"group-chat","id":"QNz7Est4eYr895e4M","fields":{"chatId":"1709041032349-4hb295a9","meetingId":"6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2-1709040921995","access":"PRIVATE_ACCESS","createdBy":"w_yqu0qgo2gbps","participants":[{"id":"w_4amx2midtfcd","name":"Odejinmi Samuel","role":"MODERATOR"},{"id":"w_yqu0qgo2gbps","name":"Odejinmi Samuel","role":"MODERATOR"}],"users":["w_4amx2midtfcd","w_yqu0qgo2gbps"]}}"]
+
+        setPrivateChatState((prev)=>({
+            ...prev,
+            chatRooms: [...prev.chatRooms,obj.fields],
+            isActive: true,
+            id: chatId,
+        }));
+
     }
 
     const handleTyping = (eventData:any) => {
@@ -264,13 +352,14 @@ const Websocket = () => {
         if (msg == 'added') {
             let urecord={
                 ...fields,
+                connection_status:'normal',
                 id
             }
             addtoUserlist(urecord)
         }
 
         if (msg == 'changed') {
-            const {presenter, role} = fields;
+            const {presenter, role, raiseHand} = fields;
 
             if(presenter != null){
                 console.log("UserState: handling presenter change",obj);
@@ -280,6 +369,11 @@ const Websocket = () => {
             if(role != null){
                 console.log("UserState: handling role change",obj);
                 modifyRoleStateUser(id,role)
+            }
+
+            if(raiseHand != null){
+                console.log("UserState: handling role change",obj);
+                modifyRaiseHandStateUser(id,raiseHand)
             }
         }
 
@@ -318,7 +412,7 @@ const Websocket = () => {
         }
 
         if(msg == "removed"){
-            setViewerScreenShareState(true);
+            setViewerScreenShareState(false);
             setScreenSharingStream(null);
         }
     }
@@ -358,6 +452,35 @@ const Websocket = () => {
             }
         }
 
+        if(msg == "removed"){
+            removeVoiceUser(id);
+        }
+
+    }
+
+    const handleConnectionStatus = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id} = obj;
+
+        if(msg == "changed"){
+            // a["{\"msg\":\"changed\",\"collection\":\"connection-status\",\"id\":\"BKJN47DdYthRg4nPp\",\"fields\":{\"status\":\"warning\",\"statusUpdatedAt\":1708676997324}}"]
+
+            const {status} = obj.fields;
+
+            const updatedArray = participantList?.map((item:any) => {
+                if (item.id === id) {
+                    return {...item, connection_status: status};
+                }
+                return item;
+            });
+
+            // 'updatedArray' now contains the modified object
+            console.log(updatedArray);
+
+            setParticipantTalkingList(updatedArray)
+        }
+
     }
 
 
@@ -376,20 +499,199 @@ const Websocket = () => {
         }
     }
 
-    // const handleMeetings =(eventData)=>{
-    //     console.log('Random User Handler')
-    //     const obj = JSON.parse(eventData);
-    //     const {msg, randomlySelectedUser, meetingEnded} = obj.fields
-    //
-    //     if(meetingEnded != null && meetingEnded){
-    //         endCall();
-    //     }
-    //
-    //     if(randomlySelectedUser != null){
-    //         handleRandomUsers(eventData)
-    //     }
-    // }
-    //
+    const handlePolls = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id, fields} = obj;
+
+        if(msg == "added") {
+            const {question,answers,requester,id} = fields;
+            setPollModal((prev) => ({
+                ...prev,
+                isActive: true,
+                step: 2,
+                pollQuestion: question,
+                pollOptions: answers.map((option:any, index:number) => {
+                    return {
+                        id: option.id,
+                        option: option.key,
+                        votes: 0,
+                    };
+                }),
+                pollCreatedAt: new Date(),
+                pollCreatorId: id,
+                pollCreatorName: findUserNamefromUserId(requester),
+            }));
+        }
+
+        if(msg == "changed") {
+            // ["{\"msg\":\"changed\",\"collection\":\"current-poll\",\"id\":\"YdpwudAXrkR2kNcYN\",\"fields\":{\"answers\":[{\"id\":0,\"key\":\"Samji\",\"numVotes\":0},{\"id\":1,\"key\":\"baddest\",\"numVotes\":0},{\"id\":2,\"key\":\"Olawale\",\"numVotes\":1},{\"id\":3,\"key\":\"Jesus\",\"numVotes\":0}],\"numRespondents\":1,\"numResponders\":1,\"questionText\":\"What is your name?\",\"questionType\":\"CUSTOM\"}}"]
+            const {answers,responses} = fields;
+
+            if(answers != null){
+                let tVote=0;
+                let answ=answers.map((option: any, index:number) => {
+                    tVote+=option.numVotes as number;
+                    return {
+                        id: option.id,
+                        option: option.key,
+                        votes: option.numVotes,
+                    };
+                });
+
+                console.log(`vote answers : ${tVote} `)
+                console.log(`vote answers : ${answ} `)
+
+                setPollModal((prev) => ({
+                    ...prev,
+                    pollOptions: answ,
+                }));
+
+                setPollModal((prev) => ({
+                    ...prev,
+                    totalVotes: tVote
+                }));
+            }
+
+
+            if(responses != null){
+                let vUsers:any=[];
+
+                for (let i = 0; i < responses.length; i++) {
+                    let vUser= {
+                        id: responses[i].userId,
+                        fullName: findUserNamefromUserId(responses[i].userId),
+                        email: null,
+                        votedOption: "NA",
+                        votedOptionId: responses[i].answerIds,
+                    };
+
+                    vUsers.push(vUser);
+                }
+
+                setPollModal((prev) => ({
+                    ...prev,
+                    usersVoted:vUsers,
+                }));
+            }
+
+        }
+    }
+
+    const handlePresentations = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id, fields} = obj;
+
+        if(msg == "added") {
+            const {pages,current,downloadable,name,podId,id} = fields;
+
+            setPresentationSlide({
+                pages: pages,
+                current: current,
+                downloadable: downloadable,
+                name: name,
+                podId: podId,
+                id: id,
+            })
+        }
+    }
+
+    const handleGuestUsers = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id, fields} = obj;
+
+        if(msg == "added") {
+            const {name,intId,role,avatar,guest,authenticated} = fields;
+            setWaitingRoomUsers([...waitingRoomUsers,{name,intId,role,avatar,guest,authenticated,"_id":id}]);
+        }
+
+        if(msg == "removed") {
+            let ur=waitingRoomUsers.filter((item:IWaitingUser) => item?._id != id);
+            console.log("waitingRoomUsers: handleRemoval ",ur)
+            setWaitingRoomUsers(ur);
+        }
+    }
+
+    const handleBreakout = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id, fields} = obj;
+
+        if(msg == "added") {
+            // ["{\"msg\":\"added\",\"collection\":\"breakouts\",\"id\":\"dF7ZMsFdC7zvFANbr\",\"fields\":{\"breakoutId\":\"60b5008f1dbdb7f487ab51c637cd80f757f8c9be-1707763221040\",\"captureNotes\":false,\"captureSlides\":false,\"externalId\":\"4d3cc89d80677808207417d4aa82a5868f6c75de-1707763221040\",\"freeJoin\":true,\"isDefaultName\":true,\"joinedUsers\":[],\"name\":\"Odejinmi Room (Room 2)\",\"parentMeetingId\":\"d02560dd9d7db4467627745bd6701e809ffca6e3-1707762025148\",\"sendInviteToModerators\":false,\"sequence\":2,\"shortName\":\"Room 2\",\"timeRemaining\":0}}"]
+
+            const {breakoutId,joinedUsers,shortName,name,sendInviteToModerators,sequence} = fields;
+
+            console.log('breakoutId',breakoutId);
+            console.log('breakoutId',fields);
+
+            setBreakOutRoomState((prev) => ({
+                ...prev,
+                rooms: [
+                    ...prev.rooms,
+                    {
+                        id: sequence,
+                        breakoutId: breakoutId,
+                        title: shortName,
+                        users: joinedUsers,
+                    }
+                ],
+            }));
+
+            setBreakOutRoomState((prev) => ({
+                ...prev,
+                step: 2,
+                activatedAt: new Date(),
+                createdAt: new Date(),
+                isActive: true,
+                endedAt: dayjs()
+                    .add(breakOutRoomState.duration, "minute")
+                    .toDate(),
+            }));
+        }
+
+
+        if(msg == "changed") {
+            // ["{\"msg\":\"changed\",\"collection\":\"breakouts\",\"id\":\"dF7ZMsFdC7zvFANbr\",\"fields\":{\"url_w_flxa3jsczb7i\":{\"redirectToHtml5JoinURL\":\"https://meet.konn3ct.ng/bigbluebutton/api/join?fullName=Odejinmi+Samuel&isBreakout=true&joinViaHtml5=true&meetingID=4d3cc89d80677808207417d4aa82a5868f6c75de-1707763221040&password=moderator&redirect=true&userID=w_flxa3jsczb7i-2&checksum=4f0e6f1b3f1ef8db8b3795f7f94eeb1bbef15cee1296f47acede66bd45439572\",\"insertedTime\":1707763310590}}}"]
+
+            // Extracting redirectToHtml5JoinURL dynamically
+            const dynamicKey = Object.keys(fields)[0] ?? "0"; // Assuming there's only one dynamic key, adjust accordingly
+            const redirectToHtml5JoinURL = fields[dynamicKey]?.redirectToHtml5JoinURL;
+
+            console.log("redirectToHtml5JoinURL",redirectToHtml5JoinURL);
+
+            if(redirectToHtml5JoinURL != null){
+                window.open(redirectToHtml5JoinURL, '_blank');
+            }
+
+        }
+
+    }
+
+
+    const handleMeetings =(eventData:any)=>{
+        console.log('Random User Handler')
+        const obj = JSON.parse(eventData);
+        const {randomlySelectedUser, meetingEnded, voiceProp} = obj.fields
+
+        if(meetingEnded != null && meetingEnded){
+            // endCall();
+        }
+
+        if(randomlySelectedUser != null){
+            // handleRandomUsers(eventData)
+        }
+
+        if(voiceProp != null){
+            if(!voiceProp.muteOnStart){
+                setMicState(voiceProp.muteOnStart);
+            }
+
+        }
+    }
+
     // const handleRandomUsers =(eventData)=>{
     //     console.log('Random User Handler')
     //     const obj = JSON.parse(eventData);
@@ -409,33 +711,79 @@ const Websocket = () => {
     //     randomlyselectedUser(userName)
     // }
     //
-    // const handleRecording = (eventData) => {
-    //     console.log('I got to handle incoming messages')
-    //     const obj = JSON.parse(eventData);
-    //     const {recording, time,} = obj.fields;
-    //     if (recording == null) {
-    //         recordingTiming(time)
-    //     } else {
-    //         if (recording) {
-    //             // startRecording()
-    //         } else {
-    //             stopRecording()
-    //         }
-    //     }
-    // }
-    //
-    // const handlePresentationPreUpload = (eventData) => {
-    //     console.log('I got to handle incoming messages')
-    //     const obj = JSON.parse(eventData);
-    //
-    //     console.log("settingfunction: webhook received")
-    //
-    //     if (obj.msg == "added") {
-    //         const {authzToken, temporaryPresentationId, filename, userId,podId,meetingId} = obj.fields;
-    //
-    //         handleUploadTCP(obj.id,authzToken,podId,temporaryPresentationId,meetingId);
-    //     }
-    // }
+
+    const handlePresentationPreUpload = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+
+        console.log("settingfunction: webhook received")
+
+        if (obj.msg == "added") {
+            const {authzToken, temporaryPresentationId, filename, userId,podId,meetingId} = obj.fields;
+
+            handleUploadTCP(obj.id,authzToken,podId,temporaryPresentationId,meetingId);
+        }
+    }
+
+    const handleUploadTCP = async (id:string,authToken:string,podId:string,temporaryPresentationId:string,meetingId:string) => {
+
+        console.log("websocket: handling tcpUpload")
+        console.log("websocket: handler receive request",id,authToken,podId,temporaryPresentationId,meetingId)
+        console.log("websocket: available files",fileUploadModal.filesUploadInProgress)
+        let find = fileUploadModal?.filesUploadInProgress.filter(item => item.id == temporaryPresentationId);
+
+        if(find.length < 1){
+            console.log("settingfunction: file to upload not found");
+            return;
+        }
+
+        console.log("settingfunction: file to upload found",find);
+
+        const formData = new FormData();
+        if (find) {
+            formData.append("fileUpload", find[0].file);
+        }
+        formData.append("conference", meetingId);
+        formData.append("room", meetingId);
+        formData.append("temporaryPresentationId", temporaryPresentationId);
+        formData.append("pod_id", podId);
+        formData.append("is_downloadable", "false");
+
+        try {
+            const response = await axios({
+                method: "post",
+                url: `https://${ServerInfo.engineBaseURL}/bigbluebutton/presentation/${authToken}/upload`,
+                data: formData,
+                headers: {"Content-Type": "multipart/form-data"},
+            });
+
+            console.log("settingfunction: upload response",response);
+            const responseData = response.data;
+
+            if (find) {
+                handlePresentationUploaded(find[0].name, id);
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+
+
+
+
+        // POST: https://meet.konn3ct.com/bigbluebutton/presentation/PresUploadToken-gsm839h8DEFAULT_PRESENTATION_POD-w_xhlpo015vbrv/upload
+        //     Content-Type:multipart/form-data
+        //
+        // Payload:
+        //     fileUpload: (binary)
+        // conference: 490ad150b2b18ea8eab01401ceea403bcd523765-1692191722847
+        // room: 490ad150b2b18ea8eab01401ceea403bcd523765-1692191722847
+        // temporaryPresentationId: xya7XwDywsgzb3QFJGpL272
+        // pod_id: DEFAULT_PRESENTATION_POD
+        // is_downloadable: false
+
+
+    }
 
     const addtoUserlist = (user:any) => {
         let ishola = participantList;
@@ -541,6 +889,10 @@ const Websocket = () => {
         // Update the 'muted' property to 'true' for the object with id '7J2pQrMaH5C58ZsHj' for Audio
         const updatedArray = participantTalkingList?.map((item:any) => {
             if (item.id === id) {
+
+                // if(item.intId == user?.meetingDetails?.internalUserID){
+                //     setMicState(!micState);
+                // }
                 return {...item, muted: state};
             }
             return item;
@@ -550,6 +902,16 @@ const Websocket = () => {
         console.log(updatedArray);
 
         setParticipantTalkingList(updatedArray)
+    }
+
+    const removeVoiceUser = (id:number) => {
+        console.log('Hi, im here')
+
+        let ishola = participantTalkingList;
+
+        let ur=ishola.filter((item:any) => item?.id != id);
+        console.log("setParticipantTalkingList: remove Voice User",id)
+        setParticipantTalkingList(ur);
     }
 
 
@@ -580,6 +942,25 @@ const Websocket = () => {
                     console.log(`UserState: You have been made ${role}`);
                 }
                 return {...item, role: role};
+            }
+            return item;
+        });
+
+        console.log(updatedArray);
+
+        console.log("UserState: updatedArray", updatedArray);
+
+        setParticipantList(updatedArray)
+    }
+
+    const modifyRaiseHandStateUser = (id:any, raiseHand:boolean) => {
+
+        const updatedArray = participantList?.map((item:IParticipant) => {
+            if (item.id === id) {
+                if (item.userId == user?.meetingDetails?.internalUserID) {
+                    console.log(`UserState: You have raise hand ${raiseHand}`);
+                }
+                return {...item, raiseHand: raiseHand};
             }
             return item;
         });
@@ -625,7 +1006,7 @@ const Websocket = () => {
     const openRemoteCamera = (id:string,intId:string, streamID:string) => {
         console.log('Hi, im here')
 
-        let newRecord:IParticipantCamera={
+        let newRecord:{ intId: string; streamID: string; stream: null; id: string; deviceID: null }={
             deviceID: null, stream: null,
             intId,streamID,id
         }
@@ -638,12 +1019,12 @@ const Websocket = () => {
 
     };
 
-    const closeRemoteCamera = (streamID:string) => {
+    const closeRemoteCamera = (id:string) => {
         console.log('Hi, im here')
 
         let ishola = participantCameraList;
 
-        let ur=ishola.filter((item:any) => item?.streamID != streamID);
+        let ur=ishola.filter((item:any) => item?.id != id);
         console.log("setParticipantCameraList: remove stream ",ur)
         setParticipantCameraList(ur);
     };
@@ -681,6 +1062,43 @@ const Websocket = () => {
             time: formattedDate,
         }
         setChatList([...chatList,chat])
+        setIsNewMessage(true);
+    }
+
+    const addPrivateMessage=(sender:string, message:string,timestamp:any,id:any,chatId:any)=>{
+        // Convert timestamp to Date object
+        const date = new Date(timestamp);
+
+        // Extract date components
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // Month is zero-based
+        const day = date.getDate();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+
+        // Create a formatted date string
+        const formattedDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day} ${hours}:${minutes}:${seconds}`;
+
+
+        let chat=  {
+            id: id as string,
+            name: sender,
+            message: message,
+            chatId: chatId as string,
+            time: formattedDate as unknown as Date,
+        }
+
+        setPrivateChatState((prev)=>({
+            ...prev,
+            chatMessages: [...prev.chatMessages,chat],
+            isActive: true,
+            id: chatId,
+        }));
+
+
+
+        setIsNewMessage(true);
     }
 
     const addtypingUsers=(id:any,name:string)=>{
@@ -759,33 +1177,37 @@ const Websocket = () => {
 }
 
 export function websocketSendMessage(internalUserID:any,meetingTitle:any,sender:any,message:string) {
-    websocketSend([`{\"msg\":\"method\",\"id\":\"19\",\"method\":\"sendGroupChatMsg\",\"params\":[\"MAIN-PUBLIC-GROUP-CHAT\",{\"correlationId\":\"${internalUserID}-${Date.now()}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"sendGroupChatMsg\",\"params\":[\"MAIN-PUBLIC-GROUP-CHAT\",{\"correlationId\":\"${internalUserID}-${Date.now()}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
     websocketStopTyping();
+}
+
+export function websocketSendPrivateMessage(internalUserID:any,message:string,chatID:string) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"sendGroupChatMsg\",\"params\":[\"${chatID}\",{\"correlationId\":\"${internalUserID}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
 }
 
 export function websocketStartTyping() {
     console.log('I am websocketStartTyping')
-    websocketSend(["{\"msg\":\"method\",\"id\":\"120\",\"method\":\"startUserTyping\",\"params\":[\"public\"]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startUserTyping\",\"params\":[\"public\"]}`])
 }
 
 export function websocketStopTyping() {
     console.log('I am websocketStopTyping')
-    websocketSend(["{\"msg\":\"method\",\"id\":\"57\",\"method\":\"stopUserTyping\",\"params\":[]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"stopUserTyping\",\"params\":[]}`])
 }
 
 export function websocketRemoveUser(internalUserID:any,preventRejoin:boolean) {
     console.log('I am websocketRemoveUser')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"19\",\"method\":\"removeUser\",\"params\":[\"${internalUserID}\",${preventRejoin}]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"removeUser\",\"params\":[\"${internalUserID}\",${preventRejoin}]}`])
 }
 
 export function websocketStopCamera(streamID:string) {
     console.log('I am websocketStopCamera')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"41\",\"method\":\"userUnshareWebcam\",\"params\":[\"${streamID}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"userUnshareWebcam\",\"params\":[\"${streamID}\"]}`])
 }
 
 export function websocketRecord() {
     console.log('I am Websockets')
-    websocketSend(["{\"msg\":\"method\",\"id\":\"273\",\"method\":\"toggleRecording\",\"params\":[]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleRecording\",\"params\":[]}`])
 }
 
 export function websocketParticipantsChangeRole(internalUserID:any,type:number) {
@@ -796,27 +1218,79 @@ export function websocketParticipantsChangeRole(internalUserID:any,type:number) 
     if(type==1){
         role='MODERATOR';
     }
-    websocketSend([`{\"msg\":\"method\",\"id\":\"39\",\"method\":\"changeRole\",\"params\":[\"${internalUserID}\",\"${role}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"changeRole\",\"params\":[\"${internalUserID}\",\"${role}\"]}`])
+}
+
+export function websocketMuteAllParticipants(internalUserID:any) {
+    console.log('Muted all')
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
 }
 
 export function websocketMuteParticipants(internalUserID:any) {
     console.log('Muted all')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"11\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
 }
 
 export function websocketMuteParticipantsePresenter(internalUserID:any) {
-    websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"muteAllExceptPresenter\",\"params\":[\"${internalUserID}\"]}`])
+    console.log('Muted all except preseter')
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"muteAllExceptPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
+
+export function websocketLockViewers(internalUserID:any) {
+    console.log('LockViewers')
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleLockSettings\",\"params\":[{\"disableCam\":true,\"disableMic\":true,\"disableNotes\":true,\"disablePrivateChat\":true,\"disablePublicChat\":true,\"hideUserList\":true,\"hideViewersAnnotation\":true,\"hideViewersCursor\":true,\"lockOnJoin\":true,\"lockOnJoinConfigurable\":false,\"setBy\":\"temp\"}]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleWebcamsOnlyForModerator\",\"params\":[true]}`])
+}
+
+export function websocketUnLockViewers(internalUserID:any) {
+    console.log('unLockViewers')
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleLockSettings\",\"params\":[{\"disableCam\":false,\"disableMic\":false,\"disablePrivateChat\":false,\"disablePublicChat\":false,\"disableNotes\":false,\"hideUserList\":false,\"lockOnJoin\":true,\"lockOnJoinConfigurable\":false,\"hideViewersCursor\":false,\"hideViewersAnnotation\":false,\"setBy\":\"w_gmo5zeyaswun\"}]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleWebcamsOnlyForModerator\",\"params\":[false]}`])
+}
+
+export function websocketSetWaitingRoom(type:number) {
+    console.log('SetWaitingRoom')
+    // ALWAYS_ACCEPT
+    // ASK_MODERATOR
+    // ALWAYS_DENY
+
+    let eType='ALWAYS_DENY';
+
+    if(type==1){
+        eType='ASK_MODERATOR';
+    }else if(type==2){
+        eType='ALWAYS_ACCEPT';
+    }
+
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"changeGuestPolicy\",\"params\":[\"${eType}\"]}`])
+}
+
+export function websocketDenyAllWaitingUser(user:any) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"allowPendingUsers\",\"params\":[${JSON.stringify(user)},\"DENY\"]}`])
+}
+
+export function websocketAllowAllWaitingUser(user:any) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"allowPendingUsers\",\"params\":[${JSON.stringify(user)},\"ALLOW\"]}`])
+}
+
+export function websocketSendMessage2AllWaitingUser(message:string) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setGuestLobbyMessage\",\"params\":[\"${message}\"]}`])
+}
+
+export function websocketSendMessage2PrivateWaitingUser(message:string,internalUserID:string) {
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setPrivateGuestLobbyMessage\",\"params\":[\"${message}\",\"${internalUserID}\"]}`])
+}
+
 
 export function websocketClear() {
     // websocketSend([`{\"msg\":\"method\",\"id\":\"51\",\"method\":\"setEmojiStatus\",\"params\":[\"${UserInfo.internalUserID}\",\"none\"]}`])
 }
 
 export function websocketMuteMic() {
-    websocketSend(["{\"msg\":\"method\",\"id\":\"9\",\"method\":\"toggleVoice\",\"params\":[]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleVoice\",\"params\":[]}`])
 }
 
-export function websocketPresenter(internalUserID:string){
+export function websocketPresenter(internalUserID:string|undefined){
     websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"assignPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
 
@@ -824,20 +1298,96 @@ export function websocketSendExternalVideo(link:string){
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startWatchingExternalVideo\",\"params\":[\"${link}"]}`]);
 }
 
+export function websocketStartPoll(id:any,question:any,answers:any){
+    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"startPoll","params":[{"YesNo":"YN","YesNoAbstention":"YNA","TrueFalse":"TF","Letter":"A-","A2":"A-2","A3":"A-3","A4":"A-4","A5":"A-5","Custom":"CUSTOM","Response":"R-"},"CUSTOM","${id}",false,"${question}",false,${answers}]}`]);
+}
+
+export function websocketVotePoll(id:any,answerID:any){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"publishVote\",\"params\":[\"${id}\",[${answerID}]]}`]);
+}
+
+export function websocketStopPoll(){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"stopPoll\",\"params\":[]}`]);
+}
+
 export function websocketStopExternalVideo(){
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"stopWatchingExternalVideo\",\"params\":[]}`]);
 }
 
+export function websocketRaiseHand(internalUserID:any){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setEmojiStatus\",\"params\":[\"${internalUserID}\",\"raiseHand\"]}`]);
+}
+
+export function websocketStartPrivateChat(participant:IParticipant){
+    const pparams = [{'subscriptionId':ServerInfo.generateRandomId(17), ...participant,}];
+
+    const jsonString = JSON.stringify(pparams);
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"createGroupChat\",\"params\":${jsonString}}`]);
+}
+
+interface BreakoutRoomOptions {
+    rooms: IColumnBreakOutRoom[];
+    time: number;
+    freeRoom: boolean;
+    saveWhiteBoard: boolean;
+    saveSharedNote: boolean;
+    sendInvite: boolean;
+    roomName: string | undefined;
+}
+
+export function websocketCreateBreakoutRoom(options: BreakoutRoomOptions): void {
+    const { rooms, time, freeRoom, saveWhiteBoard, saveSharedNote, sendInvite, roomName } = options;
+
+    const record=true;
+
+    const roomParams: IBreakoutRoom[]=[
+    ...rooms.slice(1).map((item:IColumnBreakOutRoom, number)=>({
+        users: [],
+        name: `${roomName} (${item.title})`,
+        captureNotesFilename: `Room_${number}_Notes`,
+        captureSlidesFilename: `Room_${number}_Whiteboard`,
+        shortName: item.title,
+        isDefaultName: true,
+        freeJoin: freeRoom,
+        sequence: number+1,
+    }))
+    ]
+
+    const breakoutRoomParams = [roomParams, time, record, saveWhiteBoard, saveSharedNote, sendInvite];
+
+    const jsonString = JSON.stringify(breakoutRoomParams);
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"createBreakoutRoom\",\"params\":${jsonString}}`]);
+}
+
+export function websocketEndBreakoutRoom(){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"endAllBreakouts\",\"params\":[]}`]);
+}
+
+
+export function handleRequestPresentationUploadToken(uniqueID:string,file:File){
+    console.log("settingfunction: saving file to upload with ",uniqueID)
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"requestPresentationUploadToken\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${file?.name}\",\"${uniqueID}\"]}`])
+    websocketSend([`{\"msg\":\"sub\",\"id\":\"${ServerInfo.generateRandomId(17)}\",\"name\":\"presentation-upload-token\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${file?.name}\",\"${uniqueID}\"]}`])
+}
+
+const handlePresentationUploaded = (name:string,id:string)=>{
+    websocketSend([`{\"msg\":\"sub\",\"id\":\"Sx77Jii9BsBNh5GpG\",\"name\":\"presentation-upload-token\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${name}\",\"${id}\"]}`])
+}
+
+export function websocketRequest2JoinBreakoutRoom(breakoutId: string | null){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"requestJoinURL\",\"params\":[{\"breakoutId\":\"${breakoutId}\"}]}`]);
+}
+
 export function websocketLeaveMeeting(){
-    websocketSend(["{\"msg\":\"method\",\"id\":\"10\",\"method\":\"userLeftMeeting\",\"params\":[]}"])
-    websocketSend(["{\"msg\":\"method\",\"id\":\"11\",\"method\":\"setExitReason\",\"params\":[\"logout\"]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"userLeftMeeting\",\"params\":[]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setExitReason\",\"params\":[\"logout\"]}`])
     websocketSend(["{\"msg\":\"unsub\",\"id\":\"mSxKqr4q4tGPLvXyN\"}"])
     websocketSend(["{\"msg\":\"unsub\",\"id\":\"whbeWHhAFELhDD8Gn\"}"])
 }
 
 export function websocketEndMeeting(){
-    websocketSend(["{\"msg\":\"method\",\"id\":\"27\",\"method\":\"endMeeting\",\"params\":[]}"])
-    websocketSend(["{\"msg\":\"method\",\"id\":\"15\",\"method\":\"setExitReason\",\"params\":[\"meetingEnded\"]}"])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"endMeeting\",\"params\":[]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setExitReason\",\"params\":[\"meetingEnded\"]}`])
     websocketSend(["{\"msg\":\"unsub\",\"id\":\"8ADqKJeTX9KdLCY7u\"}"])
     websocketSend(["{\"msg\":\"unsub\",\"id\":\"ZapBdy6HAuBvCRvqy\"}"])
 }

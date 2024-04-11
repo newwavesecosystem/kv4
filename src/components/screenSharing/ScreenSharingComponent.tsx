@@ -37,7 +37,7 @@ function ScreenSharingComponent() {
   return (
     <div
       className={cn(
-        " m-auto h-[calc(100vh-128px)] max-w-2xl p-4 xl:max-w-6xl",
+        " m-auto h-[calc(100vh-128px)] max-w-2xl p-4 xl:max-w-6xl 2xl:max-w-none",
         connectedUsers.filter((user) => user.isMicOpen === true)?.length > 0 &&
           "mt-6 h-[calc(100vh-150px)]",
       )}
@@ -52,7 +52,7 @@ function ScreenSharingComponent() {
         autoPlay
         playsInline
         muted
-        className="h-full w-full flex-1 object-cover"
+        className="h-full w-full"
       >
         Your browser does not support video tag
       </video>

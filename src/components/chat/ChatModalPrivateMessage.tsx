@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, {ChangeEvent, useState} from "react";
 import { Sheet, SheetContent } from "../ui/sheet";
-import { useRecoilState } from "recoil";
-import { privateChatModalState } from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {authUserState, privateChatModalState} from "~/recoil/atom";
 import CloseIcon from "../icon/outline/CloseIcon";
 import InformationIcon from "../icon/outline/InformationIcon";
 import SingleChat from "./SingleChat";
@@ -9,18 +9,58 @@ import DummyChat from "~/data/dummyChat";
 import EmojiIcon from "../icon/outline/EmojiIcon";
 import SendIcon from "../icon/outline/SendIcon";
 import { cn } from "~/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import Picker from "@emoji-mart/react";
+import emojiData from "@emoji-mart/data";
+import { IEmojiMart } from "~/types";
+import {websocketSendMessage, websocketSendPrivateMessage, websocketStartTyping} from "~/server/Websocket";
 
 function ChatModalPrivateMessage() {
-  const [chatState, setChatState] = useRecoilState(privateChatModalState);
+  const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
   const [infoMessageStatus, setInfoMessageStatus] = useState(false);
+  const [message, setMessage] = useState("");
+  const user = useRecoilValue(authUserState);
+
+  const sendMsg = () => {
+    let sender = user?.meetingDetails?.internalUserID;
+    // let ishola = chatList;
+    console.log("sendingMsg");
+    // console.log(ishola);
+
+    if (message != "") {
+      console.log("sendingMsg : ", message);
+      websocketSendPrivateMessage(
+          sender,
+          message,
+          privateChatState.id
+      );
+      setMessage("");
+    }
+  };
+
+
+  const handleTyping = (e: ChangeEvent<HTMLInputElement>) => {
+    websocketStartTyping();
+    setMessage(e.target.value);
+  };
+
+  const handleKeyDown = (e: any) => {
+    if (e.key !== "Enter") return;
+    const value = e.target.value;
+    console.log("Well");
+    if (!message.trim()) return;
+    sendMsg();
+  };
+
+
   return (
     <Sheet
-      open={chatState.isActive}
+      open={privateChatState.isActive}
       onOpenChange={() => {
-        setChatState({
-          ...chatState,
+        setPrivateChatState({
+          ...privateChatState,
           isActive: false,
-          id: 0,
+          id: "0",
           users: [],
         });
       }}
@@ -56,7 +96,7 @@ function ChatModalPrivateMessage() {
             infoMessageStatus && "h-[calc(100vh-130px)]",
           )}
         >
-          {DummyChat.map((chat, index) => (
+          {privateChatState.chatMessages.filter((chat)=> chat.chatId == privateChatState.id).map((chat, index) => (
             <SingleChat key={index} chat={chat} />
           ))}
         </div>
@@ -67,11 +107,29 @@ function ChatModalPrivateMessage() {
               name=""
               className="w-full bg-transparent pl-3  focus:shadow-none focus:outline-none"
               id=""
-              placeholder="Send a message to everyone"
+              placeholder="Send a private message"
+              value={message}
+              onChange={handleTyping}
+              onKeyDown={handleKeyDown}
             />
             <div className="flex items-center gap-4">
-              <EmojiIcon className="h-6 w-6" />
-              <SendIcon className="h-6 w-6" />
+              <Popover>
+                <PopoverTrigger>
+                  <EmojiIcon className="h-6 w-6" />
+                </PopoverTrigger>
+                <PopoverContent
+                  className="mb-5 mr-3 w-full border-none bg-transparent p-0 md:mr-4"
+                  side="bottom"
+                >
+                  <Picker
+                    data={emojiData}
+                    onEmojiSelect={(e: IEmojiMart) => {
+                      setMessage(message + e.native);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+              <SendIcon onClick={sendMsg} className="h-6 w-6" />
             </div>
           </div>
         </div>

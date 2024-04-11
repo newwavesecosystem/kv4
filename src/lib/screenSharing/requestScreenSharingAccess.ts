@@ -1,11 +1,10 @@
 const requestScreenSharingAccess = async (): Promise<MediaStream | null> => {
   try {
-    const stream = await navigator.mediaDevices.getDisplayMedia({
+    return await navigator.mediaDevices.getDisplayMedia({
       video: true,
     });
-
-    return stream;
   } catch (error) {
+    console.log("Screensharing with error");
     return null;
   }
 };

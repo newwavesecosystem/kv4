@@ -69,56 +69,56 @@ const CameraComponent: React.FC = () => {
     };
 
     // Function to get the list of available cameras and microphones
-    const getDevices = async () => {
-      try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const cameras = devices.filter(
-          (device) => device.kind === "videoinput",
-        );
-        const microphones = devices.filter(
-          (device) => device.kind === "audioinput",
-        );
-        const speakers = devices.filter(
-          (device) => device.kind === "audiooutput",
-        );
-        setAvailableSpeakers(speakers);
-        setAvailableCameras(cameras);
-        setAvailableMicrophones(microphones);
-
-        setSelectedCamera(cameras[0]?.deviceId || "");
-        switchCamera(cameras[0]?.deviceId || "");
-
-        // set microphone
-        setSelectedMicrophone(microphones[0]?.deviceId || "");
-
-        // set speaker
-        setSelectedSpeaker(speakers[0]?.deviceId || "");
-      } catch (error) {
-        console.error("Error enumerating devices:", error);
-      }
-    };
+    // const getDevices = async () => {
+    //   try {
+    //     const devices = await navigator.mediaDevices.enumerateDevices();
+    //     const cameras = devices.filter(
+    //       (device) => device.kind === "videoinput",
+    //     );
+    //     const microphones = devices.filter(
+    //       (device) => device.kind === "audioinput",
+    //     );
+    //     const speakers = devices.filter(
+    //       (device) => device.kind === "audiooutput",
+    //     );
+    //     setAvailableSpeakers(speakers);
+    //     setAvailableCameras(cameras);
+    //     setAvailableMicrophones(microphones);
+    //
+    //     setSelectedCamera(cameras[0]?.deviceId || "");
+    //     switchCamera(cameras[0]?.deviceId || "");
+    //
+    //     // set microphone
+    //     setSelectedMicrophone(microphones[0]?.deviceId || "");
+    //
+    //     // set speaker
+    //     setSelectedSpeaker(speakers[0]?.deviceId || "");
+    //   } catch (error) {
+    //     console.error("Error enumerating devices:", error);
+    //   }
+    // };
 
     // Request camera and microphone access and enumerate available devices
-    const initCamera = async () => {
-      try {
-        setLoadingCamera(true);
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-        getDevices();
-      } catch (error) {
-        console.error("Error accessing camera:", error);
-      } finally {
-        setLoadingCamera(false);
-      }
-    };
+    // const initCamera = async () => {
+    //   try {
+    //     setLoadingCamera(true);
+    //     const stream = await navigator.mediaDevices.getUserMedia({
+    //       video: true,
+    //       audio: true,
+    //     });
+    //     if (videoRef.current) {
+    //       videoRef.current.srcObject = stream;
+    //     }
+    //     getDevices();
+    //   } catch (error) {
+    //     console.error("Error accessing camera:", error);
+    //   } finally {
+    //     setLoadingCamera(false);
+    //   }
+    // };
 
     // Initialize camera on component mount
-    initCamera();
+    // initCamera();
 
     // Cleanup on component unmount
     return () => {

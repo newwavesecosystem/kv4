@@ -1,15 +1,27 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import * as kurentoUtils from "kurento-utils";
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, connectionStatusState} from "~/recoil/atom";
+import {authUserState, connectionStatusState, microphoneStreamState, selectedSpeakersState} from "~/recoil/atom";
 
 
 const KurentoAudio = () => {
 
     const user = useRecoilValue(authUserState);
     const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
+
+    const [microphoneStream, setMicrophoneStream] = useRecoilState(
+        microphoneStreamState,
+    );
+
+    const [selectedSpeaker, setSelectedSpeaker] = useRecoilState(
+        selectedSpeakersState,
+    );
+
+
     const [audioState, setAudioState] = useState(false);
+
+    const audioRef = useRef<HTMLAudioElement>(null);
 
     let ws: WebSocket | null = null;
     let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
@@ -21,16 +33,40 @@ const KurentoAudio = () => {
     }
 
     useEffect(() => {
+        const changeAudioOutput = async () => {
+            try {
+                if (audioRef.current) {
+                    // Use type assertion to tell TypeScript that audioRef.current has the setSinkId method
+                    (audioRef.current as any).setSinkId(selectedSpeaker?.deviceId);
+                    console.log(`Audio output set to: ${selectedSpeaker?.label}`);
+                    console.log('Audio output set successfully.');
+                } else {
+                    console.error('Audio element not found.');
+                }
+            } catch (error) {
+                console.error('Error changing audio output:', error);
+            }
+        };
 
-        if(!audioState){
-            console.log("websocket_connection is active")
+        // Change the audio output when the selectedSpeaker change
+        changeAudioOutput();
+
+    },[selectedSpeaker])
+
+
+    useEffect(() => {
+
+        if(!connectionStatus?.audio_connection && connectionStatus?.websocket_connection && user?.sessiontoken !=null && microphoneStream!=null ){
+            console.log("kurentoAudio websocket_connection is active")
+            console.log("kurentoAudio microphoneStream is set")
             ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
         }
+
         if (ws != null) {
 
             // Add event listeners for various socket events
             ws.onopen = () => {
-                console.log('Kurento audio Socket connection established');
+                console.log('kurentoAudio Socket connection established');
                 setAudioState(true);
                 setTimeout(()=>{
                     startProcess();
@@ -40,29 +76,29 @@ const KurentoAudio = () => {
 
             ws.onmessage = (message) => {
                 let parsedMessage = JSON.parse(message.data);
-                console.info('Kurento Received message: ' + message.data);
-                console.log("Kurento Websocket");
+                console.info('kurentoAudio Received message: ' + message.data);
+                console.log("kurentoAudio Websocket");
                 console.log(parsedMessage.id);
                 switch (parsedMessage.id) {
                     case 'startResponse':
                         startResponse(parsedMessage);
                         break;
                     case 'error':
-                        onError('Error message from server: ' + parsedMessage.message);
+                        onError('kurentoAudio Error message from server: ' + parsedMessage.message);
                         break;
                     case 'iceCandidate':
                         console.log("iceCandidate");
                         webRtcPeer?.addIceCandidate(parsedMessage.candidate);
                         break;
                     case 'webRTCAudioSuccess':
-                        console.log("Audio Connected Successfully");
+                        console.log("kurentoAudio Audio Connected Successfully");
                         setConnection({
                             websocket_connection: true,
                             audio_connection:true
                         })
                         break;
                     case 'pong':
-                        console.log("Active connection");
+                        console.log("kurentoAudio Active connection");
                         break;
                     default:
                         onError(`Unrecognized message: ${parsedMessage}`);
@@ -70,26 +106,28 @@ const KurentoAudio = () => {
             };
 
             ws.onclose = () => {
-                console.log('Kurento Socket connection closed');
-                // setConnection({
-                //     audio_connection:false
-                // })
+                console.log('kurentoAudio Socket connection closed');
+                setConnection({
+                    websocket_connection: true,
+                    audio_connection:false
+                })
             };
         }
     // },[ ])
-    },[connectionStatus?.websocket_connection])
+    },[connectionStatus?.websocket_connection, connectionStatus?.audio_connection, microphoneStream])
 
     function startProcess() {
         console.log('Creating WebRtcPeer and generating local sdp offer ...');
 
         const audioElement = document.getElementById('audioElement');
         let constraints = {
-            audio: true,
+            audio: false,
             video: false
         };
 
         let options = {
             remoteVideo:audioElement,
+            audioStream:microphoneStream,
             onicecandidate: onIceCandidate,
             mediaConstraints: constraints
         }
@@ -99,11 +137,6 @@ const KurentoAudio = () => {
             this.generateOffer(onOffer);
         });
 
-
-        // webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function (error) {
-        //     if (error) return onError(error)
-        //     this.generateOffer(onOffer)
-        // });
     }
 
     function onOffer(error:any, offerSdp:any) {
@@ -143,7 +176,7 @@ const KurentoAudio = () => {
 
     return (
         <div style={{height: 1}}>
-            <audio id="audioElement" autoPlay/>
+            <audio ref={audioRef} id="audioElement" autoPlay/>
         </div>
     )
 

@@ -145,7 +145,19 @@ export default function PreSignIn() {
                       return;
                     }
 
-                    const mic = await requestMicrophoneAccess();
+                    const devices = await navigator.mediaDevices.enumerateDevices();
+                    const desiredMic = devices.filter((device) => device.kind === "audioinput");
+
+                    if(desiredMic.length < 1){
+                      toast({
+                        variant: "destructive",
+                        title: "Uh oh! Something went wrong.",
+                        description: `No microphone device detected. Kindly check if you need to grant permission`,
+                      });
+                      return;
+                    }
+
+                    const mic = await requestMicrophoneAccess(desiredMic[0]);
                     if (mic) {
                       setMicrophoneStream(mic);
                       setMicState(!micState);
@@ -176,7 +188,21 @@ export default function PreSignIn() {
                       setVideoState(!videoState);
                       return;
                     }
-                    const video = await requestCameraAccess();
+
+                    const devices = await navigator.mediaDevices.enumerateDevices();
+                    const desiredCamera = devices.filter((device) => device.kind === "videoinput");
+
+                    if(desiredCamera.length < 1){
+                      toast({
+                        variant: "destructive",
+                        title: "Uh oh! Something went wrong.",
+                        description: `No camera device detected. Kindly check if you need to grant permission`,
+                      });
+                      return;
+                    }
+
+                    const video = await requestCameraAccess(desiredCamera[0]);
+
                     if (video) {
                       setCameraSteam(video);
                       setVideoState(!videoState);

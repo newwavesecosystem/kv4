@@ -1,6 +1,15 @@
 import { atom } from "recoil";
+// import { UsersData } from "~/data/UsersData";
 import settingsTabData from "~/data/settingsTabData";
-import {IConnectedUser, IMeetingDetails, IParticipant} from "~/types";
+import {
+  IColumnBreakOutRoom,
+  IConnectedUser,
+  IMeetingDetails,
+  IParticipant,
+  IWaitingUser,
+  IUserBreakOutRoom,
+  IBreakoutRoom
+} from "~/types";
 
 export const authUserState = atom<{
   id: number;
@@ -9,10 +18,15 @@ export const authUserState = atom<{
   passCode: string;
   meetingId: string;
   sessiontoken: string;
-  meetingDetails: IMeetingDetails|null;
+  meetingDetails: IMeetingDetails | null;
 } | null>({
   key: "authUserState",
   default: null,
+});
+
+export const newMessage = atom<boolean>({
+  key: "newMessage",
+  default: false,
 });
 
 export const connectionStatusState = atom<{
@@ -38,14 +52,23 @@ export const participantCameraListState = atom<any>({
   default: [],
 });
 
-
 export const chatListState = atom<any>({
   key: "chatListState",
   default: [],
 });
 
+export const kaiChatListState = atom<any>({
+  key: "kaiChatListState",
+  default: [],
+});
+
 export const chatTypingListState = atom<any>({
   key: "chatTypingListState",
+  default: [],
+});
+
+export const waitingRoomUsersState = atom<IWaitingUser[]>({
+  key: "waitingRoomUsersState",
   default: [],
 });
 
@@ -75,9 +98,23 @@ export const leaveRoomCallModalState = atom<boolean>({
   default: false,
 });
 
-export const postLeaveMeetingState = atom<boolean>({
+export const postLeaveMeetingState = atom<{
+  isLeave: boolean;
+  isEndCall: boolean;
+  isLeaveRoomCall: boolean;
+  isKicked: boolean;
+  isSessionExpired: boolean;
+  isOthers: boolean;
+}>({
   key: "postLeaveMeetingState",
-  default: false,
+  default: {
+    isLeave: false,
+    isEndCall: false,
+    isKicked: false,
+    isLeaveRoomCall: false,
+    isSessionExpired: false,
+    isOthers: false,
+  },
 });
 
 export const cameraStreamState = atom<MediaStream | null>({
@@ -154,6 +191,25 @@ export const currentTabState = atom<{
   default: settingsTabData[0],
 });
 
+export const presentationSlideState = atom<{
+  pages: [];
+  current: boolean;
+  downloadable: boolean;
+  name: String;
+  podId: String;
+  id: String;
+}>({
+  key: "presentationSlideState",
+  default: {
+    pages: [],
+    current: false,
+    downloadable: false,
+    name: "",
+    podId: "",
+    id: "",
+  },
+});
+
 export const recordingModalState = atom<{
   isActive: boolean;
   step: number;
@@ -188,7 +244,7 @@ export const removeUserModalState = atom<{
   key: "removeUserModalState",
   default: {
     isActive: false,
-    userId: '0',
+    userId: "0",
     userFullName: "",
     isBan: false,
   },
@@ -196,18 +252,39 @@ export const removeUserModalState = atom<{
 
 export const privateChatModalState = atom<{
   isActive: boolean;
-  id: number;
+  id: string;
   users: {
-    id: number;
+    id: string;
     fullName: string;
     email: string;
   }[];
+  chatRooms:{
+    "chatId": string,
+    "meetingId": string,
+    "access": string,
+    "createdBy": string,
+    "participants": {
+      "id": string,
+      "name": string,
+      "role": string
+    }[],
+    "users": string []
+  }[]
+  chatMessages:{
+    id: string,
+    name: string,
+    message: string,
+    chatId: string,
+    time: Date,
+  }[]
 }>({
   key: "privateChatModalState",
   default: {
     isActive: false,
-    id: 0,
+    id: "0",
     users: [],
+    chatRooms: [],
+    chatMessages: [],
   },
 });
 
@@ -260,14 +337,80 @@ export const donationModalState = atom<{
   },
 });
 
+// const defaultUsers: IUserBreakOutRoom[] = [
+//   ...UsersData.map((user) => ({
+//     id: user.id,
+//     columnId: "users",
+//     name: user.name,
+//     userId: user.name,
+//   })),
+// ];
+
+export const fileUploadModalState = atom<{
+  step: number;
+  isMinimized: boolean;
+  isFull: boolean;
+  files: File[];
+  filesToUpload: string[];
+  filesUploadInProgress: any[];
+}>({
+  key: "fileUploadModalState",
+  default: {
+    step: 0,
+    isMinimized: false,
+    isFull: false,
+    files: [],
+    filesToUpload: [],
+    filesUploadInProgress: [],
+  },
+});
+
+export const breakOutModalState = atom<{
+  isActive: boolean;
+  step: number;
+  rooms: IColumnBreakOutRoom[];
+  users: IUserBreakOutRoom[];
+  isAllowUsersToChooseRooms: boolean;
+  isSendInvitationToAssignedModerators: boolean;
+  duration: number;
+  isSaveWhiteBoard: boolean;
+  isSaveSharedNotes: boolean;
+  createdAt: Date | null;
+  creatorName: string;
+  creatorId: number;
+  isEnded: boolean;
+  activatedAt: Date | null;
+  endedAt: Date | null;
+}>({
+  key: "breakOutModalState",
+  default: {
+    step: 0,
+    isActive: false,
+    rooms: [],
+    users: [],
+    isAllowUsersToChooseRooms: true,
+    isSendInvitationToAssignedModerators: false,
+    duration: 15,
+    isSaveWhiteBoard: false,
+    isSaveSharedNotes: false,
+    createdAt: null,
+    creatorName: "",
+    creatorId: 0,
+    isEnded: false,
+    activatedAt: null,
+    endedAt: null,
+  },
+});
+
 export const pollModalState = atom<{
   isActive: boolean;
   isEnded: boolean;
   isEdit: boolean;
+  isUserHost: boolean;
   step: number;
   pollQuestion: string;
   pollCreatorName: string;
-  pollCreatorId: number;
+  pollCreatorId: string;
   pollCreatedAt: Date;
   pollOptions: {
     id: number;
@@ -276,9 +419,9 @@ export const pollModalState = atom<{
   }[];
   totalVotes: number;
   usersVoted: {
-    id: number;
-    fullName: string | null;
-    email: string | null;
+    id: string | null | undefined;
+    fullName: string | null | undefined;
+    email: string | null | undefined;
     votedOption: string;
     votedOptionId: number;
   }[];
@@ -289,9 +432,10 @@ export const pollModalState = atom<{
     isActive: false,
     isEnded: false,
     isEdit: false,
+    isUserHost: false,
     pollQuestion: "",
     pollCreatorName: "",
-    pollCreatorId: 0,
+    pollCreatorId: "0",
     pollCreatedAt: new Date(),
     pollOptions: [],
     totalVotes: 0,
@@ -314,17 +458,17 @@ export const availableSpeakersState = atom<Array<MediaDeviceInfo>>({
   default: [],
 });
 
-export const selectedCameraState = atom<string | null>({
+export const selectedCameraState = atom<MediaDeviceInfo | null>({
   key: "selectedCameraState",
   default: null,
 });
 
-export const selectedMicrophoneState = atom<string | null>({
+export const selectedMicrophoneState = atom<MediaDeviceInfo | null>({
   key: "selectedMicrophoneState",
   default: null,
 });
 
-export const selectedSpeakersState = atom<string | null>({
+export const selectedSpeakersState = atom<MediaDeviceInfo | null>({
   key: "selectedSpeakersState",
   default: null,
 });
@@ -332,4 +476,26 @@ export const selectedSpeakersState = atom<string | null>({
 export const connectedUsersState = atom<IConnectedUser[]>({
   key: "connectedUsersState",
   default: [],
+});
+
+export const pinnedUsersState = atom<IParticipant[]>({
+  key: "pinnedUsersState",
+  default: [],
+});
+
+export const LayoutSettingsState = atom<{
+  speakerMode: boolean;
+  audioMode: boolean;
+  maxTiles: number[];
+  layout: string;
+  layoutName: string;
+}>({
+  key: "LayoutSettingsState",
+  default: {
+    speakerMode: false,
+    audioMode: false,
+    maxTiles: [6],
+    layout: "1",
+    layoutName: "",
+  },
 });
