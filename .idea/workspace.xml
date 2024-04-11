@@ -42,6 +42,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="samji" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GithubDefaultAccount">
@@ -61,7 +66,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\odeji\WebstormProjects\kv4\node_modules\prettier" />
-    <property name="ts.external.directory.path" value="C:\Users\odeji\WebstormProjects\kv4\node_modules\typescript\lib" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2020.2.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -126,7 +131,7 @@
       <workItem from="1710447645023" duration="612000" />
       <workItem from="1710799614630" duration="30000" />
       <workItem from="1711922536572" duration="3929000" />
-      <workItem from="1712404825789" duration="6091000" />
+      <workItem from="1712404825789" duration="6475000" />
     </task>
     <task id="LOCAL-00001" summary="push">
       <created>1701028942152</created>
@@ -435,22 +440,22 @@
       <screen x="0" y="0" width="1366" height="720" />
     </state>
     <state x="100" y="100" width="1166" height="520" key="DiffContextDialog/0.0.1366.720@0.0.1366.720" timestamp="1707892531582" />
-    <state width="1323" height="157" key="GridCell.Tab.0.bottom" timestamp="1712522766597">
+    <state width="1323" height="157" key="GridCell.Tab.0.bottom" timestamp="1712822825036">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="157" key="GridCell.Tab.0.bottom/0.0.1366.720@0.0.1366.720" timestamp="1712522766597" />
-    <state width="1323" height="157" key="GridCell.Tab.0.center" timestamp="1712522766596">
+    <state width="1323" height="157" key="GridCell.Tab.0.bottom/0.0.1366.720@0.0.1366.720" timestamp="1712822825036" />
+    <state width="1323" height="157" key="GridCell.Tab.0.center" timestamp="1712822825035">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="157" key="GridCell.Tab.0.center/0.0.1366.720@0.0.1366.720" timestamp="1712522766596" />
-    <state width="1323" height="157" key="GridCell.Tab.0.left" timestamp="1712522766596">
+    <state width="1323" height="157" key="GridCell.Tab.0.center/0.0.1366.720@0.0.1366.720" timestamp="1712822825035" />
+    <state width="1323" height="157" key="GridCell.Tab.0.left" timestamp="1712822825035">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="157" key="GridCell.Tab.0.left/0.0.1366.720@0.0.1366.720" timestamp="1712522766596" />
-    <state width="1323" height="157" key="GridCell.Tab.0.right" timestamp="1712522766596">
+    <state width="1323" height="157" key="GridCell.Tab.0.left/0.0.1366.720@0.0.1366.720" timestamp="1712822825035" />
+    <state width="1323" height="157" key="GridCell.Tab.0.right" timestamp="1712822825036">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="157" key="GridCell.Tab.0.right/0.0.1366.720@0.0.1366.720" timestamp="1712522766596" />
+    <state width="1323" height="157" key="GridCell.Tab.0.right/0.0.1366.720@0.0.1366.720" timestamp="1712822825036" />
     <state x="18" y="54" width="1219" height="613" key="MergeDialog" timestamp="1707892381622">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
@@ -489,17 +494,17 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/recoil/atom.ts</url>
-          <line>38</line>
+          <line>10</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/layouts/Authenticated.tsx</url>
-          <line>124</line>
+          <line>101</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/chat/ChatModal.tsx</url>
-          <line>185</line>
+          <line>165</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
