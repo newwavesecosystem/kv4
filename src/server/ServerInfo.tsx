@@ -1,6 +1,6 @@
 export const laravelAppURL = "https://dev.konn3ct.ng";
-export const extRegisterURL = "https://k40.konn3ct.ng";
-export const translateURL = "https://megatongueapi.staging.5starcompany.com.ng/api/";
+export const extRegisterURL = "https://bbb-sam-bridge.vercel.app";
+export const translateURL = "https://newmegatongueapi.staging.5starcompany.com.ng/api";
 export const engineBaseURL = "meet.konn3ct.ng";
 export const tokenValidationURL = `https://${engineBaseURL}/bigbluebutton/api/enter`;
 export const joinURL = `http://127.0.0.1:8000/api/k4/`;
@@ -8,6 +8,7 @@ export const sfuURL = `wss://${engineBaseURL}/bbb-webrtc-sfu`;
 export const websocketURL = `https://${engineBaseURL}/html5client/sockjs`;
 export const aiBotURL = `${extRegisterURL}/ai-bot-message`;
 export const aiEnginesURL = `https://kv4-ai.vercel.app/konn3ctai`;
+export const captionURL = 'https://k4caption.konn3ct.ng';
 // export const aiEnginesURL = `https://k4aiengine.konn3ct.ng/konn3ctai`;
 // export const aiEnginesURL = `http://localhost:3002/konn3ctai`;
 

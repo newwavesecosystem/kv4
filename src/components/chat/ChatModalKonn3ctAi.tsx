@@ -49,7 +49,7 @@ function ChatModalKonn3ctAi() {
 
   useEffect(() => {
     if(user?.meetingDetails?.meetingID != undefined){
-      fetchBotMessages();
+      // fetchBotMessages();
     }
   },[user?.meetingDetails?.meetingID]);
 

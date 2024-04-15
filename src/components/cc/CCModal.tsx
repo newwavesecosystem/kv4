@@ -13,14 +13,20 @@ import SpeechRecognition, {
 import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-// import io from 'socket.io-client';
 import socket from '../../server/socket';
+// import {io, Socket} from 'socket.io-client';
+// import {captionURL} from "~/server/ServerInfo";
 
 function CCModal() {
   const [ccModal, setCCModal] = useRecoilState(ccModalState);
   const [ccLanguages, setCCLanguages] = useState(CCLanguageData);
   const [ccLanguageSearch, setCCLanguageSearch] = useState("");
   const [isCCLanguageModalOpen, setIsCCLanguageModalOpen] = useState(false);
+  const [transcriptTranslated, setTranscriptTranslated] = useState("");
+  const user = useRecoilValue(authUserState);
+
+  // Define the socket variable with the Socket type
+  // const socket: Socket = io(captionURL);
 
   const {
     transcript,
@@ -29,8 +35,6 @@ function CCModal() {
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
-  const [transcriptTranslated, setTranscriptTranslated] = useState("");
-  const user = useRecoilValue(authUserState);
 
   const broadcastCaption=(text:any)=>{
     console.log("send_captions", text); // world
@@ -46,28 +50,34 @@ function CCModal() {
   useEffect(() => {
     // client-side
     socket.on("connect", () => {
-      console.log("Socket Connected"); // x8WIv7-mJelg7on_ALbx
-      console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+      console.log("cSocket Connected",socket.id); // x8WIv7-mJelg7on_ALbx
 
       if(user?.meetingDetails?.meetingID != null){
-        console.log("join_room");
+        console.log("cSocket join_room",user?.meetingDetails?.meetingID);
         socket.emit("join_room", user?.meetingDetails?.meetingID);
       }
 
     });
 
     socket.on("disconnect", ( ) => {
-      console.log(socket.id); // undefined
+      console.log("cSocket disconnect",socket.id); // undefined
     });
 
     socket.on("receive_captions", (arg) => {
-      console.log("receive_captions", arg); // world
-      console.log("receive_captions", arg.user); // world
+      console.log("cSocket receive_captions", arg); // world
+      console.log("cSocket receive_captions", arg.user); // world
 
       let displayText=`${arg.user}: ${arg.text}`;
 
-      console.log("receive_captions displayText", displayText); // world
-      setTranscriptTranslated(`${transcriptTranslated} \n ${displayText}`);
+      console.log("cSocket receive_captions displayText", displayText); // world
+
+      if (ccModal.language != "en") {
+        console.log("cSocket working on translation ",ccModal.language);
+        translate(arg.text,arg.user).then();
+      }else{
+        setTranscriptTranslated(`${transcriptTranslated} \n ${displayText}`);
+      }
+
     });
 
     // return () => {
@@ -79,31 +89,26 @@ function CCModal() {
 
   // When a new transcript is received, add it to the lines array
   useEffect(() => {
-    console.log("transcript useEffect ");
+    console.log("cSocket transcript useEffect ");
     SpeechRecognition.startListening({ continuous: true });
 
     if (transcript) {
       setTimeout(resetTranscript,30000)
       broadcastCaption(transcript);
-      if (ccModal.language != "en") {
-        console.log("working on translation");
-        translate().then();
-      } else {
-        setTranscriptTranslated(transcript);
-      }
+      setTranscriptTranslated(`Me: ${transcript}`);
     }
   }, [transcript]);
 
-  async function translate() {
-    console.log("Translate API");
+  async function translate(text,user) {
+    console.log("cSocket Translate API - ",ccModal.language);
     // let data = JSON.stringify({
     //   message: transcript,
     //   target: ccModal.language,
     // });
 
     let data = JSON.stringify({
-      "q": transcript,
-      "source": "en",
+      "q": text,
+      "source": "auto",
       "target": ccModal.language,
       "format": "text"
     });
@@ -111,7 +116,7 @@ function CCModal() {
     const response = await axios({
       method: "post",
       maxBodyLength: Infinity,
-      url: `${ServerInfo.extRegisterURL}/translator`,
+      url: `${ServerInfo.translateURL}/translator`,
       headers: {
         apikey: "AJSAel5d4cSwAqopPs19LEIqZ42kX1TEnnUJRpb6",
         "Content-Type": "application/json",
@@ -123,7 +128,13 @@ function CCModal() {
 
     console.log("response", responseData);
 
-    setTranscriptTranslated(responseData?.data);
+    // setTranscriptTranslated(responseData?.data);
+
+    let displayText=`${user}: ${responseData?.message}`;
+
+    console.log("cSocket receive_captions with translation displayText", displayText); // world
+
+    setTranscriptTranslated(displayText);
 
     setTimeout(resetTranscript, 30000);
   }
@@ -199,10 +210,12 @@ function CCModal() {
                         .map((language, index) => (
                           <button
                             onClick={() => {
+                              console.log("cSocket language",language.shortCode)
                               setCCModal((prev) => ({
                                 ...prev,
                                 language: language.shortCode,
                               }));
+                              console.log("cSocket ccModal ",ccModal.language)
                               setIsCCLanguageModalOpen(false);
                             }}
                             key={index}
