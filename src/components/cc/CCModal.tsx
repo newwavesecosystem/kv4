@@ -96,15 +96,22 @@ function CCModal() {
 
   async function translate() {
     console.log("Translate API");
+    // let data = JSON.stringify({
+    //   message: transcript,
+    //   target: ccModal.language,
+    // });
+
     let data = JSON.stringify({
-      message: transcript,
-      target: ccModal.language,
+      "q": transcript,
+      "source": "en",
+      "target": ccModal.language,
+      "format": "text"
     });
 
     const response = await axios({
       method: "post",
       maxBodyLength: Infinity,
-      url: `${ServerInfo.extRegisterURL}/translator/w_wuwuuww`,
+      url: `${ServerInfo.extRegisterURL}/translator`,
       headers: {
         apikey: "AJSAel5d4cSwAqopPs19LEIqZ42kX1TEnnUJRpb6",
         "Content-Type": "application/json",

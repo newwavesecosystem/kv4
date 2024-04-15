@@ -3,9 +3,9 @@ const requestMicrophoneAccess = async (desiredMic: MediaDeviceInfo|undefined): P
     return await navigator.mediaDevices.getUserMedia({
       audio: {
           deviceId: {exact: desiredMic?.deviceId},
-          autoGainControl: false,
-          noiseSuppression: true,
-          echoCancellation: true
+          // autoGainControl: false,
+          // noiseSuppression: true,
+          // echoCancellation: true
         },
     });
   } catch (error) {

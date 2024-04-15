@@ -1,5 +1,6 @@
 export const laravelAppURL = "https://dev.konn3ct.ng";
 export const extRegisterURL = "https://k40.konn3ct.ng";
+export const translateURL = "https://megatongueapi.staging.5starcompany.com.ng/api/";
 export const engineBaseURL = "meet.konn3ct.ng";
 export const tokenValidationURL = `https://${engineBaseURL}/bigbluebutton/api/enter`;
 export const joinURL = `http://127.0.0.1:8000/api/k4/`;
