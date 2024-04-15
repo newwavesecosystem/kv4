@@ -6,7 +6,7 @@ export const joinURL = `http://127.0.0.1:8000/api/k4/`;
 export const sfuURL = `wss://${engineBaseURL}/bbb-webrtc-sfu`;
 export const websocketURL = `https://${engineBaseURL}/html5client/sockjs`;
 export const aiBotURL = `${extRegisterURL}/ai-bot-message`;
-export const aiEnginesURL = `https://kv4-captions.vercel.app/konn3ctai`;
+export const aiEnginesURL = `https://kv4-ai.vercel.app/konn3ctai`;
 // export const aiEnginesURL = `https://k4aiengine.konn3ct.ng/konn3ctai`;
 // export const aiEnginesURL = `http://localhost:3002/konn3ctai`;
 
