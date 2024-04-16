@@ -99,7 +99,7 @@ function CCModal() {
     }
   }, [transcript]);
 
-  async function translate(text,user) {
+  async function translate(text:string,user:string) {
     console.log("cSocket Translate API - ",ccModal.language);
     // let data = JSON.stringify({
     //   message: transcript,
