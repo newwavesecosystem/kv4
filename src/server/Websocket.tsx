@@ -685,9 +685,9 @@ const Websocket = () => {
         }
 
         if(voiceProp != null){
-            // if(!voiceProp.muteOnStart){
-            //     setMicState(voiceProp.muteOnStart);
-            // }
+            if(!voiceProp.muteOnStart){
+                setMicState(voiceProp.muteOnStart);
+            }
 
         }
     }
@@ -891,6 +891,8 @@ const Websocket = () => {
             if (item.id === id) {
 
                 if(item.intId == user?.meetingDetails?.internalUserID){
+                    console.log('micState',id)
+                    console.log('micState',state)
                     setMicState(state);
                 }
                 return {...item, muted: state};
