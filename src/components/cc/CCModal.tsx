@@ -13,9 +13,9 @@ import SpeechRecognition, {
 import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import socket from '../../server/socket';
-// import {io, Socket} from 'socket.io-client';
-// import {captionURL} from "~/server/ServerInfo";
+// import socket from '../../server/socket';
+import {io, Socket} from 'socket.io-client';
+import {captionURL} from "~/server/ServerInfo";
 
 function CCModal() {
   const [ccModal, setCCModal] = useRecoilState(ccModalState);
@@ -26,7 +26,7 @@ function CCModal() {
   const user = useRecoilValue(authUserState);
 
   // Define the socket variable with the Socket type
-  // const socket: Socket = io(captionURL);
+  var socket : any = null;
 
   const {
     transcript,
@@ -38,7 +38,7 @@ function CCModal() {
 
   const broadcastCaption=(text:any)=>{
     console.log("send_captions", text); // world
-    socket.emit("send_captions", {
+    socket?.emit("send_captions", {
       "text": text,
       "user": user?.meetingDetails?.fullname,
       "meetingID": user?.meetingDetails?.meetingID,
@@ -48,6 +48,13 @@ function CCModal() {
 
 
   useEffect(() => {
+    // Define the socket variable with the Socket type
+    var socket: Socket = io(captionURL);
+
+    window.onbeforeunload = function(e) {
+      socket.disconnect();
+    };
+
     // client-side
     socket.on("connect", () => {
       console.log("cSocket Connected",socket.id); // x8WIv7-mJelg7on_ALbx
@@ -70,6 +77,7 @@ function CCModal() {
       let displayText=`${arg.user}: ${arg.text}`;
 
       console.log("cSocket receive_captions displayText", displayText); // world
+      console.log("cSocket translation ",ccModal.language);
 
       if (ccModal.language != "en") {
         console.log("cSocket working on translation ",ccModal.language);
@@ -85,7 +93,7 @@ function CCModal() {
     //   socket.disconnect();
     // };
 
-  }, []);
+  }, [ccModal.language]);
 
   // When a new transcript is received, add it to the lines array
   useEffect(() => {
@@ -211,6 +219,8 @@ function CCModal() {
                           <button
                             onClick={() => {
                               console.log("cSocket language",language.shortCode)
+                              socket?.disconnect();
+                              socket?.close();
                               setCCModal((prev) => ({
                                 ...prev,
                                 language: language.shortCode,

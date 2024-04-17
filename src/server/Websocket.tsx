@@ -685,9 +685,9 @@ const Websocket = () => {
         }
 
         if(voiceProp != null){
-            if(!voiceProp.muteOnStart){
-                setMicState(voiceProp.muteOnStart);
-            }
+            // if(!voiceProp.muteOnStart){
+            //     setMicState(voiceProp.muteOnStart);
+            // }
 
         }
     }
@@ -890,9 +890,9 @@ const Websocket = () => {
         const updatedArray = participantTalkingList?.map((item:any) => {
             if (item.id === id) {
 
-                // if(item.intId == user?.meetingDetails?.internalUserID){
-                //     setMicState(!micState);
-                // }
+                if(item.intId == user?.meetingDetails?.internalUserID){
+                    setMicState(state);
+                }
                 return {...item, muted: state};
             }
             return item;
