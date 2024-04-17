@@ -511,7 +511,7 @@ function PostSignIn() {
           {user?.sessiontoken != '' && <Websocket/>}
           <KurentoAudio/>
           <KurentoVideo/>
-          {user?.meetingDetails?.meetingID!=null &&<CCModal />}
+          {/*{user?.meetingDetails?.meetingID!=null &&<CCModal />}*/}
           {participantCameraList.filter((eachItem: any) => eachItem?.intId != user?.meetingDetails?.internalUserID).map((cItem:IParticipantCamera,index:number)=>{
               return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>
           })}

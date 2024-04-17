@@ -122,6 +122,11 @@ function BreakOutModalCreate() {
                     sendInvite: breakOutRoomState.isSendInvitationToAssignedModerators,
                     roomName: user?.meetingDetails?.confname
                   });
+
+                  setBreakOutRoomState((prev) => ({
+                    ...prev,
+                    rooms: [],
+                  }));
                 }}
                 className="rounded-md bg-a11y/20 px-4 py-1 disabled:opacity-50 md:px-6"
               >

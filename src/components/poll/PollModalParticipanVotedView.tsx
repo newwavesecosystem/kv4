@@ -1,13 +1,12 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import { connectedUsersState, pollModalState } from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {connectedUsersState, participantListState, pollModalState} from "~/recoil/atom";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { cn } from "~/lib/utils";
 
 function PollModalParticipanVotedView() {
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
-  const [connectedUsers, setConnectedUsers] =
-    useRecoilState(connectedUsersState);
+  const participantList = useRecoilValue(participantListState);
   const hasVoted = pollModal.usersVoted.find((user) => user.id === user?.id);
 
   const percentage = pollModal.pollOptions.map((option) => {
@@ -24,6 +23,17 @@ function PollModalParticipanVotedView() {
         setPollModal((prev) => ({
           ...prev,
           step: 0,
+          isActive: false,
+          isEnded: false,
+          isEdit: false,
+          isUserHost: false,
+          pollQuestion: "",
+          pollCreatorName: "",
+          pollCreatorId: "0",
+          pollCreatedAt: new Date(),
+          pollOptions: [],
+          totalVotes: 0,
+          usersVoted: [],
         }));
       }}
     >
@@ -32,7 +42,7 @@ function PollModalParticipanVotedView() {
           <div className="flex flex-col">
             <span className="font-bold">Polls</span>
             <span className="text-xs">
-              Created by {pollModal.pollCreatorName}
+              Result of Poll Conducted
             </span>
           </div>
           <p className="my-2 text-center capitalize">
@@ -60,7 +70,7 @@ function PollModalParticipanVotedView() {
           ))}
         </div>
         <span className="my-5">
-          {pollModal.totalVotes} votes of {connectedUsers.length}
+          {pollModal.totalVotes} votes of {participantList.length - 1}
         </span>
       </DialogContent>
     </Dialog>

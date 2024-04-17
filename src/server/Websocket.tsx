@@ -304,6 +304,35 @@ const Websocket = () => {
         }
 
         if(chatId == "MAIN-PUBLIC-GROUP-CHAT"){
+            if(id == "SYSTEM_MESSAGE-PUBLIC_CHAT_POLL_RESULT"){
+                //{ "msg": "added", "collection": "group-chat-msg", "id": "RnpLNxM9dm6ScSDYk", "fields": { "id": "SYSTEM_MESSAGE-PUBLIC_CHAT_POLL_RESULT", "timestamp": 1713358122001, "correlationId": "SYSTEM_MESSAGE-1713358122001", "sender": "SYSTEM_MESSAGE", "message": "", "extra": { "type": "poll", "pollResultData": { "id": "5522506823d42b15259f1a751d5ff6a1e23c271c-1713354101372/1/1713358049905", "questionType": "CUSTOM", "questionText": "What is ur name?", "answers": [ { "id": 0, "key": "Samji", "numVotes": 1 }, { "id": 1, "key": "Sam", "numVotes": 1 }, { "id": 2, "key": "Test", "numVotes": 0 } ], "numRespondents": 2, "numResponders": 2 } }, "meetingId": "90af7edbfd8a161a7f711504a114aaf5bf597f9f-1713354101371", "chatId": "MAIN-PUBLIC-GROUP-CHAT" } }
+
+                const {pollResultData} = obj.fields.extra;
+
+                setPollModal((prev) => ({
+                    ...prev,
+                    step: 2,
+                    isActive: false,
+                    isEnded: true,
+                    isEdit: false,
+                    isUserHost: false,
+                    pollQuestion: pollResultData.questionText,
+                    pollCreatorName: "",
+                    pollCreatorId: "0",
+                    pollCreatedAt: new Date(),
+                    totalVotes: pollResultData.numRespondents,
+                    usersVoted: [],
+                    pollOptions: pollResultData.answers.map((option:any, index:number) => {
+                        return {
+                            id: option.id,
+                            option: option.key,
+                            votes: option.numVotes,
+                        };
+                    }),
+                }));
+                return;
+            }
+
             addMessage(senderName,message,timestamp,id);
             return;
         }
@@ -521,6 +550,7 @@ const Websocket = () => {
                 pollCreatedAt: new Date(),
                 pollCreatorId: id,
                 pollCreatorName: findUserNamefromUserId(requester),
+                isUserHost: false,
             }));
         }
 
@@ -574,6 +604,27 @@ const Websocket = () => {
                     usersVoted:vUsers,
                 }));
             }
+
+        }
+
+        if(msg == "removed") {
+            // a["{\"msg\":\"removed\",\"collection\":\"current-poll\",\"id\":\"k87dmCATZ69Ld7WoQ\"}"]
+
+            setPollModal((prev) => ({
+                ...prev,
+                step: 0,
+                isActive: false,
+                isEnded: false,
+                isEdit: false,
+                isUserHost: false,
+                pollQuestion: "",
+                pollCreatorName: "",
+                pollCreatorId: "0",
+                pollCreatedAt: new Date(),
+                pollOptions: [],
+                totalVotes: 0,
+                usersVoted: [],
+            }));
 
         }
     }
@@ -1301,15 +1352,19 @@ export function websocketSendExternalVideo(link:string){
 }
 
 export function websocketStartPoll(id:any,question:any,answers:any){
+    //Moderator have to sub to get answer update
+    websocketSend([`{"msg":"sub","id":"${ServerInfo.generateRandomId(17)}","name":"current-poll","params":[false,true]}`]);
     websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"startPoll","params":[{"YesNo":"YN","YesNoAbstention":"YNA","TrueFalse":"TF","Letter":"A-","A2":"A-2","A3":"A-3","A4":"A-4","A5":"A-5","Custom":"CUSTOM","Response":"R-"},"CUSTOM","${id}",false,"${question}",false,${answers}]}`]);
 }
 
 export function websocketVotePoll(id:any,answerID:any){
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"publishVote\",\"params\":[\"${id}\",[${answerID}]]}`]);
+    websocketSend([`{"msg":"sub","id":"${ServerInfo.generateRandomId(17)}","name":"polls","params":[false]}`]);
+    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"publishVote","params":["${id}",[${answerID}]]}`]);
 }
 
 export function websocketStopPoll(){
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"stopPoll\",\"params\":[]}`]);
+    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"publishPoll","params":[]}`]);
+    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"stopPoll","params":[]}`]);
 }
 
 export function websocketStopExternalVideo(){

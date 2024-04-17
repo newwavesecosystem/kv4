@@ -1,15 +1,15 @@
 import React from "react";
-import { useRecoilState } from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import { connectedUsersState, pollModalState } from "~/recoil/atom";
 import { Dialog, DialogContent } from "../ui/dialog";
 import PlayIcon from "../icon/outline/PlayIcon";
 import PauseIcon from "../icon/outline/PauseIcon";
 import {websocketStopPoll} from "~/server/Websocket";
+import { participantListState } from "~/recoil/atom";
 
 function PollModalHostLiveView() {
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
-  const [connectedUsers, setConnectedUsers] =
-    useRecoilState(connectedUsersState);
+  const participantList = useRecoilValue(participantListState);
 
   const percentage = pollModal.pollOptions.map((option) => {
     return {
@@ -50,7 +50,7 @@ function PollModalHostLiveView() {
           ))}
         </div>
         <span className="mt-5">
-          {pollModal.totalVotes} votes of {connectedUsers.length}
+          {pollModal.totalVotes} votes of {participantList.length -1 }
         </span>
 
         {/* disabled because of unheathly factors (updates can reset count etc)*/}
@@ -82,7 +82,7 @@ function PollModalHostLiveView() {
               setPollModal((prev) => ({
                 ...prev,
                 isActive: false,
-                isEnded: true,
+                isEnded: false,
                 step: 0,
               }));
 
