@@ -260,6 +260,10 @@ const Websocket = () => {
                     handleConnectionStatus(e.data)
                 }
 
+                // if(collection.toString().includes("stream-annotations")){
+                //     handleStreamAnnotation(e.data)
+                // }
+
             };
             sock.onclose = () => {
                 console.log('Socket connection closed');
@@ -508,6 +512,21 @@ const Websocket = () => {
             console.log(updatedArray);
 
             setParticipantTalkingList(updatedArray)
+        }
+
+    }
+
+    const handleStreamAnnotation = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id} = obj;
+
+        if(msg == "changed"){
+            //{"msg":"changed","collection":"stream-annotations-90af7edbfd8a161a7f711504a114aaf5bf597f9f-1713439593216","id":"id","fields":{"eventName":"added","args":[{"meetingId":"90af7edbfd8a161a7f711504a114aaf5bf597f9f-1713439593216","annotations":[{"meetingId":"90af7edbfd8a161a7f711504a114aaf5bf597f9f-1713439593216","whiteboardId":"306666003ee5ab331169f9408a5feda7f42b9284-1713439593219/2","userId":"w_orrivn7cqyqe","annotation":{"id":"581d8ffe-24b9-4bc9-0b18-68958ad0ae52","annotationInfo":{"size":[547.44,182.71],"style":{"isFilled":false,"size":"small","scale":1,"color":"black","textAlign":"start","font":"script","dash":"draw"},"label":"","rotation":0,"id":"581d8ffe-24b9-4bc9-0b18-68958ad0ae52","parentId":"2","childIndex":1,"name":"Rectangle","point":[852.03,596.93],"isModerator":true,"labelPoint":[0.5,0.5],"userId":"w_orrivn7cqyqe","type":"rectangle"},"wbId":"306666003ee5ab331169f9408a5feda7f42b9284-1713439593219/2","userId":"w_orrivn7cqyqe"}}]}]}}
+
+            const {eventName, args} = obj.fields;
+
+
         }
 
     }

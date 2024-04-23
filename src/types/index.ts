@@ -126,6 +126,46 @@ export interface IWaitingUser {
     authenticated:boolean;
 }
 
+export interface IWhiteBoardAnnotationRemote {
+  meetingId:    string;
+  whiteboardId: string;
+  userId:       string;
+  annotation:   Annotation;
+}
+
+export interface Annotation {
+  id:             string;
+  annotationInfo: AnnotationInfo;
+  wbId:           string;
+  userId:         string;
+}
+
+export interface AnnotationInfo {
+  size:        number[];
+  style:       Style;
+  label:       string;
+  rotation:    number;
+  id:          string;
+  parentId:    string;
+  childIndex:  number;
+  name:        string;
+  point:       number[];
+  isModerator: boolean;
+  labelPoint:  number[];
+  userId:      string;
+  type:        string;
+}
+
+export interface Style {
+  isFilled:  boolean;
+  size:      string;
+  scale:     number;
+  color:     string;
+  textAlign: string;
+  font:      string;
+  dash:      string;
+}
+
 
 export interface IParticipantCamera {
   id: string | undefined;

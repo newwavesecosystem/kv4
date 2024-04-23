@@ -8,7 +8,7 @@ import {
   IParticipant,
   IWaitingUser,
   IUserBreakOutRoom,
-  IBreakoutRoom
+  IBreakoutRoom, IWhiteBoardAnnotationRemote
 } from "~/types";
 
 export const authUserState = atom<{
@@ -335,6 +335,11 @@ export const donationModalState = atom<{
     totalAmountDonatated: 0,
     usersDonated: [],
   },
+});
+
+export const whiteboardAnnotationState = atom<IWhiteBoardAnnotationRemote[]>({
+  key: "whiteBoardAnnotationRemote",
+  default:[],
 });
 
 // const defaultUsers: IUserBreakOutRoom[] = [
