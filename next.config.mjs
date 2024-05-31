@@ -50,6 +50,12 @@ const config = {
         port: '',
         pathname: '/assets/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'api.convergenceondemand.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

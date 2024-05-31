@@ -79,6 +79,7 @@ import {
 } from "~/server/Websocket";
 import { IChat, IParticipant, IParticipantCamera } from "~/types";
 import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
+import {generateRandomId} from "~/server/ServerInfo";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
@@ -267,6 +268,8 @@ function MiddleSide() {
             console.log("setParticipantCameraList: remove stream ", ur);
             setParticipantCameraList(ur);
 
+            console.log("ParticipantCameraList: ",participantCameraList);
+
             return;
           }
 
@@ -302,6 +305,8 @@ function MiddleSide() {
             }
 
             setParticipantCameraList([...participantCameraList,newRecord])
+
+            console.log("ParticipantCameraList: ",participantCameraList);
 
           } else {
             toast({

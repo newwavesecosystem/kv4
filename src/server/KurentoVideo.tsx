@@ -25,6 +25,17 @@ const KurentoVideo = () => {
     let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
 
 
+    const handleDisconnect = () => {
+        if (ws) {
+            ws.close();
+            ws = null;
+        }
+        if (webRtcPeer) {
+            webRtcPeer.dispose();
+            webRtcPeer = null;
+        }
+    };
+
     useEffect(() => {
 
         let userCamera=participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == user?.meetingDetails?.internalUserID)[0];
@@ -113,14 +124,15 @@ const KurentoVideo = () => {
         };
 
 
-        // if (!videoStateWS && videoState && user?.sessiontoken !=null) {
-        //     setVideoStateWS(true)
-        //     kurentoConnect();
-        // }
+        if (videoState && user?.sessiontoken !=null) {
+            // if(videoStateWS){
+            //     console.log('KurentoVideo Socket existing connection established used');
+            //     startProcess();
+            // }else{
+                setVideoStateWS(true)
+                kurentoConnect();
+            // }
 
-        if(videoState && user?.sessiontoken !=null){
-            setVideoStateWS(true)
-            kurentoConnect();
         }
 
         if (ws != null) {
