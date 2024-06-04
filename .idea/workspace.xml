@@ -22,12 +22,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Working on WhiteboardComponent.tsx&#10;-Worked on separating overlapping talking indicator with participant list">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fixing Mic &amp; Camera not requesting for permission&#10;-Add 1gov domain to nextjs image permission">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/camera/requestCameraAccess.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/camera/requestCameraAccess.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/KurentoVideo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoVideo.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,6 +91,8 @@
       <workItem from="1714377442039" duration="1238000" />
       <workItem from="1714979784517" duration="25000" />
       <workItem from="1715889089961" duration="10871000" />
+      <workItem from="1717163041285" duration="846000" />
+      <workItem from="1717486913688" duration="958000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -158,7 +157,14 @@
       <option name="project" value="LOCAL" />
       <updated>1713915831840</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="-Fixing Mic &amp; Camera not requesting for permission&#10;-Add 1gov domain to nextjs image permission">
+      <created>1717163289345</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1717163289345</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -189,13 +195,15 @@
     <MESSAGE value="Worked on Mute button is not in sync for Konn3ct Web" />
     <MESSAGE value="Fixed Polls is not getting answer clicked by user&#10;Fix publishing of Poll result" />
     <MESSAGE value="-Working on WhiteboardComponent.tsx&#10;-Worked on separating overlapping talking indicator with participant list" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Working on WhiteboardComponent.tsx&#10;-Worked on separating overlapping talking indicator with participant list" />
+    <MESSAGE value="Fixing Mic &amp; Camera not requesting for permission" />
+    <MESSAGE value="-Fixing Mic &amp; Camera not requesting for permission&#10;-Add 1gov domain to nextjs image permission" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Fixing Mic &amp; Camera not requesting for permission&#10;-Add 1gov domain to nextjs image permission" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="92" y="92" width="1182" height="536" key="DiffContextDialog" timestamp="1713190748470">
+    <state x="92" y="92" width="1182" height="536" key="DiffContextDialog" timestamp="1717175841755">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state x="92" y="92" width="1182" height="536" key="DiffContextDialog/0.0.1366.720@0.0.1366.720" timestamp="1713190748470" />
+    <state x="92" y="92" width="1182" height="536" key="DiffContextDialog/0.0.1366.720@0.0.1366.720" timestamp="1717175841755" />
     <state x="463" y="114" key="FileChooserDialogImpl" timestamp="1714979806759">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
@@ -264,17 +272,17 @@
       <screen x="0" y="0" width="1366" height="720" />
     </state>
     <state width="1323" height="220" key="GridCell.Tab.3.right/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state x="275" y="79" key="Vcs.Push.Dialog.v2" timestamp="1713915844454">
+    <state x="275" y="79" key="Vcs.Push.Dialog.v2" timestamp="1717163291911">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state x="275" y="79" key="Vcs.Push.Dialog.v2/0.0.1366.720@0.0.1366.720" timestamp="1713915844454" />
-    <state x="389" y="93" width="587" height="534" key="find.popup" timestamp="1713869312304">
+    <state x="275" y="79" key="Vcs.Push.Dialog.v2/0.0.1366.720@0.0.1366.720" timestamp="1717163291911" />
+    <state x="389" y="93" width="587" height="534" key="find.popup" timestamp="1717490296395">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state x="389" y="93" width="587" height="534" key="find.popup/0.0.1366.720@0.0.1366.720" timestamp="1713869312304" />
-    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup" timestamp="1716560737684">
+    <state x="389" y="93" width="587" height="534" key="find.popup/0.0.1366.720@0.0.1366.720" timestamp="1717490296395" />
+    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup" timestamp="1717489952231">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup/0.0.1366.720@0.0.1366.720" timestamp="1716560737684" />
+    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup/0.0.1366.720@0.0.1366.720" timestamp="1717489952231" />
   </component>
 </project>

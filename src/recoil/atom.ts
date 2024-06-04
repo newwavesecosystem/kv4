@@ -78,8 +78,8 @@ export const currentColorTheme = atom<{
 }>({
   key: "currentColorTheme",
   default: {
-    background: "#227451",
-    text: "#FFFFFF",
+    background: "#FFFFFF",
+    text: "#227451",
   },
 });
 

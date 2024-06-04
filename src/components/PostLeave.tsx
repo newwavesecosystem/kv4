@@ -14,7 +14,7 @@ function PostLeave() {
     <div className="text-a11y">
       <div className="flex h-16 items-center justify-center bg-primary">
         <Image
-          src="/logo.png"
+          src="/logo_1gov.png"
           alt="logo"
           width={145}
           height={48}

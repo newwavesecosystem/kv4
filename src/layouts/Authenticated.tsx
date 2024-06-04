@@ -124,7 +124,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
         {/* left side */}
         <div className=" flex items-center gap-2 md:gap-5">
           <Image
-            src={user?.meetingDetails?.customLogoURL ?? '/logo.png'}
+            src={user?.meetingDetails?.customLogoURL ?? '/logo_1gov.png'}
             alt="logo"
             width={145}
             height={48}

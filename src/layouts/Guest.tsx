@@ -13,7 +13,7 @@ function Guest({ children }: { children: React.ReactNode }) {
       <div className="sticky border-b border-a11y/20 top-0 z-50 hidden w-full justify-between bg-primary/20 px-5 py-4 text-sm backdrop-blur-[3px] lg:flex">
         {/* left side */}
         <div className="flex items-center gap-5">
-          <Image src="/logo.png" alt="logo" width={145} height={48} />
+          <Image src="/logo_1gov.png" alt="logo" width={145} height={48} />
           <Link href="/">Solutions</Link>
           <Link href="/">Contact sales</Link>
           <Link href="/">Plan & Pricing</Link>
