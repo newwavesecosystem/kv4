@@ -22,9 +22,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fixing Mic &amp; Camera not requesting for permission&#10;-Add 1gov domain to nextjs image permission">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="screen for 1 gov">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,6 +94,10 @@
       <workItem from="1715889089961" duration="10871000" />
       <workItem from="1717163041285" duration="846000" />
       <workItem from="1717486913688" duration="958000" />
+      <workItem from="1719769235663" duration="84000" />
+      <workItem from="1720135168325" duration="2416000" />
+      <workItem from="1720511953847" duration="38000" />
+      <workItem from="1721731925035" duration="4997000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -208,22 +213,22 @@
       <screen x="0" y="0" width="1366" height="720" />
     </state>
     <state x="463" y="114" key="FileChooserDialogImpl/0.0.1366.720@0.0.1366.720" timestamp="1714979806757" />
-    <state width="1323" height="176" key="GridCell.Tab.0.bottom" timestamp="1716546016566">
+    <state width="1323" height="176" key="GridCell.Tab.0.bottom" timestamp="1721731948170">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="176" key="GridCell.Tab.0.bottom/0.0.1366.720@0.0.1366.720" timestamp="1716546016566" />
-    <state width="1323" height="176" key="GridCell.Tab.0.center" timestamp="1716546016566">
+    <state width="1323" height="176" key="GridCell.Tab.0.bottom/0.0.1366.720@0.0.1366.720" timestamp="1721731948170" />
+    <state width="1323" height="176" key="GridCell.Tab.0.center" timestamp="1721731948170">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="176" key="GridCell.Tab.0.center/0.0.1366.720@0.0.1366.720" timestamp="1716546016566" />
-    <state width="1323" height="176" key="GridCell.Tab.0.left" timestamp="1716546016565">
+    <state width="1323" height="176" key="GridCell.Tab.0.center/0.0.1366.720@0.0.1366.720" timestamp="1721731948170" />
+    <state width="1323" height="176" key="GridCell.Tab.0.left" timestamp="1721731948169">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="176" key="GridCell.Tab.0.left/0.0.1366.720@0.0.1366.720" timestamp="1716546016565" />
-    <state width="1323" height="176" key="GridCell.Tab.0.right" timestamp="1716546016566">
+    <state width="1323" height="176" key="GridCell.Tab.0.left/0.0.1366.720@0.0.1366.720" timestamp="1721731948169" />
+    <state width="1323" height="176" key="GridCell.Tab.0.right" timestamp="1721731948170">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="176" key="GridCell.Tab.0.right/0.0.1366.720@0.0.1366.720" timestamp="1716546016566" />
+    <state width="1323" height="176" key="GridCell.Tab.0.right/0.0.1366.720@0.0.1366.720" timestamp="1721731948170" />
     <state width="1323" height="220" key="GridCell.Tab.1.bottom" timestamp="1713558556184">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
@@ -276,13 +281,13 @@
       <screen x="0" y="0" width="1366" height="720" />
     </state>
     <state x="275" y="79" key="Vcs.Push.Dialog.v2/0.0.1366.720@0.0.1366.720" timestamp="1717163291911" />
-    <state x="389" y="93" width="587" height="534" key="find.popup" timestamp="1717490296395">
+    <state x="389" y="93" width="587" height="534" key="find.popup" timestamp="1721863799205">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state x="389" y="93" width="587" height="534" key="find.popup/0.0.1366.720@0.0.1366.720" timestamp="1717490296395" />
-    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup" timestamp="1717489952231">
+    <state x="389" y="93" width="587" height="534" key="find.popup/0.0.1366.720@0.0.1366.720" timestamp="1721863799205" />
+    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup" timestamp="1721863804894">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup/0.0.1366.720@0.0.1366.720" timestamp="1717489952231" />
+    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup/0.0.1366.720@0.0.1366.720" timestamp="1721863804894" />
   </component>
 </project>

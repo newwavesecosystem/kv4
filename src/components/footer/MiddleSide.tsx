@@ -525,17 +525,17 @@ function MiddleSide() {
               <ExpandIcon className="mr-2 h-5 w-5" />
               <span>Go Fullscreen</span>
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setIsWhiteboardOpen(!isWhiteboardOpen);
-              }}
-              className="py-2"
-            >
-              <DesktopIcon className="mr-2 h-5 w-5" />
-              <span>
-                {isWhiteboardOpen ? "Close White Board" : "White Board"}
-              </span>
-            </DropdownMenuItem>
+            {/*<DropdownMenuItem*/}
+            {/*  onClick={() => {*/}
+            {/*    setIsWhiteboardOpen(!isWhiteboardOpen);*/}
+            {/*  }}*/}
+            {/*  className="py-2"*/}
+            {/*>*/}
+            {/*  <DesktopIcon className="mr-2 h-5 w-5" />*/}
+            {/*  <span>*/}
+            {/*    {isWhiteboardOpen ? "Close White Board" : "White Board"}*/}
+            {/*  </span>*/}
+            {/*</DropdownMenuItem>*/}
             <DropdownMenuItem
               onClick={() => {
                 setConnectedUsers((prev) =>
@@ -582,18 +582,18 @@ function MiddleSide() {
                   : "Raise Hand"}
               </span>
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setFileUploadModal((prev) => ({
-                  ...prev,
-                  step: 1,
-                }));
-              }}
-              className="py-2"
-            >
-              <FolderOpenIcon className="mr-2 h-5 w-5" />
-              <span>Upload Files</span>
-            </DropdownMenuItem>
+            {/*<DropdownMenuItem*/}
+            {/*  onClick={() => {*/}
+            {/*    setFileUploadModal((prev) => ({*/}
+            {/*      ...prev,*/}
+            {/*      step: 1,*/}
+            {/*    }));*/}
+            {/*  }}*/}
+            {/*  className="py-2"*/}
+            {/*>*/}
+            {/*  <FolderOpenIcon className="mr-2 h-5 w-5" />*/}
+            {/*  <span>Upload Files</span>*/}
+            {/*</DropdownMenuItem>*/}
 
             {participantList
               ?.filter(
@@ -673,48 +673,48 @@ function MiddleSide() {
                   ),
               )}
 
-            {!donationState.isActive && (
-              <DropdownMenuItem
-                className="py-2"
-                onClick={() => {
-                  setDonationState((prev) => ({
-                    ...prev,
-                    step: 1,
-                  }));
-                }}
-              >
-                <GiftIcon className="mr-2 h-5 w-5" />
-                <span>Donation</span>
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuSeparator />
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger className="py-2">
-                <BotIcon className="mr-2 h-5 w-5" />
-                <span>Konn3ct AI</span>
-              </DropdownMenuSubTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuSubContent className="border-0 bg-primary text-a11y">
-                  <DropdownMenuItem>
-                    <span>Transcript</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Highlights</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span className="">Notes</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setKonn3ctAiChatState(!konn3ctAiChatState);
-                    }}
-                    className="md:hidden"
-                  >
-                    <span className="">Chat</span>
-                  </DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuPortal>
-            </DropdownMenuSub>
+            {/*{!donationState.isActive && (*/}
+            {/*  <DropdownMenuItem*/}
+            {/*    className="py-2"*/}
+            {/*    onClick={() => {*/}
+            {/*      setDonationState((prev) => ({*/}
+            {/*        ...prev,*/}
+            {/*        step: 1,*/}
+            {/*      }));*/}
+            {/*    }}*/}
+            {/*  >*/}
+            {/*    <GiftIcon className="mr-2 h-5 w-5" />*/}
+            {/*    <span>Donation</span>*/}
+            {/*  </DropdownMenuItem>*/}
+            {/*)}*/}
+            {/*<DropdownMenuSeparator />*/}
+            {/*<DropdownMenuSub>*/}
+            {/*  <DropdownMenuSubTrigger className="py-2">*/}
+            {/*    <BotIcon className="mr-2 h-5 w-5" />*/}
+            {/*    <span>Konn3ct AI</span>*/}
+            {/*  </DropdownMenuSubTrigger>*/}
+            {/*  <DropdownMenuPortal>*/}
+            {/*    <DropdownMenuSubContent className="border-0 bg-primary text-a11y">*/}
+            {/*      <DropdownMenuItem>*/}
+            {/*        <span>Transcript</span>*/}
+            {/*      </DropdownMenuItem>*/}
+            {/*      <DropdownMenuItem>*/}
+            {/*        <span>Highlights</span>*/}
+            {/*      </DropdownMenuItem>*/}
+            {/*      <DropdownMenuItem>*/}
+            {/*        <span className="">Notes</span>*/}
+            {/*      </DropdownMenuItem>*/}
+            {/*      <DropdownMenuItem*/}
+            {/*        onClick={() => {*/}
+            {/*          setKonn3ctAiChatState(!konn3ctAiChatState);*/}
+            {/*        }}*/}
+            {/*        className="md:hidden"*/}
+            {/*      >*/}
+            {/*        <span className="">Chat</span>*/}
+            {/*      </DropdownMenuItem>*/}
+            {/*    </DropdownMenuSubContent>*/}
+            {/*  </DropdownMenuPortal>*/}
+            {/*</DropdownMenuSub>*/}
 
             <DropdownMenuItem
               onClick={() => {
