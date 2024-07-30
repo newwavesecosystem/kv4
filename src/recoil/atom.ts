@@ -292,12 +292,14 @@ export const ccModalState = atom<{
   isActive: boolean;
   language: string;
   step: number;
+  caption: string;
 }>({
   key: "ccModalState",
   default: {
     isActive: false,
-    language: "en",
+    language: "df",
     step: 0,
+    caption: "",
   },
 });
 

@@ -117,7 +117,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       <DonationModal />
       <PollModal />
       <ECinemaModal />
-      {/*<CCModal />*/}
+      {user?.meetingDetails?.meetingID && <CCModal />}
       <BreakOutModal />
       <FileUploadModal />
       <div className="sticky top-0 z-50 flex h-16 w-full justify-between border-b border-a11y/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:py-4">

@@ -1,5 +1,10 @@
 const CCLanguageData = [
   {
+    id: 0,
+    name: "Default",
+    shortCode: "df",
+  },
+  {
     id: 1,
     name: "English",
     shortCode: "en",

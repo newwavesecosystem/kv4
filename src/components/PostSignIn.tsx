@@ -44,6 +44,7 @@ import KurentoScreenShare from "~/server/KurentoScreenshare";
 import KurentoScreenShareViewer from "~/server/KurentoScreenshareViewer";
 import Draggable from "react-draggable";
 import CCModal from "~/components/cc/CCModal";
+import SocketIOCaption from "~/server/SocketIOCaption";
 
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
@@ -513,7 +514,7 @@ function PostSignIn() {
           {user?.sessiontoken != '' && <Websocket/>}
           <KurentoAudio/>
           <KurentoVideo/>
-          {/*{user?.meetingDetails?.meetingID!=null &&<CCModal />}*/}
+          {user?.meetingDetails?.meetingID!=null &&<SocketIOCaption />}
           {participantCameraList.filter((eachItem: any) => eachItem?.intId != user?.meetingDetails?.internalUserID).map((cItem:IParticipantCamera,index:number)=>{
               return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>
           })}

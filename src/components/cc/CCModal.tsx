@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, ccModalState} from "~/recoil/atom";
+import {authUserState, ccModalState, micOpenState} from "~/recoil/atom";
 import CloseIcon from "../icon/outline/CloseIcon";
 import EllipsisIcon from "../icon/outline/EllipsisIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
@@ -13,9 +13,7 @@ import SpeechRecognition, {
 import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-// import socket from '../../server/socket';
-import {io, Socket} from 'socket.io-client';
-import {captionURL} from "~/server/ServerInfo";
+import {broadcastCaption} from "~/server/SocketIOCaption";
 
 function CCModal() {
   const [ccModal, setCCModal] = useRecoilState(ccModalState);
@@ -24,9 +22,7 @@ function CCModal() {
   const [isCCLanguageModalOpen, setIsCCLanguageModalOpen] = useState(false);
   const [transcriptTranslated, setTranscriptTranslated] = useState("");
   const user = useRecoilValue(authUserState);
-
-  // Define the socket variable with the Socket type
-  var socket : any = null;
+  const [micState, setMicState] = useRecoilState(micOpenState);
 
   const {
     transcript,
@@ -36,76 +32,22 @@ function CCModal() {
   } = useSpeechRecognition();
 
 
-  const broadcastCaption=(text:any)=>{
-    console.log("send_captions", text); // world
-    socket?.emit("send_captions", {
-      "text": text,
-      "user": user?.meetingDetails?.fullname,
-      "meetingID": user?.meetingDetails?.meetingID,
-      "date": new Date().toLocaleString()
-    });
-  }
-
-
-  useEffect(() => {
-    // Define the socket variable with the Socket type
-    var socket: Socket = io(captionURL);
-
-    window.onbeforeunload = function(e) {
-      socket.disconnect();
-    };
-
-    // client-side
-    socket.on("connect", () => {
-      console.log("cSocket Connected",socket.id); // x8WIv7-mJelg7on_ALbx
-
-      if(user?.meetingDetails?.meetingID != null){
-        console.log("cSocket join_room",user?.meetingDetails?.meetingID);
-        socket.emit("join_room", user?.meetingDetails?.meetingID);
-      }
-
-    });
-
-    socket.on("disconnect", ( ) => {
-      console.log("cSocket disconnect",socket.id); // undefined
-    });
-
-    socket.on("receive_captions", (arg) => {
-      console.log("cSocket receive_captions", arg); // world
-      console.log("cSocket receive_captions", arg.user); // world
-
-      let displayText=`${arg.user}: ${arg.text}`;
-
-      console.log("cSocket receive_captions displayText", displayText); // world
-      console.log("cSocket translation ",ccModal.language);
-
-      if (ccModal.language != "en") {
-        console.log("cSocket working on translation ",ccModal.language);
-        translate(arg.text,arg.user).then();
-      }else{
-        setTranscriptTranslated(`${transcriptTranslated} \n ${displayText}`);
-      }
-
-    });
-
-    // return () => {
-    //   // Clean up socket connections when the component unmounts
-    //   socket.disconnect();
-    // };
-
-  }, [ccModal.language]);
-
   // When a new transcript is received, add it to the lines array
   useEffect(() => {
     console.log("cSocket transcript useEffect ");
     SpeechRecognition.startListening({ continuous: true });
 
-    if (transcript) {
+    if (transcript && !micState) {
       setTimeout(resetTranscript,30000)
-      broadcastCaption(transcript);
-      setTranscriptTranslated(`Me: ${transcript}`);
+      broadcastCaption(transcript, user?.meetingDetails);
+      setTranscriptTranslated(`Me: ${transcript}\n ${ccModal.caption}`);
     }
-  }, [transcript]);
+
+    if(ccModal.caption != ""){
+      setTranscriptTranslated(`${ccModal.caption}`);
+    }
+
+  }, [transcript, ccModal.caption]);
 
   async function translate(text:string,user:string) {
     console.log("cSocket Translate API - ",ccModal.language);
@@ -219,8 +161,8 @@ function CCModal() {
                           <button
                             onClick={() => {
                               console.log("cSocket language",language.shortCode)
-                              socket?.disconnect();
-                              socket?.close();
+                              // socket?.disconnect();
+                              // socket?.close();
                               setCCModal((prev) => ({
                                 ...prev,
                                 language: language.shortCode,
