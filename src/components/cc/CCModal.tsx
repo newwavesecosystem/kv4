@@ -40,54 +40,10 @@ function CCModal() {
     if (transcript && !micState) {
       setTimeout(resetTranscript,30000)
       broadcastCaption(transcript, user?.meetingDetails);
-      setTranscriptTranslated(`Me: ${transcript}\n ${ccModal.caption}`);
+      setTranscriptTranslated(`Me: ${transcript}`);
     }
 
-    if(ccModal.caption != ""){
-      setTranscriptTranslated(`${ccModal.caption}`);
-    }
-
-  }, [transcript, ccModal.caption]);
-
-  async function translate(text:string,user:string) {
-    console.log("cSocket Translate API - ",ccModal.language);
-    // let data = JSON.stringify({
-    //   message: transcript,
-    //   target: ccModal.language,
-    // });
-
-    let data = JSON.stringify({
-      "q": text,
-      "source": "auto",
-      "target": ccModal.language,
-      "format": "text"
-    });
-
-    const response = await axios({
-      method: "post",
-      maxBodyLength: Infinity,
-      url: `${ServerInfo.translateURL}/translator`,
-      headers: {
-        apikey: "AJSAel5d4cSwAqopPs19LEIqZ42kX1TEnnUJRpb6",
-        "Content-Type": "application/json",
-      },
-      data: data,
-    });
-
-    const responseData = response.data;
-
-    console.log("response", responseData);
-
-    // setTranscriptTranslated(responseData?.data);
-
-    let displayText=`${user}: ${responseData?.message}`;
-
-    console.log("cSocket receive_captions with translation displayText", displayText); // world
-
-    setTranscriptTranslated(displayText);
-
-    setTimeout(resetTranscript, 30000);
-  }
+  }, [transcript]);
 
   return (
     <>
@@ -97,6 +53,8 @@ function CCModal() {
             <span className="px-4">
             {/*<span className="truncate px-4">*/}
               {transcriptTranslated}
+              <br />
+              {ccModal.caption}
             </span>
             <div className="flex h-full flex-col items-center divide-y divide-a11y border-l-2 border-a11y/70">
               <button
