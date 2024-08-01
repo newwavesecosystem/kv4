@@ -341,14 +341,14 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             </button>
           )}
 
-          <button
-            onClick={() => {
-              setKonn3ctAiChatState(!konn3ctAiChatState);
-            }}
-            className="items-center rounded-full border border-a11y/20 p-2"
-          >
-            <BotIcon className="h-6 w-6" />
-          </button>
+          {/*<button*/}
+          {/*  onClick={() => {*/}
+          {/*    setKonn3ctAiChatState(!konn3ctAiChatState);*/}
+          {/*  }}*/}
+          {/*  className="items-center rounded-full border border-a11y/20 p-2"*/}
+          {/*>*/}
+          {/*  <BotIcon className="h-6 w-6" />*/}
+          {/*</button>*/}
           {donationState.isActive && (
             <button
               onClick={() => {
