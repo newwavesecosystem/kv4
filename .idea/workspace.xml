@@ -22,8 +22,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Caption is now working">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="disable AI for now">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +104,7 @@
       <workItem from="1714377442039" duration="1238000" />
       <workItem from="1714979784517" duration="25000" />
       <workItem from="1715889089961" duration="10871000" />
-      <workItem from="1722216954547" duration="19012000" />
+      <workItem from="1722216954547" duration="23247000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -182,7 +183,14 @@
       <option name="project" value="LOCAL" />
       <updated>1722346118442</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="disable AI for now">
+      <created>1722490459005</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1722490459005</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -215,41 +223,42 @@
     <MESSAGE value="-Working on WhiteboardComponent.tsx&#10;-Worked on separating overlapping talking indicator with participant list" />
     <MESSAGE value="testing out caption and translation" />
     <MESSAGE value="Caption is now working" />
-    <option name="LAST_COMMIT_MESSAGE" value="Caption is now working" />
+    <MESSAGE value="disable AI for now" />
+    <option name="LAST_COMMIT_MESSAGE" value="disable AI for now" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="129" y="53" key="DiffContextDialog" timestamp="1722346125342">
+    <state x="129" y="53" key="DiffContextDialog" timestamp="1722490475722">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state x="129" y="53" key="DiffContextDialog/0.0.1366.720@0.0.1366.720" timestamp="1722346125342" />
+    <state x="129" y="53" key="DiffContextDialog/0.0.1366.720@0.0.1366.720" timestamp="1722490475722" />
     <state x="463" y="114" key="FileChooserDialogImpl" timestamp="1714979806759">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
     <state x="463" y="114" key="FileChooserDialogImpl/0.0.1366.720@0.0.1366.720" timestamp="1714979806757" />
-    <state width="1323" height="437" key="GridCell.Tab.0.bottom" timestamp="1722341986403">
+    <state width="1323" height="108" key="GridCell.Tab.0.bottom" timestamp="1722845655339">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="437" key="GridCell.Tab.0.bottom/0.0.1366.720@0.0.1366.720" timestamp="1722341986403" />
-    <state width="1323" height="437" key="GridCell.Tab.0.center" timestamp="1722341986403">
+    <state width="1323" height="108" key="GridCell.Tab.0.bottom/0.0.1366.720@0.0.1366.720" timestamp="1722845655339" />
+    <state width="1323" height="108" key="GridCell.Tab.0.center" timestamp="1722845655338">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="437" key="GridCell.Tab.0.center/0.0.1366.720@0.0.1366.720" timestamp="1722341986403" />
-    <state width="1323" height="437" key="GridCell.Tab.0.left" timestamp="1722341986403">
+    <state width="1323" height="108" key="GridCell.Tab.0.center/0.0.1366.720@0.0.1366.720" timestamp="1722845655338" />
+    <state width="1323" height="108" key="GridCell.Tab.0.left" timestamp="1722845655337">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="437" key="GridCell.Tab.0.left/0.0.1366.720@0.0.1366.720" timestamp="1722341986403" />
-    <state width="1323" height="437" key="GridCell.Tab.0.right" timestamp="1722341986403">
+    <state width="1323" height="108" key="GridCell.Tab.0.left/0.0.1366.720@0.0.1366.720" timestamp="1722845655337" />
+    <state width="1323" height="108" key="GridCell.Tab.0.right" timestamp="1722845655338">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state width="1323" height="437" key="GridCell.Tab.0.right/0.0.1366.720@0.0.1366.720" timestamp="1722341986403" />
-    <state x="275" y="79" key="Vcs.Push.Dialog.v2" timestamp="1722346126702">
+    <state width="1323" height="108" key="GridCell.Tab.0.right/0.0.1366.720@0.0.1366.720" timestamp="1722845655338" />
+    <state x="275" y="79" key="Vcs.Push.Dialog.v2" timestamp="1722490477689">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state x="275" y="79" key="Vcs.Push.Dialog.v2/0.0.1366.720@0.0.1366.720" timestamp="1722346126702" />
-    <state x="389" y="93" width="587" height="534" key="find.popup" timestamp="1721919250047">
+    <state x="275" y="79" key="Vcs.Push.Dialog.v2/0.0.1366.720@0.0.1366.720" timestamp="1722490477689" />
+    <state x="389" y="93" width="587" height="534" key="find.popup" timestamp="1722846232291">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
-    <state x="389" y="93" width="587" height="534" key="find.popup/0.0.1366.720@0.0.1366.720" timestamp="1721919250047" />
+    <state x="389" y="93" width="587" height="534" key="find.popup/0.0.1366.720@0.0.1366.720" timestamp="1722846232291" />
     <state x="346" y="41" width="672" height="678" key="search.everywhere.popup" timestamp="1722337614029">
       <screen x="0" y="0" width="1366" height="720" />
     </state>
