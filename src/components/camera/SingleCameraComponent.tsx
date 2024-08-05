@@ -51,13 +51,17 @@ function SingleCameraComponent({
   useEffect(() => {
   // Attach the new stream to the video element
 
-    console.log("userCamera",userCamera,userCamera[0]?.intId);
+    console.log("userCamera",userCamera);
     console.log("userCamera camOn",camOn);
     if(userCamera.length > 0 && userCamera[0]?.stream){
+      console.log("userCamera length > 0",userCamera[0]?.stream)
       if (videoRef.current && !camOn) {
+        console.log("userCamera videoRef.current > 0",userCamera[0]?.stream)
         videoRef.current.srcObject = userCamera[0].stream;
         setCamOn(true);
       }
+    }else{
+      setCamOn(false);
     }
   },[userCamera]);
 
