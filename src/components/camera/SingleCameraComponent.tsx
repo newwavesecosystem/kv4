@@ -206,7 +206,6 @@ function SingleCameraComponent({
             {participant?.name?.split(" ")[1]?.slice(0, 1)}
           </div>
           <span className="capitalize">{participant?.name}</span>
-          {/*<span className="capitalize">{participant?.intId}</span>*/}
         </div>
       )}
     </div>

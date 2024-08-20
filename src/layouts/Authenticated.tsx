@@ -123,13 +123,14 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       <div className="sticky top-0 z-50 flex h-16 w-full justify-between border-b border-a11y/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:py-4">
         {/* left side */}
         <div className=" flex items-center gap-2 md:gap-5">
+          {user?.meetingDetails?.customLogoURL != null &&
           <Image
-            src={user?.meetingDetails?.customLogoURL ?? '/logo.png'}
+            src={user?.meetingDetails?.customLogoURL}
             alt="logo"
-            width={145}
-            height={48}
+            width={95}
+            height={28}
             className="hidden md:block"
-          />
+          />}
           <Separator
             className="hidden bg-a11y md:block"
             orientation="vertical"
@@ -192,7 +193,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                   donationState.isActive && recordingState.isActive && "hidden",
                 )}
               >
-                End Recording
+                Pause Recording
               </span>
             </button>
           )}
@@ -227,7 +228,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           {recordingState.isActive ? (
             <button
               onClick={() => {
-                if (user?.meetingDetails?.role == "MODERATOR") {
+                if (participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0].role == "MODERATOR") {
                   setRecordingState((prev) => ({
                     ...prev,
                     step: 2,
@@ -235,7 +236,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 } else {
                   toast({
                     variant: "destructive",
-                    title: "Uh oh! Something went wrong.",
+                    title: "Permission Denied!!",
                     description:
                       "You dont have the permission for this action. Kindly chat with the host or moderator",
                   });
@@ -244,12 +245,12 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               className="hidden items-center gap-2 rounded-lg bg-[#DF2622] px-3 py-2 md:flex"
             >
               <RecordOnIcon className="h-6 w-6" />
-              <span>End Recording</span>
+              <span>Pause Recording</span>
             </button>
           ) : (
             <button
               onClick={() => {
-                if (user?.meetingDetails?.role == "MODERATOR") {
+                if (participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0].role == "MODERATOR") {
                   setRecordingState((prev) => ({
                     ...prev,
                     step: 1,
@@ -257,7 +258,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 } else {
                   toast({
                     variant: "destructive",
-                    title: "Uh oh! Something went wrong.",
+                    title: "Permission Denied!!",
                     description:
                       "You dont have the permission for this action. Kindly chat with the host or moderator",
                   });
@@ -266,7 +267,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               className="hidden items-center gap-2 rounded-lg border border-a11y/20 px-3 py-2 md:flex"
             >
               <RecordOnIcon className="h-6 w-6" />
-              <span>Start Recording</span>
+              <span>{recordingState.isStarted ? "Resume" : "Start"} Recording</span>
             </button>
           )}
 

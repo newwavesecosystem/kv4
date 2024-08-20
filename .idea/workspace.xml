@@ -22,9 +22,13 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="added message for unsupported speech recognization browser">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="fixed blank camera when resharing camera">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/recording/EndRecordingModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/recording/EndRecordingModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/recording/ResolutionModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/recording/ResolutionModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,29 +46,30 @@
   <component name="GithubDefaultAccount">
     <option name="defaultAccountId" value="0fd223af-77ad-413b-be4b-8d3ea30098cf" />
   </component>
-  <component name="JsFlowSettings">
-    <service-enabled>true</service-enabled>
-    <exe-path />
-    <other-services-enabled>true</other-services-enabled>
-    <auto-save>true</auto-save>
-  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
   <component name="ProjectId" id="2ewo01C7lyhxxlYB3vgw31OxCZT" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/server" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\odeji\WebstormProjects\kv4\node_modules\prettier" />
-    <property name="ts.external.directory.path" value="C:\Users\odeji\WebstormProjects\kv4\node_modules\typescript\lib" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "samji",
+    "last_opened_file_path": "C:/Users/odeji/WebstormProjects/AbitPay",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.dev.executor": "Run",
+    "ts.external.directory.path": "C:\\Users\\odeji\\WebstormProjects\\kv4\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\odeji\WebstormProjects\kv4\src\server" />
@@ -104,7 +109,13 @@
       <workItem from="1714377442039" duration="1238000" />
       <workItem from="1714979784517" duration="25000" />
       <workItem from="1715889089961" duration="10871000" />
-      <workItem from="1722216954547" duration="27699000" />
+      <workItem from="1722216954547" duration="31126000" />
+      <workItem from="1723408231980" duration="43000" />
+      <workItem from="1723638243944" duration="491000" />
+      <workItem from="1723804129297" duration="810000" />
+      <workItem from="1723806533922" duration="699000" />
+      <workItem from="1723843630225" duration="2153000" />
+      <workItem from="1724177122457" duration="6951000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -197,7 +208,14 @@
       <option name="project" value="LOCAL" />
       <updated>1722848489745</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="fixed blank camera when resharing camera">
+      <created>1722855101747</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1722855101747</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -218,7 +236,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Chnage the engine url" />
@@ -232,45 +249,8 @@
     <MESSAGE value="Caption is now working" />
     <MESSAGE value="disable AI for now" />
     <MESSAGE value="added message for unsupported speech recognization browser" />
-    <option name="LAST_COMMIT_MESSAGE" value="added message for unsupported speech recognization browser" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="129" y="53" key="DiffContextDialog" timestamp="1722490475722">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state x="129" y="53" key="DiffContextDialog/0.0.1366.720@0.0.1366.720" timestamp="1722490475722" />
-    <state x="463" y="114" key="FileChooserDialogImpl" timestamp="1714979806759">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state x="463" y="114" key="FileChooserDialogImpl/0.0.1366.720@0.0.1366.720" timestamp="1714979806757" />
-    <state width="1323" height="108" key="GridCell.Tab.0.bottom" timestamp="1722845655339">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="108" key="GridCell.Tab.0.bottom/0.0.1366.720@0.0.1366.720" timestamp="1722845655339" />
-    <state width="1323" height="108" key="GridCell.Tab.0.center" timestamp="1722845655338">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="108" key="GridCell.Tab.0.center/0.0.1366.720@0.0.1366.720" timestamp="1722845655338" />
-    <state width="1323" height="108" key="GridCell.Tab.0.left" timestamp="1722845655337">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="108" key="GridCell.Tab.0.left/0.0.1366.720@0.0.1366.720" timestamp="1722845655337" />
-    <state width="1323" height="108" key="GridCell.Tab.0.right" timestamp="1722845655338">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="108" key="GridCell.Tab.0.right/0.0.1366.720@0.0.1366.720" timestamp="1722845655338" />
-    <state x="275" y="79" key="Vcs.Push.Dialog.v2" timestamp="1722848492704">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state x="275" y="79" key="Vcs.Push.Dialog.v2/0.0.1366.720@0.0.1366.720" timestamp="1722848492704" />
-    <state x="389" y="93" width="587" height="534" key="find.popup" timestamp="1722846232291">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state x="389" y="93" width="587" height="534" key="find.popup/0.0.1366.720@0.0.1366.720" timestamp="1722846232291" />
-    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup" timestamp="1722849014455">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup/0.0.1366.720@0.0.1366.720" timestamp="1722849014455" />
+    <MESSAGE value="fixed blank camera when resharing camera" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed blank camera when resharing camera" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
