@@ -504,7 +504,7 @@ function PostSignIn() {
                       participant.presenter,
                   )
                   .map((participant: IParticipant, index: number) => (
-                      <div className="h-40 w-40">
+                      <div className="h-40 w-40" key={index}>
                         <SingleCameraComponent
                           index={index}
                           key={index}
