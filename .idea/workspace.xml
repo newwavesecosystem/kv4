@@ -22,13 +22,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="fixed blank camera when resharing camera">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Reduced the size of custom logo to fit in the box&#10;-Bring focus on presenter (Minimize icon) on participant list&#10;-Added ui-avatars.com to next.config.mjs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/recording/EndRecordingModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/recording/EndRecordingModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/recording/ResolutionModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/recording/ResolutionModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,32 +40,33 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="0fd223af-77ad-413b-be4b-8d3ea30098cf" />
+    <option name="defaultAccountId" value="38342907-856c-49d6-84da-739cdad1f29c" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2ewo01C7lyhxxlYB3vgw31OxCZT" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "samji",
-    "last_opened_file_path": "C:/Users/odeji/WebstormProjects/AbitPay",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.dev.executor": "Run",
-    "ts.external.directory.path": "C:\\Users\\odeji\\WebstormProjects\\kv4\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;samji&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/odeji/WebstormProjects/AbitPay&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\odeji\\WebstormProjects\\kv4\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\odeji\WebstormProjects\kv4\src\server" />
@@ -115,7 +112,8 @@
       <workItem from="1723804129297" duration="810000" />
       <workItem from="1723806533922" duration="699000" />
       <workItem from="1723843630225" duration="2153000" />
-      <workItem from="1724177122457" duration="6951000" />
+      <workItem from="1724177122457" duration="12658000" />
+      <workItem from="1724222966807" duration="1168000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -215,7 +213,23 @@
       <option name="project" value="LOCAL" />
       <updated>1722855101747</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="-worked on recording, Implement Start &amp; Pause; Change End Recording to Pause Recording&#10;-Fix banner image not to show unless it get value">
+      <option name="closed" value="true" />
+      <created>1724194857749</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1724194857749</updated>
+    </task>
+    <task id="LOCAL-00016" summary="-Reduced the size of custom logo to fit in the box&#10;-Bring focus on presenter (Minimize icon) on participant list&#10;-Added ui-avatars.com to next.config.mjs">
+      <option name="closed" value="true" />
+      <created>1724220226569</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1724220226569</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -250,7 +264,9 @@
     <MESSAGE value="disable AI for now" />
     <MESSAGE value="added message for unsupported speech recognization browser" />
     <MESSAGE value="fixed blank camera when resharing camera" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed blank camera when resharing camera" />
+    <MESSAGE value="-worked on recording, Implement Start &amp; Pause; Change End Recording to Pause Recording&#10;-Fix banner image not to show unless it get value" />
+    <MESSAGE value="-Reduced the size of custom logo to fit in the box&#10;-Bring focus on presenter (Minimize icon) on participant list&#10;-Added ui-avatars.com to next.config.mjs" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Reduced the size of custom logo to fit in the box&#10;-Bring focus on presenter (Minimize icon) on participant list&#10;-Added ui-avatars.com to next.config.mjs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

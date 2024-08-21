@@ -389,7 +389,7 @@ function PostSignIn() {
                 participantList.length === 1 &&
                   " flex items-center justify-center md:aspect-square  ",
                 participantList.length === 2 &&
-                  "grid justify-center gap-2 md:grid-cols-2",
+                  "grid justify-center gap-2 md:grid-cols-2 mt-5",
                 participantList.length === 3 &&
                   "grid grid-cols-2 gap-2 lg:grid-cols-3 ",
                 participantList.length >= 4 && "grid grid-cols-2 gap-2",
