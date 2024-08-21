@@ -44,6 +44,9 @@ import KurentoScreenShare from "~/server/KurentoScreenshare";
 import KurentoScreenShareViewer from "~/server/KurentoScreenshareViewer";
 import Draggable from "react-draggable";
 import CCModal from "~/components/cc/CCModal";
+import SocketIOCaption from "~/server/SocketIOCaption";
+import PinIcon from "~/components/icon/outline/PinIcon";
+import MinimizeIcon from "~/components/icon/outline/MinimizeIcon";
 
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
@@ -386,7 +389,7 @@ function PostSignIn() {
                 participantList.length === 1 &&
                   " flex items-center justify-center md:aspect-square  ",
                 participantList.length === 2 &&
-                  "grid justify-center gap-2 md:grid-cols-2",
+                  "grid justify-center gap-2 md:grid-cols-2 mt-5",
                 participantList.length === 3 &&
                   "grid grid-cols-2 gap-2 lg:grid-cols-3 ",
                 participantList.length >= 4 && "grid grid-cols-2 gap-2",
@@ -394,7 +397,7 @@ function PostSignIn() {
                 participantList.length >= 7 && "grid gap-2 md:grid-cols-4",
                 participantList.length >= 13 && "grid gap-2 md:grid-cols-5",
                 participantList.length >=3 && pinnedParticipant.length > 0 && "md:!grid-cols-4",
-              )}
+              )} style={{paddingTop:"1.5rem"}}
             >
               {participantList
               // pick only 5 participant
@@ -427,17 +430,31 @@ function PostSignIn() {
             defaultClassNameDragging="cursor-grabbing"
           >
             <div className="absolute top-0 z-50 m-2 backdrop-blur-3xl">
+              <div className="flex flex-row-reverse px-2 py-2">
+                <button
+                    onClick={() => {
+                      setlayoutSettings({
+                        ...layoutSettings,
+                        layout: "4",
+                        layoutName: "Focus on presenter",
+                      });
+                    }}
+                    className="rounded-full bg-primary/80 p-1 "
+                >
+                  <MinimizeIcon className=" h-5 w-5"/>
+                </button>
+              </div>
               <div
-                className={cn(
-                  " m-auto flex h-40 items-center justify-center gap-2 ",
-                )}
+                  className={cn(
+                      " m-auto flex h-40 items-center justify-center gap-2 ",
+                  )}
               >
                 {participantList
-                  // pick only 6 participants
-                  .filter(
-                    (participant: IParticipant, index: number) => index < 6,
-                  )
-                  .map((participant: IParticipant, index: number) => (
+                    // pick only 6 participants
+                    .filter(
+                        (participant: IParticipant, index: number) => index < 6,
+                    )
+                    .map((participant: IParticipant, index: number) => (
                     <SingleCameraComponent
                       index={index}
                       key={index}
@@ -487,11 +504,13 @@ function PostSignIn() {
                       participant.presenter,
                   )
                   .map((participant: IParticipant, index: number) => (
-                    <SingleCameraComponent
-                      index={index}
-                      key={index}
-                      participant={participant}
-                    />
+                      <div className="h-40 w-40" key={index}>
+                        <SingleCameraComponent
+                          index={index}
+                          key={index}
+                          participant={participant}
+                        />
+                      </div>
                   ))}
               </div>
             </div>
@@ -513,7 +532,7 @@ function PostSignIn() {
           {user?.sessiontoken != '' && <Websocket/>}
           <KurentoAudio/>
           <KurentoVideo/>
-          {/*{user?.meetingDetails?.meetingID!=null &&<CCModal />}*/}
+          {user?.meetingDetails?.meetingID!=null &&<SocketIOCaption />}
           {participantCameraList.filter((eachItem: any) => eachItem?.intId != user?.meetingDetails?.internalUserID).map((cItem:IParticipantCamera,index:number)=>{
               return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>
           })}
