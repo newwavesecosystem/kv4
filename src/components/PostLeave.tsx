@@ -12,16 +12,16 @@ function PostLeave() {
   );
   return (
     <div className="text-a11y">
-      <div className="flex h-16 items-center justify-center bg-primary">
+      <div className="flex h-16 items-center justify-center bg-onegov">
         <Image
           src="/logo_1gov.png"
           alt="logo"
-          width={145}
-          height={48}
+          width={40}
+          height={40}
           className=""
         />
       </div>
-      <div className="flex h-[calc(100vh-64px)] flex-col items-center justify-center bg-primary/80 ">
+      <div className="flex h-[calc(100vh-64px)] flex-col items-center justify-center bg-onegov/80 ">
         <HandOnIcon className="h-20 w-20 rotate-45" />
         <span className="text-2xl font-bold">
           {postLeaveMeeting.isLeave && "You left the session"}
@@ -35,23 +35,30 @@ function PostLeave() {
         <div className="mt-10 flex items-center gap-2">
           <span className="text-sm text-a11y/40">Left by mistake?</span>
           {!postLeaveMeeting.isKicked && (
-            <button
-              onClick={() => {
-                if (postLeaveMeeting.isKicked) return;
-                setPostLeaveMeeting({
-                  isLeave: false,
-                  isLeaveRoomCall: false,
-                  isEndCall: false,
-                  isKicked: false,
-                  isSessionExpired: false,
-                  isOthers: false,
-                });
-              }}
+            // <button
+            //   onClick={() => {
+            //     if (postLeaveMeeting.isKicked) return;
+            //     setPostLeaveMeeting({
+            //       isLeave: false,
+            //       isLeaveRoomCall: false,
+            //       isEndCall: false,
+            //       isKicked: false,
+            //       isSessionExpired: false,
+            //       isOthers: false,
+            //     });
+            //   }}
+            //   className="flex items-center gap-2 rounded-md bg-primary px-4 py-1"
+            // >
+            //   <ExitIcon className="h-4 w-4" />
+            //   <span>Rejoin</span>
+            // </button>
+            <a
+              href={user?.meetingDetails?.customdata[0]?.meetingLink}
               className="flex items-center gap-2 rounded-md bg-primary px-4 py-1"
             >
               <ExitIcon className="h-4 w-4" />
               <span>Rejoin</span>
-            </button>
+            </a>
           )}
         </div>
         <div className="fixed bottom-5">

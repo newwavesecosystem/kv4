@@ -429,18 +429,18 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               <HandOnIcon className="h-6 w-6" />
             )}
           </button>
-          {/*<button*/}
-          {/*  onClick={() => {*/}
-          {/*    setCCModal((prev) => ({*/}
-          {/*      ...prev,*/}
-          {/*      isActive: true,*/}
-          {/*      step: 1,*/}
-          {/*    }));*/}
-          {/*  }}*/}
-          {/*  className="items-center rounded-full border border-a11y/20 bg-transparent p-2"*/}
-          {/*>*/}
-          {/*  <CCIcon className="h-6 w-6" />*/}
-          {/*</button>*/}
+          <button
+            onClick={() => {
+              setCCModal((prev) => ({
+                ...prev,
+                isActive: true,
+                step: 1,
+              }));
+            }}
+            className="items-center rounded-full border border-a11y/20 bg-transparent p-2"
+          >
+            <CCIcon className="h-6 w-6" />
+          </button>
           <button
             onClick={() => {
               setChatState(!chatState);

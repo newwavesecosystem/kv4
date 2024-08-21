@@ -69,7 +69,7 @@ function SingleCameraComponent({
     <div
       key={key}
       className={cn(
-        "relative aspect-square h-full w-full overflow-hidden rounded-lg bg-a11y/20",
+        "relative aspect-square h-full w-full overflow-hidden rounded-lg bg-onegov/50",
         participantList.length === 2 &&
           "md:h-auto md:w-auto xl:h-full xl:w-full",
         participantList.length === 3 &&

@@ -24,8 +24,12 @@
   <component name="ChangeListManager">
     <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="screen for 1 gov">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/site.webmanifest" beforeDir="false" afterPath="$PROJECT_DIR$/public/site.webmanifest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PostLeave.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostLeave.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/header/Header.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,28 +37,29 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="samji" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="0fd223af-77ad-413b-be4b-8d3ea30098cf" />
+    <option name="defaultAccountId" value="38342907-856c-49d6-84da-739cdad1f29c" />
   </component>
   <component name="ProjectId" id="2ewo01C7lyhxxlYB3vgw31OxCZT" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/public/fonts" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\odeji\WebstormProjects\kv4\node_modules\prettier" />
-    <property name="ts.external.directory.path" value="C:\Users\odeji\WebstormProjects\kv4\node_modules\typescript\lib" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "1gov",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+    "ts.external.directory.path": "C:\\Users\\odeji\\WebstormProjects\\kv4\\node_modules\\typescript\\lib"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\odeji\WebstormProjects\kv4\public\fonts" />
@@ -190,7 +195,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Chnage the engine url" />
@@ -203,91 +207,5 @@
     <MESSAGE value="Fixing Mic &amp; Camera not requesting for permission" />
     <MESSAGE value="-Fixing Mic &amp; Camera not requesting for permission&#10;-Add 1gov domain to nextjs image permission" />
     <option name="LAST_COMMIT_MESSAGE" value="-Fixing Mic &amp; Camera not requesting for permission&#10;-Add 1gov domain to nextjs image permission" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="92" y="92" width="1182" height="536" key="DiffContextDialog" timestamp="1717175841755">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state x="92" y="92" width="1182" height="536" key="DiffContextDialog/0.0.1366.720@0.0.1366.720" timestamp="1717175841755" />
-    <state x="463" y="114" key="FileChooserDialogImpl" timestamp="1714979806759">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state x="463" y="114" key="FileChooserDialogImpl/0.0.1366.720@0.0.1366.720" timestamp="1714979806757" />
-    <state width="1323" height="176" key="GridCell.Tab.0.bottom" timestamp="1721731948170">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="176" key="GridCell.Tab.0.bottom/0.0.1366.720@0.0.1366.720" timestamp="1721731948170" />
-    <state width="1323" height="176" key="GridCell.Tab.0.center" timestamp="1721731948170">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="176" key="GridCell.Tab.0.center/0.0.1366.720@0.0.1366.720" timestamp="1721731948170" />
-    <state width="1323" height="176" key="GridCell.Tab.0.left" timestamp="1721731948169">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="176" key="GridCell.Tab.0.left/0.0.1366.720@0.0.1366.720" timestamp="1721731948169" />
-    <state width="1323" height="176" key="GridCell.Tab.0.right" timestamp="1721731948170">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="176" key="GridCell.Tab.0.right/0.0.1366.720@0.0.1366.720" timestamp="1721731948170" />
-    <state width="1323" height="220" key="GridCell.Tab.1.bottom" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.1.bottom/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state width="1323" height="220" key="GridCell.Tab.1.center" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.1.center/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state width="1323" height="220" key="GridCell.Tab.1.left" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.1.left/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state width="1323" height="220" key="GridCell.Tab.1.right" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.1.right/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state width="1323" height="220" key="GridCell.Tab.2.bottom" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.2.bottom/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state width="1323" height="220" key="GridCell.Tab.2.center" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.2.center/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state width="1323" height="220" key="GridCell.Tab.2.left" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.2.left/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state width="1323" height="220" key="GridCell.Tab.2.right" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.2.right/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state width="1323" height="220" key="GridCell.Tab.3.bottom" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.3.bottom/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state width="1323" height="220" key="GridCell.Tab.3.center" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.3.center/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state width="1323" height="220" key="GridCell.Tab.3.left" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.3.left/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state width="1323" height="220" key="GridCell.Tab.3.right" timestamp="1713558556184">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state width="1323" height="220" key="GridCell.Tab.3.right/0.0.1366.720@0.0.1366.720" timestamp="1713558556184" />
-    <state x="275" y="79" key="Vcs.Push.Dialog.v2" timestamp="1717163291911">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state x="275" y="79" key="Vcs.Push.Dialog.v2/0.0.1366.720@0.0.1366.720" timestamp="1717163291911" />
-    <state x="389" y="93" width="587" height="534" key="find.popup" timestamp="1721863799205">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state x="389" y="93" width="587" height="534" key="find.popup/0.0.1366.720@0.0.1366.720" timestamp="1721863799205" />
-    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup" timestamp="1721863804894">
-      <screen x="0" y="0" width="1366" height="720" />
-    </state>
-    <state x="346" y="41" width="672" height="678" key="search.everywhere.popup/0.0.1366.720@0.0.1366.720" timestamp="1721863804894" />
   </component>
 </project>

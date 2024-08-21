@@ -22,25 +22,25 @@ function Header() {
   );
   return (
     <Head>
-      <title>Konn3ct</title>
-      <meta name="description" content="Konn3ct" />
-      <link rel="icon" href="/favicon.ico" />
+      <title>Conference</title>
+      <meta name="description" content="Conference" />
+      <link rel="icon" href="/logo_1gov.png" />
       <link
         rel="apple-touch-icon"
         sizes="180x180"
-        href="/apple-touch-icon.png"
+        href="/logo_1gov.png"
       />
       <link
         rel="icon"
         type="image/png"
         sizes="32x32"
-        href="/favicon-32x32.png"
+        href="/logo_1gov.png"
       />
       <link
         rel="icon"
         type="image/png"
         sizes="16x16"
-        href="/favicon-16x16.png"
+        href="/logo_1gov.png"
       />
       <link rel="manifest" href="/site.webmanifest" />
       <style>:root {`{${primaryColor} ${a11yColor} ${secondaryColor}}`}</style>
