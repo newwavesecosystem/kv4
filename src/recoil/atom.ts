@@ -213,6 +213,7 @@ export const presentationSlideState = atom<{
 export const recordingModalState = atom<{
   isActive: boolean;
   isStarted: boolean;
+  recordingConsent: boolean;
   step: number;
   id: number;
   width: number;
@@ -220,7 +221,7 @@ export const recordingModalState = atom<{
   name: string;
 }>({
   key: "recordingModalState",
-  default: { step: 0, isActive: false, isStarted: false, height: 0, width: 0, id: 0, name: "" },
+  default: { step: 0, isActive: false, isStarted: false, recordingConsent: false, height: 0, width: 0, id: 0, name: "" },
 });
 
 export const eCinemaModalState = atom<{

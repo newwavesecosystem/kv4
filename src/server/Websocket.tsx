@@ -1,5 +1,5 @@
 import SockJS from 'sockjs-client';
-import {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import * as UserInfo from './UserInfo';
 import * as ServerInfo from './ServerInfo';
 
@@ -1064,6 +1064,7 @@ const Websocket = () => {
                 setRecordingState((prev) => ({
                     ...prev,
                     isActive: true,
+                    recordingConsent: true,
                 }));
             } else {
                 setRecordingState((prev) => ({
@@ -1248,7 +1249,7 @@ const Websocket = () => {
 
 }
 
-export function websocketSendMessage(internalUserID:any,meetingTitle:any,sender:any,message:string) {
+export function websocketSendMessage(internalUserID: any, meetingTitle: any, sender: any, message: string) {
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"sendGroupChatMsg\",\"params\":[\"MAIN-PUBLIC-GROUP-CHAT\",{\"correlationId\":\"${internalUserID}-${Date.now()}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
     websocketStopTyping();
 }

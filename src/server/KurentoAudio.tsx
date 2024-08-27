@@ -85,6 +85,10 @@ const KurentoAudio = () => {
                         break;
                     case 'error':
                         onError('kurentoAudio Error message from server: ' + parsedMessage.message);
+                        setConnection({
+                            websocket_connection: true,
+                            audio_connection:false
+                        })
                         break;
                     case 'iceCandidate':
                         console.log("iceCandidate");
