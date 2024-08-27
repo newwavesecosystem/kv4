@@ -24,6 +24,7 @@ import PinIcon from "../icon/outline/PinIcon";
 import VideoConfOffIcon from "../icon/outline/VideoConfOffIcon";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import WifiOnIcon from "../icon/outline/WifiOnIcon";
+import VolumeOffIcon from "~/components/icon/outline/VolumeOffIcon";
 
 function SingleCameraComponent({
   participant,
@@ -126,7 +127,9 @@ function SingleCameraComponent({
           {participantTalkingList
             .filter((eachItem: any, index:number) => eachItem?.intId == participant.intId)
             .map((eachItem: any) =>
-              eachItem?.joined && !eachItem?.muted ? (
+              !eachItem?.joined ? (
+                <VolumeOffIcon key={index} className="h-5 w-5 " />
+              ) :eachItem?.joined && !eachItem?.muted ? (
                 <MicOnIcon key={index} className="h-5 w-5 " />
               ) : (
                 <MicOffIcon key={index} className="h-5 w-5 " />
@@ -198,7 +201,7 @@ function SingleCameraComponent({
         <div
           className={cn(
             " flex h-full w-full flex-col items-center justify-center bg-a11y/20 ",
-            participantList.length === 2 && "w-screen md:w-full",
+            // participantList.length === 2 && "w-screen md:w-full",
           )}
         >
           <div className="flex aspect-square items-center justify-center rounded-full bg-primary/80 p-4 text-3xl font-semibold uppercase lg:p-8">

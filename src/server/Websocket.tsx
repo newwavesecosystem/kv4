@@ -1064,6 +1064,7 @@ const Websocket = () => {
                 setRecordingState((prev) => ({
                     ...prev,
                     isActive: true,
+                    recordingConsent: true,
                 }));
             } else {
                 setRecordingState((prev) => ({

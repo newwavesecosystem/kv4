@@ -35,23 +35,30 @@ function PostLeave() {
         <div className="mt-10 flex items-center gap-2">
           <span className="text-sm text-a11y/40">Left by mistake?</span>
           {!postLeaveMeeting.isKicked && (
-            <button
-              onClick={() => {
-                if (postLeaveMeeting.isKicked) return;
-                setPostLeaveMeeting({
-                  isLeave: false,
-                  isLeaveRoomCall: false,
-                  isEndCall: false,
-                  isKicked: false,
-                  isSessionExpired: false,
-                  isOthers: false,
-                });
-              }}
+            // <button
+            //   onClick={() => {
+            //     if (postLeaveMeeting.isKicked) return;
+            //     setPostLeaveMeeting({
+            //       isLeave: false,
+            //       isLeaveRoomCall: false,
+            //       isEndCall: false,
+            //       isKicked: false,
+            //       isSessionExpired: false,
+            //       isOthers: false,
+            //     });
+            //   }}
+            //   className="flex items-center gap-2 rounded-md bg-primary px-4 py-1"
+            // >
+            //   <ExitIcon className="h-4 w-4" />
+            //   <span>Rejoin</span>
+            // </button>
+            <a
+              href={user?.meetingDetails?.customdata[0]?.meetingLink}
               className="flex items-center gap-2 rounded-md bg-primary px-4 py-1"
             >
               <ExitIcon className="h-4 w-4" />
               <span>Rejoin</span>
-            </button>
+            </a>
           )}
         </div>
         <div className="fixed bottom-5">

@@ -56,6 +56,7 @@ import BreakOutModal from "~/components/breakout/BreakOutModal";
 import HandOffIcon from "~/components/icon/outline/HandOffIcon";
 import FileUploadModal from "~/components/fileUpload/FileUploadModal";
 import { Howl } from 'howler';
+import RecordingConsentModal from "~/components/recording/RecordingConsentModal";
 
 
 function Authenticated({ children }: { children: React.ReactNode }) {
@@ -106,6 +107,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
     >
       <ResolutionModal />
       <EndRecordingModal />
+      <RecordingConsentModal />
       <ParticipantsModal />
       <RemoveUserModal />
       <ChatModal />
