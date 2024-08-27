@@ -24,12 +24,15 @@
   <component name="ChangeListManager">
     <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="screen for 1 gov">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/site.webmanifest" beforeDir="false" afterPath="$PROJECT_DIR$/public/site.webmanifest" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/PostLeave.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostLeave.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/header/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/icon/outline/EllipsisIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/icon/outline/EllipsisIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/icon/outline/HandOnIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/icon/outline/HandOnIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/icon/outline/MicOffIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/icon/outline/MicOffIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/icon/outline/PhoneEndIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/icon/outline/PhoneEndIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/icon/outline/RecordOnIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/icon/outline/RecordOnIcon.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tailwind.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +59,7 @@
   "keyToString": {
     "git-widget-placeholder": "1gov",
     "node.js.selected.package.tslint": "(autodetect)",
+    "npm.dev.executor": "Run",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
     "ts.external.directory.path": "C:\\Users\\odeji\\WebstormProjects\\kv4\\node_modules\\typescript\\lib"
   }
@@ -78,6 +82,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.dev" />
         <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
@@ -207,5 +212,16 @@
     <MESSAGE value="Fixing Mic &amp; Camera not requesting for permission" />
     <MESSAGE value="-Fixing Mic &amp; Camera not requesting for permission&#10;-Add 1gov domain to nextjs image permission" />
     <option name="LAST_COMMIT_MESSAGE" value="-Fixing Mic &amp; Camera not requesting for permission&#10;-Add 1gov domain to nextjs image permission" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/server/Websocket.tsx</url>
+          <line>534</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

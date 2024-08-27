@@ -122,7 +122,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       {user?.meetingDetails?.meetingID && <CCModal />}
       <BreakOutModal />
       <FileUploadModal />
-      <div className="sticky top-0 z-50 flex h-16 w-full justify-between border-b border-a11y/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:py-4">
+      <div className="sticky top-0 z-50 flex h-16 w-full justify-between border-b border-onegov/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:py-4">
         {/* left side */}
         <div className=" flex items-center gap-2 md:gap-5">
           {user?.meetingDetails?.customLogoURL != null &&
@@ -192,7 +192,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               />
               <span
                 className={cn(
-                  donationState.isActive && recordingState.isActive && "hidden",
+                  donationState.isActive && recordingState.isActive && "hidden", "text-white"
                 )}
               >
                 Pause Recording
@@ -244,9 +244,9 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                   });
                 }
               }}
-              className="hidden items-center gap-2 rounded-lg bg-[#DF2622] px-3 py-2 md:flex"
+              className="hidden items-center gap-2 rounded-lg bg-[#DF2622] px-3 py-2 md:flex text-white"
             >
-              <RecordOnIcon className="h-6 w-6" />
+              <RecordOnIcon muted={true} className="h-6 w-6" />
               <span>Pause Recording</span>
             </button>
           ) : (

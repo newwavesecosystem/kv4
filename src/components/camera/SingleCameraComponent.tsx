@@ -132,7 +132,7 @@ function SingleCameraComponent({
               ) :eachItem?.joined && !eachItem?.muted ? (
                 <MicOnIcon key={index} className="h-5 w-5 " />
               ) : (
-                <MicOffIcon key={index} className="h-5 w-5 " />
+                <MicOffIcon key={index} muted={true} className="h-5 w-5 " />
               ),
             )}
         </button>

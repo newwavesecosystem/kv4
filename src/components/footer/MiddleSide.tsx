@@ -175,7 +175,7 @@ function MiddleSide() {
 
   return (
     <div className=" flex w-full items-center justify-center gap-5">
-      <div className="flex items-center gap-1 rounded-3xl border border-a11y/40 bg-[#DF2622] p-2 md:hidden">
+      <div className="flex items-center gap-1 rounded-3xl border border-onegov/40 bg-[#DF2622] p-2 md:hidden">
         <button
           onClick={() => {
             setEndCallModal(true);
@@ -188,7 +188,7 @@ function MiddleSide() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="px-1">
-              <EllipsisIcon className="h-6 w-6" />
+              <EllipsisIcon endMeet={true} className="h-6 w-6" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="mb-5 w-80 rounded-b-none border-0 bg-primary text-a11y md:mb-3 md:hidden md:rounded-b-md">
@@ -240,7 +240,7 @@ function MiddleSide() {
         {!micState ? (
           <MicOnIcon className="h-6 w-6 " />
         ) : (
-          <MicOffIcon className="h-6 w-6 " />
+          <MicOffIcon muted={true} className="h-6 w-6 " />
         )}
       </button>
       <button
@@ -573,7 +573,7 @@ function MiddleSide() {
                 ?.isHandRaised ? (
                 <HandOffIcon className="mr-2 h-5 w-5" />
               ) : (
-                <HandOnIcon className="mr-2 h-5 w-5" />
+                <HandOnIcon muted={false} className="mr-2 h-5 w-5" />
               )}
               <span>
                 {connectedUsers.find((user) => user.id === user.id)
@@ -742,7 +742,7 @@ function MiddleSide() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="px-1">
-                <EllipsisIcon className="h-6 w-6" />
+                <EllipsisIcon endMeet={true} className="h-6 w-6" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="mb-2 w-80 rounded-b-none border-0 bg-primary text-a11y md:mb-3 md:rounded-b-md">

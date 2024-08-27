@@ -23,7 +23,7 @@ function PostLeave() {
       </div>
       <div className="flex h-[calc(100vh-64px)] flex-col items-center justify-center bg-onegov/80 ">
         <HandOnIcon className="h-20 w-20 rotate-45" />
-        <span className="text-2xl font-bold">
+        <span className="text-2xl font-bold text-white">
           {postLeaveMeeting.isLeave && "You left the session"}
           {postLeaveMeeting.isLeaveRoomCall && "You left the session"}
           {postLeaveMeeting.isEndCall && "You ended the session"}
@@ -31,7 +31,7 @@ function PostLeave() {
           {postLeaveMeeting.isSessionExpired && "Session expired"}
           {postLeaveMeeting.isOthers && "You left the session"}
         </span>
-        <p className=" mt-2 text-sm">Have a nice day, {user?.fullName}</p>
+        <p className=" mt-2 text-sm text-white">Have a nice day, {user?.fullName}</p>
         <div className="mt-10 flex items-center gap-2">
           <span className="text-sm text-a11y/40">Left by mistake?</span>
           {!postLeaveMeeting.isKicked && (
