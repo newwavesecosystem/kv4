@@ -422,6 +422,7 @@ function PostSignIn() {
                     index={index}
                     key={index}
                     participant={participant}
+                    userCamera={participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId)[0]}
                   />
                 ),
               )}
@@ -465,6 +466,7 @@ function PostSignIn() {
                       index={index}
                       key={index}
                       participant={participant}
+                      userCamera={participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId)[0]}
                     />
                   ))}
               </div>
@@ -515,6 +517,7 @@ function PostSignIn() {
                           index={index}
                           key={index}
                           participant={participant}
+                          userCamera={participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId)[0]}
                         />
                       </div>
                   ))}

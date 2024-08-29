@@ -27,11 +27,12 @@ import WifiOnIcon from "../icon/outline/WifiOnIcon";
 import VolumeOffIcon from "~/components/icon/outline/VolumeOffIcon";
 
 function SingleCameraComponent({
-  participant,
+  participant, userCamera,
   key,
   index,
 }: {
   participant: IParticipant;
+  userCamera: IParticipantCamera|null;
   key: number;
   index: number;
 }) {
@@ -46,21 +47,20 @@ function SingleCameraComponent({
   const [camOn, setCamOn] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  let userCamera=participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId);
-
 
   useEffect(() => {
   // Attach the new stream to the video element
 
     console.log("userCamera",userCamera);
     console.log("userCamera camOn",camOn);
-    if(userCamera.length > 0 && userCamera[0]?.stream){
-      console.log("userCamera length > 0",userCamera[0]?.stream)
-      if (videoRef.current && !camOn) {
-        console.log("userCamera videoRef.current > 0",userCamera[0]?.stream)
-        videoRef.current.srcObject = userCamera[0].stream;
+    if(userCamera!= null){
+      console.log("userCamera is not null",userCamera.stream)
+      // if (videoRef.current && !camOn) {
+        console.log("userCamera videoRef.current > 0",userCamera.stream)
+        videoRef.current!.srcObject = userCamera.stream;
         setCamOn(true);
-      }
+        console.log("userCamera is null")
+      // }
     }else{
       setCamOn(false);
     }
@@ -185,19 +185,19 @@ function SingleCameraComponent({
         autoPlay
         playsInline
         muted
-        hidden={userCamera.length == 0}
+        hidden={userCamera == null}
         className="h-full w-full flex-1 object-cover"
       >
         Your browser does not support video tag
       </video>
-      {userCamera.length > 0 && (
+      {userCamera == null && (
         <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg  bg-primary/60 px-2 py-1 text-sm">
           <span className=" max-w-[150px] truncate ">{participant?.name}</span>
           {/*<span className=" max-w-[150px] truncate ">{participant?.intId}</span>*/}
           <WifiOnIcon signal={participant.connection_status == "critical"? 1 : participant.connection_status == "danger"? 2 :  participant.connection_status == "warning"? 3 : 4} className="hidden h-6 w-6 md:block" color={participant.connection_status == "critical"? '#ff0000' : participant.connection_status == "danger"? '#f68322' :  participant.connection_status == "warning"? '#fcd104' : '#004800'}  />
         </div>
       )}
-      {userCamera.length == 0 && (
+      {userCamera == null && (
         <div
           className={cn(
             " flex h-full w-full flex-col items-center justify-center bg-a11y/20 ",
