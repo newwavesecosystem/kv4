@@ -190,7 +190,7 @@ function SingleCameraComponent({
       >
         Your browser does not support video tag
       </video>
-      {userCamera == null && (
+      {userCamera != null && (
         <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg  bg-primary/60 px-2 py-1 text-sm">
           <span className=" max-w-[150px] truncate ">{participant?.name}</span>
           {/*<span className=" max-w-[150px] truncate ">{participant?.intId}</span>*/}

@@ -22,9 +22,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fix UI issues">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fixing Camera mixup issues when there are many people diconnecting and getting back">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,6 +54,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "git-widget-placeholder": "1gov",
+    "last_opened_file_path": "C:/Users/odeji/WebstormProjects/nibbsAppApi",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -110,7 +110,7 @@
       <workItem from="1720135168325" duration="2416000" />
       <workItem from="1720511953847" duration="38000" />
       <workItem from="1721731925035" duration="4997000" />
-      <workItem from="1724837668264" duration="3450000" />
+      <workItem from="1724837668264" duration="6577000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -182,7 +182,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717163289345</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="-Fixing Camera mixup issues when there are many people diconnecting and getting back">
+      <option name="closed" value="true" />
+      <created>1724921998038</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1724921998038</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,7 +222,8 @@
     <MESSAGE value="-Working on WhiteboardComponent.tsx&#10;-Worked on separating overlapping talking indicator with participant list" />
     <MESSAGE value="Fixing Mic &amp; Camera not requesting for permission" />
     <MESSAGE value="-Fixing Mic &amp; Camera not requesting for permission&#10;-Add 1gov domain to nextjs image permission" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Fixing Mic &amp; Camera not requesting for permission&#10;-Add 1gov domain to nextjs image permission" />
+    <MESSAGE value="-Fixing Camera mixup issues when there are many people diconnecting and getting back" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Fixing Camera mixup issues when there are many people diconnecting and getting back" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
