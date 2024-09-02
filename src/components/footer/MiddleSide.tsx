@@ -388,11 +388,11 @@ function MiddleSide() {
                     );
                     setScreenShareState(!screenShareState);
                   } else {
-                    toast({
-                      variant: "destructive",
-                      title: "Uh oh! Something went wrong.",
-                      description: "Kindly check your screen sharing settings.",
-                    });
+                    // toast({
+                    //   variant: "destructive",
+                    //   title: "Uh oh! Something went wrong.",
+                    //   description: "Kindly check your screen sharing settings.",
+                    // });
                   }
                 }}
               >
