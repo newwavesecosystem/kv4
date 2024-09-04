@@ -58,7 +58,7 @@ function SingleChat({
         {/*  </DropdownMenuContent>*/}
         {/*</DropdownMenu>*/}
       </div>
-      <span>{chat.message}</span>
+        <div dangerouslySetInnerHTML={{__html: chat.message}}/>
     </div>
   );
 }
