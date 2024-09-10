@@ -167,7 +167,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           >
             <ShareIcon className="h-6 w-6" />
           </button>
-          {recordingState.isActive && (
+          {user?.meetingDetails?.record == "true" ? recordingState.isActive && (
             <button
               onClick={() => {
                 setRecordingState((prev) => ({
@@ -198,7 +198,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 Pause Recording
               </span>
             </button>
-          )}
+          ) : null}
           {donationState.isActive && (
             <button
               onClick={() => {
@@ -227,7 +227,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
         </div>
         {/* right side */}
         <div className="flex items-center gap-2 md:gap-5">
-          {recordingState.isActive ? (
+          {user?.meetingDetails?.record == "true" ? recordingState.isActive ? (
             <button
               onClick={() => {
                 if (participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0].role == "MODERATOR") {
@@ -271,7 +271,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               <RecordOnIcon className="h-6 w-6" />
               <span>{recordingState.isStarted ? "Resume" : "Start"} Recording</span>
             </button>
-          )}
+          ): null}
 
           <button
             onClick={() => {

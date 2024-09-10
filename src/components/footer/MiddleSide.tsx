@@ -443,32 +443,50 @@ function MiddleSide() {
           </DropdownMenuGroup>
           <DropdownMenuSeparator className="" />
           <DropdownMenuGroup className="py-1 md:hidden">
-            {recordingState.isActive ? (
+            {user?.meetingDetails?.record == "true" ? recordingState.isActive ? (
               <DropdownMenuItem
                 onClick={() => {
-                  setRecordingState((prev) => ({
-                    ...prev,
-                    step: 2,
-                  }));
+                  if (participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0].role == "MODERATOR") {
+                    setRecordingState((prev) => ({
+                      ...prev,
+                      step: 2,
+                    }));
+                  } else {
+                    toast({
+                      variant: "destructive",
+                      title: "Permission Denied!!",
+                      description:
+                          "You dont have the permission for this action. Kindly chat with the host or moderator",
+                    });
+                  }
                 }}
                 className="bg-[#DF2622]"
               >
                 <RecordOnIcon className="mr-2 h-5 w-5" />
-                <span>End Recording</span>
+                <span>Pause Recording</span>
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem
                 onClick={() => {
-                  setRecordingState((prev) => ({
-                    ...prev,
-                    step: 1,
-                  }));
+                  if (participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0].role == "MODERATOR") {
+                    setRecordingState((prev) => ({
+                      ...prev,
+                      step: 1,
+                    }));
+                  } else {
+                    toast({
+                      variant: "destructive",
+                      title: "Permission Denied!!",
+                      description:
+                          "You dont have the permission for this action. Kindly chat with the host or moderator",
+                    });
+                  }
                 }}
               >
                 <RecordOnIcon className="mr-2 h-5 w-5" />
-                <span>Start Recording</span>
+                <span>{recordingState.isStarted ? "Resume" : "Start"} Recording</span>
               </DropdownMenuItem>
-            )}
+            ) : null }
           </DropdownMenuGroup>
           <DropdownMenuSeparator className="md:hidden" />
           <DropdownMenuGroup>
