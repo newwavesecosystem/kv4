@@ -56,7 +56,7 @@ const KurentoAudio = () => {
 
     useEffect(() => {
 
-        if(!connectionStatus?.audio_connection && connectionStatus?.websocket_connection && user?.sessiontoken !=null && microphoneStream!=null ){
+        if(!connectionStatus.audio_connection && connectionStatus.websocket_connection && user?.sessiontoken !=null && microphoneStream!=null ){
             console.log("kurentoAudio websocket_connection is active")
             console.log("kurentoAudio microphoneStream is set")
             ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
@@ -85,10 +85,10 @@ const KurentoAudio = () => {
                         break;
                     case 'error':
                         onError('kurentoAudio Error message from server: ' + parsedMessage.message);
-                        setConnection({
-                            websocket_connection: true,
+                        setConnection((prev)=>({
+                            ...prev,
                             audio_connection:false
-                        })
+                        }))
                         break;
                     case 'iceCandidate':
                         console.log("iceCandidate");
@@ -96,10 +96,10 @@ const KurentoAudio = () => {
                         break;
                     case 'webRTCAudioSuccess':
                         console.log("kurentoAudio Audio Connected Successfully");
-                        setConnection({
-                            websocket_connection: true,
+                        setConnection((prev)=>({
+                            ...prev,
                             audio_connection:true
-                        })
+                        }))
                         break;
                     case 'pong':
                         console.log("kurentoAudio Active connection");
@@ -111,10 +111,10 @@ const KurentoAudio = () => {
 
             ws.onclose = () => {
                 console.log('kurentoAudio Socket connection closed');
-                setConnection({
-                    websocket_connection: true,
+                setConnection((prev)=>({
+                    ...prev,
                     audio_connection:false
-                })
+                }))
             };
         }
     // },[ ])

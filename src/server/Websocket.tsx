@@ -192,10 +192,10 @@ const Websocket = () => {
 
                 if (obj.msg == "connected") {
                     // a["{\"msg\":\"connected\",\"session\":\"4qajGwWr4bziuofh9\"}"]
-                    setConnection({
-                        audio_connection: false,
+                    setConnection((prev)=>({
+                        ...prev,
                         websocket_connection:true
-                    })
+                    }))
                 }
 
                 if (collection == "group-chat-msg") {
@@ -268,10 +268,10 @@ const Websocket = () => {
             sock.onclose = () => {
                 console.log('Socket connection closed');
                 console.log('Trying to Reconnect');
-                setConnection({
-                    audio_connection: false,
+                setConnection((prev)=>({
+                    ...prev,
                     websocket_connection:false
-                })
+                }))
                 // reConnect()
 
             };

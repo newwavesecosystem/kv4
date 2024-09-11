@@ -125,7 +125,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       <div className="sticky top-0 z-50 flex h-16 w-full justify-between border-b border-a11y/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:py-4">
         {/* left side */}
         <div className=" flex items-center gap-2 md:gap-5">
-          {user?.meetingDetails?.customLogoURL != null &&
+          {user?.meetingDetails?.customLogoURL != null && user?.meetingDetails?.customLogoURL != "" &&
           <Image
             src={user?.meetingDetails?.customLogoURL}
             alt="logo"
@@ -344,14 +344,14 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             </button>
           )}
 
-          {/*<button*/}
-          {/*  onClick={() => {*/}
-          {/*    setKonn3ctAiChatState(!konn3ctAiChatState);*/}
-          {/*  }}*/}
-          {/*  className="items-center rounded-full border border-a11y/20 p-2"*/}
-          {/*>*/}
-          {/*  <BotIcon className="h-6 w-6" />*/}
-          {/*</button>*/}
+          <button
+            onClick={() => {
+              setKonn3ctAiChatState(!konn3ctAiChatState);
+            }}
+            className="items-center rounded-full border border-a11y/20 p-2"
+          >
+            <BotIcon className="h-6 w-6" />
+          </button>
           {donationState.isActive && (
             <button
               onClick={() => {

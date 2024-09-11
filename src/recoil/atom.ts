@@ -32,9 +32,9 @@ export const newMessage = atom<boolean>({
 export const connectionStatusState = atom<{
   websocket_connection: boolean;
   audio_connection: boolean;
-} | null>({
+}>({
   key: "connectionStatusState",
-  default: null,
+  default: {websocket_connection:false, audio_connection:false},
 });
 
 export const participantListState = atom<any>({
