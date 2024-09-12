@@ -91,7 +91,7 @@ function ECinemaComponent() {
           {/*</video>*/}
           <button
               onClick={() => {
-                  document.getElementById("ecinema").requestFullscreen();
+                  document.getElementById("ecinema")?.requestFullscreen();
               }}
               className="absolute left-7 top-7 flex items-center gap-2 rounded-md border-2 border-a11y/20 bg-primary/20 px-3 py-2 text-sm backdrop-blur-3xl"
           >
