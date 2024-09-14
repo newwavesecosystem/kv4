@@ -190,3 +190,27 @@ const KurentoVideo = () => {
 };
 
 export default KurentoVideo
+
+
+// Switching the Active Camera
+// Naturally, we assume you'll be using the front camera by default when starting a call.
+// So we set isFrontCam as true and let the value flip on execution.
+//
+//     let isFrontCam = true;
+//
+// try {
+//     // Taken from above, we don't want to flip if we don't have another camera.
+//     if ( cameraCount < 2 ) { return; };
+//
+//     const videoTrack = localMediaStream.getVideoTracks()[0];
+//     const constraints = { facingMode: isFrontCam ? 'user' : 'environment' };
+//
+//     videoTrack.applyConstraints(constraints);
+//
+//     // _switchCamera is deprecated as of 124.0.5
+//     // videoTrack._switchCamera();
+//
+//     isFrontCam = !isFrontCam;
+// } catch( err ) {
+//     // Handle Error
+// };

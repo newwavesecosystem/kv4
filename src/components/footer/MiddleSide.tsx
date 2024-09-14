@@ -80,6 +80,9 @@ import {
 import { IChat, IParticipant, IParticipantCamera } from "~/types";
 import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
 import {generateRandomId} from "~/server/ServerInfo";
+import {
+  websocketKurentoScreenshareEndScreenshare,
+} from "~/server/KurentoScreenshare";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
@@ -343,27 +346,11 @@ function MiddleSide() {
                 onClick={async () => {
                   if (screenShareState && screenSharingStream) {
                     stopScreenSharingStream(ssscreen);
-                    // update the connected users state for the user where the id is the same
-                    setConnectedUsers((prev) =>
-                      prev.map((prevUser) => {
-                        if (prevUser.id === user?.id) {
-                          return {
-                            ...prevUser,
-                            screenSharingFeed: null,
-                            isScreenSharing: false,
-                          };
-                        }
-                        return prevUser;
-                      }),
-                    );
+
                     setScreenSharingStream(null);
-                    setScreenShareState(!screenShareState);
+                    setScreenShareState(false);
 
-                    websocketPresenter(participantList[0].intId);
-
-                    setTimeout(() => {
-                      websocketPresenter(user?.meetingDetails?.internalUserID);
-                    }, 1000);
+                    websocketKurentoScreenshareEndScreenshare();
 
                     return;
                   }
@@ -706,33 +693,33 @@ function MiddleSide() {
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger className="py-2">
-                <BotIcon className="mr-2 h-5 w-5" />
-                <span>Konn3ct AI</span>
-              </DropdownMenuSubTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuSubContent className="border-0 bg-primary text-a11y">
-                  <DropdownMenuItem>
-                    <span>Transcript</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Highlights</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span className="">Notes</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setKonn3ctAiChatState(!konn3ctAiChatState);
-                    }}
-                    className="md:hidden"
-                  >
-                    <span className="">Chat</span>
-                  </DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuPortal>
-            </DropdownMenuSub>
+            {/*<DropdownMenuSub>*/}
+            {/*  <DropdownMenuSubTrigger className="py-2">*/}
+            {/*    <BotIcon className="mr-2 h-5 w-5" />*/}
+            {/*    <span>Konn3ct AI</span>*/}
+            {/*  </DropdownMenuSubTrigger>*/}
+            {/*  <DropdownMenuPortal>*/}
+            {/*    <DropdownMenuSubContent className="border-0 bg-primary text-a11y">*/}
+            {/*      <DropdownMenuItem>*/}
+            {/*        <span>Transcript</span>*/}
+            {/*      </DropdownMenuItem>*/}
+            {/*      <DropdownMenuItem>*/}
+            {/*        <span>Highlights</span>*/}
+            {/*      </DropdownMenuItem>*/}
+            {/*      <DropdownMenuItem>*/}
+            {/*        <span className="">Notes</span>*/}
+            {/*      </DropdownMenuItem>*/}
+            {/*      <DropdownMenuItem*/}
+            {/*        onClick={() => {*/}
+            {/*          setKonn3ctAiChatState(!konn3ctAiChatState);*/}
+            {/*        }}*/}
+            {/*        className="md:hidden"*/}
+            {/*      >*/}
+            {/*        <span className="">Chat</span>*/}
+            {/*      </DropdownMenuItem>*/}
+            {/*    </DropdownMenuSubContent>*/}
+            {/*  </DropdownMenuPortal>*/}
+            {/*</DropdownMenuSub>*/}
 
             <DropdownMenuItem
               onClick={() => {

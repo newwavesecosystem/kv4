@@ -21,7 +21,7 @@ import {
     participantTalkingListState,
     pollModalState,
     presentationSlideState, privateChatModalState,
-    recordingModalState,
+    recordingModalState, screenSharingState,
     screenSharingStreamState,
     viewerScreenSharingState,
     waitingRoomUsersState
@@ -441,12 +441,16 @@ const Websocket = () => {
 
         if(msg == "added"){
             const {stream, name,callerName} = obj?.fields;
-            setViewerScreenShareState(true);
+            if(!screenSharingState) {
+                setViewerScreenShareState(true);
+            }
         }
 
         if(msg == "removed"){
-            setViewerScreenShareState(false);
-            setScreenSharingStream(null);
+            if(!screenSharingState) {
+                setViewerScreenShareState(false);
+                setScreenSharingStream(null);
+            }
         }
     }
 

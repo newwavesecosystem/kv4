@@ -129,9 +129,10 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           <Image
             src={user?.meetingDetails?.customLogoURL}
             alt="logo"
-            width={93}
+            width={60}
             height={28}
             className="hidden md:block"
+            loading="lazy"
           />}
           <Separator
             className="hidden bg-a11y md:block"
