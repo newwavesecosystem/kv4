@@ -19,7 +19,7 @@ import {
     participantCameraListState,
     participantListState,
     participantTalkingListState,
-    pollModalState,
+    pollModalState, postLeaveMeetingState,
     presentationSlideState, privateChatModalState,
     recordingModalState, screenSharingState,
     screenSharingStreamState,
@@ -132,6 +132,11 @@ const Websocket = () => {
     const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
     const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
 
+    const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(
+        postLeaveMeetingState,
+    );
+
+
     const [num, setNum] = useState(1);
 
     const getNum=()=>{
@@ -211,6 +216,10 @@ const Websocket = () => {
                 }
                 if (collection == "users") {
                     handleUsers(e.data)
+                }
+
+                if (collection == "current-user") {
+                    handleCurrentUsers(e.data)
                 }
                 if (collection == "record-meetings") {
                     handleRecording(e.data)
@@ -413,6 +422,25 @@ const Websocket = () => {
 
         if (msg == 'removed') {
             removeUserlist(id)
+        }
+    }
+
+    const handleCurrentUsers = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id, fields} = obj;
+        console.log("CurrentUserState: handleUsers",obj);
+
+        if (msg == 'changed') {
+            const {authTokenValidatedTime} = fields;
+
+            if(authTokenValidatedTime != null){
+                console.log("Session switched",obj);
+                setPostLeaveMeeting({
+                    ...postLeaveMeeting,
+                    isKicked: true,
+                });
+            }
         }
     }
 
