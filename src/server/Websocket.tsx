@@ -130,6 +130,7 @@ const Websocket = () => {
     const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
     const [fileUploadModal, setFileUploadModal] = useRecoilState(fileUploadModalState);
     const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
+    const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
 
     const [num, setNum] = useState(1);
 
@@ -441,13 +442,14 @@ const Websocket = () => {
 
         if(msg == "added"){
             const {stream, name,callerName} = obj?.fields;
-            if(!screenSharingState) {
+            console.log(`screenSharingState: ${JSON.stringify(screenSharingState)}`);
+            if(!screenShareState) {
                 setViewerScreenShareState(true);
             }
         }
 
         if(msg == "removed"){
-            if(!screenSharingState) {
+            if(!screenShareState) {
                 setViewerScreenShareState(false);
                 setScreenSharingStream(null);
             }

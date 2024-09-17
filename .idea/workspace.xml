@@ -24,10 +24,9 @@
   <component name="ChangeListManager">
     <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/screenSharing/ScreenSharingComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screenSharing/ScreenSharingComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/KurentoScreenshare.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoScreenshare.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/KurentoVideo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoVideo.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/KurentoScreenshareViewer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoScreenshareViewer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -132,7 +131,7 @@
       <workItem from="1724222966807" duration="1168000" />
       <workItem from="1726055273356" duration="1062000" />
       <workItem from="1726122999163" duration="8536000" />
-      <workItem from="1726218692509" duration="24661000" />
+      <workItem from="1726218692509" duration="28678000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -279,7 +278,14 @@
       <option name="project" value="LOCAL" />
       <updated>1726135994345</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Finish work on screen sharing implementation">
+      <created>1726294768860</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1726294768860</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -320,7 +326,8 @@
     <MESSAGE value="-Add Full Screen Mode to ECinemaComponent.tsx&#10;-On Group Chat: Sending of HTMl content is not displayed correctly" />
     <MESSAGE value="-On Mobile: No ismoderator check for Start recording&#10;-Disable recording when not activated for the meeting" />
     <MESSAGE value="-Fix issues on ecinema" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Fix issues on ecinema" />
+    <MESSAGE value="Finish work on screen sharing implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finish work on screen sharing implementation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -337,7 +344,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/server/KurentoScreenshare.tsx</url>
-          <line>159</line>
+          <line>165</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="8" />
         </line-breakpoint>

@@ -3,7 +3,7 @@ import * as kurentoUtils from "kurento-utils";
 import {websocketSend} from "./Websocket"
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, screenSharingState, screenSharingStreamState} from "~/recoil/atom";
+import {authUserState, LayoutSettingsState, screenSharingState, screenSharingStreamState} from "~/recoil/atom";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 
 
@@ -33,6 +33,7 @@ const KurentoScreenShare = () => {
     const user = useRecoilValue(authUserState);
     const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
     const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState);
+    const [layoutSettings, setlayoutSettings] = useRecoilState(LayoutSettingsState);
 
     const [wsStarted, setWsStarted] = useState(false);
 
@@ -80,6 +81,11 @@ const KurentoScreenShare = () => {
         };
 
         const startProcess = () => {
+            setlayoutSettings({
+                ...layoutSettings,
+                layout: "4",
+                layoutName: "Focus on presenter",
+            });
             console.log('Creating WebRtcPeer and generating local sdp offer ...');
             const videoElement = document.getElementById('rVideoElement');
             const constraints = {
