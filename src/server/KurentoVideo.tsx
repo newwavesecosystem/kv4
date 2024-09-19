@@ -11,6 +11,36 @@ import {
     participantCameraListState
 } from "~/recoil/atom";
 import {IParticipantCamera} from "~/types";
+import requestCameraAccess from "~/lib/camera/requestCameraAccess";
+
+
+let ws: WebSocket | null = null;
+let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
+
+export async function kurentoVideoSwitchCamera(stream:MediaStream) {
+    console.log('kurentoVideo switch camera');
+
+    const newTracks = stream.getVideoTracks();
+    const localStream = webRtcPeer?.getLocalStream();
+    const oldTracks = localStream ? localStream.getVideoTracks() : [];
+
+
+    webRtcPeer?.peerConnection.getSenders().forEach((sender, index) => {
+        if (sender.track && sender.track.kind === 'video') {
+            const newTrack = newTracks[index];
+            if (newTrack == null) return;
+
+            // Cleanup old tracks in the local MediaStream
+            const oldTrack = oldTracks[index];
+            sender.replaceTrack(newTrack);
+            if (oldTrack) {
+                oldTrack.stop();
+                localStream?.removeTrack(oldTrack);
+            }
+            localStream?.addTrack(newTrack);
+        }
+    });
+}
 
 
 const KurentoVideo = () => {
@@ -20,10 +50,6 @@ const KurentoVideo = () => {
     const [videoState, setVideoState] = useRecoilState(cameraOpenState);
     const participantCameraList = useRecoilValue(participantCameraListState);
     const [videoStateWS, setVideoStateWS] = useState(false);
-
-    let ws: WebSocket | null = null;
-    let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
-
 
     const handleDisconnect = () => {
         if (ws) {

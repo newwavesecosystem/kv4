@@ -482,6 +482,20 @@ export const selectedSpeakersState = atom<MediaDeviceInfo | null>({
   default: null,
 });
 
+export const micFilterState = atom<{
+  echoCancellation: boolean;
+  noiseSuppression: boolean;
+  autoGainControl: boolean;
+}>({
+  key: "micFilterState",
+  default: {
+    echoCancellation: true,
+    noiseSuppression: false,
+    autoGainControl: false,
+  },
+});
+
+
 export const connectedUsersState = atom<IConnectedUser[]>({
   key: "connectedUsersState",
   default: [],

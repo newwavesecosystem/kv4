@@ -7,7 +7,7 @@ import {
   availableCamerasState,
   availableMicrophonesState,
   availableSpeakersState, cameraOpenState, cameraStreamState, connectionStatusState,
-  currentTabState, microphoneStreamState, participantCameraListState, participantListState,
+  currentTabState, micFilterState, microphoneStreamState, participantCameraListState, participantListState,
   selectedCameraState,
   selectedMicrophoneState,
   selectedSpeakersState,
@@ -32,19 +32,44 @@ import {IParticipantCamera} from "~/types";
 import {useToast} from "~/components/ui/use-toast";
 import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
+import {kurentoVideoSwitchCamera} from "~/server/KurentoVideo";
+import {kurentoAudioSetNewStream} from "~/server/KurentoAudio";
+import {Howl} from "howler";
 
 const VideoQuality = [
   {
     id: 1,
     name: "Low",
+    bitrate: 100,
+    default: false
   },
   {
     id: 2,
     name: "Medium",
+    bitrate: 200,
+    default: true
   },
   {
     id: 3,
+    name: "High",
+    default: false,
+    bitrate: 500,
+    constraints: {
+      width: 1280,
+      height: 720,
+      frameRate: 15
+    }
+  },
+  {
+    id: 4,
     name: "High Definition",
+    default: false,
+    bitrate: 800,
+    constraints: {
+      width: 1280,
+      height: 720,
+      frameRate: 30
+    }
   },
 ];
 
@@ -83,6 +108,8 @@ function DeviceSettings() {
 
   const [videoState, setVideoState] = useRecoilState(cameraOpenState);
 
+  const [micFilter, setMicFilter] = useRecoilState(micFilterState);
+
   const user = useRecoilValue(authUserState);
 
   const [participantCameraList, setParticipantCameraList] = useRecoilState(participantCameraListState);
@@ -94,6 +121,11 @@ function DeviceSettings() {
   const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
 
   const screenSize = useScreenSize();
+
+  const sound = new Howl({
+    src: ['/sound_test.mp3'],
+  });
+
 
   const getDevices = async () => {
     try {
@@ -118,16 +150,18 @@ function DeviceSettings() {
   // }
 
   const testSpeaker = () => {
-    const audioContext = new (window.AudioContext ||
-      window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const destination = audioContext.createMediaStreamDestination();
-    oscillator.connect(destination);
-    destination.stream.getAudioTracks().forEach((track) => {
-      track.stop();
-    });
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + 2); // Stop the test sound after 2 seconds
+    sound.play();
+
+    // const audioContext = new (window.AudioContext ||
+    //   window.webkitAudioContext)();
+    // const oscillator = audioContext.createOscillator();
+    // const destination = audioContext.createMediaStreamDestination();
+    // oscillator.connect(destination);
+    // destination.stream.getAudioTracks().forEach((track) => {
+    //   track.stop();
+    // });
+    // oscillator.start();
+    // oscillator.stop(audioContext.currentTime + 2); // Stop the test sound after 2 seconds
   };
 
   const { toast } = useToast();
@@ -170,62 +204,24 @@ function DeviceSettings() {
         <div className="flex flex-col gap-3">
           <span>Video</span>
           <Select
-              onValueChange={(value:string) => {
+              onValueChange={async (value: string) => {
 
-                var vidvalue:MediaDeviceInfo|undefined=availableCameras.filter((item:MediaDeviceInfo) =>item.deviceId == value)[0];
+                var vidvalue: MediaDeviceInfo | undefined = availableCameras.filter((item: MediaDeviceInfo) => item.deviceId == value)[0];
 
-                if (videoState) {
-                  stopCameraStream(cameraStream);
-                  setVideoState(!videoState);
-                  console.log("change_device videoState",videoState)
-                  let ur = participantCameraList.filter((item: any) => item?.intId == user?.meetingDetails?.internalUserID)[0];
-
-                  console.log("change_device participantCameraList",ur)
-
-                  if (ur.deviceID != vidvalue?.deviceId) {
-                    console.log("change_device device id changed")
-                    websocketStopCamera(`${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}${ur.deviceID}`);
-
-                    setTimeout(async()=>{
-                      const video = await requestCameraAccess(vidvalue);
-                      if (video) {
-                        console.log('change_device Camera is on');
-                        setCameraSteam(video);
-                        setVideoState(true);
-
-                        // update the user camera info
-
-                        const updatedArray = participantCameraList?.map((item:any) => {
-                          if (item.intId === user?.meetingDetails?.internalUserID) {
-                            return {...item, stream: video, deviceID:vidvalue?.deviceId, streamID: `${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}${vidvalue?.deviceId}`};
-                          }
-                          return item;
-                        });
-
-                        console.log(updatedArray);
-
-                        setParticipantCameraList(updatedArray)
-
-                      } else {
-                        toast({
-                          variant: "destructive",
-                          title: "Uh oh! Something went wrong.",
-                          description: "Kindly check your camera settings.",
-                        });
-                      }
-                    }, 5000);
-
-
-                  }
-
+                const video = await requestCameraAccess(vidvalue);
+                if (video) {
+                  console.log('change_device Camera is on');
+                  kurentoVideoSwitchCamera(video).then(r => console.log('hello'));
                 }
 
-                setSelectedCamera(vidvalue as MediaDeviceInfo)
+                setSelectedCamera(vidvalue!)
+
+                return;
               }}>
             <SelectTrigger className="bg-a11y/20">
               <div className="flex items-center gap-4">
                 <VideoOnIcon className="h-6 w-6" />{" "}
-                <SelectValue placeholder={selectedCamera == null ? "Pick a camera" : selectedCamera.label }  />
+                <SelectValue placeholder={selectedCamera == null ? availableCameras[0]?.label : selectedCamera.label }  />
               </div>
             </SelectTrigger>
             <SelectContent className="bg-primary w-full border border-a11y/40 text-white">
@@ -273,35 +269,22 @@ function DeviceSettings() {
         <div className="flex flex-col gap-3">
           <span>Microphone</span>
           <Select
-              onValueChange={(value: string) => {
+              onValueChange={async (value: string) => {
 
                 var vidvalue: MediaDeviceInfo | undefined = availableMicrophones.filter((item: MediaDeviceInfo) => item.deviceId == value)[0];
-                setSelectedMicrophone(vidvalue as MediaDeviceInfo)
 
-                stopMicrophoneStream(microphoneStream);
+                const mic = await requestMicrophoneAccess(vidvalue);
+                if (mic) {
+                  kurentoAudioSetNewStream(mic).then(r => console.log("Changing stream"));
+                }
 
-                setTimeout(async()=> {
-                  const mic = await requestMicrophoneAccess(vidvalue);
-                  if (mic) {
-                    setMicrophoneStream(mic);
-                    setConnection({
-                      websocket_connection: true,
-                      audio_connection: false
-                    })
-                  } else {
-                    toast({
-                      variant: "destructive",
-                      title: "Uh oh! Something went wrong.",
-                      description: "Kindly check your microphone settings.",
-                    });
-                  }
-                },3000);
+                setSelectedMicrophone(vidvalue!)
 
               }}>
             <SelectTrigger className="bg-a11y/20">
               <div className="flex items-center gap-4">
                 <VideoOnIcon className="h-6 w-6" />{" "}
-                <SelectValue placeholder={selectedMicrophone == null ?"Pick a microphone" : selectedMicrophone.label }  />
+                <SelectValue placeholder={selectedMicrophone == null ? availableMicrophones[0]?.label : selectedMicrophone.label }  />
               </div>
             </SelectTrigger>
             <SelectContent className="bg-primary w-full border border-a11y/40 text-white">
@@ -342,7 +325,7 @@ function DeviceSettings() {
               <SelectTrigger className="bg-a11y/20">
                 <div className="flex items-center gap-4">
                   <VideoOnIcon className="h-6 w-6" />{" "}
-                  <SelectValue placeholder={selectedSpeaker == null ? "Pick a Speaker" : selectedSpeaker.label } />
+                  <SelectValue placeholder={selectedSpeaker == null ? availableSpeakers[0]?.label : selectedSpeaker.label } />
                 </div>
               </SelectTrigger>
               <SelectContent className="bg-primary w-full border border-a11y/40 text-white">
