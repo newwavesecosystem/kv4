@@ -495,6 +495,27 @@ export const micFilterState = atom<{
   },
 });
 
+export const CamQualityState = atom<{
+  id: number,
+  name: string,
+  bitrate: number,
+  default: boolean,
+  constraints: {} | {
+    width: number,
+    height: number,
+    frameRate: number,
+  }
+}>({
+  key: "camQualityState",
+  default: {
+    id: 2,
+    name: "Medium",
+    bitrate: 200,
+    default: true,
+    constraints:{}
+  },
+});
+
 
 export const connectedUsersState = atom<IConnectedUser[]>({
   key: "connectedUsersState",

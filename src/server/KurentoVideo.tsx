@@ -6,7 +6,7 @@ import {useRecoilState, useRecoilValue} from "recoil";
 import {
     authUserState,
     cameraOpenState,
-    cameraStreamState,
+    cameraStreamState, CamQualityState,
     connectionStatusState,
     participantCameraListState
 } from "~/recoil/atom";
@@ -50,6 +50,9 @@ const KurentoVideo = () => {
     const [videoState, setVideoState] = useRecoilState(cameraOpenState);
     const participantCameraList = useRecoilValue(participantCameraListState);
     const [videoStateWS, setVideoStateWS] = useState(false);
+    const [selectedVideoQuality, setSelectedVideoQuality] = useRecoilState(CamQualityState);
+
+
 
     const handleDisconnect = () => {
         if (ws) {
@@ -111,7 +114,7 @@ const KurentoVideo = () => {
                 cameraId: buildStreamName(userCamera.deviceID),
                 role: 'share',
                 sdpOffer: offerSdp,
-                bitrate: 200,
+                bitrate: selectedVideoQuality.bitrate,
                 record: true,
             };
             kurentoSend(message);

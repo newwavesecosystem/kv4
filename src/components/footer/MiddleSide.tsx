@@ -25,7 +25,7 @@ import {
   breakOutModalState,
   selectedCameraState,
   fileUploadModalState,
-  newMessage, selectedMicrophoneState,
+  newMessage, selectedMicrophoneState, micFilterState, CamQualityState,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -137,6 +137,14 @@ function MiddleSide() {
       selectedMicrophoneState,
   );
 
+  const [selectedVideoQuality, setSelectedVideoQuality] = useRecoilState(
+      CamQualityState
+  );
+
+
+  const [micFilter, setMicFilter] = useRecoilState(micFilterState);
+
+
 
   const [ssscreen, setScreen] = useState<null|MediaStream>(null);
   const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
@@ -154,7 +162,7 @@ function MiddleSide() {
       return;
     }
 
-    const mic = await requestMicrophoneAccess(desiredMic[0]);
+    const mic = await requestMicrophoneAccess(desiredMic[0],micFilter.autoGainControl, micFilter.noiseSuppression, micFilter.echoCancellation);
     if (mic) {
       setMicrophoneStream(mic);
       setMicState(true);
@@ -288,7 +296,7 @@ function MiddleSide() {
             return;
           }
 
-          const video = await requestCameraAccess(selectedCamera == null ? desiredCamera[0] : selectedCamera);
+          const video = await requestCameraAccess(selectedCamera == null ? desiredCamera[0] : selectedCamera, selectedVideoQuality);
           if (video) {
             console.log('Camera is on');
             setCameraSteam(video);

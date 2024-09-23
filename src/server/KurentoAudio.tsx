@@ -63,10 +63,14 @@ const KurentoAudio = () => {
             try {
                 if (audioRef.current) {
                     // Use type assertion to tell TypeScript that audioRef.current has the setSinkId method
-                    (audioRef.current as any).setSinkId(selectedSpeaker?.deviceId);
+                    (audioRef.current as any).setSinkId(selectedSpeaker?.deviceId)
+                        .then(() => console.log(`Audio output set to device: ${selectedSpeaker?.deviceId}`))
+                        .catch((error:any) => console.error('Error setting audio output device:', error));
                     console.log(`Audio output set to: ${selectedSpeaker?.label}`);
                     console.log('Audio output set successfully.');
+                    console.log(`Audio output readyState : ${audioRef.current.readyState}`);
                     if (audioRef.current.readyState > 0) {
+                        console.log('Audio output is in ready state');
                         audioRef.current.load();
                     }
                 } else {

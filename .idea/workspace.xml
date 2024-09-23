@@ -22,12 +22,14 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Added listening to session token reuse">
-      <change afterPath="$PROJECT_DIR$/public/sound_test.mp3" afterDir="false" />
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PreSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PreSignIn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/settings/DeviceSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/DeviceSettings.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lib/camera/requestCameraAccess.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/camera/requestCameraAccess.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lib/microphone/requestMicrophoneAccess.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/microphone/requestMicrophoneAccess.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/join/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/join/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/KurentoAudio.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoAudio.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/KurentoVideo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoVideo.tsx" afterDir="false" />
@@ -46,6 +48,9 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -54,26 +59,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "samji",
-    "last_opened_file_path": "C:/Users/odeji/WebstormProjects/kv4/public",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.dev.executor": "Run",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
-    "ts.external.directory.path": "C:\\Users\\odeji\\WebstormProjects\\kv4\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;samji&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/odeji/WebstormProjects/kv4/public&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\odeji\\WebstormProjects\\kv4\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\odeji\WebstormProjects\kv4\public" />
       <recent name="C:\Users\odeji\WebstormProjects\kv4\src\components\recording" />
       <recent name="C:\Users\odeji\WebstormProjects\kv4\src\server" />
       <recent name="C:\Users\odeji\WebstormProjects\kv4\public\fonts" />
@@ -136,7 +142,8 @@
       <workItem from="1726055273356" duration="1062000" />
       <workItem from="1726122999163" duration="8536000" />
       <workItem from="1726218692509" duration="32320000" />
-      <workItem from="1726693522902" duration="21290000" />
+      <workItem from="1726693522902" duration="30031000" />
+      <workItem from="1726944216006" duration="9848000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -304,7 +311,14 @@
       <option name="project" value="LOCAL" />
       <updated>1726588929490</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="-Fix switching of Camera&#10;-Fix switching of Mic&#10;-Make Speaker test work&#10;-Make request camera to use deviceID&#10;-Make request audio to use deviceID&#10;-Add mic filter state to atom&#10;-Add constraint details to video quality">
+      <created>1726779961539</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1726779961539</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -348,7 +362,8 @@
     <MESSAGE value="Finish work on screen sharing implementation" />
     <MESSAGE value="-Added Go full screen to screen sharing&#10;-Fix screenSharing issue on participant end" />
     <MESSAGE value="-Added listening to session token reuse" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Added listening to session token reuse" />
+    <MESSAGE value="-Fix switching of Camera&#10;-Fix switching of Mic&#10;-Make Speaker test work&#10;-Make request camera to use deviceID&#10;-Make request audio to use deviceID&#10;-Add mic filter state to atom&#10;-Add constraint details to video quality" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Fix switching of Camera&#10;-Fix switching of Mic&#10;-Make Speaker test work&#10;-Make request camera to use deviceID&#10;-Make request audio to use deviceID&#10;-Add mic filter state to atom&#10;-Add constraint details to video quality" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -370,8 +385,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/server/KurentoVideo.tsx</url>
-          <line>133</line>
-          <properties lambdaOrdinal="-1" />
+          <line>136</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>

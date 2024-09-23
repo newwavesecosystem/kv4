@@ -1,4 +1,4 @@
-const requestMicrophoneAccess = async (desiredMic: MediaDeviceInfo|undefined): Promise<MediaStream | null> => {
+const requestMicrophoneAccess = async (desiredMic: MediaDeviceInfo|undefined,autoGainControl:boolean, noiseSuppression : boolean, echoCancellation : boolean): Promise<MediaStream | null> => {
   try {
     // return await navigator.mediaDevices.getUserMedia({
     //   audio: true,
@@ -6,9 +6,9 @@ const requestMicrophoneAccess = async (desiredMic: MediaDeviceInfo|undefined): P
     return await navigator.mediaDevices.getUserMedia({
       audio: {
           deviceId: {exact: desiredMic?.deviceId},
-          // autoGainControl: false,
-          // noiseSuppression: true,
-          // echoCancellation: true
+          autoGainControl: autoGainControl,
+          noiseSuppression: noiseSuppression,
+          echoCancellation: echoCancellation
         },
     });
   } catch (error) {

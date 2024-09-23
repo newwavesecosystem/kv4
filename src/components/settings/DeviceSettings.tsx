@@ -6,7 +6,7 @@ import {
   authUserState,
   availableCamerasState,
   availableMicrophonesState,
-  availableSpeakersState, cameraOpenState, cameraStreamState, connectionStatusState,
+  availableSpeakersState, cameraOpenState, cameraStreamState, CamQualityState, connectionStatusState,
   currentTabState, micFilterState, microphoneStreamState, participantCameraListState, participantListState,
   selectedCameraState,
   selectedMicrophoneState,
@@ -35,19 +35,23 @@ import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
 import {kurentoVideoSwitchCamera} from "~/server/KurentoVideo";
 import {kurentoAudioSetNewStream} from "~/server/KurentoAudio";
 import {Howl} from "howler";
+import {Switch} from "~/components/ui/switch";
+import MicOnIcon from "~/components/icon/outline/MicOnIcon";
 
 const VideoQuality = [
   {
     id: 1,
     name: "Low",
     bitrate: 100,
-    default: false
+    default: false,
+    constraints:{}
   },
   {
     id: 2,
     name: "Medium",
     bitrate: 200,
-    default: true
+    default: true,
+    constraints:{}
   },
   {
     id: 3,
@@ -57,7 +61,7 @@ const VideoQuality = [
     constraints: {
       width: 1280,
       height: 720,
-      frameRate: 15
+      frameRate: 15,
     }
   },
   {
@@ -78,9 +82,11 @@ function DeviceSettings() {
   const [settingsMeta, setSettingsMeta] = useRecoilState(
     settingsModalMetaState,
   );
-  const [selectedVideoQuality, setSelectedVideoQuality] = useState(
-    VideoQuality[2],
+  const [selectedVideoQuality, setSelectedVideoQuality] = useRecoilState(
+      CamQualityState
   );
+
+  const [supportedConstraint, setSupportedConstraint] = useState<MediaTrackSupportedConstraints>();
 
   const [availableCameras, setAvailableCameras] = useRecoilState(
     availableCamerasState,
@@ -145,6 +151,24 @@ function DeviceSettings() {
     }
   };
 
+  const getSupportedConstraints = async () => {
+    try {
+
+      const s = await navigator.mediaDevices.getSupportedConstraints();
+
+      console.log("Supported Constraint: ",s);
+
+      //set echoCancellation to false if th device did not support echoCancellation
+      if(!s.echoCancellation){
+        setMicFilter({...micFilter, echoCancellation: false})
+      }
+
+      setSupportedConstraint(s);
+    } catch (error) {
+      console.error("Error on Supported Constraint:", error);
+    }
+  };
+
   // if (availableCameras.length === 0 || availableMicrophones.length === 0) {
   //   getDevices();
   // }
@@ -164,11 +188,21 @@ function DeviceSettings() {
     // oscillator.stop(audioContext.currentTime + 2); // Stop the test sound after 2 seconds
   };
 
+  const applyAudioSettings = async (desiredMic:MediaDeviceInfo) => {
+
+    const mic = await requestMicrophoneAccess(desiredMic, micFilter.autoGainControl, micFilter.noiseSuppression, micFilter.echoCancellation);
+    if (mic) {
+      kurentoAudioSetNewStream(mic).then(r => console.log("Changed stream successfully"));
+    }
+
+  };
+
   const { toast } = useToast();
 
   useEffect(()=>{
     console.log('selectedMicrophone',selectedMicrophone)
     getDevices();
+    getSupportedConstraints();
   }, [""])
 
   return (
@@ -208,7 +242,7 @@ function DeviceSettings() {
 
                 var vidvalue: MediaDeviceInfo | undefined = availableCameras.filter((item: MediaDeviceInfo) => item.deviceId == value)[0];
 
-                const video = await requestCameraAccess(vidvalue);
+                const video = await requestCameraAccess(vidvalue, selectedVideoQuality);
                 if (video) {
                   console.log('change_device Camera is on');
                   kurentoVideoSwitchCamera(video).then(r => console.log('hello'));
@@ -247,11 +281,16 @@ function DeviceSettings() {
         <div className="flex flex-col gap-3">
           <span>Video Quality</span>
           <Select
-            value={selectedVideoQuality?.id.toString()}
+            value={selectedVideoQuality.id.toString()}
             onValueChange={(value) => {
-              setSelectedVideoQuality(
-                VideoQuality.find((item) => item.id.toString() === value),
-              );
+              const selectedQuality = VideoQuality.find((item) => item.id.toString() === value);
+
+              if (selectedQuality) {
+                setSelectedVideoQuality(selectedQuality);
+              } else {
+                // Handle the case where no matching quality is found, e.g., log an error or set a default
+                console.error("No matching video quality found for the selected value");
+              }
             }}
           >
             <SelectTrigger className="bg-a11y/20">
@@ -273,17 +312,14 @@ function DeviceSettings() {
 
                 var vidvalue: MediaDeviceInfo | undefined = availableMicrophones.filter((item: MediaDeviceInfo) => item.deviceId == value)[0];
 
-                const mic = await requestMicrophoneAccess(vidvalue);
-                if (mic) {
-                  kurentoAudioSetNewStream(mic).then(r => console.log("Changing stream"));
-                }
+                applyAudioSettings(vidvalue!).then(r=>console.log("apply audio settings"));
 
                 setSelectedMicrophone(vidvalue!)
 
               }}>
             <SelectTrigger className="bg-a11y/20">
               <div className="flex items-center gap-4">
-                <VideoOnIcon className="h-6 w-6" />{" "}
+                <MicOnIcon className="h-6 w-6" />{" "}
                 <SelectValue placeholder={selectedMicrophone == null ? availableMicrophones[0]?.label : selectedMicrophone.label }  />
               </div>
             </SelectTrigger>
@@ -324,7 +360,7 @@ function DeviceSettings() {
                 }}>
               <SelectTrigger className="bg-a11y/20">
                 <div className="flex items-center gap-4">
-                  <VideoOnIcon className="h-6 w-6" />{" "}
+                  <VolumeOnIcon className="h-6 w-6" />{" "}
                   <SelectValue placeholder={selectedSpeaker == null ? availableSpeakers[0]?.label : selectedSpeaker.label } />
                 </div>
               </SelectTrigger>
@@ -356,6 +392,79 @@ function DeviceSettings() {
               <span>Test</span>
             </button>
           </div>
+        </div>
+
+        <div className="flex flex-col divide-y divide-a11y/20 py-6">
+
+          <div className="flex items-center justify-between py-4">
+            <div className={cn("flex gap-3", !micFilter.noiseSuppression && "opacity-60")}>
+              <MicOnIcon className="h-6 w-6" />
+              <label htmlFor="noiseSuppression">Noise Suppression</label>
+            </div>
+            <Switch
+                checked={micFilter.noiseSuppression}
+                onCheckedChange={(checked) => {
+                  if(supportedConstraint?.noiseSuppression) {
+                    applyAudioSettings(selectedMicrophone!).then(r => console.log("apply audio settings"));
+                    setMicFilter({...micFilter, noiseSuppression: checked})
+                  }else{
+                    toast({
+                      variant: "destructive",
+                      title: "Not Supported",
+                      description: `Your device did not support this feature`,
+                    });
+                  }
+                }}
+                id="noiseSuppression"
+            />
+          </div>
+
+          <div className="flex items-center justify-between py-4">
+            <div className={cn("flex gap-3", !micFilter.echoCancellation && "opacity-60")}>
+              <MicOnIcon className="h-6 w-6" />
+              <label htmlFor="echoCancellation">Echo Cancellation</label>
+            </div>
+            <Switch
+                checked={micFilter.echoCancellation}
+                onCheckedChange={(checked) => {
+                  if(supportedConstraint?.echoCancellation) {
+                    applyAudioSettings(selectedMicrophone!).then(r => console.log("apply audio settings"));
+                    setMicFilter({...micFilter, echoCancellation: checked})
+                  }else{
+                    toast({
+                      variant: "destructive",
+                      title: "Not Supported",
+                      description: `Your device did not support this feature`,
+                    });
+                  }
+                }}
+                id="echoCancellation"
+            />
+          </div>
+
+          <div className="flex items-center justify-between py-4">
+            <div className={cn("flex gap-3", !micFilter.autoGainControl && "opacity-60")}>
+              <MicOnIcon className="h-6 w-6" />
+              <label htmlFor="autoGainControl">Audio Gain</label>
+            </div>
+            <Switch
+                checked={micFilter.autoGainControl}
+                onCheckedChange={(checked) => {
+                  if(supportedConstraint?.autoGainControl) {
+                    setMicFilter({...micFilter, autoGainControl: checked});
+                    applyAudioSettings(selectedMicrophone!).then(r => console.log("apply audio settings"));
+                  }else{
+                    toast({
+                      variant: "destructive",
+                      title: "Not Supported",
+                      description: `Your device did not support this feature`,
+                    });
+                  }
+                }}
+                id="autoGainControl"
+            />
+          </div>
+
         </div>
       </div>
     </div>
