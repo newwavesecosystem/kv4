@@ -86,7 +86,7 @@ function ChatModalPrivateMessage() {
             <div className=" mt-5 flex items-center gap-2 rounded-lg border border-a11y/20 bg-primary p-2 text-xs shadow-sm">
               <InformationIcon className="h-5 w-5" />
               <span className="w-full">
-                Messages can only be seen by {privateChatState.chatRooms.filter((item) => item.chatId == privateChatState.id)[0]!.participants.map((part,index)=>(<span key={index}>{index != 0 ? " and " : " " }  {part.name} </span>))}
+                Messages can only be seen by {privateChatState.chatRooms.filter((item) => item.chatId == privateChatState.id)[0]?.participants.map((part,index)=>(<span key={index}>{index != 0 ? " and " : " " }  {part.name} </span>))}
               </span>
               <button
                 onClick={() => setInfoMessageStatus(!infoMessageStatus)}

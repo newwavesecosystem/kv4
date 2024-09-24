@@ -24,14 +24,7 @@
   <component name="ChangeListManager">
     <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/chat/ChatModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/chat/ChatModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/chat/ChatModalKonn3ctAi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/chat/ChatModalKonn3ctAi.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/chat/ChatModalPrivateMessage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/chat/ChatModalPrivateMessage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/participants/SingleParticipant.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/participants/SingleParticipant.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +134,7 @@
       <workItem from="1726122999163" duration="8536000" />
       <workItem from="1726218692509" duration="32320000" />
       <workItem from="1726693522902" duration="30031000" />
-      <workItem from="1726944216006" duration="23903000" />
+      <workItem from="1726944216006" duration="26134000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -323,7 +316,14 @@
       <option name="project" value="LOCAL" />
       <updated>1727079574987</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="-Added retrieving of existing private chat on Public chat by selecting at the top&#10;-Typing on Private chat is now showing">
+      <created>1727194468465</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1727194468465</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -369,7 +369,8 @@
     <MESSAGE value="-Added listening to session token reuse" />
     <MESSAGE value="-Fix switching of Camera&#10;-Fix switching of Mic&#10;-Make Speaker test work&#10;-Make request camera to use deviceID&#10;-Make request audio to use deviceID&#10;-Add mic filter state to atom&#10;-Add constraint details to video quality" />
     <MESSAGE value="-Added Mic filters and support check&#10;-Implement Video Quality" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Added Mic filters and support check&#10;-Implement Video Quality" />
+    <MESSAGE value="-Added retrieving of existing private chat on Public chat by selecting at the top&#10;-Typing on Private chat is now showing" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Added retrieving of existing private chat on Public chat by selecting at the top&#10;-Typing on Private chat is now showing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
