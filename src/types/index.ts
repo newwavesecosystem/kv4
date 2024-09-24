@@ -189,6 +189,35 @@ export interface IChatMessage {
   timestamp: number;
 }
 
+export interface IPrivateChatMessage {
+  isActive: boolean;
+  id: string;
+  users: {
+    id: string;
+    fullName: string;
+    email: string;
+  }[];
+  chatRooms: {
+    "chatId": string,
+    "meetingId": string,
+    "access": string,
+    "createdBy": string,
+    "participants": {
+      "id": string,
+      "name": string,
+      "role": string
+    }[],
+    "users": string []
+  }[]
+  chatMessages: {
+    id: string,
+    name: string,
+    message: string,
+    chatId: string,
+    time: Date,
+  }[]
+}
+
 export interface IChatState {
   messages: IChatMessage[];
 }

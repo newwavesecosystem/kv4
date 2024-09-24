@@ -8,7 +8,7 @@ import {generateRandomId, generatesSmallId} from "./ServerInfo";
 import {
     authUserState,
     breakOutModalState,
-    chatListState,
+    chatListState, chatTypeListState,
     chatTypingListState,
     connectionStatusState,
     donationModalState,
@@ -131,6 +131,7 @@ const Websocket = () => {
     const [fileUploadModal, setFileUploadModal] = useRecoilState(fileUploadModalState);
     const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
     const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
+    const [chatTypeList, setChatTypeList] = useRecoilState(chatTypeListState);
 
     const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(
         postLeaveMeetingState,
@@ -380,8 +381,8 @@ const Websocket = () => {
         const obj = JSON.parse(eventData);
         const {msg, id} = obj;
         if (msg == 'added') {
-            const {userId, name} = obj.fields;
-            addtypingUsers(id,name)
+            const {userId, name, isTypingTo} = obj.fields;
+            addtypingUsers(id,name,isTypingTo)
         } else {
             removetypingUsers(id)
         }
@@ -435,11 +436,21 @@ const Websocket = () => {
             const {authTokenValidatedTime} = fields;
 
             if(authTokenValidatedTime != null){
-                console.log("Session switched",obj);
-                setPostLeaveMeeting({
-                    ...postLeaveMeeting,
-                    isKicked: true,
-                });
+                console.log(`authTokenValidatedTime:${authTokenValidatedTime}`)
+                console.log(`local authTokenValidatedTime:${Date.now()}`)
+
+                var diff=Date.now() - authTokenValidatedTime;
+
+                console.log(`local authTokenValidatedTime diff :${diff}`)
+
+
+                if((diff) > 50){
+                    console.log("Session switched",obj);
+                    setPostLeaveMeeting({
+                        ...postLeaveMeeting,
+                        isKicked: true,
+                    });
+                }
             }
         }
     }
@@ -1208,10 +1219,10 @@ const Websocket = () => {
         setIsNewMessage(true);
     }
 
-    const addtypingUsers=(id:any,name:string)=>{
+    const addtypingUsers=(id:any,name:string,type:string)=>{
      let ishola = chatTypingList
         let convertedUser={
-         id,name
+         id,name,type
         };
         console.log(ishola)
         if (ishola.filter((item:any) => item.id == id).length < 1) {
@@ -1292,9 +1303,9 @@ export function websocketSendPrivateMessage(internalUserID:any,message:string,ch
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"sendGroupChatMsg\",\"params\":[\"${chatID}\",{\"correlationId\":\"${internalUserID}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
 }
 
-export function websocketStartTyping() {
+export function websocketStartTyping(type:String) {
     console.log('I am websocketStartTyping')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startUserTyping\",\"params\":[\"public\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startUserTyping\",\"params\":[\"${type}\"]}`])
 }
 
 export function websocketStopTyping() {

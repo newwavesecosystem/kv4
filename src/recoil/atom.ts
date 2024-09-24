@@ -8,7 +8,7 @@ import {
   IParticipant,
   IWaitingUser,
   IUserBreakOutRoom,
-  IBreakoutRoom, IWhiteBoardAnnotationRemote
+  IBreakoutRoom, IWhiteBoardAnnotationRemote, IPrivateChatMessage
 } from "~/types";
 
 export const authUserState = atom<{
@@ -52,18 +52,24 @@ export const participantCameraListState = atom<any>({
   default: [],
 });
 
+export const chatTypeListState = atom<any>({
+  key: "chatTypeListState",
+  default: [],
+});
+
 export const chatListState = atom<any>({
   key: "chatListState",
   default: [],
 });
 
-export const kaiChatListState = atom<any>({
-  key: "kaiChatListState",
+export const chatTypingListState = atom<any>({
+  key: "chatTypingListState",
   default: [],
 });
 
-export const chatTypingListState = atom<any>({
-  key: "chatTypingListState",
+
+export const kaiChatListState = atom<any>({
+  key: "kaiChatListState",
   default: [],
 });
 
@@ -252,34 +258,7 @@ export const removeUserModalState = atom<{
   },
 });
 
-export const privateChatModalState = atom<{
-  isActive: boolean;
-  id: string;
-  users: {
-    id: string;
-    fullName: string;
-    email: string;
-  }[];
-  chatRooms:{
-    "chatId": string,
-    "meetingId": string,
-    "access": string,
-    "createdBy": string,
-    "participants": {
-      "id": string,
-      "name": string,
-      "role": string
-    }[],
-    "users": string []
-  }[]
-  chatMessages:{
-    id: string,
-    name: string,
-    message: string,
-    chatId: string,
-    time: Date,
-  }[]
-}>({
+export const privateChatModalState = atom<IPrivateChatMessage>({
   key: "privateChatModalState",
   default: {
     isActive: false,

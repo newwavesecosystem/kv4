@@ -228,7 +228,7 @@ function PostSignIn() {
                 style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}>You lost your network connection. Trying to reconnect<br/></span> : ''}
       {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
           <span className="flex w-full items-center justify-between px-4"
-                style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>You audio is not connected. You wont hear the conversation in the meeting.<br/></span> : ''}
+                style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}
       <div className="relative h-[calc(100vh-128px)] bg-primary/60 ">
         {/* polls */}
         {(pollModal.isActive || pollModal.isEnded) && pollModal.step === 0 && (
