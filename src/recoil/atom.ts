@@ -8,18 +8,10 @@ import {
   IParticipant,
   IWaitingUser,
   IUserBreakOutRoom,
-  IBreakoutRoom, IWhiteBoardAnnotationRemote, IPrivateChatMessage, IBreakOutRecord, IPresentationSlideState
+  IBreakoutRoom, IWhiteBoardAnnotationRemote, IPrivateChatMessage, IBreakOutRecord, IPresentationSlideState, IAuthUser
 } from "~/types";
 
-export const authUserState = atom<{
-  id: number;
-  fullName: string;
-  email: string;
-  passCode: string;
-  meetingId: string;
-  sessiontoken: string;
-  meetingDetails: IMeetingDetails | null;
-} | null>({
+export const authUserState = atom<IAuthUser | null>({
   key: "authUserState",
   default: null,
 });

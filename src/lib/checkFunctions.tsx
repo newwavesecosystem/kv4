@@ -1,61 +1,38 @@
 import React, { useEffect, useState } from "react";
-import {IParticipant} from "~/types/index";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, participantListState} from "~/recoil/atom";
+import {IAuthUser, IParticipant} from "~/types/index";
 
 
-export function CurrentUserIsPresenter() {
-  const [participantList, setParticipantList] = useRecoilState(participantListState);
-
-  const user = useRecoilValue(authUserState);
+export function CurrentUserIsPresenter(participantList:IParticipant[],user:IAuthUser|null) {
 
   const cip = participantList?.filter((eachItem: IParticipant) => eachItem?.intId == user?.meetingDetails?.internalUserID)[0]?.presenter;
 
   return cip ?? false;
 }
 
-export function GetCurrentUserRole() {
-  const [participantList, setParticipantList] = useRecoilState(participantListState);
-
-  const user = useRecoilValue(authUserState);
-
+export function GetCurrentUserRole(participantList:IParticipant[],user:IAuthUser|null) {
   return participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0]?.role;
 }
 
-export function CurrentUserRoleIsModerator() {
-  const [participantList, setParticipantList] = useRecoilState(participantListState);
-
-  const user = useRecoilValue(authUserState);
-
-  const curim= participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0]?.role == ModeratorRole;
+export function CurrentUserRoleIsModerator(participantList:IParticipant[],user:IAuthUser|null) {
+  const curim= participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0]?.role == ModeratorRole();
 
   return curim ?? false;
 }
 
-export function FindAvatarfromUserId(userId: string) {
-  const [participantList, setParticipantList] = useRecoilState(participantListState);
-
+export function FindAvatarfromUserId(userId: string, participantList:IParticipant[]) : string {
   let damola = participantList.filter((item: any) => item?.userId == userId);
   console.log("damola");
   console.log(damola);
-  if (damola.length > 0) {
-    return damola[0]?.avatar;
-  } else {
-    return "";
-  }
+
+  return damola[0]?.avatar ?? "unknown";
 }
 
-export function FindUserNamefromUserId(userId: string) {
-  const [participantList, setParticipantList] = useRecoilState(participantListState);
+export function FindUserNamefromUserId(userId: string,participantList:IParticipant[]):string {
 
   let damola = participantList.filter((item: any) => item?.userId == userId);
   console.log("damola");
   console.log(damola);
-  if (damola.length > 0) {
-    return damola[0]?.name;
-  } else {
-    return "unknown";
-  }
+  return damola[0]?.name ?? "unknown";
 }
 
 export function ModeratorRole() {

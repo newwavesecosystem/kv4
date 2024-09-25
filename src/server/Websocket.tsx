@@ -31,6 +31,7 @@ import {IBreakoutRoom, IColumnBreakOutRoom, IParticipant, IParticipantCamera, IW
 import dayjs from "dayjs";
 import axios from "axios";
 import {toast} from "~/components/ui/use-toast";
+import {FindUserNamefromUserId} from "~/lib/checkFunctions";
 
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
@@ -614,7 +615,7 @@ const Websocket = () => {
                 }),
                 pollCreatedAt: new Date(),
                 pollCreatorId: id,
-                pollCreatorName: findUserNamefromUserId(requester),
+                pollCreatorName: FindUserNamefromUserId(requester, participantList),
                 isUserHost: false,
             }));
         }
@@ -655,7 +656,7 @@ const Websocket = () => {
                 for (let i = 0; i < responses.length; i++) {
                     let vUser= {
                         id: responses[i].userId,
-                        fullName: findUserNamefromUserId(responses[i].userId),
+                        fullName: FindUserNamefromUserId(responses[i].userId, participantList),
                         email: null,
                         votedOption: "NA",
                         votedOptionId: responses[i].answerIds,
@@ -1311,19 +1312,6 @@ const Websocket = () => {
         });
     }
 
-
-
-    const findUserNamefromUserId = (userId:string) => {
-        var ishola = participantList
-        var damola = ishola.filter((item:any) => item?.userId == userId)
-        console.log('damola')
-        console.log(damola)
-        if (damola.length > 0) {
-            return damola[0]?.name
-        } else {
-            return 'unknown'
-        }
-    }
 
     const findAvatarfromUserId = (userId:string) => {
         var ishola = participantList

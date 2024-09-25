@@ -99,7 +99,7 @@ function ECinemaComponent() {
               <ExpandIcon className="h-5 w-5"/>
               <span>Go Fullscreen</span>
           </button>
-          {CurrentUserIsPresenter() &&
+          {CurrentUserIsPresenter(participantList, user) &&
               (<button
                   onClick={() => {
                       setIsOpen(true);
