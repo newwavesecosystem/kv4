@@ -114,35 +114,35 @@ function PollModalCreate() {
             <span>Add answers</span>
           </button>
           <div className="mt-5 flex w-full justify-center">
-            {/*<button*/}
-            {/*  disabled={*/}
-            {/*    options.filter((option) => option.option === "").length > 0*/}
-            {/*  }*/}
-            {/*  className=" rounded-md bg-a11y/20 px-6 py-3 disabled:opacity-30"*/}
-            {/*  onClick={() => {*/}
-            {/*    setPollModal((prev) => ({*/}
-            {/*      ...prev,*/}
-            {/*      isActive: true,*/}
-            {/*      isUserHost: true,*/}
-            {/*      step: 0,*/}
-            {/*      pollQuestion: data.pollQuestion,*/}
-            {/*      pollOptions: options.map((option, index) => {*/}
-            {/*        return {*/}
-            {/*          id: index,*/}
-            {/*          option: option.option,*/}
-            {/*          votes: 0,*/}
-            {/*        };*/}
-            {/*      }),*/}
-            {/*      pollCreatedAt: new Date(),*/}
-            {/*      pollCreatorId: `${presentationSlide.id}/1`,*/}
-            {/*      pollCreatorName: user?.fullName as string,*/}
-            {/*    }));*/}
+            <button
+              disabled={
+                options.filter((option) => option.option === "").length > 0
+              }
+              className=" rounded-md bg-a11y/20 px-6 py-3 disabled:opacity-30"
+              onClick={() => {
+                setPollModal((prev) => ({
+                  ...prev,
+                  isActive: true,
+                  isUserHost: true,
+                  step: 0,
+                  pollQuestion: data.pollQuestion,
+                  pollOptions: options.map((option, index) => {
+                    return {
+                      id: index,
+                      option: option.option,
+                      votes: 0,
+                    };
+                  }),
+                  pollCreatedAt: new Date(),
+                  pollCreatorId: `${user?.meetingDetails?.internalUserID}/1`,
+                  pollCreatorName: user?.fullName as string,
+                }));
 
-            {/*    websocketStartPoll(`${presentationSlide.id}/1`,data.pollQuestion,JSON.stringify(options.map(item => item.option)));*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  Publish Polls*/}
-            {/*</button>*/}
+                websocketStartPoll(`${user?.meetingDetails?.internalUserID}/1`,data.pollQuestion,JSON.stringify(options.map(item => item.option)));
+              }}
+            >
+              Publish Polls
+            </button>
           </div>
         </div>
       </DialogContent>
