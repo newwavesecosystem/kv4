@@ -113,7 +113,7 @@ function JoinId() {
                       return;
                     }
 
-                    const mic = await requestMicrophoneAccess(desiredMic[0]);
+                    const mic = await requestMicrophoneAccess(desiredMic[0],false,false,false);
 
                     if (mic) {
                       setMicrophoneStream(mic);
@@ -160,7 +160,7 @@ function JoinId() {
                     }
 
 
-                    const video = await requestCameraAccess(desiredCamera[0]);
+                    const video = await requestCameraAccess(desiredCamera[0],{});
                     if (video) {
                       setCameraSteam(video);
                       setVideoState(!videoState);

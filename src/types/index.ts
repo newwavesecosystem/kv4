@@ -1,4 +1,5 @@
 import DateTimeFormat = Intl.DateTimeFormat;
+import {presentationSlideState} from "~/recoil/atom";
 
 export interface IConnectedUser {
   id: number;
@@ -126,6 +127,38 @@ export interface IWaitingUser {
     authenticated:boolean;
 }
 
+export interface IBreakOutRecord {
+  isActive: boolean;
+  step: number;
+  rooms: IColumnBreakOutRoom[];
+  users: IUserBreakOutRoom[];
+  isAllowUsersToChooseRooms: boolean;
+  isSendInvitationToAssignedModerators: boolean;
+  duration: number;
+  isSaveWhiteBoard: boolean;
+  isSaveSharedNotes: boolean;
+  createdAt: Date | null;
+  creatorName: string;
+  creatorId: number;
+  isEnded: boolean;
+  activatedAt: Date | null;
+  endedAt: Date | null;
+}
+
+export interface IPresentationSlideState {
+  pages: {
+    id: string,
+    num: string,
+    thumbUri: string,
+    txtUri: string,
+  }[];
+  current: boolean;
+  downloadable: boolean;
+  name: String;
+  podId: String;
+  id: String;
+}
+
 export interface IWhiteBoardAnnotationRemote {
   meetingId:    string;
   whiteboardId: string;
@@ -187,6 +220,35 @@ export interface IChatMessage {
   message: string;
   sender: IConnectedUser;
   timestamp: number;
+}
+
+export interface IPrivateChatMessage {
+  isActive: boolean;
+  id: string;
+  users: {
+    id: string;
+    fullName: string;
+    email: string;
+  }[];
+  chatRooms: {
+    "chatId": string,
+    "meetingId": string,
+    "access": string,
+    "createdBy": string,
+    "participants": {
+      "id": string,
+      "name": string,
+      "role": string
+    }[],
+    "users": string []
+  }[]
+  chatMessages: {
+    id: string,
+    name: string,
+    message: string,
+    chatId: string,
+    time: Date,
+  }[]
 }
 
 export interface IChatState {

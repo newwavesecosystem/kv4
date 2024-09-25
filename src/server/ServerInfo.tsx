@@ -10,7 +10,7 @@ export const aiBotURL = `${extRegisterURL}/ai-bot-message`;
 export const aiEnginesURL = `https://kv4-ai.vercel.app/konn3ctai`;
 export const captionURL = 'https://k4caption.konn3ct.ng';
 // export const aiEnginesURL = `https://k4aiengine.konn3ct.ng/konn3ctai`;
-// export const aiEnginesURL = `http://localhost:3002/konn3ctai`;
+// export const aiEnginesURL = `http://localhost:3001/konn3ctai`;
 
 export function generateRandomId(length:number) {
     let result = '';

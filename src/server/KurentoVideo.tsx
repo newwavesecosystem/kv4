@@ -6,11 +6,41 @@ import {useRecoilState, useRecoilValue} from "recoil";
 import {
     authUserState,
     cameraOpenState,
-    cameraStreamState,
+    cameraStreamState, CamQualityState,
     connectionStatusState,
     participantCameraListState
 } from "~/recoil/atom";
 import {IParticipantCamera} from "~/types";
+import requestCameraAccess from "~/lib/camera/requestCameraAccess";
+
+
+let ws: WebSocket | null = null;
+let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
+
+export async function kurentoVideoSwitchCamera(stream:MediaStream) {
+    console.log('kurentoVideo switch camera');
+
+    const newTracks = stream.getVideoTracks();
+    const localStream = webRtcPeer?.getLocalStream();
+    const oldTracks = localStream ? localStream.getVideoTracks() : [];
+
+
+    webRtcPeer?.peerConnection.getSenders().forEach((sender, index) => {
+        if (sender.track && sender.track.kind === 'video') {
+            const newTrack = newTracks[index];
+            if (newTrack == null) return;
+
+            // Cleanup old tracks in the local MediaStream
+            const oldTrack = oldTracks[index];
+            sender.replaceTrack(newTrack);
+            if (oldTrack) {
+                oldTrack.stop();
+                localStream?.removeTrack(oldTrack);
+            }
+            localStream?.addTrack(newTrack);
+        }
+    });
+}
 
 
 const KurentoVideo = () => {
@@ -20,9 +50,8 @@ const KurentoVideo = () => {
     const [videoState, setVideoState] = useRecoilState(cameraOpenState);
     const participantCameraList = useRecoilValue(participantCameraListState);
     const [videoStateWS, setVideoStateWS] = useState(false);
+    const [selectedVideoQuality, setSelectedVideoQuality] = useRecoilState(CamQualityState);
 
-    let ws: WebSocket | null = null;
-    let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
 
 
     const handleDisconnect = () => {
@@ -85,7 +114,7 @@ const KurentoVideo = () => {
                 cameraId: buildStreamName(userCamera.deviceID),
                 role: 'share',
                 sdpOffer: offerSdp,
-                bitrate: 200,
+                bitrate: selectedVideoQuality.bitrate,
                 record: true,
             };
             kurentoSend(message);
@@ -190,3 +219,27 @@ const KurentoVideo = () => {
 };
 
 export default KurentoVideo
+
+
+// Switching the Active Camera
+// Naturally, we assume you'll be using the front camera by default when starting a call.
+// So we set isFrontCam as true and let the value flip on execution.
+//
+//     let isFrontCam = true;
+//
+// try {
+//     // Taken from above, we don't want to flip if we don't have another camera.
+//     if ( cameraCount < 2 ) { return; };
+//
+//     const videoTrack = localMediaStream.getVideoTracks()[0];
+//     const constraints = { facingMode: isFrontCam ? 'user' : 'environment' };
+//
+//     videoTrack.applyConstraints(constraints);
+//
+//     // _switchCamera is deprecated as of 124.0.5
+//     // videoTrack._switchCamera();
+//
+//     isFrontCam = !isFrontCam;
+// } catch( err ) {
+//     // Handle Error
+// };

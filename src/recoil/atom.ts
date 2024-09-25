@@ -8,7 +8,7 @@ import {
   IParticipant,
   IWaitingUser,
   IUserBreakOutRoom,
-  IBreakoutRoom, IWhiteBoardAnnotationRemote
+  IBreakoutRoom, IWhiteBoardAnnotationRemote, IPrivateChatMessage, IBreakOutRecord, IPresentationSlideState
 } from "~/types";
 
 export const authUserState = atom<{
@@ -32,9 +32,9 @@ export const newMessage = atom<boolean>({
 export const connectionStatusState = atom<{
   websocket_connection: boolean;
   audio_connection: boolean;
-} | null>({
+}>({
   key: "connectionStatusState",
-  default: null,
+  default: {websocket_connection:false, audio_connection:false},
 });
 
 export const participantListState = atom<any>({
@@ -52,18 +52,24 @@ export const participantCameraListState = atom<any>({
   default: [],
 });
 
+export const chatTypeListState = atom<any>({
+  key: "chatTypeListState",
+  default: [],
+});
+
 export const chatListState = atom<any>({
   key: "chatListState",
   default: [],
 });
 
-export const kaiChatListState = atom<any>({
-  key: "kaiChatListState",
+export const chatTypingListState = atom<any>({
+  key: "chatTypingListState",
   default: [],
 });
 
-export const chatTypingListState = atom<any>({
-  key: "chatTypingListState",
+
+export const kaiChatListState = atom<any>({
+  key: "kaiChatListState",
   default: [],
 });
 
@@ -192,21 +198,15 @@ export const currentTabState = atom<{
 });
 
 export const presentationSlideState = atom<{
-  pages: [];
-  current: boolean;
-  downloadable: boolean;
-  name: String;
-  podId: String;
-  id: String;
+  show: boolean,
+  currentPresentationID: "",
+  presentations: IPresentationSlideState[]
 }>({
   key: "presentationSlideState",
   default: {
-    pages: [],
-    current: false,
-    downloadable: false,
-    name: "",
-    podId: "",
-    id: "",
+    show: false,
+    currentPresentationID: "",
+    presentations: []
   },
 });
 
@@ -252,34 +252,7 @@ export const removeUserModalState = atom<{
   },
 });
 
-export const privateChatModalState = atom<{
-  isActive: boolean;
-  id: string;
-  users: {
-    id: string;
-    fullName: string;
-    email: string;
-  }[];
-  chatRooms:{
-    "chatId": string,
-    "meetingId": string,
-    "access": string,
-    "createdBy": string,
-    "participants": {
-      "id": string,
-      "name": string,
-      "role": string
-    }[],
-    "users": string []
-  }[]
-  chatMessages:{
-    id: string,
-    name: string,
-    message: string,
-    chatId: string,
-    time: Date,
-  }[]
-}>({
+export const privateChatModalState = atom<IPrivateChatMessage>({
   key: "privateChatModalState",
   default: {
     isActive: false,
@@ -374,23 +347,7 @@ export const fileUploadModalState = atom<{
   },
 });
 
-export const breakOutModalState = atom<{
-  isActive: boolean;
-  step: number;
-  rooms: IColumnBreakOutRoom[];
-  users: IUserBreakOutRoom[];
-  isAllowUsersToChooseRooms: boolean;
-  isSendInvitationToAssignedModerators: boolean;
-  duration: number;
-  isSaveWhiteBoard: boolean;
-  isSaveSharedNotes: boolean;
-  createdAt: Date | null;
-  creatorName: string;
-  creatorId: number;
-  isEnded: boolean;
-  activatedAt: Date | null;
-  endedAt: Date | null;
-}>({
+export const breakOutModalState = atom<IBreakOutRecord>({
   key: "breakOutModalState",
   default: {
     step: 0,
@@ -481,6 +438,41 @@ export const selectedSpeakersState = atom<MediaDeviceInfo | null>({
   key: "selectedSpeakersState",
   default: null,
 });
+
+export const micFilterState = atom<{
+  echoCancellation: boolean;
+  noiseSuppression: boolean;
+  autoGainControl: boolean;
+}>({
+  key: "micFilterState",
+  default: {
+    echoCancellation: true,
+    noiseSuppression: false,
+    autoGainControl: false,
+  },
+});
+
+export const CamQualityState = atom<{
+  id: number,
+  name: string,
+  bitrate: number,
+  default: boolean,
+  constraints: {} | {
+    width: number,
+    height: number,
+    frameRate: number,
+  }
+}>({
+  key: "camQualityState",
+  default: {
+    id: 2,
+    name: "Medium",
+    bitrate: 200,
+    default: true,
+    constraints:{}
+  },
+});
+
 
 export const connectedUsersState = atom<IConnectedUser[]>({
   key: "connectedUsersState",

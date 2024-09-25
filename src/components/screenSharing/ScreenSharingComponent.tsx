@@ -3,6 +3,8 @@ import { useRecoilState } from "recoil";
 import { cn } from "~/lib/utils";
 import { connectedUsersState, screenSharingStreamState } from "~/recoil/atom";
 import SpinnerIcon from "../icon/outline/SpinnerIcon";
+import {websocketStopExternalVideo} from "~/server/Websocket";
+import ExpandIcon from "~/components/icon/outline/ExpandIcon";
 
 function ScreenSharingComponent() {
   const [screenSharingStream, setScreenSharingStream] = useRecoilState(
@@ -19,20 +21,8 @@ function ScreenSharingComponent() {
     if (videoRef.current) {
       videoRef.current.srcObject = screenSharingStream;
     }
-    // Clean up when the component unmounts
-    // return () => {
-    //   const tracks = screenSharingStream?.getTracks();
-    //   tracks?.forEach((track) => track.stop());
-    // };
   }, []);
 
-  // if (videoRef.current) {
-  //   // get the user from the connected users state and attach the stream to the video element
-  //   const user = connectedUsers.find((user) => user.isScreenSharing === true);
-  //   if (!user) return null;
-  //
-  //   videoRef.current.srcObject = user.screenSharingFeed;
-  // }
 
   return (
     <div
@@ -42,6 +32,15 @@ function ScreenSharingComponent() {
           "mt-6 h-[calc(100vh-150px)]",
       )}
     >
+      <button
+          onClick={() => {
+            document.getElementById("screenSharePlay")?.requestFullscreen();
+          }}
+          className="absolute right-7 top-7 flex items-center gap-2 rounded-md border-2 border-a11y/20 bg-primary/20 px-3 py-2 text-sm backdrop-blur-3xl"
+      >
+        <ExpandIcon className="h-5 w-5"/>
+        <span>Go Fullscreen</span>
+      </button>
       {isLoading && (
         <div className="flex h-full flex-col items-center justify-center rounded-xl bg-a11y/20">
           <SpinnerIcon className="h-16 w-16 animate-spin" />
@@ -49,6 +48,7 @@ function ScreenSharingComponent() {
       )}
       <video
         ref={videoRef}
+        id="screenSharePlay"
         autoPlay
         playsInline
         muted
