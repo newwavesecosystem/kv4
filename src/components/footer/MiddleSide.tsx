@@ -336,7 +336,7 @@ function MiddleSide() {
         )}
       </button>
 
-      {CurrentUserIsPresenter() && (
+      {CurrentUserIsPresenter(participantList, user) && (
           <button
               className={cn(
                   "rounded-full p-2",
@@ -433,7 +433,7 @@ function MiddleSide() {
             {user?.meetingDetails?.record == "true" ? recordingState.isActive ? (
               <DropdownMenuItem
                 onClick={() => {
-                  if (CurrentUserRoleIsModerator()) {
+                  if (CurrentUserRoleIsModerator(participantList,user)) {
                     setRecordingState((prev) => ({
                       ...prev,
                       step: 2,
@@ -455,7 +455,7 @@ function MiddleSide() {
             ) : (
               <DropdownMenuItem
                 onClick={() => {
-                  if (CurrentUserRoleIsModerator()) {
+                  if (CurrentUserRoleIsModerator(participantList,user)) {
                     setRecordingState((prev) => ({
                       ...prev,
                       step: 1,
@@ -587,7 +587,7 @@ function MiddleSide() {
                   : "Raise Hand"}
               </span>
             </DropdownMenuItem>
-            {CurrentUserIsPresenter() && (<DropdownMenuItem
+            {CurrentUserIsPresenter(participantList, user) && (<DropdownMenuItem
               onClick={() => {
                 setFileUploadModal((prev) => ({
                   ...prev,
@@ -600,7 +600,7 @@ function MiddleSide() {
               <span>Upload Files</span>
             </DropdownMenuItem>)}
 
-            {CurrentUserIsPresenter() && (
+            {CurrentUserIsPresenter(participantList, user) && (
                 <DropdownMenuItem
                     onClick={() => {
                       if (eCinemaModal.isActive)
@@ -621,7 +621,7 @@ function MiddleSide() {
                 </DropdownMenuItem>
             )}
 
-            {CurrentUserIsPresenter() && (
+            {CurrentUserIsPresenter(participantList, user) && (
                 <DropdownMenuItem
                     onClick={() => {
                       websocketMuteAllParticipants(
@@ -635,7 +635,7 @@ function MiddleSide() {
                 </DropdownMenuItem>
             )}
 
-            {CurrentUserIsPresenter() && (
+            {CurrentUserIsPresenter(participantList, user) && (
                 <DropdownMenuItem
                     onClick={() => {
                       if (pollModal.isActive || pollModal.isEnded) return;
@@ -716,7 +716,7 @@ function MiddleSide() {
           <PhoneEndIcon className="h-6 w-6" />
         </button>
         <Separator className=" bg-a11y/20 " orientation="vertical" />
-        {CurrentUserRoleIsModerator() && (
+        {CurrentUserRoleIsModerator(participantList,user) && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="px-1">

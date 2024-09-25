@@ -296,9 +296,9 @@ function PostSignIn() {
                   key={index}
                   className="flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border border-a11y/20 p-1"
                 >
-                  {FindAvatarfromUserId(eachItem.intId) ? (
+                  {FindAvatarfromUserId(eachItem.intId,participantList) ? (
                     <Image
-                      src={FindAvatarfromUserId(eachItem.intId)}
+                      src={FindAvatarfromUserId(eachItem.intId,participantList)}
                       width={20}
                       height={20}
                       className="rounded-full"
@@ -307,16 +307,16 @@ function PostSignIn() {
                   ) : (
                     <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-a11y/20">
                       {" "}
-                      {FindUserNamefromUserId(eachItem.intId)
+                      {FindUserNamefromUserId(eachItem.intId, participantList)
                         .split(" ")[0]
                         ?.slice(0, 1)}
-                      {FindUserNamefromUserId(eachItem.intId)
+                      {FindUserNamefromUserId(eachItem.intId, participantList)
                         .split(" ")[1]
                         ?.slice(0, 1)}
                     </div>
                   )}
                   <span className="truncate">
-                    {FindUserNamefromUserId(eachItem.intId)}
+                    {FindUserNamefromUserId(eachItem.intId, participantList)}
                   </span>
                   <MicOnIcon className="h-4 w-4 shrink-0" />
                 </div>

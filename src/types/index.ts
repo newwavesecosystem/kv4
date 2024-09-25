@@ -28,8 +28,10 @@ export interface IAuthUser {
   id: number;
   fullName: string;
   email: string;
+  passCode: string;
+  meetingId: string;
   sessiontoken: string;
-  meetingDetails: IMeetingDetails;
+  meetingDetails: IMeetingDetails | null;
 }
 
 export interface IMeetingDetails {

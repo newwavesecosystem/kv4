@@ -232,7 +232,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           {user?.meetingDetails?.record == "true" ? recordingState.isActive ? (
             <button
               onClick={() => {
-                if (CurrentUserRoleIsModerator()) {
+                if (CurrentUserRoleIsModerator(participantList,user)) {
                   setRecordingState((prev) => ({
                     ...prev,
                     step: 2,
@@ -254,7 +254,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           ) : (
             <button
               onClick={() => {
-                if (CurrentUserRoleIsModerator()) {
+                if (CurrentUserRoleIsModerator(participantList,user)) {
                   setRecordingState((prev) => ({
                     ...prev,
                     step: 1,
