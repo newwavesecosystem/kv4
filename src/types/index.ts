@@ -1,4 +1,5 @@
 import DateTimeFormat = Intl.DateTimeFormat;
+import {presentationSlideState} from "~/recoil/atom";
 
 export interface IConnectedUser {
   id: number;
@@ -124,6 +125,38 @@ export interface IWaitingUser {
     avatar:string;
     guest:boolean;
     authenticated:boolean;
+}
+
+export interface IBreakOutRecord {
+  isActive: boolean;
+  step: number;
+  rooms: IColumnBreakOutRoom[];
+  users: IUserBreakOutRoom[];
+  isAllowUsersToChooseRooms: boolean;
+  isSendInvitationToAssignedModerators: boolean;
+  duration: number;
+  isSaveWhiteBoard: boolean;
+  isSaveSharedNotes: boolean;
+  createdAt: Date | null;
+  creatorName: string;
+  creatorId: number;
+  isEnded: boolean;
+  activatedAt: Date | null;
+  endedAt: Date | null;
+}
+
+export interface IPresentationSlideState {
+  pages: {
+    id: string,
+    num: string,
+    thumbUri: string,
+    txtUri: string,
+  }[];
+  current: boolean;
+  downloadable: boolean;
+  name: String;
+  podId: String;
+  id: String;
 }
 
 export interface IWhiteBoardAnnotationRemote {

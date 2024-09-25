@@ -8,7 +8,7 @@ import {
   IParticipant,
   IWaitingUser,
   IUserBreakOutRoom,
-  IBreakoutRoom, IWhiteBoardAnnotationRemote, IPrivateChatMessage
+  IBreakoutRoom, IWhiteBoardAnnotationRemote, IPrivateChatMessage, IBreakOutRecord, IPresentationSlideState
 } from "~/types";
 
 export const authUserState = atom<{
@@ -198,21 +198,15 @@ export const currentTabState = atom<{
 });
 
 export const presentationSlideState = atom<{
-  pages: [];
-  current: boolean;
-  downloadable: boolean;
-  name: String;
-  podId: String;
-  id: String;
+  show: boolean,
+  currentPresentationID: "",
+  presentations: IPresentationSlideState[]
 }>({
   key: "presentationSlideState",
   default: {
-    pages: [],
-    current: false,
-    downloadable: false,
-    name: "",
-    podId: "",
-    id: "",
+    show: false,
+    currentPresentationID: "",
+    presentations: []
   },
 });
 
@@ -353,23 +347,7 @@ export const fileUploadModalState = atom<{
   },
 });
 
-export const breakOutModalState = atom<{
-  isActive: boolean;
-  step: number;
-  rooms: IColumnBreakOutRoom[];
-  users: IUserBreakOutRoom[];
-  isAllowUsersToChooseRooms: boolean;
-  isSendInvitationToAssignedModerators: boolean;
-  duration: number;
-  isSaveWhiteBoard: boolean;
-  isSaveSharedNotes: boolean;
-  createdAt: Date | null;
-  creatorName: string;
-  creatorId: number;
-  isEnded: boolean;
-  activatedAt: Date | null;
-  endedAt: Date | null;
-}>({
+export const breakOutModalState = atom<IBreakOutRecord>({
   key: "breakOutModalState",
   default: {
     step: 0,

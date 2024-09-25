@@ -30,6 +30,7 @@ import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {IBreakoutRoom, IColumnBreakOutRoom, IParticipant, IParticipantCamera, IWaitingUser} from "~/types";
 import dayjs from "dayjs";
 import axios from "axios";
+import {toast} from "~/components/ui/use-toast";
 
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
@@ -701,14 +702,18 @@ const Websocket = () => {
         if(msg == "added") {
             const {pages,current,downloadable,name,podId,id} = fields;
 
-            setPresentationSlide({
+            setPresentationSlide((prev)=>({
+                show:true,
+                currentPresentationID:id,
+                presentations: [...prev.presentations,{
                 pages: pages,
                 current: current,
                 downloadable: downloadable,
                 name: name,
                 podId: podId,
                 id: id,
-            })
+            }]
+            }));
         }
     }
 
@@ -747,7 +752,7 @@ const Websocket = () => {
                 rooms: [
                     ...prev.rooms,
                     {
-                        id: sequence,
+                        id: id,
                         breakoutId: breakoutId,
                         title: shortName,
                         users: joinedUsers,
@@ -781,6 +786,35 @@ const Websocket = () => {
                 window.open(redirectToHtml5JoinURL, '_blank');
             }
 
+        }
+
+        if(msg == "removed") {
+            setBreakOutRoomState((prev) => ({
+                ...prev,
+                rooms: [
+                    ...prev.rooms.filter((item)=>item.id != id),
+                ],
+            }));
+
+            if(breakOutRoomState.rooms.length <= 0){
+                setBreakOutRoomState({
+                    step: 0,
+                    isActive: false,
+                    rooms: [],
+                    users: [],
+                    isAllowUsersToChooseRooms: true,
+                    isSendInvitationToAssignedModerators: false,
+                    duration: 15,
+                    isSaveWhiteBoard: false,
+                    isSaveSharedNotes: false,
+                    createdAt: null,
+                    creatorName: "",
+                    creatorId: 0,
+                    isEnded: false,
+                    activatedAt: null,
+                    endedAt: null,
+                });
+            }
         }
 
     }
@@ -854,6 +888,7 @@ const Websocket = () => {
 
         console.log("settingfunction: file to upload found",find);
 
+
         const formData = new FormData();
         if (find) {
             formData.append("fileUpload", find[0].file);
@@ -870,13 +905,29 @@ const Websocket = () => {
                 url: `https://${ServerInfo.engineBaseURL}/bigbluebutton/presentation/${authToken}/upload`,
                 data: formData,
                 headers: {"Content-Type": "multipart/form-data"},
+                onDownloadProgress: (progressEvent) => {
+                    console.log("percentCompleted progressEvent: ",progressEvent);
+                    var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!);
+                    console.log("percentCompleted upload: ",percentCompleted);
+                },
             });
 
             console.log("settingfunction: upload response",response);
             const responseData = response.data;
 
-            if (find) {
-                handlePresentationUploaded(find[0].name, id);
+            if(response.status == 200){
+                handlePresentationUploaded(find[0].name, id,authToken);
+
+                setFileUploadModal((prev) => ({
+                    ...prev,
+                    step: 0,
+                }));
+
+                toast({
+                    title: "Completed",
+                    description: `${find[0].name} uploaded successfully`,
+                    duration: 5000,
+                });
             }
 
         } catch (error) {
@@ -1492,8 +1543,10 @@ export function handleRequestPresentationUploadToken(uniqueID:string,file:File){
     websocketSend([`{\"msg\":\"sub\",\"id\":\"${ServerInfo.generateRandomId(17)}\",\"name\":\"presentation-upload-token\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${file?.name}\",\"${uniqueID}\"]}`])
 }
 
-const handlePresentationUploaded = (name:string,id:string)=>{
-    websocketSend([`{\"msg\":\"sub\",\"id\":\"Sx77Jii9BsBNh5GpG\",\"name\":\"presentation-upload-token\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${name}\",\"${id}\"]}`])
+const handlePresentationUploaded = (name:string,id:string,presentationAuthToken:string)=>{
+    websocketSend([`{\"msg\":\"sub\",\"id\":\"${ServerInfo.generateRandomId(17)}\",\"name\":\"presentation-upload-token\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${name}\",\"${id}\"]}`])
+
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setUsedToken\",\"params\":[\"${presentationAuthToken}\"]}`])
 }
 
 export function websocketRequest2JoinBreakoutRoom(breakoutId: string | null){

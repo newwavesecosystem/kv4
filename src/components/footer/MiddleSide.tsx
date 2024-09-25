@@ -83,6 +83,7 @@ import {generateRandomId} from "~/server/ServerInfo";
 import {
   websocketKurentoScreenshareEndScreenshare,
 } from "~/server/KurentoScreenshare";
+import {CurrentUserIsPresenter, CurrentUserRoleIsModerator, ModeratorRole} from "~/lib/checkFunctions";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
@@ -335,41 +336,33 @@ function MiddleSide() {
         )}
       </button>
 
-      {participantList
-        ?.filter(
-          (eachItem: IParticipant) =>
-            eachItem?.intId == user?.meetingDetails?.internalUserID,
-        )
-        .map(
-          (eachItem: IParticipant, index: number) =>
-            eachItem.presenter && (
-              <button
-                key={index}
-                className={cn(
+      {CurrentUserIsPresenter() && (
+          <button
+              className={cn(
                   "rounded-full p-2",
                   screenShareState
-                    ? "border border-a11y/20 bg-transparent"
-                    : "bg-a11y/20",
-                )}
-                onClick={async () => {
-                  if (screenShareState && screenSharingStream) {
-                    stopScreenSharingStream(ssscreen);
+                      ? "border border-a11y/20 bg-transparent"
+                      : "bg-a11y/20",
+              )}
+              onClick={async () => {
+                if (screenShareState && screenSharingStream) {
+                  stopScreenSharingStream(ssscreen);
 
-                    setScreenSharingStream(null);
-                    setScreenShareState(false);
+                  setScreenSharingStream(null);
+                  setScreenShareState(false);
 
-                    websocketKurentoScreenshareEndScreenshare();
+                  websocketKurentoScreenshareEndScreenshare();
 
-                    return;
-                  }
-                  const screen = await requestScreenSharingAccess();
+                  return;
+                }
+                const screen = await requestScreenSharingAccess();
 
-                  setScreen(screen);
+                setScreen(screen);
 
-                  if (screen) {
-                    setScreenSharingStream(screen);
-                    // update the connected users state for the user where the id is the same
-                    setConnectedUsers((prev) =>
+                if (screen) {
+                  setScreenSharingStream(screen);
+                  // update the connected users state for the user where the id is the same
+                  setConnectedUsers((prev) =>
                       prev.map((prevUser) => {
                         if (prevUser.id === user?.id) {
                           return {
@@ -380,25 +373,24 @@ function MiddleSide() {
                         }
                         return prevUser;
                       }),
-                    );
-                    setScreenShareState(!screenShareState);
-                  } else {
-                    // toast({
-                    //   variant: "destructive",
-                    //   title: "Uh oh! Something went wrong.",
-                    //   description: "Kindly check your screen sharing settings.",
-                    // });
-                  }
-                }}
-              >
-                {screenShareState ? (
-                  <ShareScreenOnIcon className="h-6 w-6 " />
-                ) : (
-                  <ShareScreenOffIcon className="h-6 w-6 " />
-                )}
-              </button>
-            ),
-        )}
+                  );
+                  setScreenShareState(!screenShareState);
+                } else {
+                  // toast({
+                  //   variant: "destructive",
+                  //   title: "Uh oh! Something went wrong.",
+                  //   description: "Kindly check your screen sharing settings.",
+                  // });
+                }
+              }}
+          >
+            {screenShareState ? (
+                <ShareScreenOnIcon className="h-6 w-6 " />
+            ) : (
+                <ShareScreenOffIcon className="h-6 w-6 " />
+            )}
+          </button>
+      )}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -441,7 +433,7 @@ function MiddleSide() {
             {user?.meetingDetails?.record == "true" ? recordingState.isActive ? (
               <DropdownMenuItem
                 onClick={() => {
-                  if (participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0].role == "MODERATOR") {
+                  if (CurrentUserRoleIsModerator()) {
                     setRecordingState((prev) => ({
                       ...prev,
                       step: 2,
@@ -463,7 +455,7 @@ function MiddleSide() {
             ) : (
               <DropdownMenuItem
                 onClick={() => {
-                  if (participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0].role == "MODERATOR") {
+                  if (CurrentUserRoleIsModerator()) {
                     setRecordingState((prev) => ({
                       ...prev,
                       step: 1,
@@ -595,7 +587,7 @@ function MiddleSide() {
                   : "Raise Hand"}
               </span>
             </DropdownMenuItem>
-            <DropdownMenuItem
+            {CurrentUserIsPresenter() && (<DropdownMenuItem
               onClick={() => {
                 setFileUploadModal((prev) => ({
                   ...prev,
@@ -606,85 +598,58 @@ function MiddleSide() {
             >
               <FolderOpenIcon className="mr-2 h-5 w-5" />
               <span>Upload Files</span>
-            </DropdownMenuItem>
+            </DropdownMenuItem>)}
 
-            {participantList
-              ?.filter(
-                (eachItem: IParticipant) =>
-                  eachItem?.intId == user?.meetingDetails?.internalUserID,
-              )
-              .map(
-                (eachItem: IParticipant, index: number) =>
-                  eachItem.presenter && (
-                    <DropdownMenuItem
-                      key={index}
-                      onClick={() => {
-                        if (eCinemaModal.isActive)
-                          return toast({
-                            title: "Uh oh! Something went wrong.",
-                            description:
+            {CurrentUserIsPresenter() && (
+                <DropdownMenuItem
+                    onClick={() => {
+                      if (eCinemaModal.isActive)
+                        return toast({
+                          title: "Uh oh! Something went wrong.",
+                          description:
                               "You can't start a new eCinema session while one is ongoing.",
-                          });
-                        setECinemaModal((prev) => ({
-                          ...prev,
-                          step: 1,
-                        }));
-                      }}
-                      className="py-2 md:hidden"
-                    >
-                      <MovieColoredIcon className="mr-2 h-5 w-5" />
-                      <span>ECinema</span>
-                    </DropdownMenuItem>
-                  ),
-              )}
+                        });
+                      setECinemaModal((prev) => ({
+                        ...prev,
+                        step: 1,
+                      }));
+                    }}
+                    className="py-2 md:hidden"
+                >
+                  <MovieColoredIcon className="mr-2 h-5 w-5" />
+                  <span>ECinema</span>
+                </DropdownMenuItem>
+            )}
 
-            {participantList
-              ?.filter(
-                (eachItem: IParticipant) =>
-                  eachItem?.intId == user?.meetingDetails?.internalUserID,
-              )
-              .map(
-                (eachItem: IParticipant, index: number) =>
-                  eachItem.presenter && (
-                    <DropdownMenuItem
-                      key={index}
-                      onClick={() => {
-                        websocketMuteAllParticipants(
+            {CurrentUserIsPresenter() && (
+                <DropdownMenuItem
+                    onClick={() => {
+                      websocketMuteAllParticipants(
                           user?.meetingDetails?.internalUserID,
-                        );
-                      }}
-                      className="py-2"
-                    >
-                      <MicOffIcon className="mr-2 h-5 w-5" />
-                      <span>Mute All</span>
-                    </DropdownMenuItem>
-                  ),
-              )}
+                      );
+                    }}
+                    className="py-2"
+                >
+                  <MicOffIcon className="mr-2 h-5 w-5" />
+                  <span>Mute All</span>
+                </DropdownMenuItem>
+            )}
 
-            {participantList
-              ?.filter(
-                (eachItem: IParticipant) =>
-                  eachItem?.intId == user?.meetingDetails?.internalUserID,
-              )
-              .map(
-                (eachItem: IParticipant, index: number) =>
-                  eachItem.presenter && (
-                    <DropdownMenuItem
-                      key={index}
-                      onClick={() => {
-                        if (pollModal.isActive || pollModal.isEnded) return;
-                        setPollModal((prev) => ({
-                          ...prev,
-                          step: 1,
-                        }));
-                      }}
-                      className="py-2"
-                    >
-                      <TextFormatIcon className="mr-2 h-5 w-5" />
-                      <span>Polls</span>
-                    </DropdownMenuItem>
-                  ),
-              )}
+            {CurrentUserIsPresenter() && (
+                <DropdownMenuItem
+                    onClick={() => {
+                      if (pollModal.isActive || pollModal.isEnded) return;
+                      setPollModal((prev) => ({
+                        ...prev,
+                        step: 1,
+                      }));
+                    }}
+                    className="py-2"
+                >
+                  <TextFormatIcon className="mr-2 h-5 w-5" />
+                  <span>Polls</span>
+                </DropdownMenuItem>
+            )}
 
             {!donationState.isActive && (
               <DropdownMenuItem
@@ -751,7 +716,7 @@ function MiddleSide() {
           <PhoneEndIcon className="h-6 w-6" />
         </button>
         <Separator className=" bg-a11y/20 " orientation="vertical" />
-        {user?.meetingDetails?.role == "MODERATOR" && (
+        {CurrentUserRoleIsModerator() && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="px-1">

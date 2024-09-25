@@ -57,6 +57,7 @@ import HandOffIcon from "~/components/icon/outline/HandOffIcon";
 import FileUploadModal from "~/components/fileUpload/FileUploadModal";
 import { Howl } from 'howler';
 import RecordingConsentModal from "~/components/recording/RecordingConsentModal";
+import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
 
 
 function Authenticated({ children }: { children: React.ReactNode }) {
@@ -231,7 +232,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           {user?.meetingDetails?.record == "true" ? recordingState.isActive ? (
             <button
               onClick={() => {
-                if (participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0].role == "MODERATOR") {
+                if (CurrentUserRoleIsModerator()) {
                   setRecordingState((prev) => ({
                     ...prev,
                     step: 2,
@@ -253,7 +254,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           ) : (
             <button
               onClick={() => {
-                if (participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0].role == "MODERATOR") {
+                if (CurrentUserRoleIsModerator()) {
                   setRecordingState((prev) => ({
                     ...prev,
                     step: 1,

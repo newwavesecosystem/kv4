@@ -9,6 +9,7 @@ import ReactPlayer from "react-player";
 import {websocketStopExternalVideo} from "~/server/Websocket";
 import {IParticipant} from "~/types";
 import ExpandIcon from "~/components/icon/outline/ExpandIcon";
+import {CurrentUserIsPresenter} from "~/lib/checkFunctions";
 
 function ECinemaComponent() {
   const [isOpen, setIsOpen] = useState(false);
@@ -98,7 +99,7 @@ function ECinemaComponent() {
               <ExpandIcon className="h-5 w-5"/>
               <span>Go Fullscreen</span>
           </button>
-          {participantList.filter((item: IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.presenter &&
+          {CurrentUserIsPresenter() &&
               (<button
                   onClick={() => {
                       setIsOpen(true);
