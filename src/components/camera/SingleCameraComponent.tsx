@@ -114,7 +114,7 @@ function SingleCameraComponent({
         )}
         <button
           className={cn(
-            "p-1 ",
+            "p-1 z-10",
             participantTalkingList
               .filter((eachItem: any) => eachItem?.intId == participant.intId)
               .map((eachItem: any) =>
@@ -137,7 +137,7 @@ function SingleCameraComponent({
             )}
         </button>
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger className="z-10">
             <button className="rounded-full bg-primary/80 p-1">
               <EllipsisIcon className="h-5 w-5 " />
             </button>
