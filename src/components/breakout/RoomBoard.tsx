@@ -6,7 +6,10 @@ import {
   DragOverEvent,
   DragOverlay,
   DragStartEvent,
-  PointerSensor,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useDndContext,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -16,6 +19,8 @@ import UsersCard from "./UsersCard";
 import { IColumnBreakOutRoom, IUserBreakOutRoom } from "~/types";
 import { breakOutModalState } from "~/recoil/atom";
 import { useRecoilState } from "recoil";
+import { coordinateGetter } from "./multipleContainersKeyboardPreset";
+import { cn } from "~/lib/utils";
 
 function RoomBoard() {
   const [breakOutRoomState, setBreakOutRoomState] =
@@ -33,34 +38,26 @@ function RoomBoard() {
   const [activeUser, setActiveUser] = useState<IUserBreakOutRoom | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 10,
-      },
-    }),
+    useSensor(MouseSensor),
+    useSensor(TouchSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: coordinateGetter,
+    })
   );
 
   function deleteUser(id: string) {
     setBreakOutRoomState((prev) => {
-      const userIndex = prev.users.findIndex((user) => user.id === id);
-
-      const user = prev.users[userIndex];
-
-      const newUsers = [...prev.users];
-
-      if (!user) return prev;
-
-      newUsers[userIndex] = {
-        ...user,
-        columnId: "users",
-      };
+      const updatedUsers = prev.users.map((user) =>
+        user.userId === id ? { ...user, columnId: "users" } : user
+      );
 
       return {
         ...prev,
-        users: newUsers,
+        users: updatedUsers,
       };
     });
   }
+
 
   function updateColumn(id: string, title: string) {
     const newColumns = breakOutRoomState.rooms.map((col) => {
@@ -75,9 +72,11 @@ function RoomBoard() {
   }
 
   function onDragStart(event: DragStartEvent) {
-    if (event.active.data.current?.type === "User") {
-      setActiveUser(event.active.data.current.user as IUserBreakOutRoom | null);
-      return;
+    const { data } = event.active;
+    if (data.current?.type === "User") {
+      setActiveUser(data.current.user as IUserBreakOutRoom);
+    } else if (data.current?.type === "Column") {
+      setActiveColumn(data.current.column as IColumnBreakOutRoom);
     }
   }
 
@@ -126,30 +125,29 @@ function RoomBoard() {
 
     // Im dropping a User over another User
     if (isActiveAUser && isOverAUser) {
-      const activeIndex = breakOutRoomState.users.findIndex(
-        (t) => t.id === activeId,
-      );
+      const activeIndex = breakOutRoomState.users.findIndex((t) => t.userId === activeId);
+
       const overIndex = breakOutRoomState.users.findIndex(
-        (t) => t.id === overId,
+        (t) => t.userId === overId,
       );
 
-      // if (
-      //   breakOutRoomState.users[activeIndex]!.columnId !==
-      //   breakOutRoomState.users[overIndex]?.columnId
-      // ) {
-      //   setBreakOutRoomState((prev: any) => ({
-      //     ...prev,
-      //     users: [
-      //       ...prev.users.slice(0, activeIndex),
-      //       {
-      //         ...prev.users[activeIndex],
-      //         columnId: prev.users[overIndex].columnId,
-      //       },
-      //       ...prev.users.slice(activeIndex + 1),
-      //     ],
-      //   }));
-      //   return;
-      // }
+      if (
+        breakOutRoomState.users[activeIndex]?.columnId !==
+        breakOutRoomState.users[overIndex]?.columnId
+      ) {
+        setBreakOutRoomState((prev: any) => ({
+          ...prev,
+          users: [
+            ...prev.users.slice(0, activeIndex),
+            {
+              ...prev.users[activeIndex],
+              columnId: prev.users[overIndex].columnId,
+            },
+            ...prev.users.slice(activeIndex + 1),
+          ],
+        }));
+        return;
+      }
     }
 
     const isOverAColumn = over.data.current?.type === "Column";
@@ -157,22 +155,22 @@ function RoomBoard() {
     // Im dropping a User over a column
     if (isActiveAUser && isOverAColumn) {
       const activeIndex = breakOutRoomState.users.findIndex(
-        (t) => t.id === activeId,
+        (t) => t.userId === activeId,
       );
-      // setBreakOutRoomState((prev: any) => ({
-      //   ...prev,
-      //   users: [
-      //     ...prev.users.slice(0, activeIndex),
-      //     {
-      //       ...prev.users[activeIndex],
-      //       columnId: overId.toString(),
-      //     },
-      //     ...prev.users.slice(activeIndex + 1),
-      //   ],
-      // }));
+      setBreakOutRoomState((prev: any) => ({
+        ...prev,
+        users: [
+          ...prev.users.slice(0, activeIndex),
+          {
+            ...prev.users[activeIndex],
+            columnId: overId.toString(),
+          },
+          ...prev.users.slice(activeIndex + 1),
+        ],
+      }));
     }
   }
-
+  const dndContext = useDndContext();
   return (
     <div className="h-full w-full text-xs text-a11y">
       <DndContext
@@ -181,7 +179,9 @@ function RoomBoard() {
         onDragEnd={onDragEnd}
         onDragOver={onDragOver}
       >
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <div className={cn("grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4",
+          dndContext.active ? "snap-none" : "snap-x snap-mandatory",
+        )}>
           <SortableContext items={columnsId}>
             {breakOutRoomState.rooms.map((col) => (
               <ColumnContainer
@@ -189,32 +189,31 @@ function RoomBoard() {
                 column={col}
                 updateColumn={updateColumn}
                 deleteUser={deleteUser}
-                users={breakOutRoomState.users.filter(
-                  (user) => user.columnId === col.id,
-                )}
+                users={breakOutRoomState.users.filter((user) => user.columnId === col.id)}
               />
             ))}
           </SortableContext>
         </div>
 
-        {createPortal(
-          <DragOverlay>
-            {activeColumn && (
-              <ColumnContainer
-                column={activeColumn}
-                updateColumn={updateColumn}
-                deleteUser={deleteUser}
-                users={breakOutRoomState.users.filter(
-                  (user) => user.columnId === activeColumn.id,
-                )}
-              />
-            )}
-            {activeUser && (
-              <UsersCard user={activeUser} deleteUser={deleteUser} />
-            )}
-          </DragOverlay>,
-          document.body,
-        )}
+        {"document" in window &&
+          createPortal(
+            <DragOverlay>
+              {activeColumn && (
+                <ColumnContainer
+                  column={activeColumn}
+                  updateColumn={updateColumn}
+                  deleteUser={deleteUser}
+                  users={breakOutRoomState.users.filter(
+                    (user) => user.columnId === activeColumn.id,
+                  )}
+                />
+              )}
+              {activeUser && (
+                <UsersCard user={activeUser} deleteUser={deleteUser} />
+              )}
+            </DragOverlay>,
+            document.body,
+          )}
       </DndContext>
     </div>
   );
