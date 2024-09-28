@@ -25,6 +25,8 @@ import Image from "next/image";
 import MicOnIcon from "./icon/outline/MicOnIcon";
 import SingleCameraComponent from "./camera/SingleCameraComponent";
 import { cn } from "~/lib/utils";
+import { useRouter } from 'next/router';
+
 
 // import "~/styles/tldraw.css";
 import dynamic from "next/dynamic";
@@ -48,6 +50,7 @@ import SocketIOCaption from "~/server/SocketIOCaption";
 import PinIcon from "~/components/icon/outline/PinIcon";
 import MinimizeIcon from "~/components/icon/outline/MinimizeIcon";
 import {FindAvatarfromUserId, FindUserNamefromUserId} from "~/lib/checkFunctions";
+import {GetCurrentSessionToken, SetCurrentSessionToken} from "~/lib/localStorageFunctions";
 
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
@@ -84,6 +87,9 @@ function PostSignIn() {
   const [pinnedParticipant, setPinnedParticipant] =
     useRecoilState(pinnedUsersState);
   const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
+
+  const router = useRouter();
+
   const checkDonation = (id: any) => {
     axios
       .get(`${ServerInfo.laravelAppURL}/api/k4/donation/${id}`)
@@ -139,8 +145,9 @@ function PostSignIn() {
             fullName: "",
             id: 0,
             meetingDetails: responseData?.response,
-            sessiontoken: token ?? " ",
+            sessiontoken: token!,
           });
+          SetCurrentSessionToken(token!);
           checkDonation(responseData?.response?.externMeetingID);
         } else {
           toast({
@@ -168,11 +175,38 @@ function PostSignIn() {
     const urlParams = new URLSearchParams(window.location.search);
     console.log("urlParams");
     console.log(urlParams);
+    // extract the value from the query params
     const token = urlParams.get("sessionToken");
-    console.log("token");
-    console.log(token);
 
-    validateToken(token);
+    if (token) {
+      // do something with the extract query param
+      console.log("token");
+      console.log(token);
+
+      // create an updated router path object
+      const newPathObject = {
+        pathname: router.pathname,
+        query: ""
+      }
+
+      validateToken(token);
+
+      // update the URL, without re-triggering data fetching
+      router.push(newPathObject, undefined, { shallow: true });
+    }else if(GetCurrentSessionToken() != ""){
+      validateToken(GetCurrentSessionToken());
+    }else{
+      setPostLeaveMeeting({
+        ...postLeaveMeeting,
+        isSessionExpired: true,
+      });
+    }
+
+    // delete router.query.paramName;
+    // router.push(router);
+
+    // setTimeout(()=>{ history.replaceState(null, "", location.pathname) }, 0)
+
   }, [""]);
 
   useEffect(() => {
@@ -204,7 +238,7 @@ function PostSignIn() {
     <Authenticated>
       {!connectionStatus?.websocket_connection ?
           <span className="flex w-full items-center justify-between px-4"
-                style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}>You lost your network connection. Trying to reconnect<br/></span> : ''}
+                style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}>Connecting...<br/></span> : ''}
       {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
           <span className="flex w-full items-center justify-between px-4"
                 style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}
