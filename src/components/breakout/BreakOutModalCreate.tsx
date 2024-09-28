@@ -323,26 +323,26 @@ function BreakOutModalCreate() {
                   let usersIndex = 0;
                   let roomsIndex = 0;
                   let newUsers = users;
-                  // while (usersIndex < users.length) {
-                  //   if (roomsIndex === rooms.length) {
-                  //     roomsIndex = 0;
-                  //   }
-                  //   const room = rooms[roomsIndex];
-                  //   newUsers = [
-                  //     ...newUsers.slice(0, usersIndex),
-                  //     {
-                  //       ...newUsers[usersIndex],
-                  //       columnId: room?.id ?? "users",
-                  //     },
-                  //     ...newUsers.slice(usersIndex + 1),
-                  //   ] as any
-                  //   usersIndex++;
-                  //   roomsIndex++;
-                  // }
-                  // setBreakOutRoomState((prev) => ({
-                  //   ...prev,
-                  //   users: newUsers,
-                  // }));
+                  while (usersIndex < users.length) {
+                    if (roomsIndex === rooms.length) {
+                      roomsIndex = 0;
+                    }
+                    const room = rooms[roomsIndex];
+                    newUsers = [
+                      ...newUsers.slice(0, usersIndex),
+                      {
+                        ...newUsers[usersIndex],
+                        columnId: room?.id ?? "users",
+                      },
+                      ...newUsers.slice(usersIndex + 1),
+                    ] as any
+                    usersIndex++;
+                    roomsIndex++;
+                  }
+                  setBreakOutRoomState((prev) => ({
+                    ...prev,
+                    users: newUsers,
+                  }));
                 }}
                 className="rounded-md bg-a11y/20 px-4 py-1 text-sm"
               >

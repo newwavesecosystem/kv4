@@ -3,6 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { IUserBreakOutRoom } from "~/types";
 import CloseIcon from "../icon/outline/CloseIcon";
 import { cn } from "~/lib/utils";
+import { MouseEvent } from "react";
 
 interface Props {
   user: IUserBreakOutRoom;
@@ -18,13 +19,20 @@ function UsersCard({ user, deleteUser }: Props) {
     transition,
     isDragging,
   } = useSortable({
-    id: user?.id ?? '66666',
+    id: user.userId || user.id || `temp-${Math.random()}`,
     data: {
       type: "User",
       user,
     },
     disabled: false,
   });
+
+  const handleDelete = (e: MouseEvent) => {
+    e.stopPropagation();  // This prevents the click from bubbling up to the draggable element
+    const id = user.userId || user.id;
+    if (!id) return;
+    deleteUser(id);
+  };
 
   const style = {
     transition,
@@ -47,21 +55,19 @@ function UsersCard({ user, deleteUser }: Props) {
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       className={cn(
-        " flex h-[25px] cursor-grab select-none items-center text-left text-a11y",
-        user.columnId !== "users" && "rounded bg-a11y/20 px-2 py-1",
+        "flex h-[25px] select-none items-center text-left text-a11y",
+        user.columnId !== "users" && "rounded bg-a11y/20 px-2 py-1"
       )}
     >
-      <p className="w-full truncate">{user.name}</p>
+      <div {...attributes} {...listeners} className="w-full cursor-grab truncate">
+        {user.name}
+      </div>
 
       {user.columnId !== "users" && (
         <button
-          onClick={() => {
-            // deleteUser(user.id);
-          }}
-          className="stroke-white pl-2"
+          onClick={handleDelete}
+          className="stroke-white pl-2 cursor-pointer"
         >
           <CloseIcon className="h-4 w-4 " />
         </button>
