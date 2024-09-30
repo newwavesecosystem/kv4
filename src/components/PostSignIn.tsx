@@ -87,8 +87,13 @@ function PostSignIn() {
   const [pinnedParticipant, setPinnedParticipant] =
     useRecoilState(pinnedUsersState);
   const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
+  const [wakeLock, setWakeLock] = useState(null);
+  const [wakeLockActive, setWakeLockActive] = useState(false);
+
 
   const router = useRouter();
+
+  let lock:WakeLockSentinel;
 
   const checkDonation = (id: any) => {
     axios
@@ -149,6 +154,7 @@ function PostSignIn() {
           });
           SetCurrentSessionToken(token!);
           checkDonation(responseData?.response?.externMeetingID);
+          requestWakeLock();
         } else {
           toast({
             variant: "destructive",
@@ -169,6 +175,38 @@ function PostSignIn() {
         // always executed
       });
   };
+
+  // Function to request wake lock
+  const requestWakeLock = async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        lock = await navigator.wakeLock.request('screen');
+        setWakeLockActive(true);
+        console.log('Wake lock is active');
+
+        // Listen for visibility change to re-activate the wake lock if needed
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+      }
+    } catch (error) {
+      console.error(`Wake lock request failed: ${error}`);
+    }
+  };
+
+  const removeWakeLock = async () => {
+      lock?.release().then(() => {
+        setWakeLockActive(false);
+        console.log('Wake lock has been released');
+      });
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+  };
+
+  // Handle when user switches tabs and the wake lock gets released
+  const handleVisibilityChange = async () => {
+    if (document.visibilityState === 'visible' && !wakeLockActive) {
+      requestWakeLock();
+    }
+  };
+
 
   useEffect(() => {
     // Get the URL parameters
@@ -225,9 +263,10 @@ function PostSignIn() {
     });
 
     // Clean up the event listener when the component is unmounted
-    // return () => {
-    //     window.removeEventListener('popstate', disableBackButton);
-    // };
+    return () => {
+      removeWakeLock();
+        window.removeEventListener('popstate', disableBackButton);
+    };
   }, []); // Run the effect only once during component mount
 
 
