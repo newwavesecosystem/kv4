@@ -134,11 +134,11 @@ function PollModalCreate() {
                     };
                   }),
                   pollCreatedAt: new Date(),
-                  pollCreatorId: `${presentationSlide.id}/1`,
+                  pollCreatorId: `${user?.meetingDetails?.internalUserID}/1`,
                   pollCreatorName: user?.fullName as string,
                 }));
 
-                websocketStartPoll(`${presentationSlide.id}/1`,data.pollQuestion,JSON.stringify(options.map(item => item.option)));
+                websocketStartPoll(`${user?.meetingDetails?.internalUserID}/1`,data.pollQuestion,JSON.stringify(options.map(item => item.option)));
               }}
             >
               Publish Polls

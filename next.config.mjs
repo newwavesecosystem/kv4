@@ -62,6 +62,12 @@ const config = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'meet.konn3ct.ng',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

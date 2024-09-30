@@ -46,7 +46,7 @@ function SingleParticipant({
   const talkingList = useRecoilValue(participantTalkingListState);
   const [removeParticipant, setRemoveParticipant] =
     useRecoilState(removeUserModalState);
-  const [privateChat, setPrivateChat] = useRecoilState(privateChatModalState);
+  const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
   const participantList = useRecoilValue(participantListState);
 
   const displayActions=(item:any,index:number)=>{
@@ -143,11 +143,11 @@ function SingleParticipant({
                 onClick={() => {
                   if (!user) return;
 
-                  if(privateChat.users.filter((item)=> item.id == participant.intId).length > 0){
-                    privateChat.chatRooms.map((citem)=>{
+                  if(privateChatState.users.filter((item)=> item.id == participant.intId).length > 0){
+                    privateChatState.chatRooms.map((citem)=>{
                       citem.participants.map((ccitem)=>{
                         if(ccitem.id == participant.intId){
-                          setPrivateChat((prev)=>({
+                          setPrivateChatState((prev)=>({
                             ...prev,
                             isActive: true,
                             id: citem.chatId,
@@ -162,16 +162,16 @@ function SingleParticipant({
                   }
 
                   websocketStartPrivateChat(participant);
-                  setPrivateChat({
-                    ...privateChat,
-                    // isActive: !privateChat.isActive,
+                  setPrivateChatState({
+                    ...privateChatState,
+                    // isActive: !privateChatState.isActive,
                     users: [
                       // {
                       //   email: user.email,
                       //   fullName: user.fullName,
                       //   id: user.id,
                       // },
-                        ...privateChat.users,
+                        ...privateChatState.users,
                       {
                         email: participant.extId,
                         fullName: participant.name,

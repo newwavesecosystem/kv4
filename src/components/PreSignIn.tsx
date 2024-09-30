@@ -157,7 +157,7 @@ export default function PreSignIn() {
                       return;
                     }
 
-                    const mic = await requestMicrophoneAccess(desiredMic[0]);
+                    const mic = await requestMicrophoneAccess(desiredMic[0], false,false,false);
                     if (mic) {
                       setMicrophoneStream(mic);
                       setMicState(!micState);
@@ -201,7 +201,7 @@ export default function PreSignIn() {
                       return;
                     }
 
-                    const video = await requestCameraAccess(desiredCamera[0]);
+                    const video = await requestCameraAccess(desiredCamera[0],{});
 
                     if (video) {
                       setCameraSteam(video);

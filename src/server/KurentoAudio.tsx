@@ -5,6 +5,36 @@ import {useRecoilState, useRecoilValue} from "recoil";
 import {authUserState, connectionStatusState, microphoneStreamState, selectedSpeakersState} from "~/recoil/atom";
 
 
+let ws: WebSocket | null = null;
+let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
+
+export async function kurentoAudioSetNewStream(stream:MediaStream) {
+    console.log('kurentoAudioSetNewStream');
+
+    const newTracks = stream.getAudioTracks();
+    const localStream = webRtcPeer?.getLocalStream();
+    const oldTracks = localStream ? localStream.getAudioTracks() : [];
+
+
+    webRtcPeer?.peerConnection.getSenders().forEach((sender, index) => {
+        if (sender.track && sender.track.kind === 'audio') {
+            const newTrack = newTracks[index];
+            if (newTrack == null) return;
+
+            // Cleanup old tracks in the local MediaStream
+            const oldTrack = oldTracks[index];
+            sender.replaceTrack(newTrack);
+            if (oldTrack) {
+                oldTrack.stop();
+                localStream?.removeTrack(oldTrack);
+            }
+            localStream?.addTrack(newTrack);
+        }
+    });
+
+}
+
+
 const KurentoAudio = () => {
 
     const user = useRecoilValue(authUserState);
@@ -23,10 +53,6 @@ const KurentoAudio = () => {
 
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    let ws: WebSocket | null = null;
-    let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
-
-
     function kurentoSend(data: any) {
         ws?.send(JSON.stringify(data))
         console.log('Sending this data via kurento websocket')
@@ -37,9 +63,16 @@ const KurentoAudio = () => {
             try {
                 if (audioRef.current) {
                     // Use type assertion to tell TypeScript that audioRef.current has the setSinkId method
-                    (audioRef.current as any).setSinkId(selectedSpeaker?.deviceId);
+                    (audioRef.current as any).setSinkId(selectedSpeaker?.deviceId)
+                        .then(() => console.log(`Audio output set to device: ${selectedSpeaker?.deviceId}`))
+                        .catch((error:any) => console.error('Error setting audio output device:', error));
                     console.log(`Audio output set to: ${selectedSpeaker?.label}`);
                     console.log('Audio output set successfully.');
+                    console.log(`Audio output readyState : ${audioRef.current.readyState}`);
+                    if (audioRef.current.readyState > 0) {
+                        console.log('Audio output is in ready state');
+                        audioRef.current.load();
+                    }
                 } else {
                     console.error('Audio element not found.');
                 }

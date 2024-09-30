@@ -2,13 +2,19 @@ import {useContext, useEffect, useState} from 'react';
 import * as kurentoUtils from "kurento-utils";
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, screenSharingState, screenSharingStreamState, viewerScreenSharingState} from "~/recoil/atom";
+import {
+    authUserState,
+    LayoutSettingsState,
+    screenSharingState,
+    screenSharingStreamState,
+    viewerScreenSharingState
+} from "~/recoil/atom";
 
 const KurentoScreenShareViewer = () => {
     const user = useRecoilValue(authUserState);
     const [viewerscreenShareState, setViewerScreenShareState] = useRecoilState(viewerScreenSharingState);
     const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState);
-
+    const [layoutSettings, setlayoutSettings] = useRecoilState(LayoutSettingsState);
     const [wsStarted, setWsStarted] = useState(false);
 
     let ws: WebSocket | null = null;
@@ -149,6 +155,11 @@ const KurentoScreenShareViewer = () => {
 
             setScreenSharingStream(gstream);
             setViewerScreenShareState(true);
+            setlayoutSettings({
+                ...layoutSettings,
+                layout: "4",
+                layoutName: "Focus on presenter",
+            });
         };
 
 

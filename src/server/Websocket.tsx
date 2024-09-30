@@ -8,7 +8,7 @@ import {generateRandomId, generatesSmallId} from "./ServerInfo";
 import {
     authUserState,
     breakOutModalState,
-    chatListState,
+    chatListState, chatTypeListState,
     chatTypingListState,
     connectionStatusState,
     donationModalState,
@@ -19,9 +19,9 @@ import {
     participantCameraListState,
     participantListState,
     participantTalkingListState,
-    pollModalState,
+    pollModalState, postLeaveMeetingState,
     presentationSlideState, privateChatModalState,
-    recordingModalState,
+    recordingModalState, screenSharingState,
     screenSharingStreamState,
     viewerScreenSharingState,
     waitingRoomUsersState
@@ -30,22 +30,15 @@ import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {IBreakoutRoom, IColumnBreakOutRoom, IParticipant, IParticipantCamera, IWaitingUser} from "~/types";
 import dayjs from "dayjs";
 import axios from "axios";
+import {toast} from "~/components/ui/use-toast";
+import {FindUserNamefromUserId} from "~/lib/checkFunctions";
+
 
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
 
 const reConnect = () => {
     sock = new SockJS(ServerInfo.websocketURL);
-    // websocketConnect()
-}
-
-function pinger(){
-
-    function ping(){
-        websocketSend(["{\"msg\":\"pong\"}"])
-    }
-
-    setInterval(ping,10000);
 }
 
 
@@ -130,6 +123,13 @@ const Websocket = () => {
     const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
     const [fileUploadModal, setFileUploadModal] = useRecoilState(fileUploadModalState);
     const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
+    const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
+    const [chatTypeList, setChatTypeList] = useRecoilState(chatTypeListState);
+
+    const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(
+        postLeaveMeetingState,
+    );
+
 
     const [num, setNum] = useState(1);
 
@@ -137,6 +137,21 @@ const Websocket = () => {
         setNum(num+1);
         return num;
     }
+
+
+    function pinger(){
+
+        let myVar = setInterval(ping, 10000);
+
+        function ping(){
+            if(!connectionStatus.websocket_connection){
+                clearInterval(myVar);
+            }
+            websocketSend(["{\"msg\":\"pong\"}"])
+        }
+
+    }
+
 
 
     useEffect(() => {
@@ -194,7 +209,8 @@ const Websocket = () => {
                     // a["{\"msg\":\"connected\",\"session\":\"4qajGwWr4bziuofh9\"}"]
                     setConnection((prev)=>({
                         ...prev,
-                        websocket_connection:true
+                        websocket_connection:true,
+                        websocket_connection_reconnect:false
                     }))
                 }
 
@@ -210,6 +226,10 @@ const Websocket = () => {
                 }
                 if (collection == "users") {
                     handleUsers(e.data)
+                }
+
+                if (collection == "current-user") {
+                    handleCurrentUsers(e.data)
                 }
                 if (collection == "record-meetings") {
                     handleRecording(e.data)
@@ -272,7 +292,15 @@ const Websocket = () => {
                     ...prev,
                     websocket_connection:false
                 }))
-                // reConnect()
+
+                if(!postLeaveMeeting.isLeave || !postLeaveMeeting.isLeaveRoomCall || !postLeaveMeeting.isEndCall || !postLeaveMeeting.isOthers || !postLeaveMeeting.isSessionExpired || !postLeaveMeeting.isKicked){
+                    reConnect();
+                    setConnection((prev)=>({
+                        ...prev,
+                        websocket_connection_reconnect:true
+                    }))
+                }
+
 
             };
         }
@@ -370,8 +398,8 @@ const Websocket = () => {
         const obj = JSON.parse(eventData);
         const {msg, id} = obj;
         if (msg == 'added') {
-            const {userId, name} = obj.fields;
-            addtypingUsers(id,name)
+            const {userId, name, isTypingTo} = obj.fields;
+            addtypingUsers(id,name,isTypingTo)
         } else {
             removetypingUsers(id)
         }
@@ -415,6 +443,35 @@ const Websocket = () => {
         }
     }
 
+    const handleCurrentUsers = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id, fields} = obj;
+        console.log("CurrentUserState: handleUsers",obj);
+
+        if (msg == 'changed') {
+            const {authTokenValidatedTime} = fields;
+
+            if(authTokenValidatedTime != null){
+                console.log(`authTokenValidatedTime:${authTokenValidatedTime}`)
+                console.log(`local authTokenValidatedTime:${Date.now()}`)
+
+                var diff=Date.now() - authTokenValidatedTime;
+
+                console.log(`local authTokenValidatedTime diff :${diff}`)
+
+
+                if((diff) > 50){
+                    console.log("Session switched",obj);
+                    setPostLeaveMeeting({
+                        ...postLeaveMeeting,
+                        isKicked: true,
+                    });
+                }
+            }
+        }
+    }
+
     const handleRemoteVideo = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
@@ -441,12 +498,17 @@ const Websocket = () => {
 
         if(msg == "added"){
             const {stream, name,callerName} = obj?.fields;
-            setViewerScreenShareState(true);
+            console.log(`screenSharingState: ${JSON.stringify(screenSharingState)}`);
+            if(!screenShareState) {
+                setViewerScreenShareState(true);
+            }
         }
 
         if(msg == "removed"){
-            setViewerScreenShareState(false);
-            setScreenSharingStream(null);
+            if(!screenShareState) {
+                setViewerScreenShareState(false);
+                setScreenSharingStream(null);
+            }
         }
     }
 
@@ -568,7 +630,7 @@ const Websocket = () => {
                 }),
                 pollCreatedAt: new Date(),
                 pollCreatorId: id,
-                pollCreatorName: findUserNamefromUserId(requester),
+                pollCreatorName: FindUserNamefromUserId(requester, participantList),
                 isUserHost: false,
             }));
         }
@@ -609,7 +671,7 @@ const Websocket = () => {
                 for (let i = 0; i < responses.length; i++) {
                     let vUser= {
                         id: responses[i].userId,
-                        fullName: findUserNamefromUserId(responses[i].userId),
+                        fullName: FindUserNamefromUserId(responses[i].userId, participantList),
                         email: null,
                         votedOption: "NA",
                         votedOptionId: responses[i].answerIds,
@@ -656,14 +718,20 @@ const Websocket = () => {
         if(msg == "added") {
             const {pages,current,downloadable,name,podId,id} = fields;
 
-            setPresentationSlide({
+            console.log(`pages issues:`,pages);
+
+            setPresentationSlide((prev)=>({
+                show:true,
+                currentPresentationID:id,
+                presentations: [...prev.presentations,{
                 pages: pages,
                 current: current,
                 downloadable: downloadable,
                 name: name,
                 podId: podId,
                 id: id,
-            })
+            }]
+            }));
         }
     }
 
@@ -702,7 +770,7 @@ const Websocket = () => {
                 rooms: [
                     ...prev.rooms,
                     {
-                        id: sequence,
+                        id: id,
                         breakoutId: breakoutId,
                         title: shortName,
                         users: joinedUsers,
@@ -736,6 +804,35 @@ const Websocket = () => {
                 window.open(redirectToHtml5JoinURL, '_blank');
             }
 
+        }
+
+        if(msg == "removed") {
+            setBreakOutRoomState((prev) => ({
+                ...prev,
+                rooms: [
+                    ...prev.rooms.filter((item)=>item.id != id),
+                ],
+            }));
+
+            if(breakOutRoomState.rooms.length <= 0){
+                setBreakOutRoomState({
+                    step: 0,
+                    isActive: false,
+                    rooms: [],
+                    users: [],
+                    isAllowUsersToChooseRooms: true,
+                    isSendInvitationToAssignedModerators: false,
+                    duration: 15,
+                    isSaveWhiteBoard: false,
+                    isSaveSharedNotes: false,
+                    createdAt: null,
+                    creatorName: "",
+                    creatorId: 0,
+                    isEnded: false,
+                    activatedAt: null,
+                    endedAt: null,
+                });
+            }
         }
 
     }
@@ -809,6 +906,7 @@ const Websocket = () => {
 
         console.log("settingfunction: file to upload found",find);
 
+
         const formData = new FormData();
         if (find) {
             formData.append("fileUpload", find[0].file);
@@ -825,13 +923,29 @@ const Websocket = () => {
                 url: `https://${ServerInfo.engineBaseURL}/bigbluebutton/presentation/${authToken}/upload`,
                 data: formData,
                 headers: {"Content-Type": "multipart/form-data"},
+                onDownloadProgress: (progressEvent) => {
+                    console.log("percentCompleted progressEvent: ",progressEvent);
+                    var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!);
+                    console.log("percentCompleted upload: ",percentCompleted);
+                },
             });
 
             console.log("settingfunction: upload response",response);
             const responseData = response.data;
 
-            if (find) {
-                handlePresentationUploaded(find[0].name, id);
+            if(response.status == 200){
+                handlePresentationUploaded(find[0].name, id,authToken);
+
+                setFileUploadModal((prev) => ({
+                    ...prev,
+                    step: 0,
+                }));
+
+                toast({
+                    title: "Completed",
+                    description: `${find[0].name} uploaded successfully`,
+                    duration: 5000,
+                });
             }
 
         } catch (error) {
@@ -1174,10 +1288,10 @@ const Websocket = () => {
         setIsNewMessage(true);
     }
 
-    const addtypingUsers=(id:any,name:string)=>{
+    const addtypingUsers=(id:any,name:string,type:string)=>{
      let ishola = chatTypingList
         let convertedUser={
-         id,name
+         id,name,type
         };
         console.log(ishola)
         if (ishola.filter((item:any) => item.id == id).length < 1) {
@@ -1216,19 +1330,6 @@ const Websocket = () => {
     }
 
 
-
-    const findUserNamefromUserId = (userId:string) => {
-        var ishola = participantList
-        var damola = ishola.filter((item:any) => item?.userId == userId)
-        console.log('damola')
-        console.log(damola)
-        if (damola.length > 0) {
-            return damola[0]?.name
-        } else {
-            return 'unknown'
-        }
-    }
-
     const findAvatarfromUserId = (userId:string) => {
         var ishola = participantList
         var damola = ishola.filter((item:any) => item?.userId == userId)
@@ -1258,9 +1359,9 @@ export function websocketSendPrivateMessage(internalUserID:any,message:string,ch
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"sendGroupChatMsg\",\"params\":[\"${chatID}\",{\"correlationId\":\"${internalUserID}\",\"sender\":{\"id\":\"${internalUserID}\",\"name\":\"\",\"role\":\"\"},\"chatEmphasizedText\":true,\"message\":\"${message}\"}]}`]);
 }
 
-export function websocketStartTyping() {
+export function websocketStartTyping(type:String) {
     console.log('I am websocketStartTyping')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startUserTyping\",\"params\":[\"public\"]}`])
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startUserTyping\",\"params\":[\"${type}\"]}`])
 }
 
 export function websocketStopTyping() {
@@ -1447,8 +1548,10 @@ export function handleRequestPresentationUploadToken(uniqueID:string,file:File){
     websocketSend([`{\"msg\":\"sub\",\"id\":\"${ServerInfo.generateRandomId(17)}\",\"name\":\"presentation-upload-token\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${file?.name}\",\"${uniqueID}\"]}`])
 }
 
-const handlePresentationUploaded = (name:string,id:string)=>{
-    websocketSend([`{\"msg\":\"sub\",\"id\":\"Sx77Jii9BsBNh5GpG\",\"name\":\"presentation-upload-token\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${name}\",\"${id}\"]}`])
+const handlePresentationUploaded = (name:string,id:string,presentationAuthToken:string)=>{
+    websocketSend([`{\"msg\":\"sub\",\"id\":\"${ServerInfo.generateRandomId(17)}\",\"name\":\"presentation-upload-token\",\"params\":[\"DEFAULT_PRESENTATION_POD\",\"${name}\",\"${id}\"]}`])
+
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setUsedToken\",\"params\":[\"${presentationAuthToken}\"]}`])
 }
 
 export function websocketRequest2JoinBreakoutRoom(breakoutId: string | null){

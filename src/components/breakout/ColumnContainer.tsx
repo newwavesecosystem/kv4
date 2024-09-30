@@ -1,5 +1,4 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import React, { useMemo, useState } from "react";
 import UsersCard from "./UsersCard";
 import { IColumnBreakOutRoom, IUserBreakOutRoom } from "~/types";
@@ -16,8 +15,11 @@ interface Props {
 function ColumnContainer({ column, users, deleteUser }: Props) {
   const [breakOutRoomState, setBreakOutRoomState] =
     useRecoilState(breakOutModalState);
+
   const usersIds = useMemo(() => {
-    return users.map((user) => user.id);
+    return users
+      .map((user) => user.userId || user.id)
+      .filter((id): id is string => id !== undefined);
   }, [users]);
 
   const { setNodeRef, transform, transition } = useSortable({
@@ -27,13 +29,6 @@ function ColumnContainer({ column, users, deleteUser }: Props) {
       column,
     },
   });
-
-  const style = {
-    transition,
-    transform: CSS.Transform.toString(transform),
-  };
-
-  const [isEditing, setIsEditing] = useState(false);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const title = e.target.value;
@@ -54,7 +49,6 @@ function ColumnContainer({ column, users, deleteUser }: Props) {
   return (
     <div
       ref={setNodeRef}
-      style={style}
       className=" flex h-40 w-[150px]  flex-col rounded-md"
     >
       {/* Column title */}
@@ -75,11 +69,15 @@ function ColumnContainer({ column, users, deleteUser }: Props) {
 
       {/* Column User container */}
       <div className="mt-3 flex flex-grow flex-col gap-2 overflow-y-auto overflow-x-hidden border border-a11y/40 p-2">
-        {/*<SortableContext items={usersIds}>*/}
+        <SortableContext items={usersIds}>
           {users.map((user) => (
-            <UsersCard key={user.id} user={user} deleteUser={deleteUser} />
+            <UsersCard
+              key={user.userId || user.id}
+              user={user}
+              deleteUser={deleteUser}
+            />
           ))}
-        {/*</SortableContext>*/}
+        </SortableContext>
       </div>
     </div>
   );
