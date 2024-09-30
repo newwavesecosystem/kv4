@@ -238,7 +238,7 @@ function PostSignIn() {
     <Authenticated>
       {!connectionStatus?.websocket_connection ?
           <span className="flex w-full items-center justify-between px-4"
-                style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}>Connecting...<br/></span> : ''}
+                style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}>{connectionStatus.websocket_connection_reconnect ? "Network issues detected. Trying to reconnecting automatically" : "Connecting..."}<br/></span> : ''}
       {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
           <span className="flex w-full items-center justify-between px-4"
                 style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}
@@ -394,11 +394,10 @@ function PostSignIn() {
 
         {/*@Solomon help me implement component for presentation*/}
         {/*{presentationSlide.show &&*/}
-        {/*<Image*/}
-        {/*    src={presentationSlide.presentations.filter((item)=>item.id == presentationSlide.currentPresentationID)[0].pages[0]}*/}
-        {/*    width={20}*/}
-        {/*    height={20}*/}
-        {/*    className="rounded-full"*/}
+        {/*<img*/}
+        {/*    src={presentationSlide.presentations[0]?.pages[0]?.svgUri ?? ''}*/}
+        {/*    width={544}*/}
+        {/*    height={544}*/}
         {/*    alt="profile picture"*/}
         {/*/>*/}
         {/*}*/}

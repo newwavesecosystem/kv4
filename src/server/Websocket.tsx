@@ -33,21 +33,12 @@ import axios from "axios";
 import {toast} from "~/components/ui/use-toast";
 import {FindUserNamefromUserId} from "~/lib/checkFunctions";
 
+
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
 
 const reConnect = () => {
     sock = new SockJS(ServerInfo.websocketURL);
-    // websocketConnect()
-}
-
-function pinger(){
-
-    function ping(){
-        websocketSend(["{\"msg\":\"pong\"}"])
-    }
-
-    setInterval(ping,10000);
 }
 
 
@@ -148,6 +139,21 @@ const Websocket = () => {
     }
 
 
+    function pinger(){
+
+        let myVar = setInterval(ping, 10000);
+
+        function ping(){
+            if(!connectionStatus.websocket_connection){
+                clearInterval(myVar);
+            }
+            websocketSend(["{\"msg\":\"pong\"}"])
+        }
+
+    }
+
+
+
     useEffect(() => {
         // websocketConnect()
         if (sock !== null) {
@@ -203,7 +209,8 @@ const Websocket = () => {
                     // a["{\"msg\":\"connected\",\"session\":\"4qajGwWr4bziuofh9\"}"]
                     setConnection((prev)=>({
                         ...prev,
-                        websocket_connection:true
+                        websocket_connection:true,
+                        websocket_connection_reconnect:false
                     }))
                 }
 
@@ -285,7 +292,15 @@ const Websocket = () => {
                     ...prev,
                     websocket_connection:false
                 }))
-                // reConnect()
+
+                if(!postLeaveMeeting.isLeave || !postLeaveMeeting.isLeaveRoomCall || !postLeaveMeeting.isEndCall || !postLeaveMeeting.isOthers || !postLeaveMeeting.isSessionExpired || !postLeaveMeeting.isKicked){
+                    reConnect();
+                    setConnection((prev)=>({
+                        ...prev,
+                        websocket_connection_reconnect:true
+                    }))
+                }
+
 
             };
         }
@@ -702,6 +717,8 @@ const Websocket = () => {
 
         if(msg == "added") {
             const {pages,current,downloadable,name,podId,id} = fields;
+
+            console.log(`pages issues:`,pages);
 
             setPresentationSlide((prev)=>({
                 show:true,

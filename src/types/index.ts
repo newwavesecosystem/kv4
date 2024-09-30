@@ -153,6 +153,9 @@ export interface IPresentationSlideState {
     num: string,
     thumbUri: string,
     txtUri: string,
+    svgUri: string,
+    imageUri: string,
+    current: boolean,
   }[];
   current: boolean;
   downloadable: boolean;
