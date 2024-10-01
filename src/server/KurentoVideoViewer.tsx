@@ -82,10 +82,18 @@ const KurentoVideoViewer = (props:any) => {
                 mediaConstraints: constraints,
             };
 
-            webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(this: any, error) {
-                if (error) return this.onError(error);
-                this.generateOffer(onOffer);
-            });
+
+            if (ws?.readyState === WebSocket.OPEN) {
+                webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(this: any, error) {
+                    if (error) return this.onError(error);
+                    this.generateOffer(onOffer);
+                });
+            } else {
+                console.log("WebSocket is not open yet. Current state: ", ws?.readyState);
+                setTimeout(()=>{
+                    startProcess();
+                }, 40);
+            }
         };
 
         const startResponse = (message:any) => {
