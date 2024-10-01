@@ -59,6 +59,7 @@ const KurentoAudio = () => {
     }
 
     useEffect(() => {
+        console.log(`selectedSpeaker : ${selectedSpeaker}`)
         const changeAudioOutput = async () => {
             try {
                 if (audioRef.current) {
@@ -81,8 +82,10 @@ const KurentoAudio = () => {
             }
         };
 
-        // Change the audio output when the selectedSpeaker change
-        changeAudioOutput();
+        if(selectedSpeaker != null) {
+            // Change the audio output when the selectedSpeaker change
+            changeAudioOutput();
+        }
 
     },[selectedSpeaker])
 
@@ -169,10 +172,17 @@ const KurentoAudio = () => {
             mediaConstraints: constraints
         }
 
-        webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(this: any, error) {
-            if (error) return this.onError(error);
-            this.generateOffer(onOffer);
-        });
+        if (ws?.readyState === WebSocket.OPEN) {
+            webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(this: any, error) {
+                if (error) return this.onError(error);
+                this.generateOffer(onOffer);
+            });
+        } else {
+            console.log("WebSocket is not open yet. Current state: ", ws?.readyState);
+            setTimeout(()=>{
+                startProcess();
+            }, 40);
+        }
 
     }
 

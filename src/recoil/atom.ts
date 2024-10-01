@@ -8,7 +8,13 @@ import {
   IParticipant,
   IWaitingUser,
   IUserBreakOutRoom,
-  IBreakoutRoom, IWhiteBoardAnnotationRemote, IPrivateChatMessage, IBreakOutRecord, IPresentationSlideState, IAuthUser
+  IBreakoutRoom,
+  IWhiteBoardAnnotationRemote,
+  IPrivateChatMessage,
+  IBreakOutRecord,
+  IPresentationSlideState,
+  IAuthUser,
+  IVoiceUser
 } from "~/types";
 
 export const authUserState = atom<IAuthUser | null>({
@@ -35,7 +41,7 @@ export const participantListState = atom<any>({
   default: [],
 });
 
-export const participantTalkingListState = atom<any>({
+export const participantTalkingListState = atom<IVoiceUser[]>({
   key: "participantTalkingListState",
   default: [],
 });
