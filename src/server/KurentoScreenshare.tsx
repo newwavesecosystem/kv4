@@ -3,19 +3,39 @@ import * as kurentoUtils from "kurento-utils";
 import {websocketSend} from "./Websocket"
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, screenSharingState, screenSharingStreamState} from "~/recoil/atom";
+import {authUserState, LayoutSettingsState, screenSharingState, screenSharingStreamState} from "~/recoil/atom";
+import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
+
+
+let ws: WebSocket | null = null;
+let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
+
+
+export function websocketKurentoScreenshareEndScreenshare() {
+    console.log('Ending screenshare on KurentoScreenShare websocket');
+
+    //to stop webRtcPeer
+    if (webRtcPeer) {
+        webRtcPeer.dispose();
+        webRtcPeer = null;
+    }
+
+    //to stop websocket
+    if(ws != null){
+        console.log("ws is not null");
+        ws.close();
+    }
+}
+
 
 const KurentoScreenShare = () => {
 
     const user = useRecoilValue(authUserState);
     const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
     const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState);
+    const [layoutSettings, setlayoutSettings] = useRecoilState(LayoutSettingsState);
 
     const [wsStarted, setWsStarted] = useState(false);
-
-    let ws: WebSocket | null = null;
-    let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
-
 
     useEffect(() => {
 
@@ -61,6 +81,11 @@ const KurentoScreenShare = () => {
         };
 
         const startProcess = () => {
+            setlayoutSettings({
+                ...layoutSettings,
+                layout: "4",
+                layoutName: "Focus on presenter",
+            });
             console.log('Creating WebRtcPeer and generating local sdp offer ...');
             const videoElement = document.getElementById('rVideoElement');
             const constraints = {
@@ -74,23 +99,88 @@ const KurentoScreenShare = () => {
                 }
             };
 
-            const onStreamEnded = () => {
-                console.log('Screenshare Ended');
-            };
-
 
             const options = {
                 localVideo: videoElement,
                 remoteVideo: null,
                 videoStream:screenSharingStream,
                 onicecandidate: onIceCandidate,
-                mediaConstraints: constraints,
-                onstreamended:onStreamEnded
+                mediaConstraints: constraints
             };
 
             webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(this: any, error) {
                 if (error) return this.onError(error);
                 this.generateOffer(onOffer);
+
+                // Access the stream
+                const localStream = this.getLocalStream();
+
+                /**
+                 * Get stats about all active screenshare peers.
+                 *
+                 * For more information see:
+                 *  - https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/getStats
+                 *  - https://developer.mozilla.org/en-US/docs/Web/API/RTCStatsReport
+
+                 * @param {Array[String]} statsType - An array containing valid RTCStatsType
+                 *                                    values to include in the return object
+                 *
+                 * @returns {Object} The information about each active screen sharing peer.
+                 *          The returned format follows the format returned by video's service
+                 *          getStats, which considers more than one peer connection to be returned.
+                 *          The format is given by:
+                 *          {
+                 *            peerIdString: RTCStatsReport
+                 *          }
+                 */
+                setInterval(() => {
+                    this.RTCPeerConnection?.getStats(localStream).then((stats:RTCStatsReport) => {
+                        let statsOutput = "";
+
+                        stats.forEach((report) => {
+                            statsOutput +=
+                                `<h2>Report: ${report.type}</h2>\n<strong>ID:</strong> ${report.id}<br>\n` +
+                                `<strong>Timestamp:</strong> ${report.timestamp}<br>\n`;
+
+                            // Now the statistics for this report; we intentionally drop the ones we
+                            // sorted to the top above
+
+                            Object.keys(report).forEach((statName) => {
+                                if (
+                                    statName !== "id" &&
+                                    statName !== "timestamp" &&
+                                    statName !== "type"
+                                ) {
+                                    statsOutput += `<strong>${statName}:</strong> ${report[statName]}<br>\n`;
+                                }
+                            });
+                        });
+
+                        console.info(statsOutput);
+                    });
+                }, 1000);
+
+                // Listen for the stream ending
+                if (localStream) {
+                    const videoTracks = localStream.getVideoTracks();
+                    if (videoTracks.length > 0) {
+                        videoTracks[0].onended = () => {
+                            console.log('The stream has ended');
+                            // Add any other logic you want when the stream ends
+                            setScreenSharingStream(null);
+                            setScreenShareState(false);
+
+                            // Manually emit the event as a safeguard; Firefox doesn't fire it when it
+                            // should with live MediaStreamTracks...
+                            // var track=videoTracks[0];
+                            // const trackStoppedEvt = new MediaStreamTrackEvent('ended', { track });
+                            // track.dispatchEvent(trackStoppedEvt);
+
+                            websocketKurentoScreenshareEndScreenshare();
+                        };
+                    }
+                }
+
             });
         };
 

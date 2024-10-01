@@ -228,7 +228,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/server/Websocket.tsx</url>
-          <line>534</line>
+          <line>580</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>

@@ -7,7 +7,7 @@ import {
   chatListState,
   chatModalState,
   chatTypingListState,
-  participantsModalState,
+  participantsModalState, privateChatModalState,
 } from "~/recoil/atom";
 import PeoplesIcon from "../icon/outline/PeoplesIcon";
 import HandOnIcon from "../icon/outline/HandOnIcon";
@@ -30,7 +30,7 @@ import {
 import TickIcon from "../icon/outline/TickIcon";
 import { cn } from "~/lib/utils";
 import { websocketSendMessage, websocketStartTyping } from "~/server/Websocket";
-import { IChat, IEmojiMart } from "~/types";
+import {IChat, IEmojiMart, IPrivateChatMessage} from "~/types";
 import Picker from "@emoji-mart/react";
 import emojiData from "@emoji-mart/data";
 
@@ -52,9 +52,10 @@ function ChatModal() {
   const [chatList, setChatList] = useRecoilState(chatListState);
   const [chatTypingList, setChatTypingList] =
     useRecoilState(chatTypingListState);
+  const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
   const [infoMessageStatus, setInfoMessageStatus] = useState(false);
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("Everyone");
   const [usersTyping, setUsersTyping] = useState<string[]>([]);
   const user = useRecoilValue(authUserState);
   const [message, setMessage] = useState("");
@@ -91,7 +92,7 @@ function ChatModal() {
   };
 
   const handleTyping = (e: ChangeEvent<HTMLInputElement>) => {
-    websocketStartTyping();
+    websocketStartTyping("public");
     setMessage(e.target.value);
   };
 
@@ -146,36 +147,45 @@ function ChatModal() {
                       className=""
                       value={"Everyone"}
                       onSelect={(currentValue) => {
-                        setValue(currentValue === value ? "" : currentValue);
+                        setValue(currentValue);
                         setOpen(false);
                       }}
                     >
-                      <TickIcon className={cn("mr-2 h-4 w-4")} />
+                      {value == "Everyone" ? (<TickIcon className={cn("mr-2 h-4 w-4")} />) : null }
                       Everyone
                     </CommandItem>
-                    {chatList.map((chat: IChat, index: number) => (
-                      <CommandItem
-                        className="text-a11y"
-                        key={index}
-                        value={chat.name}
-                        onSelect={(currentValue) => {
-                          setValue(currentValue === value ? "" : currentValue);
-                          setOpen(false);
-                        }}
-                      >
-                        <TickIcon className={cn("mr-2 h-4 w-4")} />
-                        {chat.name}
-                      </CommandItem>
-                    ))}
+                    {privateChatState.chatRooms.map((chat: IPrivateChatMessage['chatRooms'][0], index: number) => {
+                      return (
+                          <CommandItem
+                              className="text-a11y"
+                              key={index}
+                              value={chat.chatId}
+                              onSelect={(currentValue) => {
+                                setValue(currentValue);
+                                setOpen(false);
+
+                                setPrivateChatState((prev)=>({
+                                  ...prev,
+                                  isActive: true,
+                                  id: chat.chatId,
+                                }));
+
+                              }}
+                          >
+                            {value == chat.chatId ? (<TickIcon className={cn("mr-2 h-4 w-4")} />) : null }
+                            {chat.participants[1]?.name}
+                          </CommandItem>
+                      );
+                    })}
                   </CommandGroup>
                 </Command>
               </PopoverContent>
             </Popover>
           </div>
 
-          {chatTypingList.length > 0 && (
+          {chatTypingList.filter((item: any) => item.type == "public").length > 0 && (
             <p className="">
-              {chatTypingList.map((text: any, index:number) => (
+              {chatTypingList.filter((item: any) => item.type == "public").map((text: any, index:number) => (
                   <span key={index}>{text.name}, </span>
               ))} {chatTypingList.length > 1 ? "are" : "is"}{" "}
               typing...

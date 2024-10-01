@@ -19,12 +19,14 @@ import {
   postLeaveMeetingState,
   donationModalState,
   pinnedUsersState,
-  LayoutSettingsState,
+  LayoutSettingsState, presentationSlideState,
 } from "~/recoil/atom";
 import Image from "next/image";
 import MicOnIcon from "./icon/outline/MicOnIcon";
 import SingleCameraComponent from "./camera/SingleCameraComponent";
 import { cn } from "~/lib/utils";
+import { useRouter } from 'next/router';
+
 
 // import "~/styles/tldraw.css";
 import dynamic from "next/dynamic";
@@ -47,6 +49,8 @@ import CCModal from "~/components/cc/CCModal";
 import SocketIOCaption from "~/server/SocketIOCaption";
 import PinIcon from "~/components/icon/outline/PinIcon";
 import MinimizeIcon from "~/components/icon/outline/MinimizeIcon";
+import {FindAvatarfromUserId, FindUserNamefromUserId} from "~/lib/checkFunctions";
+import {GetCurrentSessionToken, SetCurrentSessionToken} from "~/lib/localStorageFunctions";
 
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
@@ -82,6 +86,10 @@ function PostSignIn() {
   const [donationState, setDonationState] = useRecoilState(donationModalState);
   const [pinnedParticipant, setPinnedParticipant] =
     useRecoilState(pinnedUsersState);
+  const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
+
+  const router = useRouter();
+
   const checkDonation = (id: any) => {
     axios
       .get(`${ServerInfo.laravelAppURL}/api/k4/donation/${id}`)
@@ -137,8 +145,9 @@ function PostSignIn() {
             fullName: "",
             id: 0,
             meetingDetails: responseData?.response,
-            sessiontoken: token ?? " ",
+            sessiontoken: token!,
           });
+          SetCurrentSessionToken(token!);
           checkDonation(responseData?.response?.externMeetingID);
         } else {
           toast({
@@ -166,11 +175,38 @@ function PostSignIn() {
     const urlParams = new URLSearchParams(window.location.search);
     console.log("urlParams");
     console.log(urlParams);
+    // extract the value from the query params
     const token = urlParams.get("sessionToken");
-    console.log("token");
-    console.log(token);
 
-    validateToken(token);
+    if (token) {
+      // do something with the extract query param
+      console.log("token");
+      console.log(token);
+
+      // create an updated router path object
+      const newPathObject = {
+        pathname: router.pathname,
+        query: ""
+      }
+
+      validateToken(token);
+
+      // update the URL, without re-triggering data fetching
+      router.push(newPathObject, undefined, { shallow: true });
+    }else if(GetCurrentSessionToken() != ""){
+      validateToken(GetCurrentSessionToken());
+    }else{
+      setPostLeaveMeeting({
+        ...postLeaveMeeting,
+        isSessionExpired: true,
+      });
+    }
+
+    // delete router.query.paramName;
+    // router.push(router);
+
+    // setTimeout(()=>{ history.replaceState(null, "", location.pathname) }, 0)
+
   }, [""]);
 
   useEffect(() => {
@@ -194,29 +230,6 @@ function PostSignIn() {
     // };
   }, []); // Run the effect only once during component mount
 
-  const findUserNamefromUserId = (userId: string) => {
-    let ishola = participantList;
-    let damola = ishola.filter((item: any) => item?.userId == userId);
-    console.log("damola");
-    console.log(damola);
-    if (damola.length > 0) {
-      return damola[0]?.name;
-    } else {
-      return "unknown";
-    }
-  };
-
-  const findAvatarfromUserId = (userId: string) => {
-    let ishola = participantList;
-    let damola = ishola.filter((item: any) => item?.userId == userId);
-    console.log("damola");
-    console.log(damola);
-    if (damola.length > 0) {
-      return damola[0]?.avatar;
-    } else {
-      return "";
-    }
-  };
 
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
   const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
@@ -225,10 +238,10 @@ function PostSignIn() {
     <Authenticated>
       {!connectionStatus?.websocket_connection ?
           <span className="flex w-full items-center justify-between px-4"
-                style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}>You lost your network connection. Trying to reconnect<br/></span> : ''}
+                style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}>Connecting...<br/></span> : ''}
       {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
           <span className="flex w-full items-center justify-between px-4"
-                style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>You audio is not connected. You wont hear the conversation in the meeting.<br/></span> : ''}
+                style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}
       <div className="relative h-[calc(100vh-128px)] bg-primary/60 ">
         {/* polls */}
         {(pollModal.isActive || pollModal.isEnded) && pollModal.step === 0 && (
@@ -317,9 +330,9 @@ function PostSignIn() {
                   key={index}
                   className="flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border border-a11y/20 p-1"
                 >
-                  {findAvatarfromUserId(eachItem.intId) ? (
+                  {FindAvatarfromUserId(eachItem.intId,participantList) ? (
                     <Image
-                      src={findAvatarfromUserId(eachItem.intId)}
+                      src={FindAvatarfromUserId(eachItem.intId,participantList)}
                       width={20}
                       height={20}
                       className="rounded-full"
@@ -328,16 +341,16 @@ function PostSignIn() {
                   ) : (
                     <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-a11y/20">
                       {" "}
-                      {findUserNamefromUserId(eachItem.intId)
+                      {FindUserNamefromUserId(eachItem.intId, participantList)
                         .split(" ")[0]
                         ?.slice(0, 1)}
-                      {findUserNamefromUserId(eachItem.intId)
+                      {FindUserNamefromUserId(eachItem.intId, participantList)
                         .split(" ")[1]
                         ?.slice(0, 1)}
                     </div>
                   )}
                   <span className="truncate">
-                    {findUserNamefromUserId(eachItem.intId)}
+                    {FindUserNamefromUserId(eachItem.intId, participantList)}
                   </span>
                   <MicOnIcon className="h-4 w-4 shrink-0" />
                 </div>
@@ -378,6 +391,20 @@ function PostSignIn() {
         {/*  )}*/}
 
         <div className="mb-5"/>
+
+        {/*@Solomon help me implement component for presentation*/}
+        {/*{presentationSlide.show &&*/}
+        {/*<Image*/}
+        {/*    src={presentationSlide.presentations.filter((item)=>item.id == presentationSlide.currentPresentationID)[0].pages[0]}*/}
+        {/*    width={20}*/}
+        {/*    height={20}*/}
+        {/*    className="rounded-full"*/}
+        {/*    alt="profile picture"*/}
+        {/*/>*/}
+        {/*}*/}
+
+
+
 
         {/* render camera feed if not whiteboard or screensharing */}
         {!isWhiteboardOpen &&

@@ -63,7 +63,7 @@ function ChatModalKonn3ctAi() {
   };
 
   const handleTyping = (e: any) => {
-    websocketStartTyping();
+    // websocketStartTyping();
     setValue(e.target.value);
   };
 

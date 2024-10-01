@@ -25,7 +25,7 @@ import {
   breakOutModalState,
   selectedCameraState,
   fileUploadModalState,
-  newMessage, selectedMicrophoneState,
+  newMessage, selectedMicrophoneState, micFilterState, CamQualityState,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -80,6 +80,10 @@ import {
 import { IChat, IParticipant, IParticipantCamera } from "~/types";
 import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
 import {generateRandomId} from "~/server/ServerInfo";
+import {
+  websocketKurentoScreenshareEndScreenshare,
+} from "~/server/KurentoScreenshare";
+import {CurrentUserIsPresenter, CurrentUserRoleIsModerator, ModeratorRole} from "~/lib/checkFunctions";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
@@ -134,6 +138,14 @@ function MiddleSide() {
       selectedMicrophoneState,
   );
 
+  const [selectedVideoQuality, setSelectedVideoQuality] = useRecoilState(
+      CamQualityState
+  );
+
+
+  const [micFilter, setMicFilter] = useRecoilState(micFilterState);
+
+
 
   const [ssscreen, setScreen] = useState<null|MediaStream>(null);
   const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
@@ -151,7 +163,7 @@ function MiddleSide() {
       return;
     }
 
-    const mic = await requestMicrophoneAccess(desiredMic[0]);
+    const mic = await requestMicrophoneAccess(desiredMic[0],micFilter.autoGainControl, micFilter.noiseSuppression, micFilter.echoCancellation);
     if (mic) {
       setMicrophoneStream(mic);
       setMicState(true);
@@ -285,7 +297,7 @@ function MiddleSide() {
             return;
           }
 
-          const video = await requestCameraAccess(selectedCamera == null ? desiredCamera[0] : selectedCamera);
+          const video = await requestCameraAccess(selectedCamera == null ? desiredCamera[0] : selectedCamera, selectedVideoQuality);
           if (video) {
             console.log('Camera is on');
             setCameraSteam(video);
@@ -324,57 +336,33 @@ function MiddleSide() {
         )}
       </button>
 
-      {participantList
-        ?.filter(
-          (eachItem: IParticipant) =>
-            eachItem?.intId == user?.meetingDetails?.internalUserID,
-        )
-        .map(
-          (eachItem: IParticipant, index: number) =>
-            eachItem.presenter && (
-              <button
-                key={index}
-                className={cn(
+      {CurrentUserIsPresenter(participantList, user) && (
+          <button
+              className={cn(
                   "rounded-full p-2",
                   screenShareState
-                    ? "border border-a11y/20 bg-transparent"
-                    : "bg-a11y/20",
-                )}
-                onClick={async () => {
-                  if (screenShareState && screenSharingStream) {
-                    stopScreenSharingStream(ssscreen);
-                    // update the connected users state for the user where the id is the same
-                    setConnectedUsers((prev) =>
-                      prev.map((prevUser) => {
-                        if (prevUser.id === user?.id) {
-                          return {
-                            ...prevUser,
-                            screenSharingFeed: null,
-                            isScreenSharing: false,
-                          };
-                        }
-                        return prevUser;
-                      }),
-                    );
-                    setScreenSharingStream(null);
-                    setScreenShareState(!screenShareState);
+                      ? "border border-a11y/20 bg-transparent"
+                      : "bg-a11y/20",
+              )}
+              onClick={async () => {
+                if (screenShareState && screenSharingStream) {
+                  stopScreenSharingStream(ssscreen);
 
-                    websocketPresenter(participantList[0].intId);
+                  setScreenSharingStream(null);
+                  setScreenShareState(false);
 
-                    setTimeout(() => {
-                      websocketPresenter(user?.meetingDetails?.internalUserID);
-                    }, 1000);
+                  websocketKurentoScreenshareEndScreenshare();
 
-                    return;
-                  }
-                  const screen = await requestScreenSharingAccess();
+                  return;
+                }
+                const screen = await requestScreenSharingAccess();
 
-                  setScreen(screen);
+                setScreen(screen);
 
-                  if (screen) {
-                    setScreenSharingStream(screen);
-                    // update the connected users state for the user where the id is the same
-                    setConnectedUsers((prev) =>
+                if (screen) {
+                  setScreenSharingStream(screen);
+                  // update the connected users state for the user where the id is the same
+                  setConnectedUsers((prev) =>
                       prev.map((prevUser) => {
                         if (prevUser.id === user?.id) {
                           return {
@@ -385,25 +373,24 @@ function MiddleSide() {
                         }
                         return prevUser;
                       }),
-                    );
-                    setScreenShareState(!screenShareState);
-                  } else {
-                    // toast({
-                    //   variant: "destructive",
-                    //   title: "Uh oh! Something went wrong.",
-                    //   description: "Kindly check your screen sharing settings.",
-                    // });
-                  }
-                }}
-              >
-                {screenShareState ? (
-                  <ShareScreenOnIcon className="h-6 w-6 " />
-                ) : (
-                  <ShareScreenOffIcon className="h-6 w-6 " />
-                )}
-              </button>
-            ),
-        )}
+                  );
+                  setScreenShareState(!screenShareState);
+                } else {
+                  // toast({
+                  //   variant: "destructive",
+                  //   title: "Uh oh! Something went wrong.",
+                  //   description: "Kindly check your screen sharing settings.",
+                  // });
+                }
+              }}
+          >
+            {screenShareState ? (
+                <ShareScreenOnIcon className="h-6 w-6 " />
+            ) : (
+                <ShareScreenOffIcon className="h-6 w-6 " />
+            )}
+          </button>
+      )}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -443,32 +430,50 @@ function MiddleSide() {
           </DropdownMenuGroup>
           <DropdownMenuSeparator className="" />
           <DropdownMenuGroup className="py-1 md:hidden">
-            {recordingState.isActive ? (
+            {user?.meetingDetails?.record == "true" ? recordingState.isActive ? (
               <DropdownMenuItem
                 onClick={() => {
-                  setRecordingState((prev) => ({
-                    ...prev,
-                    step: 2,
-                  }));
+                  if (CurrentUserRoleIsModerator(participantList,user)) {
+                    setRecordingState((prev) => ({
+                      ...prev,
+                      step: 2,
+                    }));
+                  } else {
+                    toast({
+                      variant: "destructive",
+                      title: "Permission Denied!!",
+                      description:
+                          "You dont have the permission for this action. Kindly chat with the host or moderator",
+                    });
+                  }
                 }}
                 className="bg-[#DF2622]"
               >
                 <RecordOnIcon className="mr-2 h-5 w-5" />
-                <span>End Recording</span>
+                <span>Pause Recording</span>
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem
                 onClick={() => {
-                  setRecordingState((prev) => ({
-                    ...prev,
-                    step: 1,
-                  }));
+                  if (CurrentUserRoleIsModerator(participantList,user)) {
+                    setRecordingState((prev) => ({
+                      ...prev,
+                      step: 1,
+                    }));
+                  } else {
+                    toast({
+                      variant: "destructive",
+                      title: "Permission Denied!!",
+                      description:
+                          "You dont have the permission for this action. Kindly chat with the host or moderator",
+                    });
+                  }
                 }}
               >
                 <RecordOnIcon className="mr-2 h-5 w-5" />
-                <span>Start Recording</span>
+                <span>{recordingState.isStarted ? "Resume" : "Start"} Recording</span>
               </DropdownMenuItem>
-            )}
+            ) : null }
           </DropdownMenuGroup>
           <DropdownMenuSeparator className="md:hidden" />
           <DropdownMenuGroup>
@@ -582,96 +587,69 @@ function MiddleSide() {
                   : "Raise Hand"}
               </span>
             </DropdownMenuItem>
-            {/*<DropdownMenuItem*/}
-            {/*  onClick={() => {*/}
-            {/*    setFileUploadModal((prev) => ({*/}
-            {/*      ...prev,*/}
-            {/*      step: 1,*/}
-            {/*    }));*/}
-            {/*  }}*/}
-            {/*  className="py-2"*/}
-            {/*>*/}
-            {/*  <FolderOpenIcon className="mr-2 h-5 w-5" />*/}
-            {/*  <span>Upload Files</span>*/}
-            {/*</DropdownMenuItem>*/}
+            {CurrentUserIsPresenter(participantList, user) && (<DropdownMenuItem
+              onClick={() => {
+                setFileUploadModal((prev) => ({
+                  ...prev,
+                  step: 1,
+                }));
+              }}
+              className="py-2"
+            >
+              <FolderOpenIcon className="mr-2 h-5 w-5" />
+              <span>Upload Files</span>
+            </DropdownMenuItem>)}
 
-            {participantList
-              ?.filter(
-                (eachItem: IParticipant) =>
-                  eachItem?.intId == user?.meetingDetails?.internalUserID,
-              )
-              .map(
-                (eachItem: IParticipant, index: number) =>
-                  eachItem.presenter && (
-                    <DropdownMenuItem
-                      key={index}
-                      onClick={() => {
-                        if (eCinemaModal.isActive)
-                          return toast({
-                            title: "Uh oh! Something went wrong.",
-                            description:
+            {CurrentUserIsPresenter(participantList, user) && (
+                <DropdownMenuItem
+                    onClick={() => {
+                      if (eCinemaModal.isActive)
+                        return toast({
+                          title: "Uh oh! Something went wrong.",
+                          description:
                               "You can't start a new eCinema session while one is ongoing.",
-                          });
-                        setECinemaModal((prev) => ({
-                          ...prev,
-                          step: 1,
-                        }));
-                      }}
-                      className="py-2 md:hidden"
-                    >
-                      <MovieColoredIcon className="mr-2 h-5 w-5" />
-                      <span>ECinema</span>
-                    </DropdownMenuItem>
-                  ),
-              )}
+                        });
+                      setECinemaModal((prev) => ({
+                        ...prev,
+                        step: 1,
+                      }));
+                    }}
+                    className="py-2 md:hidden"
+                >
+                  <MovieColoredIcon className="mr-2 h-5 w-5" />
+                  <span>ECinema</span>
+                </DropdownMenuItem>
+            )}
 
-            {participantList
-              ?.filter(
-                (eachItem: IParticipant) =>
-                  eachItem?.intId == user?.meetingDetails?.internalUserID,
-              )
-              .map(
-                (eachItem: IParticipant, index: number) =>
-                  eachItem.presenter && (
-                    <DropdownMenuItem
-                      key={index}
-                      onClick={() => {
-                        websocketMuteAllParticipants(
+            {CurrentUserIsPresenter(participantList, user) && (
+                <DropdownMenuItem
+                    onClick={() => {
+                      websocketMuteAllParticipants(
                           user?.meetingDetails?.internalUserID,
-                        );
-                      }}
-                      className="py-2"
-                    >
-                      <MicOffIcon className="mr-2 h-5 w-5" />
-                      <span>Mute All</span>
-                    </DropdownMenuItem>
-                  ),
-              )}
+                      );
+                    }}
+                    className="py-2"
+                >
+                  <MicOffIcon className="mr-2 h-5 w-5" />
+                  <span>Mute All</span>
+                </DropdownMenuItem>
+            )}
 
-            {participantList
-              ?.filter(
-                (eachItem: IParticipant) =>
-                  eachItem?.intId == user?.meetingDetails?.internalUserID,
-              )
-              .map(
-                (eachItem: IParticipant, index: number) =>
-                  eachItem.presenter && (
-                    <DropdownMenuItem
-                      key={index}
-                      onClick={() => {
-                        if (pollModal.isActive || pollModal.isEnded) return;
-                        setPollModal((prev) => ({
-                          ...prev,
-                          step: 1,
-                        }));
-                      }}
-                      className="py-2"
-                    >
-                      <TextFormatIcon className="mr-2 h-5 w-5" />
-                      <span>Polls</span>
-                    </DropdownMenuItem>
-                  ),
-              )}
+            {CurrentUserIsPresenter(participantList, user) && (
+                <DropdownMenuItem
+                    onClick={() => {
+                      if (pollModal.isActive || pollModal.isEnded) return;
+                      setPollModal((prev) => ({
+                        ...prev,
+                        step: 1,
+                      }));
+                    }}
+                    className="py-2"
+                >
+                  <TextFormatIcon className="mr-2 h-5 w-5" />
+                  <span>Polls</span>
+                </DropdownMenuItem>
+            )}
 
             {/*{!donationState.isActive && (*/}
             {/*  <DropdownMenuItem*/}
@@ -738,7 +716,7 @@ function MiddleSide() {
           <PhoneEndIcon className="h-6 w-6" />
         </button>
         <Separator className=" bg-a11y/20 " orientation="vertical" />
-        {user?.meetingDetails?.role == "MODERATOR" && (
+        {CurrentUserRoleIsModerator(participantList,user) && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="px-1">

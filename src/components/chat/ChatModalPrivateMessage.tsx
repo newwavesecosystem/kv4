@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useState} from "react";
 import { Sheet, SheetContent } from "../ui/sheet";
 import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, privateChatModalState} from "~/recoil/atom";
+import {authUserState, chatTypingListState, privateChatModalState} from "~/recoil/atom";
 import CloseIcon from "../icon/outline/CloseIcon";
 import InformationIcon from "../icon/outline/InformationIcon";
 import SingleChat from "./SingleChat";
@@ -20,6 +20,7 @@ function ChatModalPrivateMessage() {
   const [infoMessageStatus, setInfoMessageStatus] = useState(false);
   const [message, setMessage] = useState("");
   const user = useRecoilValue(authUserState);
+  const [chatTypingList, setChatTypingList] = useRecoilState(chatTypingListState);
 
   const sendMsg = () => {
     let sender = user?.meetingDetails?.internalUserID;
@@ -40,7 +41,7 @@ function ChatModalPrivateMessage() {
 
 
   const handleTyping = (e: ChangeEvent<HTMLInputElement>) => {
-    websocketStartTyping();
+    websocketStartTyping(privateChatState.id);
     setMessage(e.target.value);
   };
 
@@ -60,8 +61,6 @@ function ChatModalPrivateMessage() {
         setPrivateChatState({
           ...privateChatState,
           isActive: false,
-          id: "0",
-          users: [],
         });
       }}
     >
@@ -73,12 +72,21 @@ function ChatModalPrivateMessage() {
           <div className="flex items-center gap-2">
             <span className="text-xl font-bold">Private Chat</span>
           </div>
+
+          {chatTypingList.filter((item: any) => item.type == privateChatState.id).length > 0 && (
+              <p className="">
+                {chatTypingList.filter((item: any) => item.type == privateChatState.id).map((text: any, index:number) => (
+                    <span key={index}>{text.name}, </span>
+                ))} {chatTypingList.length > 1 ? "are" : "is"}{" "}
+                typing...
+              </p>
+          )}
+
           {!infoMessageStatus && (
             <div className=" mt-5 flex items-center gap-2 rounded-lg border border-a11y/20 bg-primary p-2 text-xs shadow-sm">
               <InformationIcon className="h-5 w-5" />
               <span className="w-full">
-                Messages can only be seen by people in the call and are deleted
-                when the call ends.
+                Messages can only be seen by {privateChatState.chatRooms.filter((item) => item.chatId == privateChatState.id)[0]?.participants.map((part,index)=>(<span key={index}>{index != 0 ? " and " : " " }  {part.name} </span>))}
               </span>
               <button
                 onClick={() => setInfoMessageStatus(!infoMessageStatus)}
