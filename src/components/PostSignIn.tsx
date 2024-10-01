@@ -207,8 +207,8 @@ function PostSignIn() {
     }
   };
 
+  const tokenExtraction = async () =>{
 
-  useEffect(() => {
     // Get the URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     console.log("urlParams");
@@ -231,8 +231,14 @@ function PostSignIn() {
 
       // update the URL, without re-triggering data fetching
       router.push(newPathObject, undefined, { shallow: true });
-    }else if(GetCurrentSessionToken() != ""){
-      validateToken(GetCurrentSessionToken());
+
+      // delete router.query.paramName;
+      // router.push(router);
+
+      // setTimeout(()=>{ history.replaceState(null, "", location.pathname) }, 0)
+
+    }else if(await GetCurrentSessionToken() != ""){
+      validateToken(await GetCurrentSessionToken());
     }else{
       setPostLeaveMeeting({
         ...postLeaveMeeting,
@@ -240,12 +246,12 @@ function PostSignIn() {
       });
     }
 
-    // delete router.query.paramName;
-    // router.push(router);
+  }
 
-    // setTimeout(()=>{ history.replaceState(null, "", location.pathname) }, 0)
 
-  }, [""]);
+  useEffect(() => {
+    tokenExtraction();
+  }, []);
 
   useEffect(() => {
     console.log("setting up disabling back");
