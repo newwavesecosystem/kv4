@@ -28,12 +28,12 @@ import VolumeOffIcon from "~/components/icon/outline/VolumeOffIcon";
 
 function SingleCameraComponent({
   participant, userCamera,
-  key,
+  // key,
   index,
 }: {
   participant: IParticipant;
   userCamera: IParticipantCamera | null;
-  key: number;
+  // key: number;
   index: number;
 }) {
   const [connectedUsers, setConnectedUsers] =
@@ -71,7 +71,7 @@ function SingleCameraComponent({
 
   return (
     <div
-      key={key}
+      key={index}
       className={cn(
         "relative aspect-square h-full w-full overflow-hidden rounded-lg bg-onegov/50",
         participantList.length === 2 &&

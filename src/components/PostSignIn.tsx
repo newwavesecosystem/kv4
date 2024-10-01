@@ -87,8 +87,13 @@ function PostSignIn() {
   const [pinnedParticipant, setPinnedParticipant] =
     useRecoilState(pinnedUsersState);
   const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
+  const [wakeLock, setWakeLock] = useState(null);
+  const [wakeLockActive, setWakeLockActive] = useState(false);
+
 
   const router = useRouter();
+
+  let lock:WakeLockSentinel;
 
   const checkDonation = (id: any) => {
     axios
@@ -149,6 +154,7 @@ function PostSignIn() {
           });
           SetCurrentSessionToken(token!);
           checkDonation(responseData?.response?.externMeetingID);
+          requestWakeLock();
         } else {
           toast({
             variant: "destructive",
@@ -170,7 +176,39 @@ function PostSignIn() {
       });
   };
 
-  useEffect(() => {
+  // Function to request wake lock
+  const requestWakeLock = async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        lock = await navigator.wakeLock.request('screen');
+        setWakeLockActive(true);
+        console.log('Wake lock is active');
+
+        // Listen for visibility change to re-activate the wake lock if needed
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+      }
+    } catch (error) {
+      console.error(`Wake lock request failed: ${error}`);
+    }
+  };
+
+  const removeWakeLock = async () => {
+      lock?.release().then(() => {
+        setWakeLockActive(false);
+        console.log('Wake lock has been released');
+      });
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+  };
+
+  // Handle when user switches tabs and the wake lock gets released
+  const handleVisibilityChange = async () => {
+    if (document.visibilityState === 'visible' && !wakeLockActive) {
+      requestWakeLock();
+    }
+  };
+
+  const tokenExtraction = async () =>{
+
     // Get the URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     console.log("urlParams");
@@ -193,8 +231,14 @@ function PostSignIn() {
 
       // update the URL, without re-triggering data fetching
       router.push(newPathObject, undefined, { shallow: true });
-    }else if(GetCurrentSessionToken() != ""){
-      validateToken(GetCurrentSessionToken());
+
+      // delete router.query.paramName;
+      // router.push(router);
+
+      // setTimeout(()=>{ history.replaceState(null, "", location.pathname) }, 0)
+
+    }else if(await GetCurrentSessionToken() != ""){
+      validateToken(await GetCurrentSessionToken());
     }else{
       setPostLeaveMeeting({
         ...postLeaveMeeting,
@@ -202,12 +246,12 @@ function PostSignIn() {
       });
     }
 
-    // delete router.query.paramName;
-    // router.push(router);
+  }
 
-    // setTimeout(()=>{ history.replaceState(null, "", location.pathname) }, 0)
 
-  }, [""]);
+  useEffect(() => {
+    tokenExtraction();
+  }, []);
 
   useEffect(() => {
     console.log("setting up disabling back");
@@ -225,9 +269,10 @@ function PostSignIn() {
     });
 
     // Clean up the event listener when the component is unmounted
-    // return () => {
-    //     window.removeEventListener('popstate', disableBackButton);
-    // };
+    return () => {
+      removeWakeLock();
+        window.removeEventListener('popstate', disableBackButton);
+    };
   }, []); // Run the effect only once during component mount
 
 
@@ -238,7 +283,7 @@ function PostSignIn() {
     <Authenticated>
       {!connectionStatus?.websocket_connection ?
           <span className="flex w-full items-center justify-between px-4"
-                style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}>Connecting...<br/></span> : ''}
+                style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}>{connectionStatus.websocket_connection_reconnect ? "Network issues detected. Trying to reconnecting automatically" : "Connecting..."}<br/></span> : ''}
       {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
           <span className="flex w-full items-center justify-between px-4"
                 style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}
@@ -394,11 +439,10 @@ function PostSignIn() {
 
         {/*@Solomon help me implement component for presentation*/}
         {/*{presentationSlide.show &&*/}
-        {/*<Image*/}
-        {/*    src={presentationSlide.presentations.filter((item)=>item.id == presentationSlide.currentPresentationID)[0].pages[0]}*/}
-        {/*    width={20}*/}
-        {/*    height={20}*/}
-        {/*    className="rounded-full"*/}
+        {/*<img*/}
+        {/*    src={presentationSlide.presentations[0]?.pages[0]?.svgUri ?? ''}*/}
+        {/*    width={544}*/}
+        {/*    height={544}*/}
         {/*    alt="profile picture"*/}
         {/*/>*/}
         {/*}*/}

@@ -27,27 +27,18 @@ import {
     waitingRoomUsersState
 } from "~/recoil/atom";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {IBreakoutRoom, IColumnBreakOutRoom, IParticipant, IParticipantCamera, IWaitingUser} from "~/types";
+import {IBreakoutRoom, IColumnBreakOutRoom, IParticipant, IParticipantCamera, IVoiceUser, IWaitingUser} from "~/types";
 import dayjs from "dayjs";
 import axios from "axios";
 import {toast} from "~/components/ui/use-toast";
 import {FindUserNamefromUserId} from "~/lib/checkFunctions";
+
 
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
 
 const reConnect = () => {
     sock = new SockJS(ServerInfo.websocketURL);
-    // websocketConnect()
-}
-
-function pinger(){
-
-    function ping(){
-        websocketSend(["{\"msg\":\"pong\"}"])
-    }
-
-    setInterval(ping,10000);
 }
 
 
@@ -148,6 +139,21 @@ const Websocket = () => {
     }
 
 
+    function pinger(){
+
+        let myVar = setInterval(ping, 10000);
+
+        function ping(){
+            if(!connectionStatus.websocket_connection){
+                clearInterval(myVar);
+            }
+            websocketSend(["{\"msg\":\"pong\"}"])
+        }
+
+    }
+
+
+
     useEffect(() => {
         // websocketConnect()
         if (sock !== null) {
@@ -203,7 +209,8 @@ const Websocket = () => {
                     // a["{\"msg\":\"connected\",\"session\":\"4qajGwWr4bziuofh9\"}"]
                     setConnection((prev)=>({
                         ...prev,
-                        websocket_connection:true
+                        websocket_connection:true,
+                        websocket_connection_reconnect:false
                     }))
                 }
 
@@ -285,7 +292,15 @@ const Websocket = () => {
                     ...prev,
                     websocket_connection:false
                 }))
-                // reConnect()
+
+                if(!postLeaveMeeting.isLeave || !postLeaveMeeting.isLeaveRoomCall || !postLeaveMeeting.isEndCall || !postLeaveMeeting.isOthers || !postLeaveMeeting.isSessionExpired || !postLeaveMeeting.isKicked){
+                    reConnect();
+                    setConnection((prev)=>({
+                        ...prev,
+                        websocket_connection_reconnect:true
+                    }))
+                }
+
 
             };
         }
@@ -446,7 +461,7 @@ const Websocket = () => {
                 console.log(`local authTokenValidatedTime diff :${diff}`)
 
 
-                if((diff) > 50){
+                if((diff) > 150){
                     console.log("Session switched",obj);
                     setPostLeaveMeeting({
                         ...postLeaveMeeting,
@@ -504,10 +519,9 @@ const Websocket = () => {
 
         if(msg == "added"){
             // a["{\"msg\":\"added\",\"collection\":\"voiceUsers\",\"id\":\"7J2pQrMaH5C58ZsHj\",\"fields\":{\"intId\":\"w_6pjsehfq5dcf\",\"meetingId\":\"05a8ea5382b9fd885261bb3eed0527d1d3b07262-1695982480527\",\"callerName\":\"Test Sam\",\"callerNum\":\"\",\"callingWith\":\"\",\"color\":\"#7b1fa2\",\"joined\":false,\"listenOnly\":false,\"muted\":false,\"spoke\":false,\"talking\":false,\"voiceConf\":\"\",\"voiceUserId\":\"\"}}"]
-            const {intId, callerName,talking,joined,muted} = obj.fields;
-
             var data={
-                id,intId,callerName,joined,talking,muted
+                id,
+                ...obj.fields
             }
             addTalkingUser(data);
         }
@@ -558,7 +572,7 @@ const Websocket = () => {
             // 'updatedArray' now contains the modified object
             console.log(updatedArray);
 
-            setParticipantTalkingList(updatedArray)
+            setParticipantList(updatedArray)
         }
 
     }
@@ -702,6 +716,8 @@ const Websocket = () => {
 
         if(msg == "added") {
             const {pages,current,downloadable,name,podId,id} = fields;
+
+            console.log(`pages issues:`,pages);
 
             setPresentationSlide((prev)=>({
                 show:true,
@@ -1014,10 +1030,10 @@ const Websocket = () => {
 
     const addTalkingUser = (user:any) => {
         console.log('voice user', user);
+        // { "intId": "w_1r7gdsvbegfj", "meetingId": "90af7edbfd8a161a7f711504a114aaf5bf597f9f-1727768989277", "callerName": "Odejinmi+Samuel", "callerNum": "w_1r7gdsvbegfj_2-bbbID-Odejinmi+Samuel", "callingWith": "none", "color": "#4a148c", "joined": false, "listenOnly": false, "muted": false, "spoke": false, "talking": false, "voiceConf": "55004", "voiceUserId": "303", "endTime": 1727769305417, "startTime": 1727768997499, "floor": true, "lastFloorTime": "1727769305394997" }
         // { id: '7J2pQrMaH5C58ZsHj', intId: 'w_6pjsehfq5dcf', callerName: 'Test Sam', joined: false, talking: false, muted:false }
-        var ishola = participantTalkingList
-        console.log(ishola)
-        if (ishola.filter((item:any) => item?.id == user?.id).length < 1) {
+
+        if (participantTalkingList.filter((item:IVoiceUser) => item?.id == user?.id || item?.intId == user?.intId).length < 1) {
             setParticipantTalkingList([...participantTalkingList,user])
         }
     }
