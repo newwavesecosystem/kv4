@@ -461,13 +461,13 @@ const Websocket = () => {
                 console.log(`local authTokenValidatedTime diff :${diff}`)
 
 
-                if((diff) > 2550){
-                    console.log("Session switched",obj);
-                    setPostLeaveMeeting({
-                        ...postLeaveMeeting,
-                        isKicked: true,
-                    });
-                }
+                // if((diff) > 2550){
+                //     console.log("Session switched",obj);
+                //     setPostLeaveMeeting({
+                //         ...postLeaveMeeting,
+                //         isKicked: true,
+                //     });
+                // }
             }
         }
     }
