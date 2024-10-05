@@ -43,6 +43,8 @@ export interface IAuthUser {
   passCode: string;
   meetingId: string;
   sessiontoken: string;
+  connectionID: string;
+  connectionAuthTime: number;
   meetingDetails: IMeetingDetails | null;
 }
 

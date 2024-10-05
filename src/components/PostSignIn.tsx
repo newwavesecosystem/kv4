@@ -50,7 +50,7 @@ import SocketIOCaption from "~/server/SocketIOCaption";
 import PinIcon from "~/components/icon/outline/PinIcon";
 import MinimizeIcon from "~/components/icon/outline/MinimizeIcon";
 import {FindAvatarfromUserId, FindUserNamefromUserId} from "~/lib/checkFunctions";
-import {GetCurrentSessionToken, SetCurrentSessionToken} from "~/lib/localStorageFunctions";
+import {GetCurrentSessionEjected, GetCurrentSessionToken, SetCurrentSessionToken} from "~/lib/localStorageFunctions";
 
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
@@ -133,47 +133,61 @@ function PostSignIn() {
       });
   };
 
-  const validateToken = (token: string | null) => {
-    axios
-      .get(`${ServerInfo.tokenValidationURL}?sessionToken=${token}`)
-      .then(function (response) {
-        const responseData = response.data;
+  const validateToken = async (token: string | null) => {
 
-        console.log(responseData);
-        console.log(response);
+    var gste = await GetCurrentSessionEjected();
 
-        if (responseData?.response?.returncode === "SUCCESS") {
-          setUser({
-            meetingId: "",
-            passCode: "",
-            email: "",
-            fullName: "",
-            id: 0,
-            meetingDetails: responseData?.response,
-            sessiontoken: token!,
-          });
-          SetCurrentSessionToken(token!);
-          checkDonation(responseData?.response?.externMeetingID);
-          requestWakeLock();
-        } else {
-          toast({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description: "Invalid Session Token",
-          });
-          setPostLeaveMeeting({
-            ...postLeaveMeeting,
-            isSessionExpired: true,
-          });
-        }
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .finally(function () {
-        // always executed
+    console.log("gste: ",gste);
+
+    if (token == gste) {
+      setPostLeaveMeeting({
+        ...postLeaveMeeting,
+        isSessionExpired: true,
       });
+      return;
+    }
+
+    axios
+        .get(`${ServerInfo.tokenValidationURL}?sessionToken=${token}`)
+        .then(function (response) {
+          const responseData = response.data;
+
+          console.log(responseData);
+          console.log(response);
+
+          if (responseData?.response?.returncode === "SUCCESS") {
+            setUser({
+              connectionAuthTime: 0, connectionID: "",
+              meetingId: "",
+              passCode: "",
+              email: "",
+              fullName: "",
+              id: 0,
+              meetingDetails: responseData?.response,
+              sessiontoken: token!
+            });
+            SetCurrentSessionToken(token!);
+            checkDonation(responseData?.response?.externMeetingID);
+            requestWakeLock();
+          } else {
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: "Invalid Session Token",
+            });
+            setPostLeaveMeeting({
+              ...postLeaveMeeting,
+              isSessionExpired: true,
+            });
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function () {
+          // always executed
+        });
   };
 
   // Function to request wake lock
