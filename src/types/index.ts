@@ -1,5 +1,5 @@
 import DateTimeFormat = Intl.DateTimeFormat;
-import {presentationSlideState} from "~/recoil/atom";
+import { presentationSlideState } from "~/recoil/atom";
 
 export interface IConnectedUser {
   id: number;
@@ -120,13 +120,13 @@ export interface IParticipant {
 }
 
 export interface IWaitingUser {
-    _id:string;
-    name:string;
-    intId:string;
-    role:string;
-    avatar:string;
-    guest:boolean;
-    authenticated:boolean;
+  _id: string;
+  name: string;
+  intId: string;
+  role: string;
+  avatar: string;
+  guest: boolean;
+  authenticated: boolean;
 }
 
 export interface IBreakOutRecord {
@@ -162,43 +162,43 @@ export interface IPresentationSlideState {
 }
 
 export interface IWhiteBoardAnnotationRemote {
-  meetingId:    string;
+  meetingId: string;
   whiteboardId: string;
-  userId:       string;
-  annotation:   Annotation;
+  userId: string;
+  annotation: Annotation;
 }
 
 export interface Annotation {
-  id:             string;
+  id: string;
   annotationInfo: AnnotationInfo;
-  wbId:           string;
-  userId:         string;
+  wbId: string;
+  userId: string;
 }
 
 export interface AnnotationInfo {
-  size:        number[];
-  style:       Style;
-  label:       string;
-  rotation:    number;
-  id:          string;
-  parentId:    string;
-  childIndex:  number;
-  name:        string;
-  point:       number[];
+  size: number[];
+  style: Style;
+  label: string;
+  rotation: number;
+  id: string;
+  parentId: string;
+  childIndex: number;
+  name: string;
+  point: number[];
   isModerator: boolean;
-  labelPoint:  number[];
-  userId:      string;
-  type:        string;
+  labelPoint: number[];
+  userId: string;
+  type: string;
 }
 
 export interface Style {
-  isFilled:  boolean;
-  size:      string;
-  scale:     number;
-  color:     string;
+  isFilled: boolean;
+  size: string;
+  scale: number;
+  color: string;
   textAlign: string;
-  font:      string;
-  dash:      string;
+  font: string;
+  dash: string;
 }
 
 
@@ -242,7 +242,7 @@ export interface IPrivateChatMessage {
       "name": string,
       "role": string
     }[],
-    "users": string []
+    "users": string[]
   }[]
   chatMessages: {
     id: string,
@@ -263,7 +263,7 @@ export interface IParticipantsState {
 
 export interface IColumnBreakOutRoom {
   id: string;
-  breakoutId: string|null;
+  breakoutId: string | null;
   title: string;
   users: string[];
 }
@@ -306,4 +306,17 @@ export interface IEmojiMart {
   keywords: string[];
   shortcodes: string;
   emoticons: string[];
+}
+
+export interface IPresentationSlide {
+  id: string,
+  num: number,
+  thumbUri: string,
+  txtUri: string,
+  svgUri: string,
+  current: false,
+  xOffset: number,
+  yOffset: number,
+  widthRatio: number,
+  heightRatio: number
 }
