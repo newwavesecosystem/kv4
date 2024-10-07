@@ -95,6 +95,9 @@ const KurentoVideo = () => {
                 videoStream: cameraStream,
                 onicecandidate: onIceCandidate,
                 mediaConstraints: constraints,
+                configuration:{
+                    iceServers: connectionStatus.iceServers
+                }
             };
 
             if (ws?.readyState === WebSocket.OPEN) {

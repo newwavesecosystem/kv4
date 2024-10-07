@@ -3,7 +3,7 @@ import * as kurentoUtils from "kurento-utils";
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
 import {
-    authUserState,
+    authUserState, connectionStatusState,
     LayoutSettingsState,
     screenSharingState,
     screenSharingStreamState,
@@ -12,6 +12,7 @@ import {
 
 const KurentoScreenShareViewer = () => {
     const user = useRecoilValue(authUserState);
+    const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
     const [viewerscreenShareState, setViewerScreenShareState] = useRecoilState(viewerScreenSharingState);
     const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState);
     const [layoutSettings, setlayoutSettings] = useRecoilState(LayoutSettingsState);
@@ -84,6 +85,9 @@ const KurentoScreenShareViewer = () => {
                 remoteVideo: null,
                 onicecandidate: onIceCandidate,
                 mediaConstraints: constraints,
+                configuration:{
+                    iceServers: connectionStatus.iceServers
+                }
             };
 
             webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(this: any, error) {

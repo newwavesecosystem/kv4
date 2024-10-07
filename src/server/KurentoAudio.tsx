@@ -169,7 +169,10 @@ const KurentoAudio = () => {
             remoteVideo:audioElement,
             audioStream:microphoneStream,
             onicecandidate: onIceCandidate,
-            mediaConstraints: constraints
+            mediaConstraints: constraints,
+            configuration:{
+                iceServers: connectionStatus.iceServers
+            }
         }
 
         if (ws?.readyState === WebSocket.OPEN) {

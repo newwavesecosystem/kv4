@@ -40,9 +40,12 @@ export const connectionStatusState = atom<{
   websocket_connection: boolean;
   websocket_connection_reconnect: boolean;
   audio_connection: boolean;
+  iceServers: {
+    username: string;     credential: string;     urls: string;
+  }[];
 }>({
   key: "connectionStatusState",
-  default: {websocket_connection:false, websocket_connection_reconnect:false, audio_connection:false},
+  default: {websocket_connection:false, websocket_connection_reconnect:false, audio_connection:false, iceServers:[]},
 });
 
 export const participantListState = atom<any>({
