@@ -22,13 +22,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Implement sessiontoken to be removed from url on page loaded&#10;-Implement encrypting, decrypting and saving sessionToken to localStorage">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -337,7 +332,21 @@
       <option name="project" value="LOCAL" />
       <updated>1727196936457</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="-Implement websocket reconnection&#10;-Finish up getting presentations from server">
+      <created>1727713912320</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1727713912320</updated>
+    </task>
+    <task id="LOCAL-00029" summary="-Added wakelock after the meeting is validated">
+      <created>1727717341715</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1727717341715</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -360,8 +369,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Change the ai base url" />
-    <MESSAGE value="Disabling noise suppression" />
     <MESSAGE value="Fixed shared caption and realtime translation" />
     <MESSAGE value="Worked on Mute button is not in sync for Konn3ct Web" />
     <MESSAGE value="Fixed Polls is not getting answer clicked by user&#10;Fix publishing of Poll result" />
@@ -385,7 +392,9 @@
     <MESSAGE value="-Added retrieving of existing private chat on Public chat by selecting at the top&#10;-Typing on Private chat is now showing" />
     <MESSAGE value="-Fix error" />
     <MESSAGE value="-Implement sessiontoken to be removed from url on page loaded&#10;-Implement encrypting, decrypting and saving sessionToken to localStorage" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Implement sessiontoken to be removed from url on page loaded&#10;-Implement encrypting, decrypting and saving sessionToken to localStorage" />
+    <MESSAGE value="-Implement websocket reconnection&#10;-Finish up getting presentations from server" />
+    <MESSAGE value="-Added wakelock after the meeting is validated" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Added wakelock after the meeting is validated" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -397,7 +406,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/PostSignIn.tsx</url>
-          <line>425</line>
+          <line>464</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -409,11 +418,6 @@
           <url>file://$PROJECT_DIR$/src/server/KurentoVideo.tsx</url>
           <line>136</line>
           <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/components/PostSignIn.tsx</url>
-          <line>130</line>
-          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
