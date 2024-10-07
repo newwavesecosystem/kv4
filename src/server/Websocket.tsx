@@ -1080,13 +1080,9 @@ const Websocket = () => {
         // { "intId": "w_1r7gdsvbegfj", "meetingId": "90af7edbfd8a161a7f711504a114aaf5bf597f9f-1727768989277", "callerName": "Odejinmi+Samuel", "callerNum": "w_1r7gdsvbegfj_2-bbbID-Odejinmi+Samuel", "callingWith": "none", "color": "#4a148c", "joined": false, "listenOnly": false, "muted": false, "spoke": false, "talking": false, "voiceConf": "55004", "voiceUserId": "303", "endTime": 1727769305417, "startTime": 1727768997499, "floor": true, "lastFloorTime": "1727769305394997" }
         // { id: '7J2pQrMaH5C58ZsHj', intId: 'w_6pjsehfq5dcf', callerName: 'Test Sam', joined: false, talking: false, muted:false }
 
-        console.log('micState atu',voiceUser.intId)
-        console.log('micState atu m',user?.meetingDetails?.internalUserID)
         if (participantTalkingList.filter((item:IVoiceUser) => item?.id == voiceUser?.id || item?.intId == voiceUser?.intId).length < 1) {
 
             if(voiceUser.intId == user?.meetingDetails?.internalUserID){
-                console.log('micState atu',voiceUser.muted)
-                console.log('micState atu',voiceUser.muted)
                 setMicState(voiceUser.muted);
             }
             setParticipantTalkingList([...participantTalkingList,voiceUser])
