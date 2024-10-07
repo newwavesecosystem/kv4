@@ -8,12 +8,27 @@ import {
   IParticipant,
   IWaitingUser,
   IUserBreakOutRoom,
-  IBreakoutRoom, IWhiteBoardAnnotationRemote, IPrivateChatMessage, IBreakOutRecord, IPresentationSlideState, IAuthUser
+  IBreakoutRoom,
+  IWhiteBoardAnnotationRemote,
+  IPrivateChatMessage,
+  IBreakOutRecord,
+  IPresentationSlideState,
+  IAuthUser,
+  IVoiceUser
 } from "~/types";
 
 export const authUserState = atom<IAuthUser | null>({
   key: "authUserState",
-  default: null,
+  default: {
+    connectionAuthTime: 0, connectionID: "",
+    meetingId: "",
+    passCode: "",
+    email: "",
+    fullName: "",
+    id: 0,
+    meetingDetails: null,
+    sessiontoken: ""
+  },
 });
 
 export const newMessage = atom<boolean>({
@@ -35,7 +50,7 @@ export const participantListState = atom<any>({
   default: [],
 });
 
-export const participantTalkingListState = atom<any>({
+export const participantTalkingListState = atom<IVoiceUser[]>({
   key: "participantTalkingListState",
   default: [],
 });

@@ -18,11 +18,23 @@ export interface IConnectedUser {
 }
 export interface IVoiceUser {
   id: string;
-  intId: string;
-  callerName: string;
-  joined: boolean;
-  talking: boolean;
-  muted: boolean;
+  intId:         string;
+  meetingId:     string;
+  callerName:    string;
+  callerNum:     string;
+  callingWith:   string;
+  color:         string;
+  joined:        boolean;
+  listenOnly:    boolean;
+  muted:         boolean;
+  spoke:         boolean;
+  talking:       boolean;
+  voiceConf:     string;
+  voiceUserId:   string;
+  endTime:       number;
+  startTime:     number;
+  floor:         boolean;
+  lastFloorTime: string;
 }
 export interface IAuthUser {
   id: number;
@@ -31,6 +43,8 @@ export interface IAuthUser {
   passCode: string;
   meetingId: string;
   sessiontoken: string;
+  connectionID: string;
+  connectionAuthTime: number;
   meetingDetails: IMeetingDetails | null;
 }
 
