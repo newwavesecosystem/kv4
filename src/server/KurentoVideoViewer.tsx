@@ -3,11 +3,12 @@ import * as kurentoUtils from "kurento-utils";
 import {websocketSend} from "./Websocket";
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, participantCameraListState} from "~/recoil/atom";
+import {authUserState, connectionStatusState, participantCameraListState} from "~/recoil/atom";
 import {IParticipantCamera} from "~/types";
 
 const KurentoVideoViewer = (props:any) => {
     const user = useRecoilValue(authUserState);
+    const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
     const [wsStarted, setWsStarted] = useState(false);
     const [streamID, setStreamID] = useState(props?.streamID);
     const [participantCameraList, setParticipantCameraList] = useRecoilState(participantCameraListState);
@@ -80,6 +81,9 @@ const KurentoVideoViewer = (props:any) => {
                 remoteVideo: null,
                 onicecandidate: onIceCandidate,
                 mediaConstraints: constraints,
+                configuration:{
+                    iceServers: connectionStatus.iceServers
+                }
             };
 
 
