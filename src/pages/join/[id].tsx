@@ -25,6 +25,7 @@ import {
   microphoneStreamState,
   settingsModalState,
 } from "~/recoil/atom";
+import {id} from "postcss-selector-parser";
 
 function JoinId() {
   // get id from url
@@ -253,6 +254,7 @@ function JoinId() {
                   const id = Math.floor(Math.random() * 100);
                   // login user
                   setUser({
+                    connectionAuthTime: 0, connectionID: "",
                     meetingDetails: null,
                     sessiontoken: "", id: id,
                     fullName: data.fullName,

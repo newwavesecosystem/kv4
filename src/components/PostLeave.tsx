@@ -26,7 +26,7 @@ function PostLeave() {
         <span className="text-2xl font-bold text-white">
           {postLeaveMeeting.isLeave && "You left the session"}
           {postLeaveMeeting.isLeaveRoomCall && "You left the session"}
-          {postLeaveMeeting.isEndCall && "You ended the session"}
+          {postLeaveMeeting.isEndCall && "Session has Ended"}
           {postLeaveMeeting.isKicked && "You were kicked from the session"}
           {postLeaveMeeting.isSessionExpired && "Session expired"}
           {postLeaveMeeting.isOthers && "You left the session"}

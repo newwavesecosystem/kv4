@@ -19,7 +19,16 @@ import {
 
 export const authUserState = atom<IAuthUser | null>({
   key: "authUserState",
-  default: null,
+  default: {
+    connectionAuthTime: 0, connectionID: "",
+    meetingId: "",
+    passCode: "",
+    email: "",
+    fullName: "",
+    id: 0,
+    meetingDetails: null,
+    sessiontoken: ""
+  },
 });
 
 export const newMessage = atom<boolean>({

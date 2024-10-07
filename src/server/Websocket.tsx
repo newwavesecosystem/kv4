@@ -32,6 +32,7 @@ import dayjs from "dayjs";
 import axios from "axios";
 import {toast} from "~/components/ui/use-toast";
 import {FindUserNamefromUserId} from "~/lib/checkFunctions";
+import {SetCurrentSessionEjected} from "~/lib/localStorageFunctions";
 
 
 // var sock = null;
@@ -103,7 +104,7 @@ export function websocketSend(data:any) {
 
 const Websocket = () => {
 
-    const user = useRecoilValue(authUserState);
+    const [user, setUser] = useRecoilState(authUserState);
     const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
     const [participantList, setParticipantList] = useRecoilState(participantListState);
     const [participantTalkingList, setParticipantTalkingList] = useRecoilState(participantTalkingListState);
@@ -212,6 +213,22 @@ const Websocket = () => {
                         websocket_connection:true,
                         websocket_connection_reconnect:false
                     }))
+                }
+
+                if (obj.msg == "result") {
+                    if(obj.result != null) {
+                        // a["{\"msg\":\"result\",\"id\":\"2\",\"result\":{\"connectionId\":\"53iPKsgGXaJndzZBd\",\"meetingId\":\"90af7edbfd8a161a7f711504a114aaf5bf597f9f-1728092698015\",\"userId\":\"w_jfvnaaon0fa8\",\"reason\":null,\"updatedAt\":1728094173674,\"validationStatus\":3,\"_id\":\"JhnM7euG7emiXsvSn\"}}"]
+
+                        const {connectionId} = obj.result;
+
+                        if (connectionId != null) {
+                            setUser((prev) => ({
+                                ...prev!,
+                                connectionID: connectionId,
+                                connectionAuthTime: new Date().getTime()
+                            }))
+                        }
+                    }
                 }
 
                 if (collection == "group-chat-msg") {
@@ -376,20 +393,23 @@ const Websocket = () => {
     const handleGroupChat = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
-        const {chatId, meetingId, access} = obj.fields;
+        const {msg, id, fields} = obj;
+        if(msg == "changed") {
+            const {chatId, meetingId, access} = obj.fields;
 
-        if(chatId == "MAIN-PUBLIC-GROUP-CHAT"){
-            return;
+            if (chatId == "MAIN-PUBLIC-GROUP-CHAT") {
+                return;
+            }
+
+            // a["{"msg":"added","collection":"group-chat","id":"QNz7Est4eYr895e4M","fields":{"chatId":"1709041032349-4hb295a9","meetingId":"6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2-1709040921995","access":"PRIVATE_ACCESS","createdBy":"w_yqu0qgo2gbps","participants":[{"id":"w_4amx2midtfcd","name":"Odejinmi Samuel","role":"MODERATOR"},{"id":"w_yqu0qgo2gbps","name":"Odejinmi Samuel","role":"MODERATOR"}],"users":["w_4amx2midtfcd","w_yqu0qgo2gbps"]}}"]
+
+            setPrivateChatState((prev) => ({
+                ...prev,
+                chatRooms: [...prev.chatRooms, obj.fields],
+                isActive: true,
+                id: chatId,
+            }));
         }
-
-        // a["{"msg":"added","collection":"group-chat","id":"QNz7Est4eYr895e4M","fields":{"chatId":"1709041032349-4hb295a9","meetingId":"6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2-1709040921995","access":"PRIVATE_ACCESS","createdBy":"w_yqu0qgo2gbps","participants":[{"id":"w_4amx2midtfcd","name":"Odejinmi Samuel","role":"MODERATOR"},{"id":"w_yqu0qgo2gbps","name":"Odejinmi Samuel","role":"MODERATOR"}],"users":["w_4amx2midtfcd","w_yqu0qgo2gbps"]}}"]
-
-        setPrivateChatState((prev)=>({
-            ...prev,
-            chatRooms: [...prev.chatRooms,obj.fields],
-            isActive: true,
-            id: chatId,
-        }));
 
     }
 
@@ -450,19 +470,36 @@ const Websocket = () => {
         console.log("CurrentUserState: handleUsers",obj);
 
         if (msg == 'changed') {
-            const {authTokenValidatedTime} = fields;
+            const {currentConnectionId, connectionIdUpdateTime, authTokenValidatedTime, loggedOut, exitReason} = fields;
 
-            if(authTokenValidatedTime != null){
-                console.log(`authTokenValidatedTime:${authTokenValidatedTime}`)
-                console.log(`local authTokenValidatedTime:${Date.now()}`)
+            if (currentConnectionId && currentConnectionId !== user?.connectionID && connectionIdUpdateTime > user?.connectionAuthTime!) {
+                console.log("joined_another_window_reason");
+                setPostLeaveMeeting({
+                    ...postLeaveMeeting,
+                    isKicked: true,
+                });
+            }
 
-                var diff=Date.now() - authTokenValidatedTime;
+            if(loggedOut != null && loggedOut){
+                console.log("User logout ",loggedOut);
+                SetCurrentSessionEjected(user?.sessiontoken!);
+                setPostLeaveMeeting({
+                    ...postLeaveMeeting,
+                    isLeave: true,
+                });
+            }
 
-                console.log(`local authTokenValidatedTime diff :${diff}`)
+            if(exitReason != null){
+                if(exitReason =="meetingEnded") {
+                    console.log("Meeting Ended ", exitReason);
+                    setPostLeaveMeeting({
+                        ...postLeaveMeeting,
+                        isEndCall: true,
+                    });
+                }
 
-
-                if((diff) > 150){
-                    console.log("Session switched",obj);
+                if(exitReason =="error"){
+                    console.log("User kicked",exitReason);
                     setPostLeaveMeeting({
                         ...postLeaveMeeting,
                         isKicked: true,
@@ -597,9 +634,10 @@ const Websocket = () => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id, fields} = obj;
-        const {externalVideoUrl} = fields;
 
         if(msg == "changed") {
+            const {externalVideoUrl} = fields;
+
             if (externalVideoUrl != null) {
                 receiveVideoLinkFromWebsocket(externalVideoUrl)
             } else {
@@ -840,21 +878,30 @@ const Websocket = () => {
     const handleMeetings =(eventData:any)=>{
         console.log('Random User Handler')
         const obj = JSON.parse(eventData);
-        const {randomlySelectedUser, meetingEnded, voiceProp} = obj.fields
 
-        if(meetingEnded != null && meetingEnded){
-            // endCall();
-        }
+        const {msg, id, fields} = obj;
 
-        if(randomlySelectedUser != null){
-            // handleRandomUsers(eventData)
-        }
+        if(msg == "changed") {
+            const {randomlySelectedUser, meetingEnded, voiceProp} = obj.fields
 
-        if(voiceProp != null){
-            if(!voiceProp.muteOnStart){
-                setMicState(voiceProp.muteOnStart);
+            if (meetingEnded != null && meetingEnded) {
+                console.log("Meeting has been Ended ",meetingEnded);
+                setPostLeaveMeeting({
+                    ...postLeaveMeeting,
+                    isEndCall: true,
+                });
             }
 
+            if (randomlySelectedUser != null) {
+                // handleRandomUsers(eventData)
+            }
+
+            if (voiceProp != null) {
+                if (!voiceProp.muteOnStart) {
+                    setMicState(voiceProp.muteOnStart);
+                }
+
+            }
         }
     }
 
@@ -1028,13 +1075,17 @@ const Websocket = () => {
     }
 
 
-    const addTalkingUser = (user:any) => {
-        console.log('voice user', user);
+    const addTalkingUser = (voiceUser:any) => {
+        console.log('voice user', voiceUser);
         // { "intId": "w_1r7gdsvbegfj", "meetingId": "90af7edbfd8a161a7f711504a114aaf5bf597f9f-1727768989277", "callerName": "Odejinmi+Samuel", "callerNum": "w_1r7gdsvbegfj_2-bbbID-Odejinmi+Samuel", "callingWith": "none", "color": "#4a148c", "joined": false, "listenOnly": false, "muted": false, "spoke": false, "talking": false, "voiceConf": "55004", "voiceUserId": "303", "endTime": 1727769305417, "startTime": 1727768997499, "floor": true, "lastFloorTime": "1727769305394997" }
         // { id: '7J2pQrMaH5C58ZsHj', intId: 'w_6pjsehfq5dcf', callerName: 'Test Sam', joined: false, talking: false, muted:false }
 
-        if (participantTalkingList.filter((item:IVoiceUser) => item?.id == user?.id || item?.intId == user?.intId).length < 1) {
-            setParticipantTalkingList([...participantTalkingList,user])
+        if (participantTalkingList.filter((item:IVoiceUser) => item?.id == voiceUser?.id || item?.intId == voiceUser?.intId).length < 1) {
+
+            if(voiceUser.intId == user?.meetingDetails?.internalUserID){
+                setMicState(voiceUser.muted);
+            }
+            setParticipantTalkingList([...participantTalkingList,voiceUser])
         }
     }
 
@@ -1169,21 +1220,26 @@ const Websocket = () => {
     const handleRecording = (eventData:any) => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
-        const {recording, time,} = obj.fields;
-        if (recording == null) {
-            // recordingTiming(time)
-        } else {
-            if (recording) {
-                setRecordingState((prev) => ({
-                    ...prev,
-                    isActive: true,
-                    recordingConsent: true,
-                }));
+
+        const {msg, id, fields} = obj;
+
+        if(msg == "changed") {
+            const {recording, time,} = fields;
+            if (recording == null) {
+                // recordingTiming(time)
             } else {
-                setRecordingState((prev) => ({
-                    ...prev,
-                    isActive: false,
-                }));
+                if (recording) {
+                    setRecordingState((prev) => ({
+                        ...prev,
+                        isActive: true,
+                        recordingConsent: true,
+                    }));
+                } else {
+                    setRecordingState((prev) => ({
+                        ...prev,
+                        isActive: false,
+                    }));
+                }
             }
         }
     }
