@@ -170,7 +170,7 @@ const KurentoAudio = () => {
             audioStream:microphoneStream,
             onicecandidate: onIceCandidate,
             mediaConstraints: constraints,
-            configuration:{
+            configuration: {
                 iceServers: connectionStatus.iceServers
             }
         }

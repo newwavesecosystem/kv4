@@ -58,6 +58,19 @@ import FileUploadModal from "~/components/fileUpload/FileUploadModal";
 import { Howl } from 'howler';
 import RecordingConsentModal from "~/components/recording/RecordingConsentModal";
 import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "~/components/ui/dropdown-menu";
+import EllipsisIcon from "~/components/icon/outline/EllipsisIcon";
+import PinIcon from "~/components/icon/outline/PinIcon";
+import VideoConfOffIcon from "~/components/icon/outline/VideoConfOffIcon";
+import OneGovAppToggleIcon from "~/components/icon/outline/1GovAppToggleIcon";
+import {getMyCookies} from "~/lib/cookiesFunctions";
+import axios from "axios";
 
 
 function Authenticated({ children }: { children: React.ReactNode }) {
@@ -86,9 +99,41 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
   const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
 
+  const [appToggle, setAppToggles] = useState({appsToggle:[], adminUI: {
+      "name": "1Gov Admin",
+      "url": "https://govsupport.convergenceondemand.com/admin/tenant"
+    } });
+
+
   const sound = new Howl({
     src: ['/message.mp3'],
   });
+
+
+  const get1govToggles = (id: any) => {
+    axios
+        .get(`${process.env.NEXT_PUBLIC_1GOV_URL}/sso/user/validateUser/conferencing`,{headers:{'Authorization': `Bearer ${id}`}})
+        .then(function (response) {
+          const responseData = response.data;
+
+          if (responseData?.status == 'SUCCESS') {
+            setAppToggles(responseData?.user?.toggleDetails);
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function () {
+          // always executed
+        });
+  };
+
+
+  useEffect(() => {
+    get1govToggles(getMyCookies("token"));
+  }, [""]);
+
 
   useEffect(() => {
     if(isNewMessage) {
@@ -229,6 +274,39 @@ function Authenticated({ children }: { children: React.ReactNode }) {
         </div>
         {/* right side */}
         <div className="flex items-center gap-2 md:gap-5">
+          {/* Dropdown Menu for 1gov Toggles */}
+          {appToggle?.appsToggle?.length == 0 && <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div title="You can click here to access your other 1Gov Applications" className="rounded-full bg-primary/80 p-1 cursor-pointer">
+                <OneGovAppToggleIcon className="h-5 w-5 "/>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+                align="end"
+                className="border-0 bg-primary text-a11y"
+            >
+              {appToggle?.appsToggle?.map((atg:any, index:number)=>(
+                  <DropdownMenuItem
+                      key={index}
+                      onClick={() => {
+                        window.open(atg.url,"_blank");
+                      }}
+                      className="py-2"
+                  >
+                    <img src={atg.logo} alt={`${atg.name} logo`} width="30px" height="30px" className="mr-3" /> {atg.name}
+                  </DropdownMenuItem>
+              ))}
+
+              <DropdownMenuSeparator className="h-0.5"/>
+              {appToggle?.adminUI != null && <DropdownMenuItem onClick={() => {
+                window.open(appToggle?.adminUI?.url,"_blank");
+              }} className="py-2 text-center">
+                {appToggle?.adminUI?.name}
+              </DropdownMenuItem>}
+            </DropdownMenuContent>
+          </DropdownMenu>}
+          {/* End Dropdown Menu for 1gov Toggles */}
+
           {user?.meetingDetails?.record == "true" ? recordingState.isActive ? (
             <button
               onClick={() => {

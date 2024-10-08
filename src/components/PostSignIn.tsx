@@ -51,6 +51,7 @@ import PinIcon from "~/components/icon/outline/PinIcon";
 import MinimizeIcon from "~/components/icon/outline/MinimizeIcon";
 import {FindAvatarfromUserId, FindUserNamefromUserId} from "~/lib/checkFunctions";
 import {GetCurrentSessionEjected, GetCurrentSessionToken, SetCurrentSessionToken} from "~/lib/localStorageFunctions";
+import {getMyCookies} from "~/lib/cookiesFunctions";
 
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
@@ -89,7 +90,6 @@ function PostSignIn() {
   const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
   const [wakeLock, setWakeLock] = useState(null);
   const [wakeLockActive, setWakeLockActive] = useState(false);
-
 
   const router = useRouter();
 
@@ -326,59 +326,63 @@ function PostSignIn() {
   const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
 
   return (
-    <Authenticated>
-      {!connectionStatus?.websocket_connection ?
-          <span className="flex w-full items-center justify-between px-4"
-                style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}>{connectionStatus.websocket_connection_reconnect ? "Network issues detected. Trying to reconnecting automatically" : "Connecting..."}<br/></span> : ''}
-      {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
-          <span className="flex w-full items-center justify-between px-4"
-                style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}
-      <div className="relative h-[calc(100vh-128px)] bg-primary/60 ">
-        {/* polls */}
-        {(pollModal.isActive || pollModal.isEnded) && pollModal.step === 0 && (
-          <button
-            onClick={() => {
-              setPollModal((prev) => ({
-                ...prev,
-                step: 2,
-              }));
-            }}
-            className="fixed bottom-20 left-5 z-10 flex items-center gap-2 rounded-md bg-primary px-4 py-3"
-          >
-            <span>View Polls</span>
-            <ArrowChevronDownIcon className="h-6 w-6" />
-          </button>
-        )}
-        {/* temp button to stimulate ppl joining */}
-        {/*<div className={"fixed right-[50%] top-0 z-[999] flex gap-2 "}>*/}
-        {/*  <button*/}
-        {/*    className="  rounded-md bg-orange-400 p-1"*/}
-        {/*    onClick={() => {*/}
-        {/*      setParticipantList((prev: any) => [*/}
-        {/*        ...prev,*/}
-        {/*        {*/}
-        {/*          id: prev[0].id + `${Math.floor(Math.random() * 100)}`,*/}
-        {/*          intId: prev[0].id + `${Math.floor(Math.random() * 100)}`,*/}
-        {/*        },*/}
-        {/*      ]);*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    add*/}
-        {/*  </button>*/}
-        {/*  <button*/}
-        {/*    className="  rounded-md bg-orange-400 p-1"*/}
-        {/*    onClick={() => {*/}
-        {/*      if (participantList.length === 1) return;*/}
-        {/*      setParticipantList((prev: any) => prev.slice(0, -1));*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    remove*/}
-        {/*  </button>*/}
-        {/*  {participantList.length}*/}
-        {/*</div>*/}
+      <Authenticated>
+        {!connectionStatus?.websocket_connection ?
+            <span className="flex w-full items-center justify-between px-4"
+                  style={{
+                    color: 'white',
+                    backgroundColor: 'red',
+                    textAlign: 'center'
+                  }}>{connectionStatus.websocket_connection_reconnect ? "Network issues detected. Trying to reconnecting automatically" : "Connecting..."}<br/></span> : ''}
+        {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
+            <span className="flex w-full items-center justify-between px-4"
+                  style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}
+        <div className="relative h-[calc(100vh-128px)] bg-primary/60 ">
+          {/* polls */}
+          {(pollModal.isActive || pollModal.isEnded) && pollModal.step === 0 && (
+              <button
+                  onClick={() => {
+                    setPollModal((prev) => ({
+                      ...prev,
+                      step: 2,
+                    }));
+                  }}
+                  className="fixed bottom-20 left-5 z-10 flex items-center gap-2 rounded-md bg-primary px-4 py-3"
+              >
+                <span>View Polls</span>
+                <ArrowChevronDownIcon className="h-6 w-6"/>
+              </button>
+          )}
+          {/* temp button to stimulate ppl joining */}
+          {/*<div className={"fixed right-[50%] top-0 z-[999] flex gap-2 "}>*/}
+          {/*  <button*/}
+          {/*    className="  rounded-md bg-orange-400 p-1"*/}
+          {/*    onClick={() => {*/}
+          {/*      setParticipantList((prev: any) => [*/}
+          {/*        ...prev,*/}
+          {/*        {*/}
+          {/*          id: prev[0].id + `${Math.floor(Math.random() * 100)}`,*/}
+          {/*          intId: prev[0].id + `${Math.floor(Math.random() * 100)}`,*/}
+          {/*        },*/}
+          {/*      ]);*/}
+          {/*    }}*/}
+          {/*  >*/}
+          {/*    add*/}
+          {/*  </button>*/}
+          {/*  <button*/}
+          {/*    className="  rounded-md bg-orange-400 p-1"*/}
+          {/*    onClick={() => {*/}
+          {/*      if (participantList.length === 1) return;*/}
+          {/*      setParticipantList((prev: any) => prev.slice(0, -1));*/}
+          {/*    }}*/}
+          {/*  >*/}
+          {/*    remove*/}
+          {/*  </button>*/}
+          {/*  {participantList.length}*/}
+          {/*</div>*/}
 
-        {/* show active people talking */}
-        {/*        {connectedUsers.filter((user) => user.isMicOpen === true)?.length >
+          {/* show active people talking */}
+          {/*        {connectedUsers.filter((user) => user.isMicOpen === true)?.length >
           0 && (
           <div className="no-scrollbar absolute top-2 flex h-6 w-full justify-center gap-3 overflow-x-scroll text-xs antialiased">
             {connectedUsers
@@ -410,264 +414,264 @@ function PostSignIn() {
           </div>
         )}*/}
 
-        {/* show active people talking */}
-        {participantTalkingList.filter((eachItem: any) => eachItem.talking)
-          ?.length > 0 && (
-          <div className="no-scrollbar absolute top-2 flex h-6 w-full justify-center gap-3 overflow-x-scroll text-xs antialiased">
-            {participantTalkingList
-              .filter((eachItem: any) => eachItem.talking)
-              .map((eachItem: any, index: number) => (
-                <div
-                  key={index}
-                  className="flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border border-a11y/20 p-1"
-                >
-                  {FindAvatarfromUserId(eachItem.intId,participantList) ? (
-                    <Image
-                      src={FindAvatarfromUserId(eachItem.intId,participantList)}
-                      width={20}
-                      height={20}
-                      className="rounded-full"
-                      alt="profile picture"
-                    />
-                  ) : (
-                    <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-a11y/20">
-                      {" "}
-                      {FindUserNamefromUserId(eachItem.intId, participantList)
-                        .split(" ")[0]
-                        ?.slice(0, 1)}
-                      {FindUserNamefromUserId(eachItem.intId, participantList)
-                        .split(" ")[1]
-                        ?.slice(0, 1)}
-                    </div>
-                  )}
-                  <span className="truncate">
+          {/* show active people talking */}
+          {participantTalkingList.filter((eachItem: any) => eachItem.talking)
+              ?.length > 0 && (
+              <div
+                  className="no-scrollbar absolute top-2 flex h-6 w-full justify-center gap-3 overflow-x-scroll text-xs antialiased">
+                {participantTalkingList
+                    .filter((eachItem: any) => eachItem.talking)
+                    .map((eachItem: any, index: number) => (
+                        <div
+                            key={index}
+                            className="flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border border-a11y/20 p-1"
+                        >
+                          {FindAvatarfromUserId(eachItem.intId, participantList) ? (
+                              <Image
+                                  src={FindAvatarfromUserId(eachItem.intId, participantList)}
+                                  width={20}
+                                  height={20}
+                                  className="rounded-full"
+                                  alt="profile picture"
+                              />
+                          ) : (
+                              <div
+                                  className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-a11y/20">
+                                {" "}
+                                {FindUserNamefromUserId(eachItem.intId, participantList)
+                                    .split(" ")[0]
+                                    ?.slice(0, 1)}
+                                {FindUserNamefromUserId(eachItem.intId, participantList)
+                                    .split(" ")[1]
+                                    ?.slice(0, 1)}
+                              </div>
+                          )}
+                          <span className="truncate">
                     {FindUserNamefromUserId(eachItem.intId, participantList)}
                   </span>
-                  <MicOnIcon className="h-4 w-4 shrink-0" />
-                </div>
-              ))}
-          </div>
-        )}
-        {/*{(isWhiteboardOpen || screenSharingStream) &&*/}
-        {/*  connectedUsers.filter((user) => user.isMicOpen === true)?.length >*/}
-        {/*    0 && (*/}
-        {/*    <div className="no-scrollbar absolute top-2 flex h-6 w-full justify-center gap-3 overflow-x-scroll text-xs antialiased">*/}
-        {/*      {connectedUsers*/}
-        {/*        .filter((user) => user.isMicOpen === true)*/}
-        {/*        .map((user, index) => (*/}
-        {/*          <div*/}
-        {/*            key={index}*/}
-        {/*            className="flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border border-a11y/20 p-1"*/}
-        {/*          >*/}
-        {/*            {user.profilePicture ? (*/}
-        {/*              <Image*/}
-        {/*                src={user.profilePicture}*/}
-        {/*                width={20}*/}
-        {/*                height={20}*/}
-        {/*                className="rounded-full"*/}
-        {/*                alt="profile picture"*/}
-        {/*              />*/}
-        {/*            ) : (*/}
-        {/*              <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-a11y/20">*/}
-        {/*                {" "}*/}
-        {/*                {user.fullName.split(" ")[0]?.slice(0, 1)}*/}
-        {/*                {user.fullName.split(" ")[1]?.slice(0, 1)}*/}
-        {/*              </div>*/}
-        {/*            )}*/}
-        {/*            <span className="truncate">{user.fullName}</span>*/}
-        {/*            <MicOnIcon className="h-4 w-4 shrink-0" />*/}
-        {/*          </div>*/}
-        {/*        ))}*/}
-        {/*    </div>*/}
-        {/*  )}*/}
+                          <MicOnIcon className="h-4 w-4 shrink-0"/>
+                        </div>
+                    ))}
+              </div>
+          )}
+          {/*{(isWhiteboardOpen || screenSharingStream) &&*/}
+          {/*  connectedUsers.filter((user) => user.isMicOpen === true)?.length >*/}
+          {/*    0 && (*/}
+          {/*    <div className="no-scrollbar absolute top-2 flex h-6 w-full justify-center gap-3 overflow-x-scroll text-xs antialiased">*/}
+          {/*      {connectedUsers*/}
+          {/*        .filter((user) => user.isMicOpen === true)*/}
+          {/*        .map((user, index) => (*/}
+          {/*          <div*/}
+          {/*            key={index}*/}
+          {/*            className="flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border border-a11y/20 p-1"*/}
+          {/*          >*/}
+          {/*            {user.profilePicture ? (*/}
+          {/*              <Image*/}
+          {/*                src={user.profilePicture}*/}
+          {/*                width={20}*/}
+          {/*                height={20}*/}
+          {/*                className="rounded-full"*/}
+          {/*                alt="profile picture"*/}
+          {/*              />*/}
+          {/*            ) : (*/}
+          {/*              <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-a11y/20">*/}
+          {/*                {" "}*/}
+          {/*                {user.fullName.split(" ")[0]?.slice(0, 1)}*/}
+          {/*                {user.fullName.split(" ")[1]?.slice(0, 1)}*/}
+          {/*              </div>*/}
+          {/*            )}*/}
+          {/*            <span className="truncate">{user.fullName}</span>*/}
+          {/*            <MicOnIcon className="h-4 w-4 shrink-0" />*/}
+          {/*          </div>*/}
+          {/*        ))}*/}
+          {/*    </div>*/}
+          {/*  )}*/}
 
-        <div className="mb-5"/>
+          <div className="mb-5"/>
 
-        {/*@Solomon help me implement component for presentation*/}
-        {/*{presentationSlide.show &&*/}
-        {/*<img*/}
-        {/*    src={presentationSlide.presentations[0]?.pages[0]?.svgUri ?? ''}*/}
-        {/*    width={544}*/}
-        {/*    height={544}*/}
-        {/*    alt="profile picture"*/}
-        {/*/>*/}
-        {/*}*/}
-
-
+          {/*@Solomon help me implement component for presentation*/}
+          {/*{presentationSlide.show &&*/}
+          {/*<img*/}
+          {/*    src={presentationSlide.presentations[0]?.pages[0]?.svgUri ?? ''}*/}
+          {/*    width={544}*/}
+          {/*    height={544}*/}
+          {/*    alt="profile picture"*/}
+          {/*/>*/}
+          {/*}*/}
 
 
-        {/* render camera feed if not whiteboard or screensharing */}
-        {!isWhiteboardOpen &&
-          (!screenSharingStream ||
-            (screenSharingStream && layoutSettings.layout === "2")) &&
-          !eCinemaModal.isActive && (
-            <div
-              className={cn(
-                " m-auto h-[calc(100vh-158px)] items-center justify-center p-4",
-                (isWhiteboardOpen || screenSharingStream) &&
-                  participantTalkingList.filter(
-                    (eachItem: any) => !eachItem.muted,
-                  )?.length > 0 &&
-                  "mt-6 h-[calc(100vh-150px)]",
-                participantList.length === 1 &&
-                  " flex items-center justify-center md:aspect-square  ",
-                participantList.length === 2 &&
-                  "grid justify-center gap-2 md:grid-cols-2 mt-5",
-                participantList.length === 3 &&
-                  "grid grid-cols-2 gap-2 lg:grid-cols-3 ",
-                participantList.length >= 4 && "grid grid-cols-2 gap-2",
-                participantList.length >= 5 && "grid gap-2 md:grid-cols-3",
-                participantList.length >= 7 && "grid gap-2 md:grid-cols-4",
-                participantList.length >= 13 && "grid gap-2 md:grid-cols-5",
-                participantList.length >=3 && pinnedParticipant.length > 0 && "md:!grid-cols-4",
-              )} style={{paddingTop:"1.5rem"}}
-            >
-              {participantList
-              // pick only 5 participant
-              .filter(
-                (participant: IParticipant, index: number) => {
-                  if (pinnedParticipant.length > 0 ){
-                   return index < 5
-                  } else {
-                    return participant
-                  }
-                } ,
-              )
-              .map(
-                (participant: IParticipant, index: number) => (
-                  <SingleCameraComponent
-                    index={index}
-                    key={index}
-                    participant={participant}
-                    userCamera={participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId)[0]}
-                  />
-                ),
+          {/* render camera feed if not whiteboard or screensharing */}
+          {!isWhiteboardOpen &&
+              (!screenSharingStream ||
+                  (screenSharingStream && layoutSettings.layout === "2")) &&
+              !eCinemaModal.isActive && (
+                  <div
+                      className={cn(
+                          " m-auto h-[calc(100vh-158px)] items-center justify-center p-4",
+                          (isWhiteboardOpen || screenSharingStream) &&
+                          participantTalkingList.filter(
+                              (eachItem: any) => !eachItem.muted,
+                          )?.length > 0 &&
+                          "mt-6 h-[calc(100vh-150px)]",
+                          participantList.length === 1 &&
+                          " flex items-center justify-center md:aspect-square  ",
+                          participantList.length === 2 &&
+                          "grid justify-center gap-2 md:grid-cols-2 mt-5",
+                          participantList.length === 3 &&
+                          "grid grid-cols-2 gap-2 lg:grid-cols-3 ",
+                          participantList.length >= 4 && "grid grid-cols-2 gap-2",
+                          participantList.length >= 5 && "grid gap-2 md:grid-cols-3",
+                          participantList.length >= 7 && "grid gap-2 md:grid-cols-4",
+                          participantList.length >= 13 && "grid gap-2 md:grid-cols-5",
+                          participantList.length >= 3 && pinnedParticipant.length > 0 && "md:!grid-cols-4",
+                      )} style={{paddingTop: "1.5rem"}}
+                  >
+                    {participantList
+                        // pick only 5 participant
+                        .filter(
+                            (participant: IParticipant, index: number) => {
+                              if (pinnedParticipant.length > 0) {
+                                return index < 5
+                              } else {
+                                return participant
+                              }
+                            },
+                        )
+                        .map(
+                            (participant: IParticipant, index: number) => (
+                                <SingleCameraComponent
+                                    index={index}
+                                    key={index}
+                                    participant={participant}
+                                    userCamera={participantCameraList.filter((cItem: IParticipantCamera) => cItem?.intId == participant.intId)[0]}
+                                />
+                            ),
+                        )}
+                  </div>
               )}
-            </div>
+
+          {/* Smart Layout */}
+          {screenSharingStream && layoutSettings.layout === "1" && (
+              <Draggable
+                  defaultClassName="cursor-grab hidden xl:block"
+                  bounds="parent"
+                  defaultClassNameDragging="cursor-grabbing"
+              >
+                <div className="absolute top-0 z-50 m-2 backdrop-blur-3xl">
+                  <div className="flex flex-row-reverse px-2 py-2">
+                    <button
+                        onClick={() => {
+                          setlayoutSettings({
+                            ...layoutSettings,
+                            layout: "4",
+                            layoutName: "Focus on presenter",
+                          });
+                        }}
+                        className="rounded-full bg-primary/80 p-1 "
+                    >
+                      <MinimizeIcon className=" h-5 w-5"/>
+                    </button>
+                  </div>
+                  <div
+                      className={cn(
+                          " m-auto flex h-40 items-center justify-center gap-2 ",
+                      )}
+                  >
+                    {participantList
+                        // pick only 6 participants
+                        .filter(
+                            (participant: IParticipant, index: number) => index < 6,
+                        )
+                        .map((participant: IParticipant, index: number) => (
+                            <SingleCameraComponent
+                                index={index}
+                                key={index}
+                                participant={participant}
+                                userCamera={participantCameraList.filter((cItem: IParticipantCamera) => cItem?.intId == participant.intId)[0]}
+                            />
+                        ))}
+                  </div>
+                </div>
+              </Draggable>
           )}
 
-        {/* Smart Layout */}
-        {screenSharingStream && layoutSettings.layout === "1" && (
-          <Draggable
-            defaultClassName="cursor-grab hidden xl:block"
-            bounds="parent"
-            defaultClassNameDragging="cursor-grabbing"
-          >
-            <div className="absolute top-0 z-50 m-2 backdrop-blur-3xl">
-              <div className="flex flex-row-reverse px-2 py-2">
-                <button
-                    onClick={() => {
-                      setlayoutSettings({
-                        ...layoutSettings,
-                        layout: "4",
-                        layoutName: "Focus on presenter",
-                      });
-                    }}
-                    className="rounded-full bg-primary/80 p-1 "
-                >
-                  <MinimizeIcon className=" h-5 w-5"/>
-                </button>
-              </div>
-              <div
-                  className={cn(
-                      " m-auto flex h-40 items-center justify-center gap-2 ",
-                  )}
+          {/* Focus on Video */}
+          {screenSharingStream && layoutSettings.layout === "2" && (
+              <Draggable
+                  defaultClassName="cursor-grab hidden xl:block"
+                  bounds="parent"
+                  defaultClassNameDragging="cursor-grabbing"
               >
-                {participantList
-                    // pick only 6 participants
-                    .filter(
-                        (participant: IParticipant, index: number) => index < 6,
-                    )
-                    .map((participant: IParticipant, index: number) => (
-                    <SingleCameraComponent
-                      index={index}
-                      key={index}
-                      participant={participant}
-                      userCamera={participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId)[0]}
-                    />
-                  ))}
-              </div>
-            </div>
-          </Draggable>
-        )}
+                <div className="absolute top-0 z-50 ">
+                  <div
+                      className={cn(
+                          " m-auto flex h-40 items-center justify-center gap-2 ",
+                      )}
+                  >
+                    <ScreenSharingComponent/>
+                  </div>
+                </div>
+              </Draggable>
+          )}
 
-        {/* Focus on Video */}
-        {screenSharingStream && layoutSettings.layout === "2" && (
-          <Draggable
-            defaultClassName="cursor-grab hidden xl:block"
-            bounds="parent"
-            defaultClassNameDragging="cursor-grabbing"
-          >
-            <div className="absolute top-0 z-50 ">
-              <div
-                className={cn(
-                  " m-auto flex h-40 items-center justify-center gap-2 ",
-                )}
+          {/* Focus on Presenter */}
+          {screenSharingStream && layoutSettings.layout === "4" && (
+              <Draggable
+                  defaultClassName="cursor-grab hidden xl:block"
+                  bounds="parent"
+                  defaultClassNameDragging="cursor-grabbing"
               >
-                <ScreenSharingComponent />
-              </div>
-            </div>
-          </Draggable>
-        )}
+                <div className="absolute top-0 z-50 m-2 backdrop-blur-3xl">
+                  <div
+                      className={cn(
+                          " m-auto flex h-40 items-center justify-center gap-2 ",
+                      )}
+                  >
+                    {participantList
+                        .filter(
+                            (participant: IParticipant, index: number) =>
+                                participant.presenter,
+                        )
+                        .map((participant: IParticipant, index: number) => (
+                            <div className="h-40 w-40" key={index}>
+                              <SingleCameraComponent
+                                  index={index}
+                                  key={index}
+                                  participant={participant}
+                                  userCamera={participantCameraList.filter((cItem: IParticipantCamera) => cItem?.intId == participant.intId)[0]}
+                              />
+                            </div>
+                        ))}
+                  </div>
+                </div>
+              </Draggable>
+          )}
 
-        {/* Focus on Presenter */}
-        {screenSharingStream && layoutSettings.layout === "4" && (
-          <Draggable
-            defaultClassName="cursor-grab hidden xl:block"
-            bounds="parent"
-            defaultClassNameDragging="cursor-grabbing"
-          >
-            <div className="absolute top-0 z-50 m-2 backdrop-blur-3xl">
-              <div
-                className={cn(
-                  " m-auto flex h-40 items-center justify-center gap-2 ",
-                )}
-              >
-                {participantList
-                  .filter(
-                    (participant: IParticipant, index: number) =>
-                      participant.presenter,
-                  )
-                  .map((participant: IParticipant, index: number) => (
-                      <div className="h-40 w-40" key={index}>
-                        <SingleCameraComponent
-                          index={index}
-                          key={index}
-                          participant={participant}
-                          userCamera={participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId)[0]}
-                        />
-                      </div>
-                  ))}
-              </div>
-            </div>
-          </Draggable>
-        )}
+          {/* render screen sharing if screen sharing is open and whiteboard is closed */}
+          {screenSharingStream &&
+              !isWhiteboardOpen &&
+              layoutSettings.layout !== "2" && <ScreenSharingComponent/>}
 
-        {/* render screen sharing if screen sharing is open and whiteboard is closed */}
-        {screenSharingStream &&
-          !isWhiteboardOpen &&
-          layoutSettings.layout !== "2" && <ScreenSharingComponent />}
+          {/* render whiteboard if whiteboard is open */}
+          {isWhiteboardOpen && <WhiteboardComponent/>}
 
-        {/* render whiteboard if whiteboard is open */}
-        {isWhiteboardOpen && <WhiteboardComponent />}
+          {(!isWhiteboardOpen || !screenSharingStream) &&
+              eCinemaModal.isActive && <ECinemaComponent/>}
 
-        {(!isWhiteboardOpen || !screenSharingStream) &&
-          eCinemaModal.isActive && <ECinemaComponent />}
-
-        {/* {screenSharingStream && screenShareState && <ScreenSharingComponent />} */}
+          {/* {screenSharingStream && screenShareState && <ScreenSharingComponent />} */}
           {user?.sessiontoken != '' && <Websocket/>}
           <KurentoAudio/>
           <KurentoVideo/>
-          {user?.meetingDetails?.meetingID!=null &&<SocketIOCaption />}
-          {participantCameraList.filter((eachItem: any) => eachItem?.intId != user?.meetingDetails?.internalUserID).map((cItem:IParticipantCamera,index:number)=>{
-              return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>
+          {user?.meetingDetails?.meetingID != null && <SocketIOCaption/>}
+          {participantCameraList.filter((eachItem: any) => eachItem?.intId != user?.meetingDetails?.internalUserID).map((cItem: IParticipantCamera, index: number) => {
+            return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>
           })}
 
           {screenShareState && <KurentoScreenShare/>}
           {viewerscreenShareState && !screenShareState && <KurentoScreenShareViewer/>}
 
-      </div>
-    </Authenticated>
+        </div>
+      </Authenticated>
   );
 }
 
