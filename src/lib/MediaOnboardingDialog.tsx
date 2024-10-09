@@ -114,9 +114,9 @@ const MediaOnboardingDialog: React.FC = () => {
                 setErrorDetails(error);
             });
 
-        setTimeout(() => {
-            checkForExplanationDialog();
-        }, 500);
+        // setTimeout(() => {
+        //     checkForExplanationDialog();
+        // }, 500);
     };
 
     const _renderTryAgain = (text?: string) => {
@@ -175,34 +175,6 @@ const MediaOnboardingDialog: React.FC = () => {
             </div>
     )
         ;
-    };
-
-    const _renderUserDeniedDialogOl = () => {
-        return (
-            <div>
-                <Typography variant="h5">
-                    Camera and microphone are blocked
-                </Typography>
-                <Typography>
-                    App requires access to your camera and microphone.{' '}
-                    {browser.getBrowserName() !== 'Safari' && (
-                        <Typography>
-                            Click the camera blocked icon{' '}
-                            <img
-                                alt="icon"
-                                src={
-                                    'https://www.gstatic.com/meet/ic_blocked_camera_dark_f401bc8ec538ede48315b75286c1511b.svg'
-                                }
-                                style={{display: 'inline'}}
-                            />{' '}
-                            in your browser's address bar.
-                        </Typography>
-                    )}
-                </Typography>
-                {_renderErrorMessage()}
-                {_renderTryAgain()}
-            </div>
-        );
     };
 
     const _renderUserDeniedDialog = () => {

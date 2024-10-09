@@ -265,6 +265,7 @@ const KurentoScreenShare = () => {
             ws.onclose = () => {
                 console.log('KurentoScreenShare Socket connection closed');
                 setWsStarted(false);
+                webRtcPeer?.dispose();
             };
         }
 

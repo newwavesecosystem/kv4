@@ -185,7 +185,9 @@ function MiddleSide() {
   }
 
   useEffect(()=> {
+    console.log("StartEvent changed for mic stream");
     if (mediaPermission.audioAllowed) {
+      console.log("Starting mic stream");
       setMicStream();
     }
   },[mediaPermission.audioAllowed]);

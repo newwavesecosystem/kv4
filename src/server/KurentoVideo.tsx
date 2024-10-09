@@ -210,6 +210,7 @@ const KurentoVideo = () => {
                 console.log('KurentoVideo Socket connection closed');
                 setVideoState(false);
                 setVideoStateWS(false);
+                webRtcPeer?.dispose();
             };
         }
 

@@ -24,7 +24,7 @@ export function FindAvatarfromUserId(userId: string, participantList:IParticipan
   console.log("damola");
   console.log(damola);
 
-  return damola[0]?.avatar ?? "unknown";
+  return damola.length != 0 ? damola[0]!.avatar : "https://static.thenounproject.com/png/363640-200.png";
 }
 
 export function FindUserNamefromUserId(userId: string,participantList:IParticipant[]):string {
@@ -32,7 +32,7 @@ export function FindUserNamefromUserId(userId: string,participantList:IParticipa
   let damola = participantList.filter((item: any) => item?.userId == userId);
   console.log("damola");
   console.log(damola);
-  return damola[0]?.name ?? "unknown";
+  return damola.length != 0 ? damola[0]!.name : "unknown";
 }
 
 export function ModeratorRole() {
