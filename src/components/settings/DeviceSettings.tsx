@@ -258,7 +258,7 @@ function DeviceSettings() {
                 <SelectValue placeholder={selectedCamera == null ? availableCameras[0]?.label : selectedCamera.label }  />
               </div>
             </SelectTrigger>
-            <SelectContent className="bg-primary w-full border border-a11y/40 text-white">
+            <SelectContent className="bg-primary w-full border border-a11y/40 text-onegov">
               {availableCameras.length > 0 && availableCameras[0]?.deviceId ? (
                 <>
                   {availableCameras.map((camera, index) => (
@@ -296,7 +296,7 @@ function DeviceSettings() {
             <SelectTrigger className="bg-a11y/20">
               {selectedVideoQuality?.name}
             </SelectTrigger>
-            <SelectContent className="bg-primary w-full border border-a11y/40 text-white">
+            <SelectContent className="bg-primary w-full border border-a11y/40 text-onegov">
               {VideoQuality.map((item, index) => (
                 <SelectItem className="" key={index} value={item.id.toString()}>
                   {item.name}
@@ -323,7 +323,7 @@ function DeviceSettings() {
                 <SelectValue placeholder={selectedMicrophone == null ? availableMicrophones[0]?.label : selectedMicrophone.label }  />
               </div>
             </SelectTrigger>
-            <SelectContent className="bg-primary w-full border border-a11y/40 text-white">
+            <SelectContent className="bg-primary w-full border border-a11y/40 text-onegov">
               {
                 availableMicrophones.length > 0 && availableMicrophones[0]?.deviceId ? (
                   <>
@@ -364,7 +364,7 @@ function DeviceSettings() {
                   <SelectValue placeholder={selectedSpeaker == null ? availableSpeakers[0]?.label : selectedSpeaker.label } />
                 </div>
               </SelectTrigger>
-              <SelectContent className="bg-primary w-full border border-a11y/40 text-white">
+              <SelectContent className="bg-primary w-full border border-a11y/40 text-onegov">
 
                 {availableSpeakers.length > 0 && availableSpeakers[0]?.deviceId ? (
                   <>
