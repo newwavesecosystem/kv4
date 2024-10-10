@@ -407,35 +407,35 @@ function MiddleSide() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="mb-2 w-52 rounded-b-none border-0 bg-primary text-a11y md:mb-3 md:rounded-b-md">
           <div className="absolute bottom-0 right-[45%] hidden h-0 w-0 border-l-[10px] border-r-[10px] border-t-[15px] border-l-transparent border-r-transparent border-t-primary md:block"></div>
-          <DropdownMenuGroup className="py-1">
-            {breakOutRoomState.isActive ? (
-              <DropdownMenuItem
-                onClick={() => {
-                  setBreakOutRoomState((prev) => ({
-                    ...prev,
-                    step: 2,
-                  }));
-                }}
-                className="bg-[#DF2622]"
-              >
-                <RecordOnIcon className="mr-2 h-5 w-5" />
-                <span>View Breakout Rooms</span>
-              </DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem
-                onClick={() => {
-                  setBreakOutRoomState((prev) => ({
-                    ...prev,
-                    step: 1,
-                  }));
-                }}
-              >
-                <RecordOnIcon className="mr-2 h-5 w-5" />
-                <span>Breakout Rooms</span>
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator className="" />
+          {/*<DropdownMenuGroup className="py-1">*/}
+          {/*  {breakOutRoomState.isActive ? (*/}
+          {/*    <DropdownMenuItem*/}
+          {/*      onClick={() => {*/}
+          {/*        setBreakOutRoomState((prev) => ({*/}
+          {/*          ...prev,*/}
+          {/*          step: 2,*/}
+          {/*        }));*/}
+          {/*      }}*/}
+          {/*      className="bg-[#DF2622]"*/}
+          {/*    >*/}
+          {/*      <RecordOnIcon className="mr-2 h-5 w-5" />*/}
+          {/*      <span>View Breakout Rooms</span>*/}
+          {/*    </DropdownMenuItem>*/}
+          {/*  ) : (*/}
+          {/*    <DropdownMenuItem*/}
+          {/*      onClick={() => {*/}
+          {/*        setBreakOutRoomState((prev) => ({*/}
+          {/*          ...prev,*/}
+          {/*          step: 1,*/}
+          {/*        }));*/}
+          {/*      }}*/}
+          {/*    >*/}
+          {/*      <RecordOnIcon className="mr-2 h-5 w-5" />*/}
+          {/*      <span>Breakout Rooms</span>*/}
+          {/*    </DropdownMenuItem>*/}
+          {/*  )}*/}
+          {/*</DropdownMenuGroup>*/}
+          {/*<DropdownMenuSeparator className="" />*/}
           <DropdownMenuGroup className="py-1 md:hidden">
             {user?.meetingDetails?.record == "true" ? recordingState.isActive ? (
               <DropdownMenuItem
@@ -502,14 +502,14 @@ function MiddleSide() {
                 // setChatState(!chatState);
                 window.location.reload();
                 toast({
-                  title: "Rekonn3ct",
-                  description: "Re-konn3cting, Please wait for few moment",
+                  title: "Re-Join",
+                  description: "Re-joining, Please wait for few moment",
                 });
               }}
               className="py-2"
             >
               <RefreshIcon className="mr-2 h-5 w-5" />
-              <span>Rekonn3ct</span>
+              <span>Re-Join</span>
             </DropdownMenuItem>
             {/* disabled because its redundant with layout on settings */}
             {/* <DropdownMenuSub>

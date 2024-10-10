@@ -277,7 +277,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
         {/* right side */}
         <div className="flex items-center gap-2 md:gap-5">
           {/* Dropdown Menu for 1gov Toggles */}
-          {appToggle?.appsToggle?.length == 0 && <DropdownMenu>
+          {appToggle?.appsToggle?.length > 0 && <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div title="You can click here to access your other 1Gov Applications" className="rounded-full bg-primary/80 p-1 cursor-pointer">
                 <OneGovAppToggleIcon className="h-5 w-5 "/>
@@ -426,14 +426,14 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             </button>
           )}
 
-          <button
-            onClick={() => {
-              setKonn3ctAiChatState(!konn3ctAiChatState);
-            }}
-            className="items-center rounded-full border border-a11y/20 p-2"
-          >
-            <BotIcon className="h-6 w-6" />
-          </button>
+          {/*<button*/}
+          {/*  onClick={() => {*/}
+          {/*    setKonn3ctAiChatState(!konn3ctAiChatState);*/}
+          {/*  }}*/}
+          {/*  className="items-center rounded-full border border-a11y/20 p-2"*/}
+          {/*>*/}
+          {/*  <BotIcon className="h-6 w-6" />*/}
+          {/*</button>*/}
           {/*{donationState.isActive && (*/}
           {/*  <button*/}
           {/*    onClick={() => {*/}
