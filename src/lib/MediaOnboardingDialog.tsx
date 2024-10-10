@@ -190,18 +190,20 @@ const MediaOnboardingDialog: React.FC = () => {
                                     "Click the camera blocked icon in your browser's address bar.")}
                         </p>
                         <div className="mt-7 flex w-full gap-6">
+                            {_renderTryAgain()}
                             <button
                                 className="w-full rounded-md border border-a11y/20 py-3"
                                 onClick={() => {
-                                    if (browser.getBrowserName() === 'Safari') {
-                                        // If on Safari, rechecking permissions results in glitches so just refresh the page
-                                        window.location.reload();
-                                    } else {
-                                        checkMediaPermissions();
-                                    }
+                                    window.open("https://webliskainc.freshdesk.com/support/solutions/articles/82000881134-how-to-allow-camera-and-mic-access-on-different-browsers","_blank")
+                                    // if (browser.getBrowserName() === 'Safari') {
+                                    //     // If on Safari, rechecking permissions results in glitches so just refresh the page
+                                    //     window.open("https://support.google.com/chrome/answer/2693767?hl=en&co=GENIE.Platform%3DDesktop&oco=0#zippy=%2Cswitch-between-cameras","_blank")
+                                    // } else {
+                                    //     checkMediaPermissions();
+                                    // }
                                 }}
                             >
-                                Retry
+                                Learn More
                             </button>
                         </div>
                     </div>
