@@ -411,7 +411,8 @@ const Websocket = () => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id, fields} = obj;
-        if(msg == "changed") {
+
+        if(msg == "added") {
             const {chatId, meetingId, access} = obj.fields;
 
             if (chatId == "MAIN-PUBLIC-GROUP-CHAT") {
@@ -423,7 +424,7 @@ const Websocket = () => {
             setPrivateChatState((prev) => ({
                 ...prev,
                 chatRooms: [...prev.chatRooms, obj.fields],
-                isActive: true,
+                // isActive: true,
                 id: chatId,
             }));
         }
@@ -446,7 +447,7 @@ const Websocket = () => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id, fields} = obj;
-        console.log("UserState: handleUsers",obj);
+        // console.log("UserState: handleUsers",obj);
         if (msg == 'added') {
             let urecord={
                 ...fields,
@@ -484,10 +485,10 @@ const Websocket = () => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id, fields} = obj;
-        console.log("CurrentUserState: handleUsers",obj);
+        // console.log("CurrentUserState: handleUsers",obj);
 
         if (msg == 'changed') {
-            const {currentConnectionId, connectionIdUpdateTime, authTokenValidatedTime, loggedOut, exitReason} = fields;
+            const {currentConnectionId, connectionIdUpdateTime, authTokenValidatedTime, loggedOut, exitReason, ejected} = fields;
 
             if (currentConnectionId && currentConnectionId !== user?.connectionID && connectionIdUpdateTime > user?.connectionAuthTime!) {
                 console.log("joined_another_window_reason");
@@ -503,6 +504,15 @@ const Websocket = () => {
                 setPostLeaveMeeting({
                     ...postLeaveMeeting,
                     isLeave: true,
+                });
+            }
+
+            if(ejected != null && ejected){
+                console.log("User ejected ",ejected);
+                SetCurrentSessionEjected(user?.sessiontoken!);
+                setPostLeaveMeeting({
+                    ...postLeaveMeeting,
+                    isKicked: true,
                 });
             }
 

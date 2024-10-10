@@ -13,7 +13,7 @@ export function GetCurrentUserRole(participantList:IParticipant[],user:IAuthUser
   return participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0]?.role;
 }
 
-export function CurrentUserRoleIsModerator(participantList:IParticipant[],user:IAuthUser|null) {
+export function CurrentUserRoleIsModerator(participantList:IParticipant[],user:IAuthUser|null):boolean {
   const curim= participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0]?.role == ModeratorRole();
 
   return curim ?? false;
