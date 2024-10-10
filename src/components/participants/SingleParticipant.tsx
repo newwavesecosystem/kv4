@@ -33,6 +33,7 @@ import {
   websocketStartPrivateChat
 } from "~/server/Websocket";
 import {IParticipant} from "~/types";
+import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
 
 function SingleParticipant({
   key,
@@ -93,7 +94,6 @@ function SingleParticipant({
           ))}
         </button>
 
-        {participantList.filter((item:IParticipant) => item.intId == user?.meetingDetails?.internalUserID)[0]?.role=='MODERATOR' && (
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
             <button>
@@ -104,7 +104,7 @@ function SingleParticipant({
             align="end"
             className="divide-y divide-a11y/20 border-a11y/20 bg-primary text-a11y shadow-lg"
             >
-              <DropdownMenuSub>
+            {CurrentUserRoleIsModerator(participantList,user) && <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <RepeatIcon className="mr-2 h-5 w-5" />
                   Change Role
@@ -130,20 +130,23 @@ function SingleParticipant({
                     })}
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
-              </DropdownMenuSub>
+              </DropdownMenuSub>}
 
-              <DropdownMenuItem className="py-4" onClick={()=>{
+            {CurrentUserRoleIsModerator(participantList,user) && <DropdownMenuItem className="py-4" onClick={()=>{
                 websocketMuteParticipants(participant.userId);
               }}>
                 <VolumeOnIcon volume={1} className="mr-2 h-5 w-5" />
                 Mute User
-              </DropdownMenuItem>
+              </DropdownMenuItem>}
 
             {user?.meetingDetails?.internalUserID == participant.intId ? null :<DropdownMenuItem
                 onClick={() => {
                   if (!user) return;
 
+                  console.log("Private Chat: searching in privateChatState.users",privateChatState.users)
+
                   if(privateChatState.users.filter((item)=> item.id == participant.intId).length > 0){
+                    console.log("Private Chat: searching in privateChatState.chatRooms",privateChatState.chatRooms)
                     privateChatState.chatRooms.map((citem)=>{
                       citem.participants.map((ccitem)=>{
                         if(ccitem.id == participant.intId){
@@ -161,6 +164,7 @@ function SingleParticipant({
                     return;
                   }
 
+                  console.log("Private Chat: starting a new chat")
                   websocketStartPrivateChat(participant);
                   setPrivateChatState({
                     ...privateChatState,
@@ -178,6 +182,7 @@ function SingleParticipant({
                         id: participant.intId,
                       },
                     ],
+                    isActive: true,
                   });
                 }}
                 className="py-4"
@@ -186,7 +191,7 @@ function SingleParticipant({
                 Private Chat
               </DropdownMenuItem>}
 
-            {user?.meetingDetails?.internalUserID == participant.intId ? null : <DropdownMenuItem
+            {user?.meetingDetails?.internalUserID == participant.intId ? null : CurrentUserRoleIsModerator(participantList,user) && <DropdownMenuItem
                 onClick={() => {
                   setRemoveParticipant({
                     ...removeParticipant,
@@ -203,7 +208,6 @@ function SingleParticipant({
 
             </DropdownMenuContent>
           </DropdownMenu>
-        )}
 
 
         </div>}

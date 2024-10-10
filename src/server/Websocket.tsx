@@ -15,7 +15,7 @@ import {
     eCinemaModalState,
     fileUploadModalState,
     micOpenState,
-    newMessage,
+    newMessage, newRaiseHand,
     participantCameraListState,
     participantListState,
     participantTalkingListState,
@@ -138,6 +138,7 @@ const Websocket = () => {
     const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
     const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
     const [chatTypeList, setChatTypeList] = useRecoilState(chatTypeListState);
+    const [isnewRaiseHand, setIsnewRaiseHand] = useRecoilState(newRaiseHand);
 
     const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(
         postLeaveMeetingState,
@@ -410,7 +411,8 @@ const Websocket = () => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id, fields} = obj;
-        if(msg == "changed") {
+
+        if(msg == "added") {
             const {chatId, meetingId, access} = obj.fields;
 
             if (chatId == "MAIN-PUBLIC-GROUP-CHAT") {
@@ -422,7 +424,7 @@ const Websocket = () => {
             setPrivateChatState((prev) => ({
                 ...prev,
                 chatRooms: [...prev.chatRooms, obj.fields],
-                isActive: true,
+                // isActive: true,
                 id: chatId,
             }));
         }
@@ -445,7 +447,7 @@ const Websocket = () => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id, fields} = obj;
-        console.log("UserState: handleUsers",obj);
+        // console.log("UserState: handleUsers",obj);
         if (msg == 'added') {
             let urecord={
                 ...fields,
@@ -483,10 +485,10 @@ const Websocket = () => {
         console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id, fields} = obj;
-        console.log("CurrentUserState: handleUsers",obj);
+        // console.log("CurrentUserState: handleUsers",obj);
 
         if (msg == 'changed') {
-            const {currentConnectionId, connectionIdUpdateTime, authTokenValidatedTime, loggedOut, exitReason} = fields;
+            const {currentConnectionId, connectionIdUpdateTime, authTokenValidatedTime, loggedOut, exitReason, ejected} = fields;
 
             if (currentConnectionId && currentConnectionId !== user?.connectionID && connectionIdUpdateTime > user?.connectionAuthTime!) {
                 console.log("joined_another_window_reason");
@@ -502,6 +504,15 @@ const Websocket = () => {
                 setPostLeaveMeeting({
                     ...postLeaveMeeting,
                     isLeave: true,
+                });
+            }
+
+            if(ejected != null && ejected){
+                console.log("User ejected ",ejected);
+                SetCurrentSessionEjected(user?.sessiontoken!);
+                setPostLeaveMeeting({
+                    ...postLeaveMeeting,
+                    isKicked: true,
                 });
             }
 
@@ -1080,12 +1091,22 @@ const Websocket = () => {
         // }
     }
 
-    const removeUserlist = (id:number) => {
+    const removeUserlist = (id:any) => {
         console.log('removing user ',id);
-        let ishola = participantList;
 
-        let ur=ishola.filter((item:any) => item?.id != id);
-        console.log("UserState: handleUsers ",ur)
+        participantList?.map((item:IParticipant) => {
+            if (item.id === id) {
+                if(item.userId != user?.meetingDetails?.internalUserID){
+                    toast({
+                        title: "User Left",
+                        description: `${item.name} has left the Meeting`,
+                        duration: 5000,
+                    });
+                }
+            }
+        });
+
+        let ur=participantList.filter((item:any) => item?.id != id);
         setParticipantList(ur);
 
     }
@@ -1145,7 +1166,7 @@ const Websocket = () => {
                     console.log('micState',state)
                     setMicState(state);
                 }
-                return {...item, muted: state};
+                return {...item, muted: state, talking: false};
             }
             return item;
         });
@@ -1207,19 +1228,26 @@ const Websocket = () => {
 
     const modifyRaiseHandStateUser = (id:any, raiseHand:boolean) => {
 
+        var name="You";
         const updatedArray = participantList?.map((item:IParticipant) => {
             if (item.id === id) {
                 if (item.userId == user?.meetingDetails?.internalUserID) {
                     console.log(`UserState: You have raise hand ${raiseHand}`);
                 }
                 return {...item, raiseHand: raiseHand};
+            }else{
+                name=item.name;
             }
             return item;
         });
 
-        console.log(updatedArray);
+        setIsnewRaiseHand(raiseHand);
 
-        console.log("UserState: updatedArray", updatedArray);
+        toast({
+            title: "Raised Hand 🙋🏽",
+            description: `${name} raised hand`,
+            duration: 5000,
+        });
 
         setParticipantList(updatedArray)
     }
@@ -1563,8 +1591,8 @@ export function websocketStopExternalVideo(){
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"stopWatchingExternalVideo\",\"params\":[]}`]);
 }
 
-export function websocketRaiseHand(internalUserID:any){
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"setEmojiStatus\",\"params\":[\"${internalUserID}\",\"raiseHand\"]}`]);
+export function websocketRaiseHand(raiseHand:boolean){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"changeRaiseHand\",\"params\":[${raiseHand}]}`]);
 }
 
 export function websocketStartPrivateChat(participant:IParticipant){

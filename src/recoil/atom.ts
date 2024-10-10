@@ -36,6 +36,11 @@ export const newMessage = atom<boolean>({
   default: false,
 });
 
+export const newRaiseHand = atom<boolean>({
+  key: "newRaiseHand",
+  default: false,
+});
+
 export const connectionStatusState = atom<{
   websocket_connection: boolean;
   websocket_connection_reconnect: boolean;
