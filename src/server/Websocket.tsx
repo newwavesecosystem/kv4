@@ -102,6 +102,18 @@ export function websocketSend(data:any) {
 }
 
 
+export function websocketEnd() {
+    console.log('Ending websocket');
+
+    //to stop websocket
+    if(sock !== null){
+        console.log("sock is not null");
+        sock.close();
+    }
+}
+
+
+
 const Websocket = () => {
 
     const [user, setUser] = useRecoilState(authUserState);
@@ -213,6 +225,10 @@ const Websocket = () => {
                         websocket_connection:true,
                         websocket_connection_reconnect:false
                     }))
+                }
+
+                if (obj.msg == "ping") {
+                    websocketSend(["{\"msg\":\"pong\"}"]);
                 }
 
                 if (obj.msg == "result") {

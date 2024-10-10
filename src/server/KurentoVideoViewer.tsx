@@ -199,6 +199,7 @@ const KurentoVideoViewer = (props:any) => {
             ws.onclose = () => {
                 console.log('KurentoVideoViewer Socket connection closed');
                 setWsStarted(false);
+                webRtcPeer?.dispose();
             };
         }
 

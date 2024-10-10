@@ -1,15 +1,29 @@
 import Image from "next/image";
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { authUserState, postLeaveMeetingState } from "~/recoil/atom";
+import {authUserState, microphoneStreamState, postLeaveMeetingState} from "~/recoil/atom";
 import HandOnIcon from "./icon/outline/HandOnIcon";
 import ExitIcon from "./icon/outline/ExitIcon";
+import {kurentoAudioEndStream} from "~/server/KurentoAudio";
+import {websocketEnd} from "~/server/Websocket";
+import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
 
 function PostLeave() {
   const user = useRecoilValue(authUserState);
   const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(
     postLeaveMeetingState,
   );
+  const [microphoneStream, setMicrophoneStream] = useRecoilState(
+      microphoneStreamState,
+  );
+
+  React.useEffect(() => {
+    console.log("running post leave")
+    stopMicrophoneStream(microphoneStream);
+    kurentoAudioEndStream();
+    // websocketEnd();
+  }, [postLeaveMeeting]);
+
   return (
     <div className="text-a11y">
       <div className="flex h-16 items-center justify-center bg-onegov">
@@ -52,13 +66,13 @@ function PostLeave() {
             //   <ExitIcon className="h-4 w-4" />
             //   <span>Rejoin</span>
             // </button>
-            <a
+              user?.meetingDetails?.customdata[0]?.meetingLink !== "" && (<a
               href={user?.meetingDetails?.customdata[0]?.meetingLink}
               className="flex items-center gap-2 rounded-md bg-primary px-4 py-1"
             >
               <ExitIcon className="h-4 w-4" />
               <span>Rejoin</span>
-            </a>
+            </a>)
           )}
         </div>
         <div className="fixed bottom-5">

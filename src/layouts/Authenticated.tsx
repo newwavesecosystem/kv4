@@ -58,6 +58,7 @@ import FileUploadModal from "~/components/fileUpload/FileUploadModal";
 import { Howl } from 'howler';
 import RecordingConsentModal from "~/components/recording/RecordingConsentModal";
 import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
+import MediaOnboardingDialog from "~/lib/MediaOnboardingDialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -151,6 +152,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
         inter.variable,
       )}
     >
+      <MediaOnboardingDialog />
       <ResolutionModal />
       <EndRecordingModal />
       <RecordingConsentModal />

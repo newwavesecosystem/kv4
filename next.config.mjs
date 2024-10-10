@@ -68,6 +68,12 @@ const config = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'static.thenounproject.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

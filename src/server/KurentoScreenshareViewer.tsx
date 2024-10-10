@@ -203,6 +203,7 @@ const KurentoScreenShareViewer = () => {
             ws.onclose = () => {
                 console.log('KurentoScreenShareViewer Socket connection closed');
                 setWsStarted(false);
+                webRtcPeer?.dispose();
             };
         }
 
