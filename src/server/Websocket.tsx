@@ -662,6 +662,14 @@ const Websocket = () => {
         const obj = JSON.parse(eventData);
         const {msg, id, fields} = obj;
 
+        if(msg == "added") {
+            const {externalVideoUrl} = fields;
+
+            if (externalVideoUrl != null) {
+                receiveVideoLinkFromWebsocket(externalVideoUrl)
+            }
+        }
+
         if(msg == "changed") {
             const {externalVideoUrl} = fields;
 
@@ -1243,11 +1251,22 @@ const Websocket = () => {
 
         setIsnewRaiseHand(raiseHand);
 
-        toast({
-            title: "Raised Hand 🙋🏽",
-            description: `${name} raised hand`,
-            duration: 1000,
-        });
+        if(raiseHand){
+            toast({
+                title: "Raised Hand 🙋🏽",
+                description: `${name} raised hand`,
+                duration: 1000,
+            });
+        }
+
+        if(!raiseHand && name=="You"){
+            toast({
+                title: "Raised Hand 🙋🏽",
+                description: `Your hand has been lowered`,
+                duration: 1000,
+            });
+        }
+
 
         setParticipantList(updatedArray)
     }
