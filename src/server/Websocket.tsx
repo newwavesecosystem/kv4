@@ -1233,10 +1233,10 @@ const Websocket = () => {
             if (item.id === id) {
                 if (item.userId == user?.meetingDetails?.internalUserID) {
                     console.log(`UserState: You have raise hand ${raiseHand}`);
+                }else{
+                    name=item.name;
                 }
                 return {...item, raiseHand: raiseHand};
-            }else{
-                name=item.name;
             }
             return item;
         });
@@ -1246,7 +1246,7 @@ const Websocket = () => {
         toast({
             title: "Raised Hand 🙋🏽",
             description: `${name} raised hand`,
-            duration: 5000,
+            duration: 1000,
         });
 
         setParticipantList(updatedArray)
