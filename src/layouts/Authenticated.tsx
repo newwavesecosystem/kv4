@@ -30,7 +30,7 @@ import {
   eCinemaModalState,
   participantsModalState,
   recordingModalState,
-  newMessage,
+  newMessage, newRaiseHand,
 } from "~/recoil/atom";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
 
@@ -87,8 +87,14 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
   const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
 
+  const [isnewRaiseHand, setIsnewRaiseHand] = useRecoilState(newRaiseHand);
+
   const sound = new Howl({
     src: ['/message.mp3'],
+  });
+
+  const raiseHandSound = new Howl({
+    src: ['/finger-snaps.mp3'],
   });
 
   useEffect(() => {
@@ -97,6 +103,13 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       sound.play();
     }
   }, [isNewMessage])
+
+
+  useEffect(() => {
+    if(isnewRaiseHand) {
+      raiseHandSound.play();
+    }
+  }, [isnewRaiseHand])
 
 
 
@@ -390,6 +403,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
         <div className="hidden w-full items-center justify-end gap-5 md:flex">
           <button
             onClick={() => {
+
               setParticipantList((prev: any[]) =>
                 prev.map((prevUser) => {
                   if (prevUser.intId === user?.meetingDetails?.internalUserID) {
@@ -403,8 +417,10 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               );
 
 
+              var raiseH=false;
               const updatedArray = participantList?.map((item:IParticipant) => {
                 if (item.userId == user?.meetingDetails?.internalUserID) {
+                  raiseH=!item.raiseHand;
                   return {...item, raiseHand: !item.raiseHand};
                 }
                 return item;
@@ -416,7 +432,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
               setParticipantList(updatedArray)
 
-              websocketRaiseHand(user?.meetingDetails?.internalUserID);
+              websocketRaiseHand(raiseH);
             }}
             className={cn(
               "items-center rounded-full border border-a11y/20 bg-transparent p-2",

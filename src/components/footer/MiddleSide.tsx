@@ -562,9 +562,11 @@ function MiddleSide() {
                   }),
                 );
 
+                var raiseH=false;
                 const updatedArray = participantList?.map(
                   (item: IParticipant) => {
                     if (item.userId == user?.meetingDetails?.internalUserID) {
+                      raiseH=!item.raiseHand;
                       return { ...item, raiseHand: !item.raiseHand };
                     }
                     return item;
@@ -577,7 +579,7 @@ function MiddleSide() {
 
                 setParticipantList(updatedArray);
 
-                websocketRaiseHand(user?.meetingDetails?.internalUserID);
+                websocketRaiseHand(raiseH);
               }}
               className="py-2 md:hidden"
             >
