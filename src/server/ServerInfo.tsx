@@ -1,8 +1,9 @@
-export const laravelAppURL = "https://dev.konn3ct.ng";
+export const laravelAppURL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 export const extRegisterURL = "https://bbb-sam-bridge.vercel.app";
 export const translateURL = "https://newmegatongueapi.staging.5starcompany.com.ng/api";
-export const engineBaseURL = "meet.konn3ct.ng";
+export const engineBaseURL = process.env.NEXT_PUBLIC_ENGINE_DOMAIN;
 export const tokenValidationURL = `https://${engineBaseURL}/bigbluebutton/api/enter`;
+export const turnStunApiURL = `https://${engineBaseURL}/bigbluebutton/api/stuns`;
 export const joinURL = `http://127.0.0.1:8000/api/k4/`;
 export const sfuURL = `wss://${engineBaseURL}/bbb-webrtc-sfu`;
 export const websocketURL = `https://${engineBaseURL}/html5client/sockjs`;

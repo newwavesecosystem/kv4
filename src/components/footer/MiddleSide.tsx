@@ -25,7 +25,7 @@ import {
   breakOutModalState,
   selectedCameraState,
   fileUploadModalState,
-  newMessage, selectedMicrophoneState, micFilterState, CamQualityState,
+  newMessage, selectedMicrophoneState, micFilterState, CamQualityState, mediaPermissionState,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -150,6 +150,9 @@ function MiddleSide() {
   const [ssscreen, setScreen] = useState<null|MediaStream>(null);
   const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
 
+  const mediaPermission = useRecoilValue(mediaPermissionState);
+
+
   const setMicStream=async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const desiredMic = devices.filter((device) => device.kind === "audioinput");
@@ -181,9 +184,13 @@ function MiddleSide() {
     }
   }
 
-  useEffect(()=>{
-    setMicStream();
-  },[""]);
+  useEffect(()=> {
+    console.log("StartEvent changed for mic stream");
+    if (mediaPermission.audioAllowed) {
+      console.log("Starting mic stream");
+      setMicStream();
+    }
+  },[mediaPermission.audioAllowed]);
 
   return (
     <div className=" flex w-full items-center justify-center gap-5">
@@ -555,9 +562,11 @@ function MiddleSide() {
                   }),
                 );
 
+                var raiseH=false;
                 const updatedArray = participantList?.map(
                   (item: IParticipant) => {
                     if (item.userId == user?.meetingDetails?.internalUserID) {
+                      raiseH=!item.raiseHand;
                       return { ...item, raiseHand: !item.raiseHand };
                     }
                     return item;
@@ -570,7 +579,7 @@ function MiddleSide() {
 
                 setParticipantList(updatedArray);
 
-                websocketRaiseHand(user?.meetingDetails?.internalUserID);
+                websocketRaiseHand(raiseH);
               }}
               className="py-2 md:hidden"
             >

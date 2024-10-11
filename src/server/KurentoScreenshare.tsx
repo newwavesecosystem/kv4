@@ -3,7 +3,13 @@ import * as kurentoUtils from "kurento-utils";
 import {websocketSend} from "./Websocket"
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
-import {authUserState, LayoutSettingsState, screenSharingState, screenSharingStreamState} from "~/recoil/atom";
+import {
+    authUserState,
+    connectionStatusState,
+    LayoutSettingsState,
+    screenSharingState,
+    screenSharingStreamState
+} from "~/recoil/atom";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 
 
@@ -31,6 +37,7 @@ export function websocketKurentoScreenshareEndScreenshare() {
 const KurentoScreenShare = () => {
 
     const user = useRecoilValue(authUserState);
+    const [connectionStatus, setConnection] = useRecoilState(connectionStatusState);
     const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
     const [screenSharingStream, setScreenSharingStream] = useRecoilState(screenSharingStreamState);
     const [layoutSettings, setlayoutSettings] = useRecoilState(LayoutSettingsState);
@@ -105,7 +112,10 @@ const KurentoScreenShare = () => {
                 remoteVideo: null,
                 videoStream:screenSharingStream,
                 onicecandidate: onIceCandidate,
-                mediaConstraints: constraints
+                mediaConstraints: constraints,
+                configuration:{
+                    iceServers: connectionStatus.iceServers
+                }
             };
 
             webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(this: any, error) {
@@ -255,6 +265,7 @@ const KurentoScreenShare = () => {
             ws.onclose = () => {
                 console.log('KurentoScreenShare Socket connection closed');
                 setWsStarted(false);
+                webRtcPeer?.dispose();
             };
         }
 

@@ -34,6 +34,23 @@ export async function kurentoAudioSetNewStream(stream:MediaStream) {
 
 }
 
+export function kurentoAudioEndStream() {
+    console.log('Ending Audio on KurentoAudio websocket');
+
+    //to stop webRtcPeer
+    if (webRtcPeer) {
+        webRtcPeer.dispose();
+        webRtcPeer = null;
+    }
+
+    //to stop websocket
+    if(ws != null){
+        console.log("ws is not null");
+        ws.close();
+        ws=null;
+    }
+}
+
 
 const KurentoAudio = () => {
 
@@ -151,6 +168,7 @@ const KurentoAudio = () => {
                     ...prev,
                     audio_connection:false
                 }))
+                webRtcPeer?.dispose();
             };
         }
     // },[ ])
@@ -169,7 +187,10 @@ const KurentoAudio = () => {
             remoteVideo:audioElement,
             audioStream:microphoneStream,
             onicecandidate: onIceCandidate,
-            mediaConstraints: constraints
+            mediaConstraints: constraints,
+            configuration:{
+                iceServers: connectionStatus.iceServers
+            }
         }
 
         if (ws?.readyState === WebSocket.OPEN) {

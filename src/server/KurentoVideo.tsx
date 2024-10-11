@@ -95,6 +95,9 @@ const KurentoVideo = () => {
                 videoStream: cameraStream,
                 onicecandidate: onIceCandidate,
                 mediaConstraints: constraints,
+                configuration:{
+                    iceServers: connectionStatus.iceServers
+                }
             };
 
             if (ws?.readyState === WebSocket.OPEN) {
@@ -207,6 +210,7 @@ const KurentoVideo = () => {
                 console.log('KurentoVideo Socket connection closed');
                 setVideoState(false);
                 setVideoStateWS(false);
+                webRtcPeer?.dispose();
             };
         }
 

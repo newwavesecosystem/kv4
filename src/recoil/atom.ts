@@ -36,13 +36,21 @@ export const newMessage = atom<boolean>({
   default: false,
 });
 
+export const newRaiseHand = atom<boolean>({
+  key: "newRaiseHand",
+  default: false,
+});
+
 export const connectionStatusState = atom<{
   websocket_connection: boolean;
   websocket_connection_reconnect: boolean;
   audio_connection: boolean;
+  iceServers: {
+    username: string;     credential: string;     urls: string;
+  }[];
 }>({
   key: "connectionStatusState",
-  default: {websocket_connection:false, websocket_connection_reconnect:false, audio_connection:false},
+  default: {websocket_connection:false, websocket_connection_reconnect:false, audio_connection:false, iceServers:[]},
 });
 
 export const participantListState = atom<any>({
@@ -151,6 +159,14 @@ export const whiteBoardOpenState = atom<boolean>({
 export const micOpenState = atom<boolean>({
   key: "micOpenState",
   default: false,
+});
+
+export const mediaPermissionState = atom<{audioAllowed:boolean, videoAllowed:boolean}>({
+  key: "mediaPermissionState",
+  default: {
+    audioAllowed:false,
+    videoAllowed:false
+  },
 });
 
 export const cameraOpenState = atom<boolean>({

@@ -101,9 +101,6 @@ function PostSignIn() {
       .then(function (response) {
         const responseData = response.data;
 
-        console.log(responseData);
-        console.log(response);
-
         if (responseData?.success) {
           console.log("checkDonation data length");
           if (responseData?.data.length > 0) {
@@ -152,9 +149,6 @@ function PostSignIn() {
         .then(function (response) {
           const responseData = response.data;
 
-          console.log(responseData);
-          console.log(response);
-
           if (responseData?.response?.returncode === "SUCCESS") {
             setUser({
               connectionAuthTime: 0, connectionID: "",
@@ -167,6 +161,7 @@ function PostSignIn() {
               sessiontoken: token!
             });
             SetCurrentSessionToken(token!);
+            getTurnServers(token);
             checkDonation(responseData?.response?.externMeetingID);
             requestWakeLock();
           } else {
@@ -179,6 +174,43 @@ function PostSignIn() {
               ...postLeaveMeeting,
               isSessionExpired: true,
             });
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function () {
+          // always executed
+        });
+  };
+
+  const getTurnServers = async (token: string | null) => {
+
+    axios
+        .get(`${ServerInfo.turnStunApiURL}?sessionToken=${token}`)
+        .then(function (response) {
+          const responseData = response.data;
+
+          if (responseData?.turnServers.length > 1) {
+            var turnReply:any = [];
+
+            responseData?.turnServers.forEach((turnEntry:any) => {
+              const { password, url, username } = turnEntry;
+              turnReply.push({
+                urls: url,
+                credential:password,
+                username,
+              });
+            });
+
+            setConnection((prev)=>({
+              ...prev,
+                  iceServers:turnReply
+            }));
+            console.log("iceServers gotten: ",turnReply)
+          } else {
+            console.log("Unable to get iceServers")
           }
         })
         .catch(function (error) {
@@ -265,7 +297,7 @@ function PostSignIn() {
 
   useEffect(() => {
     tokenExtraction();
-  }, []);
+  }, [""]);
 
   useEffect(() => {
     console.log("setting up disabling back");
