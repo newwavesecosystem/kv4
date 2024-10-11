@@ -42,6 +42,23 @@ export async function kurentoVideoSwitchCamera(stream:MediaStream) {
     });
 }
 
+export function kurentoVideoEndStream() {
+    console.log('Ending Video on KurentoVideo websocket');
+
+    //to stop webRtcPeer
+    if (webRtcPeer) {
+        webRtcPeer.dispose();
+        webRtcPeer = null;
+    }
+
+    //to stop websocket
+    if(ws != null){
+        console.log("ws is not null");
+        ws.close();
+        ws=null;
+    }
+}
+
 
 const KurentoVideo = () => {
     const user = useRecoilValue(authUserState);
