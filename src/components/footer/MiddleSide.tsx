@@ -169,7 +169,7 @@ function MiddleSide() {
     const mic = await requestMicrophoneAccess(desiredMic[0],micFilter.autoGainControl, micFilter.noiseSuppression, micFilter.echoCancellation);
     if (mic) {
       setMicrophoneStream(mic);
-      setMicState(true);
+      // setMicState(true);
 
       if(desiredMic[0] != undefined){
         setSelectedMicrophone(desiredMic[0])
@@ -252,7 +252,7 @@ function MiddleSide() {
           !micState ? "border border-a11y/20 bg-transparent" : "bg-konn3ct-red",
         )}
         onClick={async () => {
-          setMicState(!micState);
+          // setMicState(!micState);
           websocketMuteMic();
         }}
       >
