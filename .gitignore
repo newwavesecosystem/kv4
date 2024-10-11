@@ -57,3 +57,5 @@ yarn-error.log*
 /src/components/icon/outline/**/*.svg
 /src/components/icon/solid/*.svg
 /src/components/icon/solid/**/*.svg
+
+/.idea

@@ -98,7 +98,7 @@ function JoinId() {
                     if (micState && microphoneStream) {
                       stopMicrophoneStream(microphoneStream);
                       setMicrophoneStream(null);
-                      setMicState(!micState);
+                      // setMicState(!micState);
                       return;
                     }
 
@@ -118,7 +118,7 @@ function JoinId() {
 
                     if (mic) {
                       setMicrophoneStream(mic);
-                      setMicState(!micState);
+                      // setMicState(!micState);
                     } else {
                       toast({
                         variant: "destructive",

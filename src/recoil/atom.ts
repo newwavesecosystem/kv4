@@ -158,7 +158,7 @@ export const whiteBoardOpenState = atom<boolean>({
 
 export const micOpenState = atom<boolean>({
   key: "micOpenState",
-  default: false,
+  default: true,
 });
 
 export const mediaPermissionState = atom<{audioAllowed:boolean, videoAllowed:boolean}>({

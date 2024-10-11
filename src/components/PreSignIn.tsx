@@ -142,7 +142,7 @@ export default function PreSignIn() {
                     if (micState && microphoneStream) {
                       stopMicrophoneStream(microphoneStream);
                       setMicrophoneStream(null);
-                      setMicState(!micState);
+                      // setMicState(!micState);
                       return;
                     }
 
@@ -161,7 +161,7 @@ export default function PreSignIn() {
                     const mic = await requestMicrophoneAccess(desiredMic[0], false,false,false);
                     if (mic) {
                       setMicrophoneStream(mic);
-                      setMicState(!micState);
+                      // setMicState(!micState);
                     } else {
                       toast({
                         variant: "destructive",

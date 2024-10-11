@@ -47,7 +47,7 @@ const KurentoScreenShareViewer = () => {
                 "voiceBridge": user?.meetingDetails?.voicebridge,
                 "userName": user?.meetingDetails?.fullname,
                 "callerName": user?.meetingDetails?.internalUserID,
-                "hasAudio": false,
+                "hasAudio": true,
                 "contentType": "camera"
             };
             KurentoScreenShareViewerSend(message);
