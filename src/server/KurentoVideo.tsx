@@ -84,6 +84,20 @@ const KurentoVideo = () => {
 
     useEffect(() => {
 
+        function pinger(){
+
+            let myVar = setInterval(ping, 15000);
+
+            function ping(){
+                if(!videoState){
+                    clearInterval(myVar);
+                }
+                websocketSend({"id":"ping"})
+            }
+
+        }
+
+
         let userCamera=participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == user?.meetingDetails?.internalUserID)[0];
 
         console.log("KurentoVideo userCamera",userCamera)
@@ -207,6 +221,7 @@ const KurentoVideo = () => {
                 switch (parsedMessage.id) {
                     case 'playStart':
                         websocketSend([`{\"msg\":\"method\",\"id\":\"100\",\"method\":\"userShareWebcam\",\"params\":[\"${buildStreamName(userCamera.deviceID)}\"]}`]);
+                        pinger();
                         break;
                     case 'startResponse':
                         startResponse(parsedMessage);

@@ -51,6 +51,7 @@ import PinIcon from "~/components/icon/outline/PinIcon";
 import MinimizeIcon from "~/components/icon/outline/MinimizeIcon";
 import {FindAvatarfromUserId, FindUserNamefromUserId} from "~/lib/checkFunctions";
 import {GetCurrentSessionEjected, GetCurrentSessionToken, SetCurrentSessionToken} from "~/lib/localStorageFunctions";
+import KurentoVideoSingleStick from "~/server/KurentoVideoSingleStick";
 
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
@@ -659,9 +660,10 @@ function PostSignIn() {
           <KurentoAudio/>
           <KurentoVideo/>
           {user?.meetingDetails?.meetingID!=null &&<SocketIOCaption />}
-          {participantCameraList.filter((eachItem: any) => eachItem?.intId != user?.meetingDetails?.internalUserID).map((cItem:IParticipantCamera,index:number)=>{
-              return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>
-          })}
+        {participantCameraList.length > 0 && <KurentoVideoSingleStick/>}
+          {/*{participantCameraList.filter((eachItem: any) => eachItem?.intId != user?.meetingDetails?.internalUserID).map((cItem:IParticipantCamera,index:number)=>{*/}
+          {/*    return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>*/}
+          {/*})}*/}
 
           {screenShareState && <KurentoScreenShare/>}
           {viewerscreenShareState && !screenShareState && <KurentoScreenShareViewer/>}

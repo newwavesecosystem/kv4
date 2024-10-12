@@ -107,9 +107,11 @@ const KurentoVideoViewer = (props:any) => {
             webRtcPeer?.processOffer(message.sdpAnswer, (error, sdpAnswer) => {
                 if (error) {
                     // Handle error
-                    console.error(error);
+                    console.error('Failed to process SDP answer:', error);
                     return;
                 }
+
+                console.log('SDP answer received and processed successfully');
 
                 console.log("setOfferAndGetAnswer: ",sdpAnswer);
                 var dt={
@@ -188,7 +190,7 @@ const KurentoVideoViewer = (props:any) => {
                         onError('Error message from server: ' + parsedMessage.message);
                         break;
                     case 'iceCandidate':
-                        console.log('iceCandidate');
+                        console.log('Received ICE candidate:', parsedMessage.candidate);
                         webRtcPeer?.addIceCandidate(parsedMessage.candidate);
                         break;
                     default:
