@@ -596,18 +596,18 @@ function MiddleSide() {
                   : "Raise Hand"}
               </span>
             </DropdownMenuItem>
-            {CurrentUserIsPresenter(participantList, user) && (<DropdownMenuItem
-              onClick={() => {
-                setFileUploadModal((prev) => ({
-                  ...prev,
-                  step: 1,
-                }));
-              }}
-              className="py-2"
-            >
-              <FolderOpenIcon className="mr-2 h-5 w-5" />
-              <span>Upload Files</span>
-            </DropdownMenuItem>)}
+            {/*{CurrentUserIsPresenter(participantList, user) && (<DropdownMenuItem*/}
+            {/*  onClick={() => {*/}
+            {/*    setFileUploadModal((prev) => ({*/}
+            {/*      ...prev,*/}
+            {/*      step: 1,*/}
+            {/*    }));*/}
+            {/*  }}*/}
+            {/*  className="py-2"*/}
+            {/*>*/}
+            {/*  <FolderOpenIcon className="mr-2 h-5 w-5" />*/}
+            {/*  <span>Upload Files</span>*/}
+            {/*</DropdownMenuItem>)}*/}
 
             {CurrentUserIsPresenter(participantList, user) && (
                 <DropdownMenuItem
@@ -630,19 +630,19 @@ function MiddleSide() {
                 </DropdownMenuItem>
             )}
 
-            {CurrentUserIsPresenter(participantList, user) && (
-                <DropdownMenuItem
-                    onClick={() => {
-                      websocketMuteAllParticipants(
-                          user?.meetingDetails?.internalUserID,
-                      );
-                    }}
-                    className="py-2"
-                >
-                  <MicOffIcon className="mr-2 h-5 w-5" />
-                  <span>Mute All</span>
-                </DropdownMenuItem>
-            )}
+            {/*{CurrentUserIsPresenter(participantList, user) && (*/}
+            {/*    <DropdownMenuItem*/}
+            {/*        onClick={() => {*/}
+            {/*          websocketMuteAllParticipants(*/}
+            {/*              user?.meetingDetails?.internalUserID,*/}
+            {/*          );*/}
+            {/*        }}*/}
+            {/*        className="py-2"*/}
+            {/*    >*/}
+            {/*      <MicOffIcon className="mr-2 h-5 w-5" />*/}
+            {/*      <span>Mute All</span>*/}
+            {/*    </DropdownMenuItem>*/}
+            {/*)}*/}
 
             {CurrentUserIsPresenter(participantList, user) && (
                 <DropdownMenuItem
