@@ -55,7 +55,7 @@ function SingleCameraComponent({
     // Attach the new stream to the video element
 
     console.log("userCamera", userCamera);
-    console.log("userCamera camOn", camOn);
+    console.log(`userCamera camOn, ${participant.name}`, userCamera != null);
     if (userCamera != null) {
       console.log("userCamera is not null", userCamera.stream)
       // if (videoRef.current && !camOn) {

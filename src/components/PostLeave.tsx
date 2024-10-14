@@ -7,6 +7,8 @@ import ExitIcon from "./icon/outline/ExitIcon";
 import {kurentoAudioEndStream} from "~/server/KurentoAudio";
 import {websocketEnd} from "~/server/Websocket";
 import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
+import {kurentoVideoEndStream} from "~/server/KurentoVideo";
+import {websocketKurentoScreenshareEndScreenshare} from "~/server/KurentoScreenshare";
 
 function PostLeave() {
   const user = useRecoilValue(authUserState);
@@ -21,7 +23,9 @@ function PostLeave() {
     console.log("running post leave")
     stopMicrophoneStream(microphoneStream);
     kurentoAudioEndStream();
-    // websocketEnd();
+    kurentoVideoEndStream();
+    websocketKurentoScreenshareEndScreenshare();
+    websocketEnd();
   }, [postLeaveMeeting]);
 
   return (

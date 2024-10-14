@@ -229,7 +229,9 @@ const Websocket = () => {
                 }
 
                 if (obj.msg == "ping") {
-                    websocketSend(["{\"msg\":\"pong\"}"]);
+                    if(!postLeaveMeeting.isLeave || !postLeaveMeeting.isLeaveRoomCall || !postLeaveMeeting.isEndCall || !postLeaveMeeting.isOthers || !postLeaveMeeting.isSessionExpired || !postLeaveMeeting.isKicked) {
+                        websocketSend(["{\"msg\":\"pong\"}"]);
+                    }
                 }
 
                 if (obj.msg == "result") {
@@ -561,6 +563,7 @@ const Websocket = () => {
         const {msg, id} = obj;
 
         if(msg == "added"){
+            // a["{\"msg\":\"added\",\"collection\":\"screenshare\",\"id\":\"2drKzXSS2H33iQQ9B\",\"fields\":{\"meetingId\":\"bcac9d1d8eab3713ae489224d0130c9468e7a0e3-1728646144507\",\"screenshare\":{\"voiceConf\":\"57493\",\"screenshareConf\":\"57493\",\"stream\":\"1455a736-2a0b-4652-ae46-a15055fbdaf8\",\"vidWidth\":0,\"vidHeight\":0,\"timestamp\":\"1728655842761\",\"hasAudio\":false,\"contentType\":\"screenshare\"}}}"]
             const {stream, name,callerName} = obj?.fields;
             console.log(`screenSharingState: ${JSON.stringify(screenSharingState)}`);
             if(!screenShareState) {

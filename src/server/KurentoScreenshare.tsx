@@ -71,7 +71,7 @@ const KurentoScreenShare = () => {
                 "userName": user?.meetingDetails?.fullname,
                 "callerName": user?.meetingDetails?.internalUserID,
                 "sdpOffer": offerSdp,
-                "hasAudio": false,
+                "hasAudio": screenSharingStream!.getAudioTracks().length > 0,
                 "contentType": "screenshare",
                 "bitrate": 1500
             };

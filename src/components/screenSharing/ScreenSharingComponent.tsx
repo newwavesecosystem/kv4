@@ -51,7 +51,7 @@ function ScreenSharingComponent() {
         id="screenSharePlay"
         autoPlay
         playsInline
-        muted
+        // muted
         className="h-full w-full"
       >
         Your browser does not support video tag
