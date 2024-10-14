@@ -64,7 +64,7 @@ function RecordingConsentModal() {
                 }));
               }}
             >
-              Dismiss
+              Accept
             </button>
             <button
                 className="w-full rounded-md bg-a11y/20 py-3"

@@ -17,8 +17,10 @@ let ws: WebSocket | null = null;
 let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
 
 
-export function websocketKurentoScreenshareEndScreenshare() {
+export function websocketKurentoScreenshareEndScreenshare(screenSharingStream: MediaStream) {
     console.log('Ending screenshare on KurentoScreenShare websocket');
+
+    stopScreenSharingStream(screenSharingStream);
 
     //to stop webRtcPeer
     if (webRtcPeer) {
@@ -186,7 +188,7 @@ const KurentoScreenShare = () => {
                             // const trackStoppedEvt = new MediaStreamTrackEvent('ended', { track });
                             // track.dispatchEvent(trackStoppedEvt);
 
-                            websocketKurentoScreenshareEndScreenshare();
+                            websocketKurentoScreenshareEndScreenshare(screenSharingStream!);
                         };
                     }
                 }
