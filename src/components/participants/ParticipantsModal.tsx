@@ -23,6 +23,7 @@ import HandOnIcon from "../icon/outline/HandOnIcon";
 import SearchIcon from "../icon/outline/SearchIcon";
 import SingleParticipant from "./SingleParticipant";
 import {IParticipant} from "~/types";
+import ArrowChevronDownIcon from "~/components/icon/outline/ArrowChevronDownIcon";
 
 const DummyMenu = [
   {
@@ -76,8 +77,9 @@ function ParticipantsModal() {
           <span className="text-xl font-bold">Participants</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="items-center rounded-lg border border-a11y/20 p-2 text-sm">
+              <button className="items-center rounded-lg border border-a11y/20 p-2 text-sm flex">
                 {filterTags}
+                <ArrowChevronDownIcon className=" ml-2 h-4 w-4 shrink-0 opacity-50" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className=" mt-1 w-52  border-0 bg-primary text-a11y ">

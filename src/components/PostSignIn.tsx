@@ -486,11 +486,11 @@ function PostSignIn() {
         <div className="mb-5" />
 
         {/* @Solomon help me implement component for presentation */}
-         {presentationSlide.show &&
-          <PresentationSlide
-            slides={presentationSlide.presentations.filter((item) => item.id == presentationSlide.currentPresentationID)[0]}
-          />
-        }
+        {/* {presentationSlide.show &&*/}
+        {/*  <PresentationSlide*/}
+        {/*    slides={presentationSlide.presentations.filter((item) => item.id == presentationSlide.currentPresentationID)[0]}*/}
+        {/*  />*/}
+        {/*}*/}
 
 
 
