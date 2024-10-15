@@ -2,6 +2,8 @@ import * as React from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "~/lib/utils";
+import {SheetDescription, SheetTitle} from "~/components/ui/sheet";
+import {VisuallyHidden} from "@radix-ui/react-visually-hidden";
 
 const SettingsSheet = SheetPrimitive.Root;
 
@@ -59,9 +61,16 @@ const SettingsSheetContent = React.forwardRef<
     {/* <SheetOverlay /> */}
     <SheetPrimitive.Content
       ref={ref}
+      aria-describedby="content"
       className={cn(sheetVariants({ side }), className)}
       {...props}
     >
+        <VisuallyHidden>
+            <SheetTitle>Sheet Content</SheetTitle>
+            <SheetDescription>
+                This is a hidden description for screen readers.
+            </SheetDescription>
+        </VisuallyHidden>
       {children}
     </SheetPrimitive.Content>
   </SettingsSheetPortal>

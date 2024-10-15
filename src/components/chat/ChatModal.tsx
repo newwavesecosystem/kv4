@@ -33,6 +33,13 @@ import { websocketSendMessage, websocketStartTyping } from "~/server/Websocket";
 import {IChat, IEmojiMart, IPrivateChatMessage} from "~/types";
 import Picker from "@emoji-mart/react";
 import emojiData from "@emoji-mart/data";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "~/components/ui/dropdown-menu";
 
 const DummyMenu = [
   {
@@ -120,67 +127,73 @@ function ChatModal() {
         >
           <div className="flex items-center gap-2">
             <span className="text-xl font-bold">Chat</span>
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <button
-                  role="combobox"
-                  aria-expanded={open}
-                  className="flex items-center gap-2 rounded-md border border-a11y/20 px-3 py-1 text-sm"
-                >
-                  Everyone
-                  {open ? (
-                    <ArrowChevronUpIcon className="  h-4 w-4 shrink-0 opacity-50" />
-                  ) : (
-                    <ArrowChevronDownIcon className="  h-4 w-4 shrink-0 opacity-50" />
-                  )}
+            {/*<Popover open={open} onOpenChange={setOpen}>*/}
+            {/*  <PopoverTrigger asChild>*/}
+            {/*    <button*/}
+            {/*      role="combobox"*/}
+            {/*      aria-expanded={open}*/}
+            {/*      className="flex items-center gap-2 rounded-md border border-a11y/20 px-3 py-1 text-sm"*/}
+            {/*    >*/}
+            {/*      Everyone*/}
+            {/*      {open ? (*/}
+            {/*        <ArrowChevronUpIcon className="  h-4 w-4 shrink-0 opacity-50" />*/}
+            {/*      ) : (*/}
+            {/*        <ArrowChevronDownIcon className="  h-4 w-4 shrink-0 opacity-50" />*/}
+            {/*      )}*/}
+            {/*    </button>*/}
+            {/*  </PopoverTrigger>*/}
+            {/*  <PopoverContent className="w-[200px] border-0 bg-primary p-0 text-a11y">*/}
+            {/*    <Command className="border-0 bg-primary text-a11y  ">*/}
+            {/*      <CommandInput*/}
+            {/*        className=""*/}
+            {/*        placeholder="Search for participants..."*/}
+            {/*      />*/}
+            {/*      <CommandEmpty>No user found.</CommandEmpty>*/}
+            {/*      <CommandGroup className=" ">*/}
+            {/*        <CommandItem*/}
+            {/*          className=""*/}
+            {/*          value={"Everyone"}*/}
+            {/*          onSelect={(currentValue) => {*/}
+            {/*            setValue(currentValue);*/}
+            {/*            setOpen(false);*/}
+            {/*          }}*/}
+            {/*        >*/}
+            {/*          {value == "Everyone" ? (<TickIcon className={cn("mr-2 h-4 w-4")} />) : null }*/}
+            {/*          Everyone*/}
+            {/*        </CommandItem>*/}
+            {/*      </CommandGroup>*/}
+            {/*    </Command>*/}
+            {/*  </PopoverContent>*/}
+            {/*</Popover>*/}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="items-center rounded-lg border border-a11y/20 p-2 text-sm flex">
+                  Switch to Private Chat
+                  <ArrowChevronDownIcon className=" ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[200px] border-0 bg-primary p-0 text-a11y">
-                <Command className="border-0 bg-primary text-a11y  ">
-                  <CommandInput
-                    className=""
-                    placeholder="Search for participants..."
-                  />
-                  <CommandEmpty>No user found.</CommandEmpty>
-                  <CommandGroup className=" ">
-                    <CommandItem
-                      className=""
-                      value={"Everyone"}
-                      onSelect={(currentValue) => {
-                        setValue(currentValue);
-                        setOpen(false);
-                      }}
-                    >
-                      {value == "Everyone" ? (<TickIcon className={cn("mr-2 h-4 w-4")} />) : null }
-                      Everyone
-                    </CommandItem>
-                    {privateChatState.chatRooms.map((chat: IPrivateChatMessage['chatRooms'][0], index: number) => {
-                      return (
-                          <CommandItem
-                              className="text-a11y"
-                              key={index}
-                              value={chat.chatId}
-                              onSelect={(currentValue) => {
-                                setValue(currentValue);
-                                setOpen(false);
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className=" mt-1 w-52  border-0 bg-primary text-a11y ">
+                <DropdownMenuGroup className=" divide-y divide-a11y/20">
+                  {privateChatState.chatRooms.map((chat: IPrivateChatMessage['chatRooms'][0], index: number) => (
+                      <DropdownMenuItem
+                          key={index}
+                          className="flex items-center gap-2 rounded-none py-4"
+                          onClick={() => {
 
-                                setPrivateChatState((prev)=>({
-                                  ...prev,
-                                  isActive: true,
-                                  id: chat.chatId,
-                                }));
-
-                              }}
-                          >
-                            {value == chat.chatId ? (<TickIcon className={cn("mr-2 h-4 w-4")} />) : null }
-                            {chat.participants[1]?.name}
-                          </CommandItem>
-                      );
-                    })}
-                  </CommandGroup>
-                </Command>
-              </PopoverContent>
-            </Popover>
+                            setPrivateChatState((prev)=>({
+                              ...prev,
+                              isActive: true,
+                              id: chat.chatId,
+                            }));
+                          }}
+                      >
+                        {value == chat.chatId ? (<TickIcon className={cn("mr-2 h-4 w-4")} />) : null }
+                        {chat.participants[1]?.name}
+                      </DropdownMenuItem>
+                  ))}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {chatTypingList.filter((item: any) => item.type == "public").length > 0 && (

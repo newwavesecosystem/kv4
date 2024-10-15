@@ -49,7 +49,8 @@ import CCModal from "~/components/cc/CCModal";
 import SocketIOCaption from "~/server/SocketIOCaption";
 import PinIcon from "~/components/icon/outline/PinIcon";
 import MinimizeIcon from "~/components/icon/outline/MinimizeIcon";
-import {FindAvatarfromUserId, FindUserNamefromUserId} from "~/lib/checkFunctions";
+import { FindAvatarfromUserId, FindUserNamefromUserId } from "~/lib/checkFunctions";
+import PresentationSlide from "./presentationSlide/PresentationSlide";
 import {GetCurrentSessionEjected, GetCurrentSessionToken, SetCurrentSessionToken} from "~/lib/localStorageFunctions";
 import {getMyCookies} from "~/lib/cookiesFunctions";
 import KurentoVideoSingleStick from "~/server/KurentoVideoSingleStick";
@@ -488,15 +489,12 @@ function PostSignIn() {
           {/*    </div>*/}
           {/*  )}*/}
 
-          <div className="mb-5"/>
+          <div className="mb-5" />
 
           {/*@Solomon help me implement component for presentation*/}
           {/*{presentationSlide.show &&*/}
-          {/*<img*/}
-          {/*    src={presentationSlide.presentations[0]?.pages[0]?.svgUri ?? ''}*/}
-          {/*    width={544}*/}
-          {/*    height={544}*/}
-          {/*    alt="profile picture"*/}
+          {/*<PresentationSlide*/}
+          {/*    slides={presentationSlide.presentations.filter((item) => item.id == presentationSlide.currentPresentationID)[0]}*/}
           {/*/>*/}
           {/*}*/}
 
@@ -669,10 +667,10 @@ function PostSignIn() {
           {participantCameraList.length > 0 && <KurentoVideoSingleStick/>}
           {/*{participantCameraList.filter((eachItem: any) => eachItem?.intId != user?.meetingDetails?.internalUserID).map((cItem: IParticipantCamera, index: number) => {*/}
           {/*    return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>*/}
-          {/*})}*/}
+        {/*})}*/}
 
-          {screenShareState && <KurentoScreenShare/>}
-          {viewerscreenShareState && !screenShareState && <KurentoScreenShareViewer/>}
+        {screenShareState && <KurentoScreenShare />}
+        {viewerscreenShareState && !screenShareState && <KurentoScreenShareViewer />}
 
         </div>
       </Authenticated>
