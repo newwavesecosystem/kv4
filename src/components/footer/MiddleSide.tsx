@@ -353,12 +353,11 @@ function MiddleSide() {
               )}
               onClick={async () => {
                 if (screenShareState && screenSharingStream) {
-                  stopScreenSharingStream(ssscreen);
+
+                  websocketKurentoScreenshareEndScreenshare(screenSharingStream);
 
                   setScreenSharingStream(null);
                   setScreenShareState(false);
-
-                  websocketKurentoScreenshareEndScreenshare();
 
                   return;
                 }

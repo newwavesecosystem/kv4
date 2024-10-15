@@ -558,8 +558,9 @@ function PostSignIn() {
                   bounds="parent"
                   defaultClassNameDragging="cursor-grabbing"
               >
-                <div className="absolute top-0 z-50 m-2 backdrop-blur-3xl">
-                  <div className="flex flex-row-reverse px-2 py-2">
+                <div className="absolute top-0 z-50 m-2 backdrop-blur-3xlright-0">
+                  <div className="flex flex-row px-2 py-2 justify-between">
+              Participant List ({participantList.length})
                     <button
                         onClick={() => {
                           setlayoutSettings({
@@ -573,28 +574,29 @@ function PostSignIn() {
                       <MinimizeIcon className=" h-5 w-5"/>
                     </button>
                   </div>
-                  <div
-                      className={cn(
-                          " m-auto flex h-40 items-center justify-center gap-2 ",
-                      )}
+      {/* Adjusted scrollable grid container */}
+            <div className="h-[30rem] overflow-y-auto"> {/* Ensure proper height */}
+                     <div className="grid grid-cols-2 gap-4 m-3"
                   >
                     {participantList
-                        // pick only 6 participants
-                        .filter(
-                            (participant: IParticipant, index: number) => index < 6,
-                        )
-                        .map((participant: IParticipant, index: number) => (
+                        .map
+                            ((participant: IParticipant, index: number) => (
+                        <div className="w-36 h-36" key={index}>
                             <SingleCameraComponent
                                 index={index}
-                                key={index}
+
                                 participant={participant}
-                                userCamera={participantCameraList.filter((cItem: IParticipantCamera) => cItem?.intId == participant.intId)[0]}
-                            />
-                        ))}
+                                userCamera={participantCameraList.find(
+                                (cItem: IParticipantCamera) => cItem?.intId == participant.intId)
+                          }
+                      />
+                    </div>
+                            ))}
+                        </div>
                   </div>
                 </div>
-              </Draggable>
-          )}
+              </Draggable>)}
+
 
           {/* Focus on Video */}
           {screenSharingStream && layoutSettings.layout === "2" && (

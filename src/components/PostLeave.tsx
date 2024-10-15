@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {authUserState, microphoneStreamState, postLeaveMeetingState} from "~/recoil/atom";
+import {authUserState, microphoneStreamState, postLeaveMeetingState, screenSharingStreamState} from "~/recoil/atom";
 import HandOnIcon from "./icon/outline/HandOnIcon";
 import ExitIcon from "./icon/outline/ExitIcon";
 import {kurentoAudioEndStream} from "~/server/KurentoAudio";
@@ -18,13 +18,19 @@ function PostLeave() {
   const [microphoneStream, setMicrophoneStream] = useRecoilState(
       microphoneStreamState,
   );
+  const [screenSharingStream, setScreenSharingStream] = useRecoilState(
+      screenSharingStreamState,
+  );
+
 
   React.useEffect(() => {
     console.log("running post leave")
     stopMicrophoneStream(microphoneStream);
     kurentoAudioEndStream();
     kurentoVideoEndStream();
-    websocketKurentoScreenshareEndScreenshare();
+    if(screenSharingStream != null){
+      websocketKurentoScreenshareEndScreenshare(screenSharingStream);
+    }
     websocketEnd();
   }, [postLeaveMeeting]);
 
