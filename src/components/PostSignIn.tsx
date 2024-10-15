@@ -553,53 +553,55 @@ function PostSignIn() {
             defaultClassName="cursor-grab hidden xl:block"
             bounds="parent"
             defaultClassNameDragging="cursor-grabbing"
-          >
-            <div className="absolute top-0 z-50 m-2 backdrop-blur-3xl">
-              <div className="flex flex-row-reverse px-2 py-2">
-                <button
-                    onClick={() => {
-                      setlayoutSettings({
-                        ...layoutSettings,
-                        layout: "4",
-                        layoutName: "Focus on presenter",
-                      });
-                    }}
-                    className="rounded-full bg-primary/80 p-1 "
-                >
-                  <MinimizeIcon className=" h-5 w-5"/>
-                </button>
-              </div>
-              <div
-                  className={cn(
-                      " m-auto flex h-40 items-center justify-center gap-2 ",
-                  )}
+        >
+          <div className="absolute top-0 z-50 m-2 backdrop-blur-3xl right-0">
+            <div className="flex flex-row px-2 py-2 justify-between">
+              Participant List ({participantList.length})
+              <button
+                  onClick={() => {
+                    setlayoutSettings({
+                      ...layoutSettings,
+                      layout: "4",
+                      layoutName: "Focus on presenter",
+                    });
+                  }}
+                  className="rounded-full bg-primary/80 p-1"
               >
-                {participantList
-                    // pick only 6 participants
-                    .filter(
-                        (participant: IParticipant, index: number) => index < 6,
-                    )
-                    .map((participant: IParticipant, index: number) => (
-                    <SingleCameraComponent
-                      index={index}
-                      key={index}
-                      participant={participant}
-                      userCamera={participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId)[0]}
-                    />
-                  ))}
+                <MinimizeIcon className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Adjusted scrollable grid container */}
+            <div className="h-[30rem] overflow-y-auto"> {/* Ensure proper height */}
+              <div className="grid grid-cols-2 gap-4 m-3">
+                {participantList.map((participant: IParticipant, index: number) => (
+                    <div className="w-36 h-36" key={index}>
+                      <SingleCameraComponent
+                          index={index}
+                          participant={participant}
+                          userCamera={
+                            participantCameraList.find(
+                                (cItem: IParticipantCamera) =>
+                                    cItem?.intId == participant.intId
+                            )
+                          }
+                      />
+                    </div>
+                ))}
               </div>
             </div>
-          </Draggable>
-        )}
+          </div>
+        </Draggable>)}
+
 
         {/* Focus on Video */}
         {screenSharingStream && layoutSettings.layout === "2" && (
-          <Draggable
-            defaultClassName="cursor-grab hidden xl:block"
-            bounds="parent"
-            defaultClassNameDragging="cursor-grabbing"
-          >
-            <div className="absolute top-0 z-50 ">
+            <Draggable
+                defaultClassName="cursor-grab hidden xl:block"
+                bounds="parent"
+                defaultClassNameDragging="cursor-grabbing"
+            >
+              <div className="absolute top-0 z-50 ">
               <div
                 className={cn(
                   " m-auto flex h-40 items-center justify-center gap-2 ",

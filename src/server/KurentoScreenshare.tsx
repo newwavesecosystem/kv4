@@ -92,8 +92,8 @@ const KurentoScreenShare = () => {
         const startProcess = () => {
             setlayoutSettings({
                 ...layoutSettings,
-                layout: "4",
-                layoutName: "Focus on presenter",
+                layout: "1",
+                layoutName: "Smart layout",
             });
             console.log('Creating WebRtcPeer and generating local sdp offer ...');
             const videoElement = document.getElementById('rVideoElement');

@@ -53,14 +53,14 @@ function ScreenSharingComponent() {
               </div>
           )}
           {CurrentUserIsPresenter(participantList, user) && (
-              <div className="grid h-full w-full bg-black/20 justify-items-center content-center">
+              <div className="grid h-full w-full bg-black/20 justify-items-center content-center" style={{justifyContent: 'center'}}>
                   <video
                       ref={videoRef}
                       id="screenSharePlay"
                       autoPlay
                       playsInline
                       muted
-                      className="h-2/4 w-2/4"
+                      className="h-3/4 w-3/4"
                   >
                       Your browser does not support video tag
                   </video>
