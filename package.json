@@ -44,6 +44,7 @@
     "clsx": "^2.0.0",
     "cmdk": "^1.0.0",
     "dayjs": "^1.11.10",
+    "embla-carousel-react": "^8.3.0",
     "emoji-mart": "^5.5.2",
     "howler": "^2.2.4",
     "kurento-utils": "^7.0.0",
