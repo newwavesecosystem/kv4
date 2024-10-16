@@ -18,6 +18,7 @@ import {
 } from "../ui/alert-dialog";
 import {websocketLeaveMeeting, websocketRecord} from "~/server/Websocket";
 import {IParticipant} from "~/types/index";
+import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
 
 function RecordingConsentModal() {
   const [recordingState, setRecordingState] =
@@ -36,11 +37,7 @@ function RecordingConsentModal() {
 
   return (
     <AlertDialog
-      open={recordingState.recordingConsent && participantList.filter(
-          (item: IParticipant) =>
-              item.intId == user?.meetingDetails?.internalUserID,
-      )[0]?.role != "MODERATOR"
-          }
+      open={recordingState.recordingConsent && !CurrentUserRoleIsModerator(participantList,user)}
       onOpenChange={() => {
         console.log('Recording Consent opened')
       }}

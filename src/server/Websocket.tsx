@@ -31,7 +31,7 @@ import {IBreakoutRoom, IColumnBreakOutRoom, IParticipant, IParticipantCamera, IV
 import dayjs from "dayjs";
 import axios from "axios";
 import {toast} from "~/components/ui/use-toast";
-import {FindUserNamefromUserId} from "~/lib/checkFunctions";
+import {FindUserNamefromUserId, ModeratorRole} from "~/lib/checkFunctions";
 import {SetCurrentSessionEjected} from "~/lib/localStorageFunctions";
 
 
@@ -1204,7 +1204,12 @@ const Websocket = () => {
         const updatedArray = participantList?.map((item:IParticipant) => {
             if (item.id === id) {
                 if (item.userId == user?.meetingDetails?.internalUserID) {
-                    console.log("UserState: You have been made Presenter");
+                    console.log("UserState: You have been made Presenter 📺");
+                    toast({
+                        title: "You have been made a Presenter",
+                        description: `You can now share your screen using the button beside camera icon`,
+                        duration: 9000,
+                    });
                 }
                 return {...item, presenter: state};
             }
@@ -1224,6 +1229,15 @@ const Websocket = () => {
             if (item.id === id) {
                 if (item.userId == user?.meetingDetails?.internalUserID) {
                     console.log(`UserState: You have been made ${role}`);
+
+                    if(role == ModeratorRole()) {
+                        toast({
+                            title: "You have been made a Co-Moderator 🫅🏾",
+                            description: `You can now start recording, pause recording, remove user, mute users,...`,
+                            duration: 9000,
+                        });
+                    }
+
                 }
                 return {...item, role: role};
             }

@@ -33,7 +33,7 @@ import {
   websocketStartPrivateChat
 } from "~/server/Websocket";
 import {IParticipant} from "~/types";
-import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
+import {CurrentUserRoleIsModerator, ModeratorRole, ViewerRole} from "~/lib/checkFunctions";
 
 function SingleParticipant({
   key,
@@ -78,7 +78,7 @@ function SingleParticipant({
           </span>
 
           <div>
-            {participant.role === "MODERATOR" && (<span className="text-xs">Moderator</span>) }
+            {participant.role === ModeratorRole() && (<span className="text-xs">Moderator</span>) }
             {participant.presenter && (<span className="text-xs"> | Presenter</span>) }
             {participant.mobile && (<span className="text-xs"> | Mobile</span>) }
           </div>
@@ -113,11 +113,11 @@ function SingleParticipant({
                   <DropdownMenuSubContent className="divide-y divide-a11y/20 border border-a11y/20 bg-primary text-a11y shadow-2xl">
                     {userRolesData.map((item: any, index: number) => {
 
-                      if (participant.role !== "MODERATOR" && item.id === 1) {
+                      if (participant.role !== ModeratorRole() && item.id === 1) {
                         return displayActions(item, index);
                       }
 
-                      if (participant.role !== "VIEWER" && item.id === 5) {
+                      if (participant.role !== ViewerRole() && item.id === 5) {
                         return displayActions(item, index);
                       }
 
