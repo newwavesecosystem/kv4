@@ -244,7 +244,7 @@ function SingleCameraComponent({
               {participant?.name?.split(" ")[0]?.slice(0, 1)}
               {participant?.name?.split(" ")[1]?.slice(0, 1)}
             </div>
-            <span className="capitalize">{participant?.name} {participant.userId == user?.meetingDetails?.internalUserID && "(You)"}</span>
+            <span className="capitalize">{participant?.name} {participant.userId == user?.meetingDetails?.internalUserID && "(You) "}</span>
           </div>
       )}
     </div>
