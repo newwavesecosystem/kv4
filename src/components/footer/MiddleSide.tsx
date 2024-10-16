@@ -197,14 +197,15 @@ function MiddleSide() {
       <div className="flex items-center gap-1 rounded-3xl border border-onegov/40 bg-[#DF2622] p-2 md:hidden">
         <button
           onClick={() => {
-            setEndCallModal(true);
+            setRoomCallModal(true);
           }}
           className="px-1"
         >
           <PhoneEndIcon className="h-6 w-6" />
         </button>
         <Separator className="w-0.5 bg-a11y/20" orientation="vertical" />
-        <DropdownMenu>
+        {CurrentUserRoleIsModerator(participantList,user) && (
+          <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="px-1">
               <EllipsisIcon endMeet={true} className="h-6 w-6" />
@@ -245,6 +246,7 @@ function MiddleSide() {
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+        )}
       </div>
       <button
         className={cn(
