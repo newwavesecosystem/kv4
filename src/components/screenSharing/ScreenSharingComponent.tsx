@@ -14,6 +14,7 @@ import ExpandIcon from "~/components/icon/outline/ExpandIcon";
 import ShareScreenOffIcon from "~/components/icon/outline/ShareScreenOffIcon";
 import {websocketKurentoScreenshareEndScreenshare} from "~/server/KurentoScreenshare";
 import {CurrentUserIsPresenter} from "~/lib/checkFunctions";
+import playAndRetry from "~/lib/mediaElementPlayRetry";
 
 function ScreenSharingComponent() {
   const [screenSharingStream, setScreenSharingStream] = useRecoilState(
@@ -34,6 +35,8 @@ function ScreenSharingComponent() {
     setIsLoading(false);
     if (videoRef.current) {
       videoRef.current.srcObject = screenSharingStream;
+
+        playAndRetry(document.getElementById("screenSharePlay")).then(r=>console.log("screenSharePlay playAndRetry ",r));
     }
   }, []);
 

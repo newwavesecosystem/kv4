@@ -15,6 +15,7 @@ import {websocketKurentoScreenshareEndScreenshare} from "~/server/KurentoScreens
 import requestScreenSharingAccess from "~/lib/screenSharing/requestScreenSharingAccess";
 import ShareScreenOnIcon from "~/components/icon/outline/ShareScreenOnIcon";
 import ShareScreenOffIcon from "~/components/icon/outline/ShareScreenOffIcon";
+import {ModeratorRole} from "~/lib/checkFunctions";
 dayjs.extend(duration);
 function BreakOutModalView() {
   const [breakOutRoomState, setBreakOutRoomState] =
@@ -83,7 +84,7 @@ function BreakOutModalView() {
               )
               .map(
                   (eachItem: IParticipant, index: number) =>
-                      eachItem.role == "MODERATOR" && (
+                      eachItem.role == ModeratorRole() && (
                           <div key={index} className=" flex w-full items-center rounded-md border border-a11y/20 bg-transparent py-3 pr-4 ">
                             <input
                                 type="text"

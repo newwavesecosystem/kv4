@@ -25,6 +25,13 @@ import VideoConfOffIcon from "../icon/outline/VideoConfOffIcon";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import WifiOnIcon from "../icon/outline/WifiOnIcon";
 import VolumeOffIcon from "~/components/icon/outline/VolumeOffIcon";
+import ShareScreenOnIcon from "~/components/icon/outline/ShareScreenOnIcon";
+import Sun from "~/components/icon/outline/Sun";
+import PeoplesIcon from "~/components/icon/outline/PeoplesIcon";
+import PeopleAppointmentIcon from "~/components/icon/outline/PeopleAppointmentIcon";
+import PeopleSpeakIcon from "~/components/icon/outline/PeopleSpeakIcon";
+import {CurrentUserRoleIsModerator, ModeratorRole} from "~/lib/checkFunctions";
+import {websocketPresenter} from "~/server/Websocket";
 
 function SingleCameraComponent({
   participant, userCamera,
@@ -38,7 +45,7 @@ function SingleCameraComponent({
 }) {
   const [connectedUsers, setConnectedUsers] =
     useRecoilState(connectedUsersState);
-  // const user = useRecoilValue(authUserState);
+  const user = useRecoilValue(authUserState);
   const participantList = useRecoilValue(participantListState);
   const participantTalkingList = useRecoilValue(participantTalkingListState);
   const participantCameraList = useRecoilValue(participantCameraListState);
@@ -98,6 +105,16 @@ function SingleCameraComponent({
       )}
     >
       <div className="absolute right-3 top-3 flex items-center gap-1">
+        {participant.presenter && (<button className="rounded-full bg-primary/80 p-1">
+          <ShareScreenOnIcon className="h-5 w-5"/>
+        </button>)
+        }
+
+        {participant.role == ModeratorRole() && (<button className="rounded-full bg-primary/80 p-1">
+          <PeoplesIcon className="h-5 w-5"/>
+        </button>)
+        }
+
         {pinnedParticipant.filter(
             (eachItem: any) => eachItem?.intId == participant.intId,
         ).length > 0 && (
@@ -177,6 +194,13 @@ function SingleCameraComponent({
               <VideoConfOffIcon className="mr-2 h-5 w-5"/>
               {isMirrored ? "Remove Mirror" : "Mirror"}
             </DropdownMenuItem>
+
+            {CurrentUserRoleIsModerator(participantList,user) && !participant.presenter && (<DropdownMenuItem onClick={()=>{
+              websocketPresenter(participant.userId);
+            }} className="py-2">
+              <ShareScreenOnIcon className="mr-2 h-5 w-5"/>
+              Make Presenter
+            </DropdownMenuItem>)}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -220,7 +244,7 @@ function SingleCameraComponent({
               {participant?.name?.split(" ")[0]?.slice(0, 1)}
               {participant?.name?.split(" ")[1]?.slice(0, 1)}
             </div>
-            <span className="capitalize">{participant?.name}</span>
+            <span className="capitalize">{participant?.name} {participant.userId == user?.meetingDetails?.internalUserID && "(You) "}</span>
           </div>
       )}
     </div>
