@@ -72,10 +72,10 @@ function ScreenSharingComponent() {
                           setScreenSharingStream(null);
                           setScreenShareState(false);
                       }}
-                      className="mt-3 flex items-center gap-2 rounded-md border-2 border-a11y/20 bg-red-700/80 px-3 py-2 text-sm backdrop-blur-3xl"
+                      className="mt-3 flex items-center gap-2 rounded-md border-2 bg-red-700/80 px-3 py-2 text-sm backdrop-blur-3xl"
                   >
-                      <ShareScreenOffIcon className="h-5 w-5 "/>
-                      <span>Stop Screen Sharing</span>
+                      <ShareScreenOffIcon className="h-5 w-5 bg-white"/>
+                      <span style={{color:"white"}}>Stop Screen Sharing</span>
                   </button>
               </div>)}
 
