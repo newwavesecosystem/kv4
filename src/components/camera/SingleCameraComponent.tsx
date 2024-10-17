@@ -32,6 +32,7 @@ import PeopleAppointmentIcon from "~/components/icon/outline/PeopleAppointmentIc
 import PeopleSpeakIcon from "~/components/icon/outline/PeopleSpeakIcon";
 import {CurrentUserRoleIsModerator, ModeratorRole} from "~/lib/checkFunctions";
 import {websocketPresenter} from "~/server/Websocket";
+import playAndRetry from "~/lib/mediaElementPlayRetry";
 
 function SingleCameraComponent({
   participant, userCamera,
@@ -70,6 +71,7 @@ function SingleCameraComponent({
       videoRef.current!.srcObject = userCamera.stream;
       setCamOn(true);
       console.log("userCamera is null")
+      playAndRetry(document.getElementById(`video${participant.intId}`)).then(r=>console.log("videoPlay playAndRetry ",r));
       // }
     } else {
       setCamOn(false);
@@ -216,6 +218,7 @@ function SingleCameraComponent({
           autoPlay
           playsInline
           muted
+          id={`video${participant.intId}`}
           hidden={userCamera == null}
           className={cn("h-full w-full transition-transform duration-700 flex-1 object-cover", isMirrored && "scale-x-[-1]")}
       >
