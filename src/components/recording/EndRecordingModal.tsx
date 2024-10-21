@@ -29,10 +29,10 @@ function EndRecordingModal() {
         <div className="grid gap-3 py-4">
           <div className="flex gap-2 text-2xl">
             <AlertTriangleIcon className="h-8 w-8 " />
-            <span>Pause Recording</span>
+            <span>End Recording</span>
           </div>
           <p>
-            Are you sure you want to pause recording?
+            Are you sure you want to End Recording?
           </p>
           <div className="mt-7 flex w-full gap-6">
             <button
@@ -57,7 +57,7 @@ function EndRecordingModal() {
                 websocketRecord();
               }}
             >
-              Pause Recording
+              End Recording
             </button>
           </div>
         </div>

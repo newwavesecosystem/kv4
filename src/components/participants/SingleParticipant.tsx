@@ -33,7 +33,9 @@ import {
   websocketStartPrivateChat
 } from "~/server/Websocket";
 import {IParticipant} from "~/types";
-import {CurrentUserRoleIsModerator, ModeratorRole, ViewerRole} from "~/lib/checkFunctions";
+import {CurrentUserRoleIsModerator, FindAvatarfromUserId, ModeratorRole, ViewerRole} from "~/lib/checkFunctions";
+import Image from "next/image";
+import HandOnIcon from "~/components/icon/outline/HandOnIcon";
 
 function SingleParticipant({
   key,
@@ -70,7 +72,13 @@ function SingleParticipant({
   return (
     <div className="flex justify-between border-b border-b-a11y/20 py-4 text-sm">
       <div className="flex items-center gap-3">
-        <div className="h-9 w-9 rounded-full bg-secondary/40"></div>
+        <Image
+            src={participant.avatar}
+            width={20}
+            height={20}
+            className="h-9 w-9 rounded-full bg-secondary/40"
+            alt="profile picture"
+        />
         <div className="flex flex-col">
           <span className="font-bold">
             {participant.name}
@@ -86,6 +94,10 @@ function SingleParticipant({
         </div>
       </div>
       {participant.id != user?.id.toString() && <div className=" flex items-center gap-2">
+
+        <button>
+          {participant.raiseHand && <HandOnIcon className="h-6 w-6" />}
+        </button>
 
         <button>
           {talkingList.map((eachItem:any) => (

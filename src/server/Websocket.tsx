@@ -1233,7 +1233,7 @@ const Websocket = () => {
                     if(role == ModeratorRole()) {
                         toast({
                             title: "You have been made a Co-Moderator 🫅🏾",
-                            description: `You can now start recording, pause recording, remove user, mute users,...`,
+                            description: `You can now start recording, End Recording, remove user, mute users,...`,
                             duration: 9000,
                         });
                     }

@@ -335,7 +335,7 @@ function PostSignIn() {
                     color: 'white',
                     backgroundColor: 'red',
                     textAlign: 'center'
-                  }}>{connectionStatus.websocket_connection_reconnect ? "Network issues detected. Trying to reconnecting automatically" : "Connecting..."}<br/></span> : ''}
+                  }}>{connectionStatus.websocket_connection_reconnect ? "Network issues detected. Trying to reconnect automatically" : "Connecting..."}<br/></span> : ''}
         {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
             <span className="flex w-full items-center justify-between px-4"
                   style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}

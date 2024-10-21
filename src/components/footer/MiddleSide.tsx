@@ -458,7 +458,7 @@ function MiddleSide() {
                 className="bg-[#DF2622]"
               >
                 <RecordOnIcon className="mr-2 h-5 w-5" />
-                <span>Pause Recording</span>
+                <span>End Recording</span>
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem
@@ -479,7 +479,7 @@ function MiddleSide() {
                 }}
               >
                 <RecordOnIcon className="mr-2 h-5 w-5" />
-                <span>{recordingState.isStarted ? "Resume" : "Start"} Recording</span>
+                <span>{recordingState.isStarted ? "Start" : "Start"} Recording</span>
               </DropdownMenuItem>
             ) : null }
           </DropdownMenuGroup>
