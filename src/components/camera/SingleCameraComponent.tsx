@@ -7,7 +7,8 @@ import {
   participantTalkingListState,
   pinnedUsersState,
 } from "~/recoil/atom";
-import { IAuthUser, IConnectedUser, IParticipant, IParticipantCamera } from "~/types";
+import { IAuthUser, IConnectedUser, IParticipant, IParticipantCamera ,
+} from "~/types";
 import MicOnIcon from "../icon/outline/MicOnIcon";
 import MicOffIcon from "../icon/outline/MicOffIcon";
 import EllipsisIcon from "../icon/outline/EllipsisIcon";
@@ -58,6 +59,10 @@ function SingleCameraComponent({
     setIsMirrored(!isMirrored);
   };
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  let userCamera = participantCameraList.filter(
+    (cItem: IParticipantCamera) => cItem?.intId == participant.intId,
+  );
+  const [videoElementWidth, setVideoElementWidth] = useState(0);
 
   useEffect(() => {
     // Attach the new stream to the video element
@@ -69,7 +74,9 @@ function SingleCameraComponent({
       // if (videoRef.current && !camOn) {
       console.log("userCamera videoRef.current > 0", userCamera.stream)
       videoRef.current!.srcObject = userCamera.stream;
-      setCamOn(true);
+      const width = videoRef.current.offsetWidth;
+        setVideoElementWidth(width);
+        setCamOn(true);
       console.log("userCamera is null")
       playAndRetry(document.getElementById(`video${participant.intId}`)).then(r=>console.log("videoPlay playAndRetry ",r));
       // }
@@ -147,7 +154,10 @@ function SingleCameraComponent({
             )}
         >
           {participantTalkingList
-              .filter((eachItem: any, index: number) => eachItem?.intId == participant.intId)
+              .filter(
+              (eachItem: any, index: number) =>
+                eachItem?.intId == participant.intId,
+            )
               .map((eachItem: any) =>
                   !eachItem?.joined ? (
                       <VolumeOffIcon key={index} className="h-5 w-5 "/>
@@ -208,7 +218,7 @@ function SingleCameraComponent({
       </div>
 
       {participant?.raiseHand && (
-          <div className="animate-wave absolute left-3 top-3 flex items-center gap-1">
+          <div className="absolute left-3 top-3 flex animate-wave items-center gap-1">
             <HandOnIcon coloured={true} className="h-8 w-8"/>
           </div>
       )}
@@ -227,12 +237,16 @@ function SingleCameraComponent({
 
       {userCamera != null && (
           <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg  bg-primary/60 px-2 py-1 text-sm">
-            <span className=" max-w-[150px] truncate ">{participant?.name}</span>
+            <spanstyle={{
+              width: videoElementWidth - 70,
+            }} className=" max-w-[150px] truncate ">{participant?.name}</span>
             {/*<span className=" max-w-[150px] truncate ">{participant?.intId}</span>*/}
             <WifiOnIcon
                 signal={participant.connection_status == "critical" ? 1 : participant.connection_status == "danger" ? 2 : participant.connection_status == "warning" ? 3 : 4}
                 className="hidden h-6 w-6 md:block"
-                color={participant.connection_status == "critical" ? '#ff0000' : participant.connection_status == "danger" ? '#f68322' : participant.connection_status == "warning" ? '#fcd104' : '#004800'}/>
+                color={participant.connection_status == "critical" ? "#ff0000" : participant.connection_status == "danger" ? "#f68322" : participant.connection_status == "warning" ? "#fcd104"
+                    : "#004800"
+            }/>
           </div>
       )}
       {userCamera == null && (
@@ -247,7 +261,7 @@ function SingleCameraComponent({
               {participant?.name?.split(" ")[0]?.slice(0, 1)}
               {participant?.name?.split(" ")[1]?.slice(0, 1)}
             </div>
-            <span className="capitalize">{participant?.name} {participant.userId == user?.meetingDetails?.internalUserID && "(You) "}</span>
+            <span className="w-[70%] truncate text-centercapitalize">{participant?.name} {participant.userId == user?.meetingDetails?.internalUserID && "(You) "}</span>
           </div>
       )}
     </div>
