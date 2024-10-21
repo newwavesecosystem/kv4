@@ -23,7 +23,7 @@ function ResolutionModal() {
       }}
     >
       <DialogContent className="text-a11y rounded-xl border-0 bg-primary sm:max-w-[425px] md:rounded-xl">
-        <span className=" text-xl font-bold">{recordingState.isStarted ? "Resume" : "Start"} Recording</span>
+        <span className=" text-xl font-bold">{recordingState.isStarted ? "Start" : "Start"} Recording</span>
         <div className="grid gap-6 py-4">
           <p>
             Kindly be aware that all activities will be recorded. To proceed click on start button below.

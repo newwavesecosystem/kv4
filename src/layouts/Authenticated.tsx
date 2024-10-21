@@ -212,7 +212,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                   donationState.isActive && recordingState.isActive && "hidden",
                 )}
               >
-                Pause Recording
+                End Recording
               </span>
             </button>
           ) : null}
@@ -259,7 +259,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               className="hidden items-center gap-2 rounded-lg bg-[#DF2622] px-3 py-2 md:flex"
             >
               <RecordOnIcon className="h-6 w-6" />
-              <span>Pause Recording</span>
+              <span>End Recording</span>
             </button>
           ) : (
             <button
@@ -281,7 +281,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               className="hidden items-center gap-2 rounded-lg border border-a11y/20 px-3 py-2 md:flex"
             >
               <RecordOnIcon className="h-6 w-6" />
-              <span>{recordingState.isStarted ? "Resume" : "Start"} Recording</span>
+              <span>{recordingState.isStarted ? "Start" : "Start"} Recording</span>
             </button>
           ): null}
 
