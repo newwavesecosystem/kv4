@@ -59,9 +59,7 @@ function SingleCameraComponent({
     setIsMirrored(!isMirrored);
   };
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  let userCamera = participantCameraList.filter(
-    (cItem: IParticipantCamera) => cItem?.intId == participant.intId,
-  );
+
   const [videoElementWidth, setVideoElementWidth] = useState(0);
 
   useEffect(() => {
@@ -73,9 +71,9 @@ function SingleCameraComponent({
       console.log("userCamera is not null", userCamera.stream)
       // if (videoRef.current && !camOn) {
       console.log("userCamera videoRef.current > 0", userCamera.stream)
-      videoRef.current!.srcObject = userCamera.stream;
-      const width = videoRef.current.offsetWidth;
-        setVideoElementWidth(width);
+      videoRef.current!.srcObject = userCamera.stream!;
+      const width = videoRef.current?.offsetWidth;
+        setVideoElementWidth(width!);
         setCamOn(true);
       console.log("userCamera is null")
       playAndRetry(document.getElementById(`video${participant.intId}`)).then(r=>console.log("videoPlay playAndRetry ",r));
@@ -237,7 +235,7 @@ function SingleCameraComponent({
 
       {userCamera != null && (
           <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-lg  bg-primary/60 px-2 py-1 text-sm">
-            <spanstyle={{
+            <span style={{
               width: videoElementWidth - 70,
             }} className=" max-w-[150px] truncate ">{participant?.name}</span>
             {/*<span className=" max-w-[150px] truncate ">{participant?.intId}</span>*/}
