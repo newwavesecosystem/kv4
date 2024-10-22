@@ -30,7 +30,7 @@ import {
   eCinemaModalState,
   participantsModalState,
   recordingModalState,
-  newMessage, newRaiseHand,
+  newMessage, newRaiseHand, selectedSpeakersState,
 } from "~/recoil/atom";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
 
@@ -59,6 +59,7 @@ import { Howl } from 'howler';
 import RecordingConsentModal from "~/components/recording/RecordingConsentModal";
 import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
 import MediaOnboardingDialog from "~/lib/MediaOnboardingDialog";
+import {kurentoAudioPlaySound} from "~/server/KurentoAudio";
 
 
 function Authenticated({ children }: { children: React.ReactNode }) {
@@ -89,6 +90,11 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
   const [isnewRaiseHand, setIsnewRaiseHand] = useRecoilState(newRaiseHand);
 
+  const [selectedSpeaker, setSelectedSpeaker] = useRecoilState(
+      selectedSpeakersState,
+  );
+
+
   const sound = new Howl({
     src: ['/message.mp3'],
   });
@@ -97,17 +103,19 @@ function Authenticated({ children }: { children: React.ReactNode }) {
     src: ['/finger-snaps.mp3'],
   });
 
+  const NewMessageSound = "/message.mp3";
+  const RaiseHandSound = "/finger-snaps.mp3";
+
   useEffect(() => {
     if(isNewMessage) {
-
-      sound.play();
+      kurentoAudioPlaySound(NewMessageSound, selectedSpeaker?.deviceId);
     }
   }, [isNewMessage])
 
 
   useEffect(() => {
     if(isnewRaiseHand) {
-      raiseHandSound.play();
+      kurentoAudioPlaySound(RaiseHandSound, selectedSpeaker?.deviceId);
     }
   }, [isnewRaiseHand])
 
