@@ -31,7 +31,7 @@ function TakeSpotAttendanceSettings() {
 
 
 
-  const takeAttendance = () => {
+  const takeAttendanceTxt = () => {
     let docTitle = `Attendance for the meeting, ${user?.meetingDetails?.confname} @ ${getDateTime()}`
     let allNames = ''
 
@@ -50,7 +50,7 @@ function TakeSpotAttendanceSettings() {
 
     console.log(allNames)
     const mimeType = 'text/plain';
-    const content = `${docTitle}\r\n\r\n ${allNames.replaceAll(',', '\n')}\n\n\n Auto-Generated from Konn3ct\n\n\n Total Number of Attendees: ${total}`
+    const content = `${docTitle}\r\n\r\n ${allNames.replaceAll(',', '\n')}\n\n\n Auto-Generated from ${process.env.NEXT_PUBLIC_PLATFORM_NAME}\n\n\n Total Number of Attendees: ${total}`
     const link = document.createElement('a');
     link.setAttribute('download', `attendance_${user?.meetingDetails?.confname}_${Date.now()}.txt`);
     link.setAttribute(
@@ -61,6 +61,36 @@ function TakeSpotAttendanceSettings() {
     link.click();
     document.body.removeChild(link);
   }
+  const takeAttendanceCsv = () => {
+    let docTitle = `Attendance for the meeting, ${user?.meetingDetails?.confname} @ ${getDateTime()}`;
+
+    // CSV header with S/N and Name columns
+    let csvContent = `S/N,Name\n`;
+
+    participantList.map((user: IParticipant, index: number) => {
+      // Adding S/N and each name to the new row
+      csvContent += `${index + 1},${user.name}\n`;
+    });
+
+    let total = participantList.length;
+
+    // Adding footer information for total attendees and auto-generated note
+    csvContent += `\nAuto-Generated from ${process.env.NEXT_PUBLIC_PLATFORM_NAME}\nTotal Number of Attendees: ${total}`;
+
+    const mimeType = 'text/csv';
+    const link = document.createElement('a');
+    link.setAttribute('download', `attendance_${user?.meetingDetails?.confname}_${Date.now()}.csv`);
+    link.setAttribute(
+        'href',
+        `data: ${mimeType};charset=utf-8,${encodeURIComponent(csvContent)}`
+    );
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+
 
   return (
     <div
@@ -98,10 +128,17 @@ function TakeSpotAttendanceSettings() {
         </div>
 
         <button className="bg-a11y/40 flex items-center rounded-lg p-2"  onClick={()=>{
-          takeAttendance()
+          takeAttendanceTxt()
         }}>
           <ArrowChevronDownIcon className="h-6 w-6" />
-          <span className="ml-2">Download</span>
+          <span className="ml-2">Download (TXT)</span>
+        </button>
+
+        <button className="bg-a11y/40 flex items-center rounded-lg p-2 mt-5"  onClick={()=>{
+          takeAttendanceCsv()
+        }}>
+          <ArrowChevronDownIcon className="h-6 w-6" />
+          <span className="ml-2">Download (CSV)</span>
         </button>
       </div>
     </div>

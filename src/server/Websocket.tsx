@@ -485,7 +485,7 @@ const Websocket = () => {
             }
 
             if(raiseHand != null){
-                console.log("UserState: handling role change",obj);
+                console.log("UserState: handling raiseHand change",obj);
                 modifyRaiseHandStateUser(id,raiseHand)
             }
         }

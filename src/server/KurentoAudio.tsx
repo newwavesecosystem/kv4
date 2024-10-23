@@ -34,7 +34,7 @@ export async function kurentoAudioSetNewStream(stream:MediaStream) {
 
 }
 
-export async function kurentoAudioPlaySound(source:String, deviceId:String|null) {
+export async function kurentoAudioPlaySound(source:string, deviceId:string|undefined) {
     console.log('kurentoAudioPlaySound');
 
     const sound = new Audio(source);
