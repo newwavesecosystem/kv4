@@ -30,7 +30,7 @@ import {
   eCinemaModalState,
   participantsModalState,
   recordingModalState,
-  newMessage, newRaiseHand, selectedSpeakersState,
+  newMessage, newRaiseHand, selectedSpeakersState, manageUserSettingsState,
 } from "~/recoil/atom";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
 
@@ -93,6 +93,8 @@ function Authenticated({ children }: { children: React.ReactNode }) {
   const [selectedSpeaker, setSelectedSpeaker] = useRecoilState(
       selectedSpeakersState,
   );
+
+  const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
 
 
   const sound = new Howl({
@@ -305,7 +307,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           >
             <CCIcon className="h-6 w-6" />
           </button>
-          <button
+          {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.hideUserList) && (<button
             onClick={() => {
               setParticipantState(!participantState);
             }}
@@ -313,7 +315,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           >
             <PeoplesIcon className="h-5 w-5" />
             <span>{participantList.length}</span>
-          </button>
+          </button>)}
         </div>
       </div>
       {children}
@@ -460,7 +462,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           >
             <CCIcon className="h-6 w-6" />
           </button>
-          <button
+          {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disablePublicChat) && (<button
             onClick={() => {
               setChatState(!chatState);
               setIsNewMessage(false);
@@ -471,7 +473,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             {isNewMessage && (
               <div className="absolute right-2 top-2 h-2 w-2 animate-pulse rounded-full bg-a11y"></div>
             )}
-          </button>
+          </button>)}
         </div>
       </div>
     </div>

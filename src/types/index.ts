@@ -143,6 +143,21 @@ export interface IWaitingUser {
   authenticated: boolean;
 }
 
+export interface IManageUserSettings {
+  muteAllUsers: boolean,
+  muteAllUsersExceptPresenter: boolean,
+  disableCam:boolean,
+  disableMic:boolean,
+  disableNotes:boolean,
+  disablePrivateChat:boolean,
+  disablePublicChat:boolean,
+  hideUserList:boolean,
+  hideViewersAnnotation:boolean,
+  hideViewersCursor:boolean,
+  lockOnJoin:boolean,
+  lockOnJoinConfigurable:boolean
+}
+
 export interface IBreakOutRecord {
   isActive: boolean;
   step: number;

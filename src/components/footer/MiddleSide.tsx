@@ -25,7 +25,7 @@ import {
   breakOutModalState,
   selectedCameraState,
   fileUploadModalState,
-  newMessage, selectedMicrophoneState, micFilterState, CamQualityState, mediaPermissionState,
+  newMessage, selectedMicrophoneState, micFilterState, CamQualityState, mediaPermissionState, manageUserSettingsState,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -152,6 +152,8 @@ function MiddleSide() {
 
   const mediaPermission = useRecoilValue(mediaPermissionState);
 
+  const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
+
 
   const setMicStream=async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -264,7 +266,8 @@ function MiddleSide() {
           <MicOffIcon className="h-6 w-6 " />
         )}
       </button>
-      <button
+
+      {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disableCam) && (<button
         className={cn(
           "rounded-full p-2",
           videoState ? "border border-a11y/20 bg-transparent" : "bg-a11y/20",
@@ -343,7 +346,7 @@ function MiddleSide() {
         ) : (
           <VideoOffIcon className="h-6 w-6 " />
         )}
-      </button>
+      </button>)}
 
       {CurrentUserIsPresenter(participantList, user) && (
           <button

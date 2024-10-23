@@ -178,6 +178,7 @@ const KurentoAudio = () => {
                             ...prev,
                             audio_connection:true
                         }))
+                        pinger();
                         break;
                     case 'pong':
                         console.log("kurentoAudio Active connection");
@@ -198,6 +199,16 @@ const KurentoAudio = () => {
         }
     // },[ ])
     },[connectionStatus?.websocket_connection, connectionStatus?.audio_connection, microphoneStream])
+
+    function pinger(){
+        let myVar = setInterval(ping, 15000);
+        function ping(){
+            if(!connectionStatus.audio_connection){
+                clearInterval(myVar);
+            }
+            kurentoSend({"id":"ping"});
+        }
+    }
 
     function startProcess() {
         console.log('Creating WebRtcPeer and generating local sdp offer ...');
