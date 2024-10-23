@@ -33,8 +33,7 @@ import {useToast} from "~/components/ui/use-toast";
 import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
 import {kurentoVideoSwitchCamera} from "~/server/KurentoVideo";
-import {kurentoAudioSetNewStream} from "~/server/KurentoAudio";
-import {Howl} from "howler";
+import {kurentoAudioPlaySound, kurentoAudioSetNewStream} from "~/server/KurentoAudio";
 import {Switch} from "~/components/ui/switch";
 import MicOnIcon from "~/components/icon/outline/MicOnIcon";
 
@@ -128,11 +127,6 @@ function DeviceSettings() {
 
   const screenSize = useScreenSize();
 
-  const sound = new Howl({
-    src: ['/sound_test.mp3'],
-  });
-
-
   const getDevices = async () => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
@@ -174,7 +168,7 @@ function DeviceSettings() {
   // }
 
   const testSpeaker = () => {
-    sound.play();
+    kurentoAudioPlaySound('/sound_test.mp3', selectedSpeaker?.deviceId);
 
     // const audioContext = new (window.AudioContext ||
     //   window.webkitAudioContext)();

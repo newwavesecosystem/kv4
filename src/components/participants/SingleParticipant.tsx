@@ -16,7 +16,7 @@ import {
   authUserState,
   privateChatModalState,
   removeUserModalState,
-  participantTalkingListState, participantListState
+  participantTalkingListState, participantListState, manageUserSettingsState
 } from "~/recoil/atom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import VolumeOnIcon from "../icon/outline/VolumeOnIcon";
@@ -32,16 +32,14 @@ import {
   websocketPresenter,
   websocketStartPrivateChat
 } from "~/server/Websocket";
-import {IParticipant} from "~/types";
+import {IParticipant, IVoiceUser} from "~/types";
 import {CurrentUserRoleIsModerator, FindAvatarfromUserId, ModeratorRole, ViewerRole} from "~/lib/checkFunctions";
 import Image from "next/image";
 import HandOnIcon from "~/components/icon/outline/HandOnIcon";
 
 function SingleParticipant({
-  key,
   participant,
 }: {
-  key: number;
   participant: IParticipant;
 }) {
   const [open, setOpen] = useState(false);
@@ -51,6 +49,8 @@ function SingleParticipant({
     useRecoilState(removeUserModalState);
   const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
   const participantList = useRecoilValue(participantListState);
+  const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
+
 
   const displayActions=(item:any,index:number)=>{
     return (<DropdownMenuItem onClick={()=>{
@@ -144,14 +144,15 @@ function SingleParticipant({
                 </DropdownMenuPortal>
               </DropdownMenuSub>}
 
-            {CurrentUserRoleIsModerator(participantList,user) && <DropdownMenuItem className="py-4" onClick={()=>{
+            {CurrentUserRoleIsModerator(participantList,user) && talkingList.filter((eachItem:IVoiceUser) =>
+                eachItem?.intId == participant.intId  && eachItem?.joined && !eachItem?.muted).length > 0 && (<DropdownMenuItem className="py-4" onClick={()=>{
                 websocketMuteParticipants(participant.userId);
               }}>
                 <VolumeOnIcon volume={1} className="mr-2 h-5 w-5" />
                 Mute User
-              </DropdownMenuItem>}
+              </DropdownMenuItem>)}
 
-            {user?.meetingDetails?.internalUserID == participant.intId ? null :<DropdownMenuItem
+            {user?.meetingDetails?.internalUserID == participant.intId ? null : (CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disablePrivateChat) && (<DropdownMenuItem
                 onClick={() => {
                   if (!user) return;
 
@@ -201,7 +202,7 @@ function SingleParticipant({
               >
                 <ChatIcon className="mr-2 h-5 w-5" />
                 Private Chat
-              </DropdownMenuItem>}
+              </DropdownMenuItem>)}
 
             {user?.meetingDetails?.internalUserID == participant.intId ? null : CurrentUserRoleIsModerator(participantList,user) && <DropdownMenuItem
                 onClick={() => {

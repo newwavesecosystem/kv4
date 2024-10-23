@@ -13,7 +13,7 @@ import {
     connectionStatusState,
     donationModalState,
     eCinemaModalState,
-    fileUploadModalState,
+    fileUploadModalState, manageUserSettingsState,
     micOpenState,
     newMessage, newRaiseHand,
     participantCameraListState,
@@ -27,7 +27,15 @@ import {
     waitingRoomUsersState
 } from "~/recoil/atom";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {IBreakoutRoom, IColumnBreakOutRoom, IParticipant, IParticipantCamera, IVoiceUser, IWaitingUser} from "~/types";
+import {
+    IBreakoutRoom,
+    IColumnBreakOutRoom,
+    IManageUserSettings,
+    IParticipant,
+    IParticipantCamera,
+    IVoiceUser,
+    IWaitingUser
+} from "~/types";
 import dayjs from "dayjs";
 import axios from "axios";
 import {toast} from "~/components/ui/use-toast";
@@ -139,6 +147,8 @@ const Websocket = () => {
     const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
     const [chatTypeList, setChatTypeList] = useRecoilState(chatTypeListState);
     const [isnewRaiseHand, setIsnewRaiseHand] = useRecoilState(newRaiseHand);
+    const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
+
 
     const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(
         postLeaveMeetingState,
@@ -451,12 +461,14 @@ const Websocket = () => {
         const {msg, id, fields} = obj;
         // console.log("UserState: handleUsers",obj);
         if (msg == 'added') {
-            let urecord={
-                ...fields,
-                connection_status:'normal',
-                id
+            if(fields.userId != null) {
+                let urecord = {
+                    ...fields,
+                    connection_status: 'normal',
+                    id
+                }
+                addtoUserlist(urecord)
             }
-            addtoUserlist(urecord)
         }
 
         if (msg == 'changed') {
@@ -473,7 +485,7 @@ const Websocket = () => {
             }
 
             if(raiseHand != null){
-                console.log("UserState: handling role change",obj);
+                console.log("UserState: handling raiseHand change",obj);
                 modifyRaiseHandStateUser(id,raiseHand)
             }
         }
@@ -840,29 +852,31 @@ const Websocket = () => {
             console.log('breakoutId',breakoutId);
             console.log('breakoutId',fields);
 
-            setBreakOutRoomState((prev) => ({
-                ...prev,
-                rooms: [
-                    ...prev.rooms,
-                    {
-                        id: id,
-                        breakoutId: breakoutId,
-                        title: shortName,
-                        users: joinedUsers,
-                    }
-                ],
-            }));
+            if(breakoutId != null) {
+                setBreakOutRoomState((prev) => ({
+                    ...prev,
+                    rooms: [
+                        ...prev.rooms,
+                        {
+                            id: id,
+                            breakoutId: breakoutId,
+                            title: shortName,
+                            users: joinedUsers,
+                        }
+                    ],
+                }));
 
-            setBreakOutRoomState((prev) => ({
-                ...prev,
-                step: 2,
-                activatedAt: new Date(),
-                createdAt: new Date(),
-                isActive: true,
-                endedAt: dayjs()
-                    .add(breakOutRoomState.duration, "minute")
-                    .toDate(),
-            }));
+                setBreakOutRoomState((prev) => ({
+                    ...prev,
+                    step: 2,
+                    activatedAt: new Date(),
+                    createdAt: new Date(),
+                    isActive: true,
+                    endedAt: dayjs()
+                        .add(breakOutRoomState.duration, "minute")
+                        .toDate(),
+                }));
+            }
         }
 
 
@@ -914,13 +928,33 @@ const Websocket = () => {
 
 
     const handleMeetings =(eventData:any)=>{
-        console.log('Random User Handler')
+        // console.log('Random User Handler')
         const obj = JSON.parse(eventData);
 
         const {msg, id, fields} = obj;
 
+        if(msg == "added") {
+            const {lockSettingsProps} = obj.fields;
+
+            if(lockSettingsProps != null){
+                setManageUserSettings((prev)=>({
+                    ...prev,
+                    disableCam: lockSettingsProps.disableCam,
+                    disableMic: lockSettingsProps.disableMic,
+                    disableNotes: lockSettingsProps.disableNotes,
+                    disablePrivateChat: lockSettingsProps.disablePrivateChat,
+                    disablePublicChat: lockSettingsProps.disablePublicChat,
+                    hideUserList: lockSettingsProps.hideUserList,
+                    hideViewersAnnotation: lockSettingsProps.hideViewersAnnotation,
+                    hideViewersCursor: lockSettingsProps.hideViewersCursor,
+                    lockOnJoin: lockSettingsProps.lockOnJoin,
+                    lockOnJoinConfigurable: lockSettingsProps.lockOnJoinConfigurable
+                }));
+            }
+        }
+
         if(msg == "changed") {
-            const {randomlySelectedUser, meetingEnded, voiceProp} = obj.fields
+            const {randomlySelectedUser, meetingEnded, voiceProp, lockSettingsProps} = obj.fields
 
             if (meetingEnded != null && meetingEnded) {
                 console.log("Meeting has been Ended ",meetingEnded);
@@ -939,6 +973,22 @@ const Websocket = () => {
                     setMicState(voiceProp.muteOnStart);
                 }
 
+            }
+
+            if(lockSettingsProps != null){
+                setManageUserSettings((prev)=>({
+                    ...prev,
+                    disableCam: lockSettingsProps.disableCam,
+                    disableMic: lockSettingsProps.disableMic,
+                    disableNotes: lockSettingsProps.disableNotes,
+                    disablePrivateChat: lockSettingsProps.disablePrivateChat,
+                    disablePublicChat: lockSettingsProps.disablePublicChat,
+                    hideUserList: lockSettingsProps.hideUserList,
+                    hideViewersAnnotation: lockSettingsProps.hideViewersAnnotation,
+                    hideViewersCursor: lockSettingsProps.hideViewersCursor,
+                    lockOnJoin: lockSettingsProps.lockOnJoin,
+                    lockOnJoinConfigurable: lockSettingsProps.lockOnJoinConfigurable
+                }));
             }
         }
     }
@@ -1530,31 +1580,25 @@ export function websocketParticipantsChangeRole(internalUserID:any,type:number) 
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"changeRole\",\"params\":[\"${internalUserID}\",\"${role}\"]}`])
 }
 
+export function websocketMuteParticipants(internalUserID:any) {
+    console.log('Muted User')
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleVoice\",\"params\":[\"${internalUserID}\"]}`])
+}
+
 export function websocketMuteAllParticipants(internalUserID:any) {
     console.log('Muted all')
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
 }
 
-export function websocketMuteParticipants(internalUserID:any) {
-    console.log('Muted all')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"muteAllUsers\",\"params\":[\"${internalUserID}\"]}`])
-}
-
 export function websocketMuteParticipantsePresenter(internalUserID:any) {
-    console.log('Muted all except preseter')
+    console.log('Muted all except presenter')
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"muteAllExceptPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
 
-export function websocketLockViewers(internalUserID:any) {
+export function websocketLockViewers(manageUserSettings:IManageUserSettings,internalUserID:any) {
     console.log('LockViewers')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleLockSettings\",\"params\":[{\"disableCam\":true,\"disableMic\":true,\"disableNotes\":true,\"disablePrivateChat\":true,\"disablePublicChat\":true,\"hideUserList\":true,\"hideViewersAnnotation\":true,\"hideViewersCursor\":true,\"lockOnJoin\":true,\"lockOnJoinConfigurable\":false,\"setBy\":\"temp\"}]}`])
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleWebcamsOnlyForModerator\",\"params\":[true]}`])
-}
-
-export function websocketUnLockViewers(internalUserID:any) {
-    console.log('unLockViewers')
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleLockSettings\",\"params\":[{\"disableCam\":false,\"disableMic\":false,\"disablePrivateChat\":false,\"disablePublicChat\":false,\"disableNotes\":false,\"hideUserList\":false,\"lockOnJoin\":true,\"lockOnJoinConfigurable\":false,\"hideViewersCursor\":false,\"hideViewersAnnotation\":false,\"setBy\":\"w_gmo5zeyaswun\"}]}`])
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"toggleWebcamsOnlyForModerator\",\"params\":[false]}`])
+    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"toggleLockSettings","params":[{"disableCam":${manageUserSettings.disableCam},"disableMic":${manageUserSettings.disableMic},"disableNotes":${manageUserSettings.disableNotes},"disablePrivateChat":${manageUserSettings.disablePrivateChat},"disablePublicChat":${manageUserSettings.disablePublicChat},"hideUserList":${manageUserSettings.hideUserList},"hideViewersAnnotation":${manageUserSettings.hideViewersAnnotation},"hideViewersCursor":${manageUserSettings.hideViewersCursor},"lockOnJoin":true,"lockOnJoinConfigurable":false,"setBy":"${internalUserID}"}]}`])
+    // websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"toggleWebcamsOnlyForModerator","params":[true]}`])
 }
 
 export function websocketSetWaitingRoom(type:number) {

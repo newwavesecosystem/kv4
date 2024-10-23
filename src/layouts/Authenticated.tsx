@@ -30,7 +30,7 @@ import {
   eCinemaModalState,
   participantsModalState,
   recordingModalState,
-  newMessage, newRaiseHand,
+  newMessage, newRaiseHand, selectedSpeakersState, manageUserSettingsState,
 } from "~/recoil/atom";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
 
@@ -59,6 +59,7 @@ import { Howl } from 'howler';
 import RecordingConsentModal from "~/components/recording/RecordingConsentModal";
 import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
 import MediaOnboardingDialog from "~/lib/MediaOnboardingDialog";
+import {kurentoAudioPlaySound} from "~/server/KurentoAudio";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -102,6 +103,13 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
   const [isnewRaiseHand, setIsnewRaiseHand] = useRecoilState(newRaiseHand);
 
+  const [selectedSpeaker, setSelectedSpeaker] = useRecoilState(
+      selectedSpeakersState,
+  );
+
+  const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
+
+
   const [appToggle, setAppToggles] = useState({appsToggle:[], adminUI: {
       "name": "1Gov Admin",
       "url": "https://govsupport.convergenceondemand.com/admin/tenant"
@@ -115,6 +123,9 @@ function Authenticated({ children }: { children: React.ReactNode }) {
   const raiseHandSound = new Howl({
     src: ['/finger-snaps.mp3'],
   });
+
+  const NewMessageSound = "/message.mp3";
+  const RaiseHandSound = "/finger-snaps.mp3";
 
 
   const get1govToggles = (id: any) => {
@@ -144,15 +155,14 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if(isNewMessage) {
-
-      sound.play();
+      kurentoAudioPlaySound(NewMessageSound, selectedSpeaker?.deviceId);
     }
   }, [isNewMessage])
 
 
   useEffect(() => {
     if(isnewRaiseHand) {
-      raiseHandSound.play();
+      kurentoAudioPlaySound(RaiseHandSound, selectedSpeaker?.deviceId);
     }
   }, [isnewRaiseHand])
 
@@ -375,7 +385,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           >
             <CCIcon className="h-6 w-6" />
           </button>
-          <button
+          {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.hideUserList) && (<button
             onClick={() => {
               setParticipantState(!participantState);
             }}
@@ -383,7 +393,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           >
             <PeoplesIcon className="h-5 w-5" />
             <span>{participantList.length}</span>
-          </button>
+          </button>)}
         </div>
       </div>
       {children}
@@ -530,7 +540,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           >
             <CCIcon className="h-6 w-6" />
           </button>
-          <button
+          {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disablePublicChat) && (<button
             onClick={() => {
               setChatState(!chatState);
               setIsNewMessage(false);
@@ -541,7 +551,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             {isNewMessage && (
               <div className="absolute right-2 top-2 h-2 w-2 animate-pulse rounded-full bg-a11y"></div>
             )}
-          </button>
+          </button>)}
         </div>
       </div>
     </div>

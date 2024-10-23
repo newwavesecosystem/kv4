@@ -34,6 +34,16 @@ export async function kurentoAudioSetNewStream(stream:MediaStream) {
 
 }
 
+export async function kurentoAudioPlaySound(source:string, deviceId:string|undefined) {
+    console.log('kurentoAudioPlaySound');
+
+    const sound = new Audio(source);
+
+    if (deviceId && sound.setSinkId) await sound.setSinkId(deviceId);
+
+    sound.play();
+}
+
 export function kurentoAudioEndStream() {
     console.log('Ending Audio on KurentoAudio websocket');
 
@@ -79,21 +89,32 @@ const KurentoAudio = () => {
         console.log(`selectedSpeaker : ${selectedSpeaker}`)
         const changeAudioOutput = async () => {
             try {
-                if (audioRef.current) {
-                    // Use type assertion to tell TypeScript that audioRef.current has the setSinkId method
-                    (audioRef.current as any).setSinkId(selectedSpeaker?.deviceId)
-                        .then(() => console.log(`Audio output set to device: ${selectedSpeaker?.deviceId}`))
-                        .catch((error:any) => console.error('Error setting audio output device:', error));
-                    console.log(`Audio output set to: ${selectedSpeaker?.label}`);
-                    console.log('Audio output set successfully.');
-                    console.log(`Audio output readyState : ${audioRef.current.readyState}`);
-                    if (audioRef.current.readyState > 0) {
-                        console.log('Audio output is in ready state');
-                        audioRef.current.load();
-                    }
-                } else {
-                    console.error('Audio element not found.');
+
+                const audioElement:any = document.getElementById('audioElement');
+                var from = audioElement?.sinkId;
+                await audioElement?.setSinkId(selectedSpeaker?.deviceId);
+                if (audioElement && (audioElement.readyState > 0)) {
+                    audioElement.load();
                 }
+                console.log(`Audio output set to: ${selectedSpeaker?.deviceId} from:${from}`);
+                console.log(`Audio output set successfully ${selectedSpeaker?.label}`);
+                console.log(`Audio output readyState : ${audioElement.readyState}`);
+
+                //     if (audioRef.current) {
+            //         // Use type assertion to tell TypeScript that audioRef.current has the setSinkId method
+            //         (audioRef.current as any).setSinkId(selectedSpeaker?.deviceId)
+            //             .then(() => console.log(`Audio output set to device: ${selectedSpeaker?.deviceId}`))
+            //             .catch((error:any) => console.error('Error setting audio output device:', error));
+            //         console.log(`Audio output set to: ${selectedSpeaker?.label}`);
+            //         console.log('Audio output set successfully.');
+            //         console.log(`Audio output readyState : ${audioRef.current.readyState}`);
+            //         if (audioRef.current.readyState > 0) {
+            //             console.log('Audio output is in ready state');
+            //             audioRef.current.load();
+            //         }
+            //     } else {
+            //         console.error('Audio element not found.');
+            //     }
             } catch (error) {
                 console.error('Error changing audio output:', error);
             }
@@ -103,6 +124,10 @@ const KurentoAudio = () => {
             // Change the audio output when the selectedSpeaker change
             changeAudioOutput();
         }
+
+        console.log("getCurrentAudioSinkId",audioRef.current?.sinkId);
+
+
 
     },[selectedSpeaker])
 
@@ -153,6 +178,7 @@ const KurentoAudio = () => {
                             ...prev,
                             audio_connection:true
                         }))
+                        pinger();
                         break;
                     case 'pong':
                         console.log("kurentoAudio Active connection");
@@ -173,6 +199,16 @@ const KurentoAudio = () => {
         }
     // },[ ])
     },[connectionStatus?.websocket_connection, connectionStatus?.audio_connection, microphoneStream])
+
+    function pinger(){
+        let myVar = setInterval(ping, 15000);
+        function ping(){
+            if(!connectionStatus.audio_connection){
+                clearInterval(myVar);
+            }
+            kurentoSend({"id":"ping"});
+        }
+    }
 
     function startProcess() {
         console.log('Creating WebRtcPeer and generating local sdp offer ...');

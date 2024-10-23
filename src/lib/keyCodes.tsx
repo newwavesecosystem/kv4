@@ -23,3 +23,35 @@ export default {
   PAGE_DOWN,
   A,
 };
+
+
+// const setModOnlyMessage = (resp) => {
+//   if (resp && resp.modOnlyMessage) {
+//     const sanitizedModOnlyText = SanitizeHTML(resp.modOnlyMessage, {
+//       allowedTags: ['a', 'b', 'br', 'i', 'img', 'li', 'small', 'span', 'strong', 'u', 'ul'],
+//       allowedAttributes: {
+//         a: ['href', 'name', 'target'],
+//         img: ['src', 'width', 'height'],
+//       },
+//       allowedSchemes: ['https'],
+//     });
+//     setModeratorOnlyMessage(sanitizedModOnlyText);
+//   }
+//   return resp;
+// };
+
+
+// if(['missingSession','meetingForciblyEnded','notFound'].includes(response.messageKey)) {
+//   JoinHandler.setError('410');
+//   Session.set('errorMessageDescription', 'meeting_ended');
+// } else if(response.messageKey == "guestDeny") {
+//   JoinHandler.setError('401');
+//   Session.set('errorMessageDescription', 'guest_deny');
+// } else if(response.messageKey == "maxParticipantsReached") {
+//   JoinHandler.setError('401');
+//   Session.set('errorMessageDescription', 'max_participants_reason');
+// } else {
+//   JoinHandler.setError('401');
+//   Session.set('errorMessageDescription', response.message);
+// }
+

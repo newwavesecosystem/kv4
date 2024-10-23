@@ -14,7 +14,7 @@ import {
   IBreakOutRecord,
   IPresentationSlideState,
   IAuthUser,
-  IVoiceUser
+  IVoiceUser, IManageUserSettings
 } from "~/types";
 
 export const authUserState = atom<IAuthUser | null>({
@@ -102,6 +102,15 @@ export const currentColorTheme = atom<{
   default: {
     background: "#FFFFFF",
     text: "#227451",
+  },
+});
+
+export const manageUserSettingsState = atom<IManageUserSettings>({
+  key: "manageUseSettingsState",
+  default: {
+    muteAllUsers: false,
+    muteAllUsersExceptPresenter: false,
+    disableCam:false,disableMic:false,disableNotes:false,disablePrivateChat:false,disablePublicChat:false,hideUserList:false,hideViewersAnnotation:false,hideViewersCursor:false,lockOnJoin:true,lockOnJoinConfigurable:false
   },
 });
 
