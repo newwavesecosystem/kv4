@@ -1,22 +1,19 @@
 import React, {useEffect, useState} from "react";
 import { cn } from "~/lib/utils";
 import SingleCameraComponent from "./SingleCameraComponent";
+import {IParticipant, IParticipantCamera} from "~/types/index";
+import {useRecoilValue} from "recoil";
+import {participantCameraListState} from "~/recoil/atom";
 
-const ParticipantsCameraComponent = ({ participantList, participantCameraList, pinnedParticipant, paginateParticipants =[] }) => {
+const ParticipantsCameraComponent = ({ participantList, pinnedParticipant, paginateParticipants}: {
+    participantList: IParticipant[];
+    pinnedParticipant: IParticipant[];
+    paginateParticipants: IParticipant[];
+}) => {
   const participantsPerPage = 8; // Limit to 8 participants per page
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(participantList.length / participantsPerPage);
-
-    useEffect(() => {
-        console.log("participantsPerPage: ",participantsPerPage);
-        console.log("currentPage: ",currentPage);
-        console.log("from: ",(currentPage - 1) * participantsPerPage);
-        console.log("to: ",currentPage * participantsPerPage);
-        console.log("paginateParticipants: ",paginateParticipants.length);
-        console.log("participantList: ",participantList.length);
-    }, [paginateParticipants, participantList]);
-
-  console.log("paginateParticipants.length: ",paginateParticipants.length);
+  const participantCameraList = useRecoilValue(participantCameraListState);
 
   return (
       <div>
@@ -38,11 +35,11 @@ const ParticipantsCameraComponent = ({ participantList, participantCameraList, p
           {paginateParticipants.map((participant, index) => (
               <SingleCameraComponent
                   index={index}
-                  key={participant.id * currentPage}
+                  key={participant.id}
                   participant={participant}
-                  userCamera={participantCameraList.find(
-                      (cItem) => cItem?.intId === participant.intId
-                  )}
+                  userCamera={participantCameraList.filter(
+                      (cItem:IParticipantCamera) => cItem.intId === participant.intId
+                  )[0]}
               />
           ))}
         </div>

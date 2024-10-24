@@ -100,7 +100,7 @@ function PostSignIn() {
   const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const participantsPerPage = layoutSettings.maxTiles;
+  const participantsPerPage:number = layoutSettings.maxTiles[0] ?? 4;
   const totalPages = Math.ceil(participantList.length / participantsPerPage);
 
 
@@ -516,7 +516,7 @@ function PostSignIn() {
             !eCinemaModal.isActive &&
             (CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.hideUserList) && (
                 <div>
-                <ParticipantsCameraComponent participantCameraList={participantCameraList} participantList={participantList} pinnedParticipant={pinnedParticipant} paginateParticipants={participantList.slice(
+                <ParticipantsCameraComponent participantList={participantList} pinnedParticipant={pinnedParticipant} paginateParticipants={participantList.slice(
                     (currentPage - 1) * participantsPerPage,
                     currentPage * participantsPerPage
                 )} />
