@@ -1515,19 +1515,6 @@ const Websocket = () => {
     }
 
 
-    const findAvatarfromUserId = (userId:string) => {
-        var ishola = participantList
-        var damola = ishola.filter((item:any) => item?.userId == userId)
-        console.log('damola')
-        console.log(damola)
-        if (damola.length > 0) {
-            return damola[0]?.avatar
-        } else {
-            return ''
-        }
-    }
-
-
     return (
         <div>
         </div>

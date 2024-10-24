@@ -58,6 +58,7 @@ import {
 import PresentationSlide from "./presentationSlide/PresentationSlide";
 import {GetCurrentSessionEjected, GetCurrentSessionToken, SetCurrentSessionToken} from "~/lib/localStorageFunctions";
 import KurentoVideoSingleStick from "~/server/KurentoVideoSingleStick";
+import ParticipantsCameraComponent from "~/components/camera/ParticipantsCameraComponent";
 
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
@@ -97,6 +98,10 @@ function PostSignIn() {
   const [wakeLock, setWakeLock] = useState(null);
   const [wakeLockActive, setWakeLockActive] = useState(false);
   const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const participantsPerPage = layoutSettings.maxTiles;
+  const totalPages = Math.ceil(participantList.length / participantsPerPage);
 
 
   const router = useRouter();
@@ -504,54 +509,50 @@ function PostSignIn() {
 
         {/* render camera feed if not whiteboard or screensharing */}
         {/*and hideUserList is not true; render all cams*/}
+        {/*and pagination has been added*/}
         {!isWhiteboardOpen &&
-          (!screenSharingStream ||
-            (screenSharingStream && layoutSettings.layout === "2")) &&
-          !eCinemaModal.isActive && (CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.hideUserList) && (
-            <div
-              className={cn(
-                " m-auto h-[calc(100vh-158px)] items-center justify-center p-4",
-                (isWhiteboardOpen || screenSharingStream) &&
-                participantTalkingList.filter(
-                  (eachItem: any) => !eachItem.muted,
-                )?.length > 0 &&
-                "mt-6 h-[calc(100vh-150px)]",
-                participantList.length === 1 &&
-                " flex items-center justify-center md:aspect-square  ",
-                participantList.length === 2 &&
-                "grid justify-center gap-2 md:grid-cols-2 mt-5",
-                participantList.length === 3 &&
-                "grid grid-cols-2 gap-2 lg:grid-cols-3 ",
-                participantList.length >= 4 && "grid grid-cols-2 gap-2",
-                participantList.length >= 5 && "grid gap-2 md:grid-cols-3",
-                participantList.length >= 7 && "grid gap-2 md:grid-cols-4",
-                participantList.length >= 13 && "grid gap-2 md:grid-cols-5",
-                participantList.length >= 3 && pinnedParticipant.length > 0 && "md:!grid-cols-4",
-              )} style={{ paddingTop: "1.5rem" }}
-            >
-              {participantList
-                // pick only 5 participant
-                .filter(
-                  (participant: IParticipant, index: number) => {
-                    if (pinnedParticipant.length > 0) {
-                      return index < 5
-                    } else {
-                      return participant
-                    }
-                  },
-                )
-                .map(
-                  (participant: IParticipant, index: number) => (
-                    <SingleCameraComponent
-                      index={index}
-                      key={index}
-                      participant={participant}
-                      userCamera={participantCameraList.filter((cItem: IParticipantCamera) => cItem?.intId == participant.intId)[0]}
-                    />
-                  ),
-                )}
-            </div>
-          )}
+            (!screenSharingStream ||
+                (screenSharingStream && layoutSettings.layout === "2")) &&
+            !eCinemaModal.isActive &&
+            (CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.hideUserList) && (
+                <div>
+                <ParticipantsCameraComponent participantCameraList={participantCameraList} participantList={participantList} pinnedParticipant={pinnedParticipant} paginateParticipants={participantList.slice(
+                    (currentPage - 1) * participantsPerPage,
+                    currentPage * participantsPerPage
+                )} />
+
+                  {/* Pagination controls */}
+                  <div className="pagination-controls flex justify-center gap-4 mt-2">
+                    {/* Previous Button */}
+                    {currentPage > 1 && (
+                        <button
+                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                            className="bg-a11y/20 w-10 h-10 rounded-md"
+                        >
+                          &lt;
+                        </button>
+                    )}
+
+                    {/* Pagination Dots */}
+                    <div className="flex items-center gap-2">
+
+                      {/* Current Page Dot */}
+                      {Array.from({length: totalPages}, (_, index) => <button key={index} onClick={() => setCurrentPage(index+1)} className={`${(currentPage - 1) == index ? 'bg-white': 'bg-green-900'} w-3 h-3 rounded-full`}/>)}
+
+                    </div>
+
+                    {/* Next Button */}
+                    {currentPage < totalPages && (
+                        <button
+                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                            className="bg-a11y/20 w-10 h-10 rounded-md"
+                        >
+                          &gt;
+                        </button>
+                    )}
+                  </div>
+                </div>
+            )}
 
         {/* render camera feed if not whiteboard or screensharing */}
         {/*and hideUserList is true; render all moderator cams*/}

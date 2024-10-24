@@ -36,6 +36,8 @@ const Layouts = [
   },
 ];
 
+import deviceInfo from "~/lib/deviceInfo";
+
 function LayoutSettings() {
   const colorPickerRef = useRef<HTMLInputElement>(null);
   const currentTab = useRecoilValue(currentTabState);
@@ -159,7 +161,7 @@ function LayoutSettings() {
           <div>
             <span>Change layout</span>
             <p className="text-xs opacity-50">
-              Maximum tiles to display within the window
+              Change style
             </p>
           </div>
           <RadioGroup
@@ -210,8 +212,8 @@ function LayoutSettings() {
               onValueChange={(value) =>
                 setlayoutSettings({ ...layoutSettings, maxTiles: value })
               }
-              max={20}
-              min={6}
+              max={deviceInfo.isMobile ? 6 : 12}
+              min={4}
               step={2}
             />
             <div className="grid h-5 w-8 grid-cols-3 gap-[2px]">
