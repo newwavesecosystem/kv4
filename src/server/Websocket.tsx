@@ -1105,7 +1105,7 @@ const Websocket = () => {
 
     const addtoUserlist = (user:any) => {
         let ishola = participantList;
-        console.log("UserState: ishola", ishola)
+        // console.log("UserState: ishola", ishola)
         if (ishola.filter((item :any) => item?.userId == user?.userId).length < 1) {
             setParticipantList([...participantList,user]);
         }
@@ -1512,19 +1512,6 @@ const Websocket = () => {
             source: link,
             isActive:false
         });
-    }
-
-
-    const findAvatarfromUserId = (userId:string) => {
-        var ishola = participantList
-        var damola = ishola.filter((item:any) => item?.userId == userId)
-        console.log('damola')
-        console.log(damola)
-        if (damola.length > 0) {
-            return damola[0]?.avatar
-        } else {
-            return ''
-        }
     }
 
 
