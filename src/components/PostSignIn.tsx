@@ -540,7 +540,7 @@ function PostSignIn() {
                               <div className="flex items-center gap-2">
 
                               {/* Current Page Dot */}
-                                {Array.from({length: totalPages}, (_, index) => <button key={index} onClick={() => setCurrentPage(index+1)} className={`${(currentPage - 1) == index ? 'bg-white': 'bg-green-900'} w-3 h-3 rounded-full`}/>)}
+                                {Array.from({length: totalPages}, (_, index) => <button key={index} onClick={() => setCurrentPage(index+1)} className={`${(currentPage - 1) == index ? 'bg-green-900': 'bg-white outline-green-900 border-8'} w-3 h-3 rounded-full`}/>)}
 
                             </div>
 
