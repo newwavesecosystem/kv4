@@ -22,19 +22,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Make audio and sound alert play through the selected output device">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fix UI Color issue on pagination">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/participants/SingleParticipant.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/participants/SingleParticipant.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/settings/Settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/Settings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/keyCodes.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/keyCodes.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/KurentoAudio.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoAudio.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,26 +51,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "samji",
-    "last_opened_file_path": "C:/Users/odeji/WebstormProjects/kv4/src/lib",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.build.executor": "Run",
-    "npm.dev.executor": "Run",
-    "npm.start.executor": "Run",
-    "settings.editor.selected.configurable": "editor.preferences.jsonOptions",
-    "ts.external.directory.path": "C:\\Users\\odeji\\WebstormProjects\\kv4\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;samji&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/odeji/WebstormProjects/kv4/src/lib&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.start.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.jsonOptions&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\odeji\\WebstormProjects\\kv4\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\odeji\WebstormProjects\kv4\src\lib" />
@@ -437,20 +428,13 @@
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/server/Websocket.tsx</url>
-          <line>183</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/server/KurentoAudio.tsx</url>
-          <line>246</line>
-          <properties lambdaOrdinal="-1" />
+          <line>273</line>
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx</url>
           <line>47</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>

@@ -42,68 +42,16 @@ import {toast} from "~/components/ui/use-toast";
 import {FindUserNamefromUserId, ModeratorRole} from "~/lib/checkFunctions";
 import {SetCurrentSessionEjected} from "~/lib/localStorageFunctions";
 
+const maxReconnectAttempts = 10;
+let reconnectAttempts = 0;
+
+
 
 // var sock = null;
 var sock = new SockJS(ServerInfo.websocketURL);
 
-const reConnect = () => {
-    sock = new SockJS(ServerInfo.websocketURL);
-}
-
-
-// export function websocketConnect() {
-//     // Add event listeners for various socket events
-//
-//     sock.onopen = () => {
-//         console.log('Websocket connection established');
-//         websocketSend(["{\"msg\":\"connect\",\"version\":\"1\",\"support\":[\"1\",\"pre2\",\"pre1\"]}"])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meteor_autoupdate_clientVersions\",\"params\":[]}`])
-//         websocketSend(["{\"msg\":\"method\",\"id\":\"1\",\"method\":\"userChangedLocalSettings\",\"params\":[{\"application\":{\"animations\":true,\"chatAudioAlerts\":false,\"chatPushAlerts\":false,\"userJoinAudioAlerts\":false,\"userJoinPushAlerts\":false,\"userLeaveAudioAlerts\":false,\"userLeavePushAlerts\":false,\"raiseHandAudioAlerts\":true,\"raiseHandPushAlerts\":true,\"guestWaitingAudioAlerts\":true,\"guestWaitingPushAlerts\":true,\"paginationEnabled\":true,\"pushLayoutToEveryone\":false,\"fallbackLocale\":\"en\",\"overrideLocale\":null,\"locale\":\"en-US\"},\"audio\":{\"inputDeviceId\":\"undefined\",\"outputDeviceId\":\"undefined\"},\"dataSaving\":{\"viewParticipantsWebcams\":true,\"viewScreenshare\":true}}]}"])
-//         websocketSend([`{\"msg\":\"method\",\"id\":\"2\",\"method\":\"validateAuthToken\",\"params\":[\"${UserInfo.meetingID}\",\"${UserInfo.internalUserID}\",\"${UserInfo.authToken}\",\"${UserInfo.externUserID}\"]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"auth-token-validation\",\"params\":[{\"meetingId\":\"${UserInfo.meetingID}\",\"userId\":\"${UserInfo.internalUserID}\"}]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"current-user\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meetings\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"polls\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"presentations\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"slides\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"slide-positions\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"captions\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"voiceUsers\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"whiteboard-multi-user\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"screenshare\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"group-chat\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"group-chat-msg\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"presentation-pods\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-settings\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"guestUser\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-infos\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"note\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meeting-time-remaining\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"local-settings\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-typing\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"record-meetings\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"video-streams\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"connection-status\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"voice-call-states\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"external-video-meetings\",\"params\":[]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meetings\",\"params\":[\"MODERATOR\"]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users\",\"params\":[\"MODERATOR\"]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"breakouts\",\"params\":[\"MODERATOR\"]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"guestUser\",\"params\":[\"MODERATOR\"]}`])
-//         websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"annotations\",\"params\":[]}`])
-//
-//         pinger();
-//     };
-//
-//     sock.onmessage = (e) => {
-//         console.log('Received message:', e.data);
-//         // handleIncomingmsg(e.data)
-//     };
-// }
 
 export function websocketSend(data:any) {
-    // addNewmessage2()
     sock.send(data)
 
     console.log('Sending this data via websocket')
@@ -165,24 +113,38 @@ const Websocket = () => {
 
     function pinger(){
 
-        let myVar = setInterval(ping, 10000);
+        let myVar = setInterval(ping, 5000);
 
         function ping(){
             if(!connectionStatus.websocket_connection){
                 clearInterval(myVar);
             }
-            websocketSend(["{\"msg\":\"pong\"}"])
+            websocketSend(["{\"msg\":\"ping\"}"])
         }
 
     }
 
 
+    const reConnect = () => {
+        if (reconnectAttempts < maxReconnectAttempts) {
+            const delay = Math.min(1000 * 2 ** reconnectAttempts, 30000); // Exponential backoff
+            setTimeout(() => {
+                console.log(`Reconnecting... Attempt ${reconnectAttempts + 1}`);
+                sock = new SockJS(ServerInfo.websocketURL);
+                initializeWebSocket();
+                reconnectAttempts += 1;
+            }, delay);
+        } else {
+            // console.log("Max reconnection attempts reached");
+        }
+    };
 
-    useEffect(() => {
-        // websocketConnect()
+    const initializeWebSocket = () => {
         if (sock !== null) {
             sock.onopen = () => {
-                console.log('Websocket connection established');
+                // console.log('Websocket connection established');
+                reconnectAttempts = 0;  // Reset attempts on successful connection
+
                 websocketSend(["{\"msg\":\"connect\",\"version\":\"1\",\"support\":[\"1\",\"pre2\",\"pre1\"]}"])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meteor_autoupdate_clientVersions\",\"params\":[]}`])
                 websocketSend(["{\"msg\":\"method\",\"id\":\"1\",\"method\":\"userChangedLocalSettings\",\"params\":[{\"application\":{\"animations\":true,\"chatAudioAlerts\":false,\"chatPushAlerts\":false,\"userJoinAudioAlerts\":false,\"userJoinPushAlerts\":false,\"userLeaveAudioAlerts\":false,\"userLeavePushAlerts\":false,\"raiseHandAudioAlerts\":true,\"raiseHandPushAlerts\":true,\"guestWaitingAudioAlerts\":true,\"guestWaitingPushAlerts\":true,\"paginationEnabled\":true,\"pushLayoutToEveryone\":false,\"fallbackLocale\":\"en\",\"overrideLocale\":null,\"locale\":\"en-US\"},\"audio\":{\"inputDeviceId\":\"undefined\",\"outputDeviceId\":\"undefined\"},\"dataSaving\":{\"viewParticipantsWebcams\":true,\"viewScreenshare\":true}}]}"])
@@ -219,8 +181,6 @@ const Websocket = () => {
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"breakouts\",\"params\":[\"MODERATOR\"]}`])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"guestUser\",\"params\":[\"MODERATOR\"]}`])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"annotations\",\"params\":[]}`])
-
-                pinger();
             };
 
             sock.onmessage = (e) => {
@@ -256,6 +216,7 @@ const Websocket = () => {
                                 connectionID: connectionId,
                                 connectionAuthTime: new Date().getTime()
                             }))
+                            pinger();
                         }
                     }
                 }
@@ -332,8 +293,24 @@ const Websocket = () => {
 
             };
             sock.onclose = () => {
-                console.log('Socket connection closed');
-                console.log('Trying to Reconnect');
+                // console.log('Socket connection closed, attempting to reconnect...');
+                setConnection((prev)=>({
+                    ...prev,
+                    websocket_connection:false
+                }))
+
+                if(!postLeaveMeeting.isLeave || !postLeaveMeeting.isLeaveRoomCall || !postLeaveMeeting.isEndCall || !postLeaveMeeting.isOthers || !postLeaveMeeting.isSessionExpired || !postLeaveMeeting.isKicked){
+                    reConnect();
+                    setConnection((prev)=>({
+                        ...prev,
+                        websocket_connection_reconnect:true
+                    }))
+                }
+
+
+            };
+            sock.onerror = () => {
+                console.log('Socket connection error, attempting to reconnect...');
                 setConnection((prev)=>({
                     ...prev,
                     websocket_connection:false
@@ -350,6 +327,12 @@ const Websocket = () => {
 
             };
         }
+    };
+
+
+
+    useEffect(() => {
+        initializeWebSocket();
     })
 
     const handleIncomingmsg = (eventData:any) => {
@@ -1178,12 +1161,15 @@ const Websocket = () => {
         // { "intId": "w_1r7gdsvbegfj", "meetingId": "90af7edbfd8a161a7f711504a114aaf5bf597f9f-1727768989277", "callerName": "Odejinmi+Samuel", "callerNum": "w_1r7gdsvbegfj_2-bbbID-Odejinmi+Samuel", "callingWith": "none", "color": "#4a148c", "joined": false, "listenOnly": false, "muted": false, "spoke": false, "talking": false, "voiceConf": "55004", "voiceUserId": "303", "endTime": 1727769305417, "startTime": 1727768997499, "floor": true, "lastFloorTime": "1727769305394997" }
         // { id: '7J2pQrMaH5C58ZsHj', intId: 'w_6pjsehfq5dcf', callerName: 'Test Sam', joined: false, talking: false, muted:false }
 
-        if (participantTalkingList.filter((item:IVoiceUser) => item?.id == voiceUser?.id || item?.intId == voiceUser?.intId).length < 1) {
-
-            if(voiceUser.intId == user?.meetingDetails?.internalUserID){
-                setMicState(voiceUser.muted);
-            }
+        if (participantTalkingList.filter((item:IVoiceUser) => item?.intId == voiceUser?.intId).length < 1) {
             setParticipantTalkingList([...participantTalkingList,voiceUser])
+        }else{
+            var removeExisting=participantTalkingList.filter((item:IVoiceUser) => item?.intId != voiceUser?.intId);
+            setParticipantTalkingList([...removeExisting,voiceUser])
+        }
+
+        if(voiceUser.intId == user?.meetingDetails?.internalUserID){
+            setMicState(voiceUser.muted);
         }
     }
 
@@ -1217,7 +1203,7 @@ const Websocket = () => {
 
     }
 
-    const modifyMutedUser = (id:number, state:boolean) => {
+    const modifyMutedUser = (id:any, state:boolean) => {
         // Update the 'muted' property to 'true' for the object with id '7J2pQrMaH5C58ZsHj' for Audio
         const updatedArray = participantTalkingList?.map((item:any) => {
             if (item.id === id) {

@@ -78,6 +78,11 @@ const KurentoAudio = () => {
 
     const [audioState, setAudioState] = useState(false);
 
+    const [reconnectAttempts, setReconnectAttempts] = useState(0);
+
+    const maxReconnectAttempts = 10;
+
+
     const audioRef = useRef<HTMLAudioElement>(null);
 
     function kurentoSend(data: any) {
@@ -133,23 +138,32 @@ const KurentoAudio = () => {
 
 
     useEffect(() => {
-
+        console.log("kurentoAudio connectionStatus.audio_connection: ",connectionStatus.audio_connection)
+        console.log("kurentoAudio connectionStatus.websocket_connection: ",connectionStatus.websocket_connection)
+        console.log("kurentoAudio user?.sessiontoken: ",user?.sessiontoken)
+        console.log("kurentoAudio microphoneStream: ",microphoneStream)
         if(!connectionStatus.audio_connection && connectionStatus.websocket_connection && user?.sessiontoken !=null && microphoneStream!=null ){
             console.log("kurentoAudio websocket_connection is active")
             console.log("kurentoAudio microphoneStream is set")
-            ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
+            initializeWebSocket();
         }
 
-        if (ws != null) {
+        // return () => {
+        //     if (ws) ws.close();
+        // };
+    }, [connectionStatus?.websocket_connection, connectionStatus?.audio_connection, microphoneStream]);
 
-            // Add event listeners for various socket events
+    function initializeWebSocket() {
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+            ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
+
             ws.onopen = () => {
-                console.log('kurentoAudio Socket connection established');
+                console.log("WebSocket reconnected");
+                setReconnectAttempts(0);  // Reset attempts on success
                 setAudioState(true);
                 setTimeout(()=>{
-                    startProcess();
+                    startProcess(); // Restart WebRTC after reconnect
                 }, 40);
-
             };
 
             ws.onmessage = (message) => {
@@ -188,17 +202,31 @@ const KurentoAudio = () => {
                 }
             };
 
-            ws.onclose = () => {
-                console.log('kurentoAudio Socket connection closed');
-                setConnection((prev)=>({
-                    ...prev,
-                    audio_connection:false
-                }))
-                webRtcPeer?.dispose();
-            };
+            ws.onclose = handleReconnect;  // Trigger reconnection on close
+            ws.onerror = handleReconnect;  // Trigger reconnection on error
         }
-    // },[ ])
-    },[connectionStatus?.websocket_connection, connectionStatus?.audio_connection, microphoneStream])
+    }
+
+    function handleReconnect() {
+        console.log("Attempting reconnection...");
+
+        // Update connection status
+        setConnection((prev) => ({
+            ...prev,
+            audio_connection: false,
+        }));
+        setAudioState(false);
+
+        if (reconnectAttempts < maxReconnectAttempts) {
+            const timeout = Math.min(1000 * 2 ** reconnectAttempts, 30000);  // Exponential backoff
+            setTimeout(() => {
+                setReconnectAttempts(reconnectAttempts + 1);
+                initializeWebSocket();  // Try reconnecting
+            }, timeout);
+        } else {
+            console.log("Max reconnection attempts reached");
+        }
+    }
 
     function pinger(){
         let myVar = setInterval(ping, 15000);
@@ -231,7 +259,7 @@ const KurentoAudio = () => {
 
         if (ws?.readyState === WebSocket.OPEN) {
             webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(this: any, error) {
-                if (error) return this.onError(error);
+                if (error) return onError(error);
                 this.generateOffer(onOffer);
             });
         } else {
