@@ -8,7 +8,7 @@ import {
     cameraOpenState,
     cameraStreamState, CamQualityState,
     connectionStatusState,
-    participantCameraListState
+    participantCameraListState, postLeaveMeetingState
 } from "~/recoil/atom";
 import {IParticipantCamera} from "~/types";
 import requestCameraAccess from "~/lib/camera/requestCameraAccess";
@@ -16,6 +16,10 @@ import requestCameraAccess from "~/lib/camera/requestCameraAccess";
 
 let ws: WebSocket | null = null;
 let webRtcPeer:kurentoUtils.WebRtcPeer| null = null;
+
+const RECONNECT_DELAY = 3000; // 3 seconds between attempts
+const MAX_RECONNECT_ATTEMPTS = 5;
+
 
 export async function kurentoVideoSwitchCamera(stream:MediaStream) {
     console.log('kurentoVideo switch camera');
@@ -68,6 +72,10 @@ const KurentoVideo = () => {
     const participantCameraList = useRecoilValue(participantCameraListState);
     const [videoStateWS, setVideoStateWS] = useState(false);
     const [selectedVideoQuality, setSelectedVideoQuality] = useRecoilState(CamQualityState);
+    const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(
+        postLeaveMeetingState,
+    );
+    let reconnectAttempts = 0;
 
 
 
@@ -82,180 +90,136 @@ const KurentoVideo = () => {
         }
     };
 
-    useEffect(() => {
+    const shouldStopReconnecting = () => {
+        return postLeaveMeeting.isLeave || postLeaveMeeting.isLeaveRoomCall ||
+            postLeaveMeeting.isEndCall || postLeaveMeeting.isOthers ||
+            postLeaveMeeting.isSessionExpired || postLeaveMeeting.isKicked;
+    };
 
-        function pinger(){
-
-            let myVar = setInterval(ping, 15000);
-
-            function ping(){
-                if(!videoState){
-                    clearInterval(myVar);
-                }
-                websocketSend({"id":"ping"})
-            }
-
+    const initializeWebSocket = () => {
+        if (shouldStopReconnecting()) {
+            console.log('Stopping KurentoVideo reconnection due to meeting exit condition');
+            return;
         }
 
+        ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
 
         let userCamera=participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == user?.meetingDetails?.internalUserID)[0];
 
-        console.log("KurentoVideo userCamera",userCamera)
-
-        console.log("effect changes in KurentoVideo")
-
-        const kurentoConnect = () => {
-            console.log('KurentoVideo Connect');
-            ws = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
+        ws.onopen = () => {
+            console.log('KurentoVideo connected');
+            reconnectAttempts = 0; // Reset attempts after a successful connection
+            startProcess();
         };
 
-        const startProcess = () => {
-            console.log('Creating WebRtcPeer and generating local sdp offer ...');
+        ws.onmessage = (message) => {
+            const parsedMessage = JSON.parse(message.data);
+            console.info('KurentoVideo Received message: ' + message.data);
 
-            const constraints = {
-                audio: false,
-                video: {
-                    width: 640,
-                    framerate: 15,
-                },
-            };
-
-            const options = {
-                localVideo: null,
-                remoteVideo: null,
-                videoStream: cameraStream,
-                onicecandidate: onIceCandidate,
-                mediaConstraints: constraints,
-                configuration:{
-                    iceServers: connectionStatus.iceServers
-                }
-            };
-
-            if (ws?.readyState === WebSocket.OPEN) {
-                webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(this: any, error) {
-                    if (error) return this.onError(error);
-                    this.generateOffer(onOffer);
-                });
-            } else {
-                console.log("WebSocket is not open yet. Current state: ", ws?.readyState);
-                setTimeout(()=>{
-                    startProcess();
-                }, 40);
+            switch (parsedMessage.id) {
+                case 'playStart':
+                    websocketSend([`{\"msg\":\"method\",\"id\":\"100\",\"method\":\"userShareWebcam\",\"params\":[\"${buildStreamName(userCamera.deviceID)}\"]}`]);
+                    startPing();
+                    break;
+                case 'startResponse':
+                    startResponse(parsedMessage);
+                    break;
+                case 'error':
+                    console.error('Kurento Error:', parsedMessage.message);
+                    break;
+                case 'iceCandidate':
+                    webRtcPeer?.addIceCandidate(parsedMessage.candidate);
+                    break;
+                default:
+                    console.error(`Unrecognized message ${parsedMessage}`);
             }
-
         };
 
-
-        const onOffer = (error:any, offerSdp:any) => {
-            if (error) return onError(error);
-
-            console.info('Invoking SDP offer callback function ' + offerSdp);
-            const message = {
-                id: 'start',
-                type: 'video',
-                cameraId: buildStreamName(userCamera.deviceID),
-                role: 'share',
-                sdpOffer: offerSdp,
-                bitrate: selectedVideoQuality.bitrate,
-                record: true,
-            };
-            kurentoSend(message);
-        };
-
-        const onIceCandidate = (candidate:any) => {
-            console.log('Local candidate' + JSON.stringify(candidate));
-
-            const message = {
-                type: 'video',
-                role: 'share',
-                id: 'onIceCandidate',
-                candidate: candidate,
-                cameraId: buildStreamName(userCamera.deviceID),
-            };
-
-            kurentoSend(message);
-        };
-
-        const onError = (error:any) => {
-            console.error('kurento error:', error);
-        };
-
-        const startResponse = (message:any) => {
-            console.log('SDP answer received from server. Processing ...');
-            webRtcPeer?.processAnswer(message?.sdpAnswer);
-        };
-
-        const buildStreamName = (deviceId:string) => {
-            return `${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}${deviceId}`;
-        };
-
-        const kurentoSend = (data:any) => {
-            ws?.send(JSON.stringify(data));
-            console.log('Sending this data via kurento websocket');
-        };
-
-
-        if (videoState && user?.sessiontoken !=null) {
-            // if(videoStateWS){
-            //     console.log('KurentoVideo Socket existing connection established used');
-            //     startProcess();
-            // }else{
-                setVideoStateWS(true)
-                kurentoConnect();
-            // }
-
-        }
-
-        if (ws != null) {
-            ws.onopen = () => {
-                console.log('KurentoVideo Socket connection established');
-                startProcess();
-            };
-
-            ws.onmessage = (message) => {
-                const parsedMessage = JSON.parse(message.data);
-                console.info('KurentoVideo Received message: ' + message.data);
-
-                console.log('KurentoVideo Websocket');
-                console.log(parsedMessage.id);
-                switch (parsedMessage.id) {
-                    case 'playStart':
-                        websocketSend([`{\"msg\":\"method\",\"id\":\"100\",\"method\":\"userShareWebcam\",\"params\":[\"${buildStreamName(userCamera.deviceID)}\"]}`]);
-                        pinger();
-                        break;
-                    case 'startResponse':
-                        startResponse(parsedMessage);
-                        break;
-                    case 'error':
-                        onError('Error message from server: ' + parsedMessage.message);
-                        break;
-                    case 'iceCandidate':
-                        console.log('iceCandidate');
-                        webRtcPeer?.addIceCandidate(parsedMessage.candidate);
-                        break;
-                    default:
-                        onError(`Unrecognized message ${parsedMessage}`);
-                }
-            };
-
-            ws.onclose = () => {
-                console.log('KurentoVideo Socket connection closed');
+        ws.onclose = () => {
+            console.log('WebSocket connection closed');
+            if (videoState && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                reconnectAttempts++;
+                setTimeout(initializeWebSocket, RECONNECT_DELAY); // Reconnect after delay
+            } else {
                 setVideoState(false);
                 setVideoStateWS(false);
-                webRtcPeer?.dispose();
-            };
+            }
+        };
+    };
+
+    const startProcess = () => {
+        const constraints = { audio: false, video: { width: 640, framerate: 15 } };
+        const options = {
+            localVideo: null,
+            remoteVideo: null,
+            videoStream: cameraStream,
+            onicecandidate: onIceCandidate,
+            mediaConstraints: constraints,
+            configuration: { iceServers: connectionStatus.iceServers }
+        };
+
+        if (ws?.readyState === WebSocket.OPEN) {
+            webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function (this: any, error) {
+                if (error) return console.error('Error creating WebRTC Peer:', error);
+                this.generateOffer(onOffer);
+            });
+        } else {
+            console.log("WebSocket is not open yet. Retrying in 1 second.");
+            setTimeout(startProcess, 1000);
+        }
+    };
+
+    const onOffer = (error: any, offerSdp: any) => {
+        if (error) return console.error('Offer Error:', error);
+        let userCamera=participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == user?.meetingDetails?.internalUserID)[0];
+        const message = {
+            id: 'start',
+            type: 'video',
+            cameraId: buildStreamName(userCamera.deviceID),
+            role: 'share',
+            sdpOffer: offerSdp,
+            bitrate: selectedVideoQuality.bitrate,
+            record: true,
+        };
+        ws?.send(JSON.stringify(message));
+    };
+
+    const onIceCandidate = (candidate: any) => {
+        let userCamera=participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == user?.meetingDetails?.internalUserID)[0];
+        const message = {
+            id: 'onIceCandidate',
+            candidate,
+            type: 'video',
+            role: 'share',
+            cameraId: buildStreamName(userCamera.deviceID),
+        };
+        ws?.send(JSON.stringify(message));
+    };
+
+    const startResponse = (message: any) => {
+        webRtcPeer?.processAnswer(message.sdpAnswer);
+    };
+
+    const buildStreamName = (deviceId: string) => {
+        return `${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}${deviceId}`;
+    };
+
+
+    const startPing = () => {
+        const interval = setInterval(() => {
+            if (!videoState || ws?.readyState !== WebSocket.OPEN) {
+                clearInterval(interval);
+            }
+            websocketSend({ id: "ping" });
+        }, 15000);
+    };
+
+    useEffect(() => {
+        if (videoState && user?.sessiontoken && connectionStatus.websocket_connection) {
+            initializeWebSocket();
         }
 
-        // return () => {
-        //     // Cleanup: Close WebSocket and release WebRTC resources
-        //     if (ws && ws.readyState === WebSocket.OPEN) {
-        //         ws.close();
-        //     }
-        //     if (webRtcPeer) {
-        //         webRtcPeer.dispose();
-        //     }
-        // };
-    }, [videoState]);
+    }, [videoState,connectionStatus.websocket_connection]);
 
     return <div>
         {/*{camera.localVideoStream ? 'Local stream on' : 'Local stream false'}*/}

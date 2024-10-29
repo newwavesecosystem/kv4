@@ -14,7 +14,7 @@ import {
     donationModalState,
     eCinemaModalState,
     fileUploadModalState, manageUserSettingsState,
-    micOpenState,
+    micOpenState, microphoneStreamState,
     newMessage, newRaiseHand,
     participantCameraListState,
     participantListState,
@@ -41,9 +41,13 @@ import axios from "axios";
 import {toast} from "~/components/ui/use-toast";
 import {FindUserNamefromUserId, ModeratorRole} from "~/lib/checkFunctions";
 import {SetCurrentSessionEjected} from "~/lib/localStorageFunctions";
+import {ValidationStates} from "~/lib/utils";
+import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
+import {kurentoAudioEndStream} from "~/server/KurentoAudio";
+import {kurentoVideoEndStream} from "~/server/KurentoVideo";
+import {websocketKurentoScreenshareEndScreenshare} from "~/server/KurentoScreenshare";
 
 const maxReconnectAttempts = 10;
-let reconnectAttempts = 0;
 
 
 
@@ -96,11 +100,16 @@ const Websocket = () => {
     const [chatTypeList, setChatTypeList] = useRecoilState(chatTypeListState);
     const [isnewRaiseHand, setIsnewRaiseHand] = useRecoilState(newRaiseHand);
     const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
-
-
     const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(
         postLeaveMeetingState,
     );
+    const [microphoneStream, setMicrophoneStream] = useRecoilState(
+        microphoneStreamState,
+    );
+
+    const [stopReconnection, setStopReconnection] = useState(false);
+
+    const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
 
     const [num, setNum] = useState(1);
@@ -110,46 +119,92 @@ const Websocket = () => {
         return num;
     }
 
+    let myPingVar:any=null;
+
 
     function pinger(){
 
-        let myVar = setInterval(ping, 5000);
+        myPingVar = setInterval(ping, 14000);
 
         function ping(){
-            if(!connectionStatus.websocket_connection){
-                clearInterval(myVar);
-            }
             websocketSend(["{\"msg\":\"ping\"}"])
         }
 
     }
 
 
-    const reConnect = () => {
-        if (reconnectAttempts < maxReconnectAttempts) {
-            const delay = Math.min(1000 * 2 ** reconnectAttempts, 30000); // Exponential backoff
+    useEffect(() => {
+        initializeWebSocket();
+    })
+
+    useEffect(() => {
+        console.log("reconnection state is changing: ",connectionStatus.websocket_connection_reconnect)
+        const reConnect = () => {
+            console.log("Reconnection launched");
+            // console.log("should stop reconnection,",stopReconnection);
+            console.log("should stop reconnection connectionStatus,",connectionStatus);
+            if (stopReconnection) {
+                console.log('Stopping Websocket reconnection due to meeting exit condition');
+                return;
+            }
+
+
+            if (!connectionStatus.websocket_connection_reconnect) {
+                shouldStopReconnectingLocal();
+                console.log('Stopping Websocket reconnection due to meeting exit condition should not retry');
+                return;
+            }
+
+            if (reconnectAttempts < maxReconnectAttempts) {
+                const delay = Math.min(1000 * 2 ** reconnectAttempts, 30000); // Exponential backoff
+                setTimeout(() => {
+                    console.log(`Reconnecting... Attempt ${reconnectAttempts + 1}`);
+                    sock = new SockJS(ServerInfo.websocketURL);
+                    initializeWebSocket();
+                    setReconnectAttempts(reconnectAttempts + 1);
+                }, delay);
+            } else {
+                console.log("Max reconnection attempts reached");
+                window.location.reload();
+            }
+        };
+
+        if(connectionStatus.websocket_connection_reconnect) {
+            clearInterval(myPingVar);
             setTimeout(() => {
-                console.log(`Reconnecting... Attempt ${reconnectAttempts + 1}`);
-                sock = new SockJS(ServerInfo.websocketURL);
-                initializeWebSocket();
-                reconnectAttempts += 1;
-            }, delay);
-        } else {
-            // console.log("Max reconnection attempts reached");
+                reConnect();
+            }, 2000);
+        }
+    }, [connectionStatus.websocket_connection_reconnect]);
+
+    const shouldStopReconnectingLocal = () => {
+        console.log("updating should stop reconnection local")
+        clearInterval(myPingVar);
+        setReconnectAttempts(maxReconnectAttempts);
+        setConnection((prev)=>({
+            ...prev,
+            websocket_connection:false,
+            websocket_connection_reconnect:false
+        }))
+        websocketEnd();
+        stopMicrophoneStream(microphoneStream);
+        kurentoAudioEndStream();
+        kurentoVideoEndStream();
+        if(screenSharingStream != null){
+            websocketKurentoScreenshareEndScreenshare(screenSharingStream);
         }
     };
 
     const initializeWebSocket = () => {
         if (sock !== null) {
             sock.onopen = () => {
-                // console.log('Websocket connection established');
-                reconnectAttempts = 0;  // Reset attempts on successful connection
+                console.log('Websocket connection established');
 
                 websocketSend(["{\"msg\":\"connect\",\"version\":\"1\",\"support\":[\"1\",\"pre2\",\"pre1\"]}"])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meteor_autoupdate_clientVersions\",\"params\":[]}`])
                 websocketSend(["{\"msg\":\"method\",\"id\":\"1\",\"method\":\"userChangedLocalSettings\",\"params\":[{\"application\":{\"animations\":true,\"chatAudioAlerts\":false,\"chatPushAlerts\":false,\"userJoinAudioAlerts\":false,\"userJoinPushAlerts\":false,\"userLeaveAudioAlerts\":false,\"userLeavePushAlerts\":false,\"raiseHandAudioAlerts\":true,\"raiseHandPushAlerts\":true,\"guestWaitingAudioAlerts\":true,\"guestWaitingPushAlerts\":true,\"paginationEnabled\":true,\"pushLayoutToEveryone\":false,\"fallbackLocale\":\"en\",\"overrideLocale\":null,\"locale\":\"en-US\"},\"audio\":{\"inputDeviceId\":\"undefined\",\"outputDeviceId\":\"undefined\"},\"dataSaving\":{\"viewParticipantsWebcams\":true,\"viewScreenshare\":true}}]}"])
                 websocketSend([`{\"msg\":\"method\",\"id\":\"2\",\"method\":\"validateAuthToken\",\"params\":[\"${user?.meetingDetails?.meetingID}\",\"${user?.meetingDetails?.internalUserID}\",\"${user?.meetingDetails?.authToken}\",\"${user?.meetingDetails?.externUserID}\"]}`])
-                websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"auth-token-validation\",\"params\":[{\"meetingId\":\"${user?.meetingDetails?.meetingID}\",\"userId\":\"${user?.meetingDetails?.internalUserID}\"}]}`])
+                // websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"auth-token-validation\",\"params\":[{\"meetingId\":\"${user?.meetingDetails?.meetingID}\",\"userId\":\"${user?.meetingDetails?.internalUserID}\"}]}`])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"current-user\",\"params\":[]}`])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users\",\"params\":[]}`])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meetings\",\"params\":[]}`])
@@ -167,7 +222,7 @@ const Websocket = () => {
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-settings\",\"params\":[]}`])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"guestUser\",\"params\":[]}`])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-infos\",\"params\":[]}`])
-                websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"note\",\"params\":[]}`])
+                // websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"note\",\"params\":[]}`])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"meeting-time-remaining\",\"params\":[]}`])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"local-settings\",\"params\":[]}`])
                 websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"users-typing\",\"params\":[]}`])
@@ -191,11 +246,6 @@ const Websocket = () => {
 
                 if (obj.msg == "connected") {
                     // a["{\"msg\":\"connected\",\"session\":\"4qajGwWr4bziuofh9\"}"]
-                    setConnection((prev)=>({
-                        ...prev,
-                        websocket_connection:true,
-                        websocket_connection_reconnect:false
-                    }))
                 }
 
                 if (obj.msg == "ping") {
@@ -208,15 +258,38 @@ const Websocket = () => {
                     if(obj.result != null) {
                         // a["{\"msg\":\"result\",\"id\":\"2\",\"result\":{\"connectionId\":\"53iPKsgGXaJndzZBd\",\"meetingId\":\"90af7edbfd8a161a7f711504a114aaf5bf597f9f-1728092698015\",\"userId\":\"w_jfvnaaon0fa8\",\"reason\":null,\"updatedAt\":1728094173674,\"validationStatus\":3,\"_id\":\"JhnM7euG7emiXsvSn\"}}"]
 
-                        const {connectionId} = obj.result;
+                        const {connectionId, validationStatus, reason} = obj.result;
 
                         if (connectionId != null) {
-                            setUser((prev) => ({
-                                ...prev!,
-                                connectionID: connectionId,
-                                connectionAuthTime: new Date().getTime()
-                            }))
-                            pinger();
+                            switch (validationStatus) {
+                                case ValidationStates.INVALID:
+                                    console.log(reason);
+                                    shouldStopReconnectingLocal();
+
+                                    setPostLeaveMeeting({
+                                        ...postLeaveMeeting,
+                                        isOthers: true,
+                                    });
+                                    return;
+
+                                    break;
+                                case ValidationStates.VALIDATED:
+                                    setConnection((prev)=>({
+                                        ...prev,
+                                        websocket_connection:true,
+                                        websocket_connection_reconnect:false
+                                    }))
+                                    setUser((prev) => ({
+                                        ...prev!,
+                                        connectionID: connectionId,
+                                        connectionAuthTime: new Date().getTime()
+                                    }))
+                                    pinger();
+                                    setReconnectAttempts(0); // Reset attempts on successful connection
+                                    break;
+                                default:
+                            }
+
                         }
                     }
                 }
@@ -293,47 +366,26 @@ const Websocket = () => {
 
             };
             sock.onclose = () => {
-                // console.log('Socket connection closed, attempting to reconnect...');
+                console.log('Socket connection closed, attempting to reconnect...');
                 setConnection((prev)=>({
                     ...prev,
-                    websocket_connection:false
+                    websocket_connection:false,
+                    websocket_connection_reconnect:true,
+                    audio_connection:false
                 }))
-
-                if(!postLeaveMeeting.isLeave || !postLeaveMeeting.isLeaveRoomCall || !postLeaveMeeting.isEndCall || !postLeaveMeeting.isOthers || !postLeaveMeeting.isSessionExpired || !postLeaveMeeting.isKicked){
-                    reConnect();
-                    setConnection((prev)=>({
-                        ...prev,
-                        websocket_connection_reconnect:true
-                    }))
-                }
-
-
             };
             sock.onerror = () => {
                 console.log('Socket connection error, attempting to reconnect...');
                 setConnection((prev)=>({
                     ...prev,
-                    websocket_connection:false
+                    websocket_connection:false,
+                    websocket_connection_reconnect:true,
+                    audio_connection:false
                 }))
-
-                if(!postLeaveMeeting.isLeave || !postLeaveMeeting.isLeaveRoomCall || !postLeaveMeeting.isEndCall || !postLeaveMeeting.isOthers || !postLeaveMeeting.isSessionExpired || !postLeaveMeeting.isKicked){
-                    reConnect();
-                    setConnection((prev)=>({
-                        ...prev,
-                        websocket_connection_reconnect:true
-                    }))
-                }
-
-
             };
         }
     };
 
-
-
-    useEffect(() => {
-        initializeWebSocket();
-    })
 
     const handleIncomingmsg = (eventData:any) => {
         console.log('I got to handle incoming messages')
@@ -487,13 +539,13 @@ const Websocket = () => {
         if (msg == 'changed') {
             const {currentConnectionId, connectionIdUpdateTime, authTokenValidatedTime, loggedOut, exitReason, ejected} = fields;
 
-            if (currentConnectionId && currentConnectionId !== user?.connectionID && connectionIdUpdateTime > user?.connectionAuthTime!) {
-                console.log("joined_another_window_reason");
-                setPostLeaveMeeting({
-                    ...postLeaveMeeting,
-                    isKicked: true,
-                });
-            }
+            // if (currentConnectionId && currentConnectionId !== user?.connectionID && connectionIdUpdateTime > user?.connectionAuthTime!) {
+            //     console.log("joined_another_window_reason");
+            //     setPostLeaveMeeting({
+            //         ...postLeaveMeeting,
+            //         isKicked: true,
+            //     });
+            // }
 
             if(loggedOut != null && loggedOut){
                 console.log("User logout ",loggedOut);
@@ -502,6 +554,7 @@ const Websocket = () => {
                     ...postLeaveMeeting,
                     isLeave: true,
                 });
+                shouldStopReconnectingLocal();
             }
 
             if(ejected != null && ejected){
@@ -511,6 +564,7 @@ const Websocket = () => {
                     ...postLeaveMeeting,
                     isKicked: true,
                 });
+                shouldStopReconnectingLocal();
             }
 
             if(exitReason != null){
@@ -520,6 +574,7 @@ const Websocket = () => {
                         ...postLeaveMeeting,
                         isEndCall: true,
                     });
+                    shouldStopReconnectingLocal();
                 }
 
                 if(exitReason =="error"){
@@ -528,6 +583,7 @@ const Websocket = () => {
                         ...postLeaveMeeting,
                         isKicked: true,
                     });
+                    shouldStopReconnectingLocal();
                 }
             }
         }
@@ -575,7 +631,7 @@ const Websocket = () => {
     }
 
     const handleVoiceUsers = (eventData:any) => {
-        console.log('I got to handle incoming messages')
+        // console.log('I got to handle incoming messages')
         const obj = JSON.parse(eventData);
         const {msg, id} = obj;
 
@@ -945,6 +1001,7 @@ const Websocket = () => {
                     ...postLeaveMeeting,
                     isEndCall: true,
                 });
+                shouldStopReconnectingLocal();
             }
 
             if (randomlySelectedUser != null) {

@@ -155,45 +155,6 @@ function MiddleSide() {
   const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
 
 
-  const setMicStream=async () => {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const desiredMic = devices.filter((device) => device.kind === "audioinput");
-
-    if (desiredMic.length < 1) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: `No microphone device detected. Kindly check if you need to grant permission`,
-      });
-      return;
-    }
-
-    const mic = await requestMicrophoneAccess(desiredMic[0],micFilter.autoGainControl, micFilter.noiseSuppression, micFilter.echoCancellation);
-    if (mic) {
-      setMicrophoneStream(mic);
-      // setMicState(true);
-
-      if(desiredMic[0] != undefined){
-        setSelectedMicrophone(desiredMic[0])
-      }
-
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Kindly check your microphone settings.",
-      });
-    }
-  }
-
-  useEffect(()=> {
-    console.log("StartEvent changed for mic stream");
-    if (mediaPermission.audioAllowed) {
-      console.log("Starting mic stream");
-      setMicStream();
-    }
-  },[mediaPermission.audioAllowed]);
-
   return (
     <div className=" flex w-full items-center justify-center gap-5">
       <div className="flex items-center gap-1 rounded-3xl border border-a11y/40 bg-[#DF2622] p-2 md:hidden">

@@ -16,10 +16,7 @@ const KurentoVideoSingleStick = () => {
     const webRtcPeers = useRef<{ [key: string]: kurentoUtils.WebRtcPeer }>({}).current;
     const cameraListRef = useRef(participantCameraList); // Ref to always hold the latest participant list
 
-    // Update the ref whenever participantCameraList changes
-    useEffect(() => {
-        cameraListRef.current = participantCameraList;
-    }, [participantCameraList]);
+    const reconnectAttemptRef = useRef(0); // Track reconnection attempts
 
 
     function pinger(){
@@ -82,8 +79,23 @@ const KurentoVideoSingleStick = () => {
         wsRef.current.onclose = () => {
             console.log('WebSocket connection closed');
             cleanUpWebRtcPeers();
+            attemptReconnect(); // Attempt reconnection
         };
     };
+
+    const attemptReconnect = () => {
+        const maxReconnectAttempts = 5; // Limit reconnection attempts
+        if (reconnectAttemptRef.current < maxReconnectAttempts) {
+            setTimeout(() => {
+                reconnectAttemptRef.current += 1;
+                console.log(`Reconnection attempt ${reconnectAttemptRef.current}`);
+                initializeWebSocket();
+            }, 2000 * reconnectAttemptRef.current); // Exponential backoff
+        } else {
+            console.error('Max reconnection attempts reached. Could not reconnect.');
+        }
+    };
+
 
     const handleStartResponse = (cameraId: string, message: any) => {
         const webRtcPeer = webRtcPeers[cameraId];
@@ -117,8 +129,11 @@ const KurentoVideoSingleStick = () => {
 
     const startProcessForNewParticipants = () => {
         participantCameraList.forEach((camera:IParticipantCamera) => {
-            if (camera.stream == null ) {
-                startProcess(camera.streamID!);
+            //Removign the current user from being on the singlestick
+            if(camera.intId != user?.meetingDetails?.internalUserID){
+                if (camera.stream == null) {
+                    startProcess(camera.streamID!);
+                }
             }
         });
     };
@@ -139,8 +154,9 @@ const KurentoVideoSingleStick = () => {
         const constraints = {
             audio: false,
             video: {
-                width: 640,
-                framerate: 15,
+                width: {min: 640, ideal: 1280},
+                height: {min: 480, ideal: 720},
+                frameRate: 15,
             },
         };
 
@@ -216,6 +232,11 @@ const KurentoVideoSingleStick = () => {
     };
 
 
+    // Update the ref whenever participantCameraList changes
+    useEffect(() => {
+        cameraListRef.current = participantCameraList;
+    }, [participantCameraList]);
+
     useEffect(() => {
         initializeWebSocket();
 
@@ -231,6 +252,15 @@ const KurentoVideoSingleStick = () => {
         startProcessForNewParticipants();
         disposeUnusedWebRtcPeers(participantCameraList);
         }, [participantCameraList]);
+
+
+    useEffect(() => {
+            if(connectionStatus.websocket_connection_reconnect) {
+                let up=participantCameraList.filter((item:IParticipantCamera)=> item.intId == user?.meetingDetails?.internalUserID);
+                setParticipantCameraList(up);
+            }
+        }, [connectionStatus.websocket_connection_reconnect]);
+
 
     return <div>{/* Render participant videos here */}</div>;
 };
