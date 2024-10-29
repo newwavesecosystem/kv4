@@ -60,3 +60,11 @@ export const getMeetingIdFromLink = (link: string) => {
   }
   return link;
 };
+
+export const ValidationStates = Object.freeze({
+  NOT_VALIDATED: 1,
+  VALIDATING: 2,
+  VALIDATED: 3,
+  INVALID: 4,
+});
+

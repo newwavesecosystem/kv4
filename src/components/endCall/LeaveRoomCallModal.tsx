@@ -37,10 +37,10 @@ function LeaveRoomCallModal() {
               className="w-full rounded-md bg-a11y/20 py-3"
               onClick={() => {
                 setRoomCallModal(false);
-                setPostLeaveMeeting({
-                  ...postLeaveMeeting,
-                  isLeaveRoomCall: true,
-                });
+                // setPostLeaveMeeting({
+                //   ...postLeaveMeeting,
+                //   isLeaveRoomCall: true,
+                // });
                 websocketLeaveMeeting();
               }}
             >

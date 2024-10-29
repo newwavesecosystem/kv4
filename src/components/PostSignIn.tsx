@@ -33,7 +33,7 @@ import dynamic from "next/dynamic";
 import ScreenSharingComponent from "./screenSharing/ScreenSharingComponent";
 import ArrowChevronDownIcon from "./icon/outline/ArrowChevronDownIcon";
 import ECinemaComponent from "./eCinema/ECinemaComponent";
-import Websocket from "~/server/Websocket";
+import Websocket, {websocketLeaveMeeting} from "~/server/Websocket";
 import KurentoAudio from "~/server/KurentoAudio";
 import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";
@@ -333,7 +333,7 @@ function PostSignIn() {
       removeWakeLock();
         window.removeEventListener('popstate', disableBackButton);
     };
-  }, []); // Run the effect only once during component mount
+  }); // Run the effect only once during component mount
 
 
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
@@ -347,7 +347,24 @@ function PostSignIn() {
                     color: 'white',
                     backgroundColor: 'red',
                     textAlign: 'center'
-                  }}>{connectionStatus.websocket_connection_reconnect ? "Network issues detected. Trying to reconnect automatically" : "Connecting..."}<br/></span> : ''}
+                  }}>{connectionStatus.websocket_connection_reconnect ? "Network issues detected. Trying to reconnect automatically" : "Connecting..."}{connectionStatus.websocket_connection_reconnect && <button className="bg-a11y/20" style={{backgroundColor:"#227451", padding: 10, borderRadius:15, margin:5, borderColor:"white", borderStyle: "solid", borderWidth: 2}} onClick={async () => {
+                // window.location.reload();
+                setUser({
+                  connectionAuthTime: 0, connectionID: "",
+                  meetingId: "",
+                  passCode: "",
+                  email: "",
+                  fullName: "",
+                  id: 0,
+                  meetingDetails: null,
+                  sessiontoken: ""
+                });
+                validateToken(await GetCurrentSessionToken());
+                toast({
+                  title: "Reconnecting",
+                  description: "Reconnecting... Please wait for few moment",
+                });
+              }}>Reconnect Now</button>}<br/></span> : ''}
         {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
             <span className="flex w-full items-center justify-between px-4"
                   style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}
