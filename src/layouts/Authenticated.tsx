@@ -60,6 +60,17 @@ import RecordingConsentModal from "~/components/recording/RecordingConsentModal"
 import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
 import MediaOnboardingDialog from "~/lib/MediaOnboardingDialog";
 import {kurentoAudioPlaySound} from "~/server/KurentoAudio";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "~/components/ui/tooltip";
+import PhoneEndIcon from "~/components/icon/outline/PhoneEndIcon";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "~/components/ui/dropdown-menu";
+import EllipsisIcon from "~/components/icon/outline/EllipsisIcon";
+import ExitIcon from "~/components/icon/outline/ExitIcon";
 
 
 function Authenticated({ children }: { children: React.ReactNode }) {
@@ -322,77 +333,118 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       <div className="sticky bottom-0 z-50 flex h-16 w-full justify-center border-t border-a11y/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:justify-between">
         {/* left side */}
         <div className="hidden w-full items-center justify-start gap-5 md:flex">
-          <button
-            onClick={() => {
-              // copy link to clipboard and show toast
-              const meetingId = user?.meetingId || "";
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                    onClick={() => {
+                      // copy link to clipboard and show toast
+                      const meetingId = user?.meetingId || "";
 
-              if (navigator.clipboard) {
-                navigator.clipboard.writeText(
-                    user?.meetingDetails?.customdata[0]?.meetingLink,
-                );
-                toast({
-                  title: "Copied",
-                  description: "Link copied to clipboard",
-                  duration: 5000,
-                });
-              } else {
-                toast({
-                  title: "Error",
-                  description: "Your browser does not support clipboard",
-                  duration: 5000,
-                });
-              }
-            }}
-            className="items-center rounded-full border border-a11y/20 p-2"
-          >
-            <ShareIcon className="h-6 w-6" />
-          </button>
+                      if (navigator.clipboard) {
+                        navigator.clipboard.writeText(
+                            user?.meetingDetails?.customdata[0]?.meetingLink,
+                        );
+                        toast({
+                          title: "Copied",
+                          description: "Link copied to clipboard",
+                          duration: 5000,
+                        });
+                      } else {
+                        toast({
+                          title: "Error",
+                          description: "Your browser does not support clipboard",
+                          duration: 5000,
+                        });
+                      }
+                    }}
+                    className="items-center rounded-full border border-a11y/20 p-2"
+                >
+                  <ShareIcon className="h-6 w-6"/>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Copy Meeting Link</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-          {participantList.filter(
-            (item: IParticipant) =>
-              item.intId == user?.meetingDetails?.internalUserID,
-          )[0]?.presenter && (
-            <button
-              onClick={() => {
-                setECinemaModal((prev) => ({
-                  ...prev,
-                  step: 1,
-                }));
-              }}
-              className="items-center rounded-full border border-a11y/20 p-2"
-            >
-              <MovieColoredIcon className="h-6 w-6" />
-            </button>
-          )}
 
-          <button
-            onClick={() => {
-              setKonn3ctAiChatState(!konn3ctAiChatState);
-            }}
-            className="items-center rounded-full border border-a11y/20 p-2"
-          >
-            <BotIcon className="h-6 w-6" />
-          </button>
-          {donationState.isActive && (
-            <button
-              onClick={() => {
-                // TODO check if user is mod then set step to 2 else 3
-                setDonationState((prev) => ({
-                  ...prev,
-                  // trigger admin view
-                  // step: 2,
-                  // trigger user view
-                  // step: 3,
-                  step: CurrentUserRoleIsModerator(participantList,user)? 2 : 3,
-                }));
-              }}
-              className="hidden items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:flex"
-            >
-              <MoneyIcon className="h-6 w-6 pt-1" />
-              <span>Donation</span>
-            </button>
-          )}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                {participantList.filter(
+                    (item: IParticipant) =>
+                        item.intId == user?.meetingDetails?.internalUserID,
+                )[0]?.presenter && (
+                    <button
+                        onClick={() => {
+                          setECinemaModal((prev) => ({
+                            ...prev,
+                            step: 1,
+                          }));
+                        }}
+                        className="items-center rounded-full border border-a11y/20 p-2"
+                    >
+                      <MovieColoredIcon className="h-6 w-6"/>
+                    </button>
+                )}
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>E-Cinema</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                    onClick={() => {
+                      setKonn3ctAiChatState(!konn3ctAiChatState);
+                    }}
+                    className="items-center rounded-full border border-a11y/20 p-2"
+                >
+                  <BotIcon className="h-6 w-6"/>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Konn3ct AI for Meeting Summary</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                {donationState.isActive && (
+                    <button
+                        onClick={() => {
+                          // TODO check if user is mod then set step to 2 else 3
+                          setDonationState((prev) => ({
+                            ...prev,
+                            // trigger admin view
+                            // step: 2,
+                            // trigger user view
+                            // step: 3,
+                            step: CurrentUserRoleIsModerator(participantList,user)? 2 : 3,
+                          }));
+                        }}
+                        className="hidden items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:flex"
+                    >
+                      <MoneyIcon className="h-6 w-6 pt-1" />
+                      <span>Donation</span>
+                    </button>
+                )}
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Make Donation</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
         </div>
 
         {/* middle side */}
@@ -400,56 +452,70 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
         {/* right side */}
         <div className="hidden w-full items-center justify-end gap-5 md:flex">
-          <button
-            onClick={() => {
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                    onClick={() => {
 
-              setParticipantList((prev: any[]) =>
-                prev.map((prevUser) => {
-                  if (prevUser.intId === user?.meetingDetails?.internalUserID) {
-                    return {
-                      ...prevUser,
-                      raiseHand: !prevUser.raiseHand,
-                    };
-                  }
-                  return prevUser;
-                }),
-              );
+                      setParticipantList((prev: any[]) =>
+                          prev.map((prevUser) => {
+                            if (prevUser.intId === user?.meetingDetails?.internalUserID) {
+                              return {
+                                ...prevUser,
+                                raiseHand: !prevUser.raiseHand,
+                              };
+                            }
+                            return prevUser;
+                          }),
+                      );
 
 
-              var raiseH=false;
-              const updatedArray = participantList?.map((item:IParticipant) => {
-                if (item.userId == user?.meetingDetails?.internalUserID) {
-                  raiseH=!item.raiseHand;
-                  return {...item, raiseHand: !item.raiseHand};
-                }
-                return item;
-              });
+                      var raiseH = false;
+                      const updatedArray = participantList?.map((item: IParticipant) => {
+                        if (item.userId == user?.meetingDetails?.internalUserID) {
+                          raiseH = !item.raiseHand;
+                          return {...item, raiseHand: !item.raiseHand};
+                        }
+                        return item;
+                      });
 
-              console.log(updatedArray);
+                      console.log(updatedArray);
 
-              console.log("UserState: updatedArray", updatedArray);
+                      console.log("UserState: updatedArray", updatedArray);
 
-              setParticipantList(updatedArray)
+                      setParticipantList(updatedArray)
 
-              websocketRaiseHand(raiseH);
-            }}
-            className={cn(
-              "items-center rounded-full border border-a11y/20 bg-transparent p-2",
-              participantList.filter(
-                (item: IParticipant) =>
-                  item.intId == user?.meetingDetails?.internalUserID,
-              )[0]?.raiseHand && "bg-a11y/20",
-            )}
-          >
-            {participantList.filter(
-              (item: IParticipant) =>
-                item.intId == user?.meetingDetails?.internalUserID,
-            )[0]?.raiseHand ? (
-              <HandOffIcon className="h-6 w-6" />
-            ) : (
-              <HandOnIcon className="h-6 w-6" />
-            )}
-          </button>
+                      websocketRaiseHand(raiseH);
+                    }}
+                    className={cn(
+                        "items-center rounded-full border border-a11y/20 bg-transparent p-2",
+                        participantList.filter(
+                            (item: IParticipant) =>
+                                item.intId == user?.meetingDetails?.internalUserID,
+                        )[0]?.raiseHand && "bg-a11y/20",
+                    )}
+                >
+                  {participantList.filter(
+                      (item: IParticipant) =>
+                          item.intId == user?.meetingDetails?.internalUserID,
+                  )[0]?.raiseHand ? (
+                      <HandOffIcon className="h-6 w-6"/>
+                  ) : (
+                      <HandOnIcon className="h-6 w-6"/>
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{participantList.filter(
+                    (item: IParticipant) =>
+                        item.intId == user?.meetingDetails?.internalUserID,
+                )[0]?.raiseHand ? "Unraise Hand": "Raise Hand"}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+
           {/*<button*/}
           {/*  onClick={() => {*/}
           {/*    setCCModal((prev) => ({*/}
@@ -462,18 +528,29 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           {/*>*/}
           {/*  <CCIcon className="h-6 w-6" />*/}
           {/*</button>*/}
-          {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disablePublicChat) && (<button
-            onClick={() => {
-              setChatState(!chatState);
-              setIsNewMessage(false);
-            }}
-            className="relative items-center rounded-full border border-a11y/20 bg-transparent p-2"
-          >
-            <ChatIcon className="h-6 w-6" />
-            {isNewMessage && (
-              <div className="absolute right-2 top-2 h-2 w-2 animate-pulse rounded-full bg-a11y"></div>
-            )}
-          </button>)}
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disablePublicChat) && (<button
+                    onClick={() => {
+                      setChatState(!chatState);
+                      setIsNewMessage(false);
+                    }}
+                    className="relative items-center rounded-full border border-a11y/20 bg-transparent p-2"
+                >
+                  <ChatIcon className="h-6 w-6"/>
+                  {isNewMessage && (
+                      <div className="absolute right-2 top-2 h-2 w-2 animate-pulse rounded-full bg-a11y"></div>
+                  )}
+                </button>)}
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Chats</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
         </div>
       </div>
     </div>
