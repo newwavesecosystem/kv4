@@ -275,7 +275,7 @@ function SingleCameraComponent({
 
         {participant?.raiseHand && (
             <div className="animate-wave absolute left-3 top-3 flex items-center gap-1">
-              <HandOnIcon className="h-8 w-8"/>
+              <HandOnIcon coloured={true} className="h-8 w-8"/>
             </div>
         )}
 
