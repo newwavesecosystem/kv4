@@ -307,7 +307,7 @@ function PostSignIn() {
 
   }
 
-  const handleBeforeUnload = (event) => {
+  const handleBeforeUnload = (event:any) => {
     event.preventDefault();
     event.returnValue = ''; // Or any custom message
   };
