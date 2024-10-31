@@ -33,6 +33,7 @@ import PeopleSpeakIcon from "~/components/icon/outline/PeopleSpeakIcon";
 import {CurrentUserRoleIsModerator, ModeratorRole} from "~/lib/checkFunctions";
 import {websocketPresenter} from "~/server/Websocket";
 import playAndRetry from "~/lib/mediaElementPlayRetry";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "~/components/ui/tooltip";
 
 function SingleCameraComponent({
   participant, userCamera,
@@ -120,64 +121,117 @@ function SingleCameraComponent({
         </video>
 
         <div className="absolute right-3 top-3 flex items-center gap-1">
-          {participant.presenter && (<button className="rounded-full bg-primary/80 p-1">
-            <ShareScreenOnIcon className="h-5 w-5"/>
-          </button>)
+          {participant.presenter && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button className="rounded-full bg-primary/80 p-1">
+                      <ShareScreenOnIcon className="h-5 w-5"/>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{participant.name} is a Presenter</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              )
           }
 
-          {participant.role == ModeratorRole() && (<button className="rounded-full bg-primary/80 p-1">
-            <PeoplesIcon className="h-5 w-5"/>
-          </button>)
+          {participant.role == ModeratorRole() && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button className="rounded-full bg-primary/80 p-1">
+                        <PeoplesIcon className="h-5 w-5"/>
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{participant.name} is a Moderator</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>)
           }
 
-          {pinnedParticipant.filter(
-              (eachItem: any) => eachItem?.intId == participant.intId,
-          ).length > 0 && (
-              <button
-                  onClick={() => {
-                    // remove selected participant from pinned list
-                    setPinnedParticipant(
-                        pinnedParticipant.filter(
-                            (eachItem: any) => eachItem?.intId != participant.intId,
-                        ),
-                    );
-                  }}
-                  className="rounded-full bg-primary/80 p-1"
-              >
-                <PinIcon className="h-5 w-5"/>
-              </button>
-          )}
-          <button
-              className={cn(
-                  "p-1 z-10",
-                  participantTalkingList
-                      .filter((eachItem: any) => eachItem?.intId == participant.intId)
-                      .map((eachItem: any) =>
-                          eachItem?.joined && eachItem?.muted
-                              ? "rounded-full border border-a11y/20 bg-konn3ct-red"
-                              : "rounded-full bg-primary/80",
-                      ),
-              )}
-          >
-            {participantTalkingList
-                .filter((eachItem: any, index: number) => eachItem?.intId == participant.intId)
-                .map((eachItem: any) =>
-                    !eachItem?.joined ? (
-                        <VolumeOffIcon key={index} className="h-5 w-5 "/>
-                    ) : eachItem?.joined && !eachItem?.muted ? (
-                        <MicOnIcon key={index} className="h-5 w-5 "/>
-                    ) : (
-                        <MicOffIcon key={index} muted={true} className="h-5 w-5 "/>
-                    ),
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                {pinnedParticipant.filter(
+                    (eachItem: any) => eachItem?.intId == participant.intId,
+                ).length > 0 && (
+                    <button
+                        onClick={() => {
+                          // remove selected participant from pinned list
+                          setPinnedParticipant(
+                              pinnedParticipant.filter(
+                                  (eachItem: any) => eachItem?.intId != participant.intId,
+                              ),
+                          );
+                        }}
+                        className="rounded-full bg-primary/80 p-1"
+                    >
+                      <PinIcon className="h-5 w-5"/>
+                    </button>
                 )}
-          </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{participant.name} is Pinned</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                {pinnedParticipant.filter(
+                    (eachItem: any) => eachItem?.intId == participant.intId,
+                ).length > 0 && (
+                    <button
+                        className={cn(
+                            "p-1 z-10",
+                            participantTalkingList
+                                .filter((eachItem: any) => eachItem?.intId == participant.intId)
+                                .map((eachItem: any) =>
+                                    eachItem?.joined && eachItem?.muted
+                                        ? "rounded-full border border-a11y/20 bg-konn3ct-red"
+                                        : "rounded-full bg-primary/80",
+                                ),
+                        )}
+                    >
+                      {participantTalkingList
+                          .filter((eachItem: any, index: number) => eachItem?.intId == participant.intId)
+                          .map((eachItem: any) =>
+                              !eachItem?.joined ? (
+                                  <VolumeOffIcon key={index} className="h-5 w-5 "/>
+                              ) : eachItem?.joined && !eachItem?.muted ? (
+                                  <MicOnIcon key={index} className="h-5 w-5 "/>
+                              ) : (
+                                  <MicOffIcon key={index} muted={true} className="h-5 w-5 "/>
+                              ),
+                          )}
+                    </button>
+                )}
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{participant.name} Mic Status</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
           {/* Dropdown Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="rounded-full bg-primary/80 p-1 cursor-pointer">
-                <EllipsisIcon className="h-5 w-5 "/>
-              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="rounded-full bg-primary/80 p-1 cursor-pointer">
+                      <EllipsisIcon className="h-5 w-5 "/>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Action</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </DropdownMenuTrigger>
             <DropdownMenuContent
                 align="end"

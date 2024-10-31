@@ -6,7 +6,7 @@ import {
   authUserState,
   chatListState,
   chatModalState,
-  chatTypingListState,
+  chatTypingListState, participantListState,
   participantsModalState, privateChatModalState,
 } from "~/recoil/atom";
 import PeoplesIcon from "../icon/outline/PeoplesIcon";
@@ -29,8 +29,8 @@ import {
 } from "../ui/command";
 import TickIcon from "../icon/outline/TickIcon";
 import { cn } from "~/lib/utils";
-import { websocketSendMessage, websocketStartTyping } from "~/server/Websocket";
-import {IChat, IEmojiMart, IPrivateChatMessage} from "~/types";
+import {websocketSendMessage, websocketStartPrivateChat, websocketStartTyping} from "~/server/Websocket";
+import {IChat, IEmojiMart, IParticipant, IPrivateChatMessage} from "~/types";
 import Picker from "@emoji-mart/react";
 import emojiData from "@emoji-mart/data";
 import {
@@ -60,6 +60,7 @@ function ChatModal() {
   const [chatTypingList, setChatTypingList] =
     useRecoilState(chatTypingListState);
   const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
+  const participantList = useRecoilValue(participantListState);
   const [infoMessageStatus, setInfoMessageStatus] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("Everyone");
@@ -174,21 +175,58 @@ function ChatModal() {
               </DropdownMenuTrigger>
               <DropdownMenuContent className=" mt-1 w-52  border-0 bg-primary text-a11y ">
                 <DropdownMenuGroup className=" divide-y divide-a11y/20">
-                  {privateChatState.chatRooms.map((chat: IPrivateChatMessage['chatRooms'][0], index: number) => (
+                  {participantList.filter((participant: IParticipant) => participant.intId != user?.meetingDetails?.internalUserID).map((participant: IParticipant, index: number) => (
                       <DropdownMenuItem
                           key={index}
                           className="flex items-center gap-2 rounded-none py-4"
                           onClick={() => {
 
-                            setPrivateChatState((prev)=>({
-                              ...prev,
+                            console.log("Private Chat: searching in privateChatState.users",privateChatState.users)
+
+                            if(privateChatState.users.filter((item)=> item.id == participant.intId).length > 0){
+                              console.log("Private Chat: searching in privateChatState.chatRooms",privateChatState.chatRooms)
+                              privateChatState.chatRooms.map((citem)=>{
+                                citem.participants.map((ccitem)=>{
+                                  if(ccitem.id == participant.intId){
+                                    setPrivateChatState((prev)=>({
+                                      ...prev,
+                                      isActive: true,
+                                      id: citem.chatId,
+                                    }));
+
+                                    return;
+                                  }
+                                });
+                              });
+
+                              return;
+                            }
+
+                            console.log("Private Chat: starting a new chat")
+                            websocketStartPrivateChat(participant);
+                            setPrivateChatState({
+                              ...privateChatState,
+                              // isActive: !privateChatState.isActive,
+                              users: [
+                                // {
+                                //   email: user.email,
+                                //   fullName: user.fullName,
+                                //   id: user.id,
+                                // },
+                                ...privateChatState.users,
+                                {
+                                  email: participant.extId,
+                                  fullName: participant.name,
+                                  id: participant.intId,
+                                },
+                              ],
                               isActive: true,
-                              id: chat.chatId,
-                            }));
+                            });
+
                           }}
                       >
-                        {value == chat.chatId ? (<TickIcon className={cn("mr-2 h-4 w-4")} />) : null }
-                        {chat.participants[1]?.name}
+                        {value == participant.id ? (<TickIcon className={cn("mr-2 h-4 w-4")} />) : null }
+                        {participant.name}
                       </DropdownMenuItem>
                   ))}
                 </DropdownMenuGroup>

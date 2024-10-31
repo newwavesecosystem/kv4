@@ -198,22 +198,50 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       <div className="sticky top-0 z-50 flex h-16 w-full justify-between border-b border-onegov/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:py-4">
         {/* left side */}
         <div className=" flex items-center gap-2 md:gap-5">
-          {user?.meetingDetails?.customLogoURL != null && user?.meetingDetails?.customLogoURL != "" &&
-          <Image
-            src={user?.meetingDetails?.customLogoURL}
-            alt="logo"
-            width={60}
-            height={28}
-            className="hidden md:block"
-            loading="lazy"
-          />}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                {user?.meetingDetails?.customLogoURL != null && user?.meetingDetails?.customLogoURL != "" &&
+                    <Image
+                        src={user?.meetingDetails?.customLogoURL}
+                        alt="logo"
+                        width={60}
+                        height={28}
+                        className="hidden md:block"
+                        loading="lazy"
+                    />}
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Conference Banner</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
           <Separator
             className="hidden bg-a11y md:block"
             orientation="vertical"
           />
           <div className="hidden flex-col md:flex">
-            <span>{user?.meetingDetails?.confname}</span>
-            <p>{new Date().toDateString()}</p>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>{user?.meetingDetails?.confname}</span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Conference Name</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <p>{new Date().toDateString()}</p>
+                </TooltipTrigger>
+                <TooltipContent>
+                <p>Conference Date</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <button
             onClick={() => {
@@ -387,15 +415,25 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           {/*>*/}
           {/*  <CCIcon className="h-6 w-6" />*/}
           {/*</button>*/}
-          {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.hideUserList) && (<button
-            onClick={() => {
-              setParticipantState(!participantState);
-            }}
-            className="flex items-center gap-2 rounded-lg border-a11y/20 bg-a11y/20 px-3 py-2 text-a11y md:border "
-          >
-            <PeoplesIcon className="h-5 w-5" />
-            <span>{participantList.length}</span>
-          </button>)}
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.hideUserList) && (<button
+                    onClick={() => {
+                      setParticipantState(!participantState);
+                    }}
+                    className="flex items-center gap-2 rounded-lg border-a11y/20 bg-a11y/20 px-3 py-2 text-a11y md:border "
+                >
+                  <PeoplesIcon className="h-5 w-5" />
+                  <span>{participantList.length}</span>
+                </button>)}
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Participant List</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
       {children}
@@ -615,7 +653,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 </button>)}
               </TooltipTrigger>
               <TooltipContent>
-                <p>Chats</p>
+                <p>Chat with Everyone</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
