@@ -406,20 +406,20 @@ function MiddleSide() {
       </TooltipProvider>
 
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <button className="items-center rounded-full border border-a11y/20 bg-transparent p-2">
-                                <EllipsisIcon className="h-6 w-6"/>
-                            </button>
+                            <DropdownMenuTrigger asChild>
+                                <button className="items-center rounded-full border border-a11y/20 bg-transparent p-2">
+                                    <EllipsisIcon className="h-6 w-6"/>
+                                </button>
+                            </DropdownMenuTrigger>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>More Options</p>
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
-            </DropdownMenuTrigger>
             <DropdownMenuContent className="mb-2 w-52 rounded-b-none border-0 bg-primary text-a11y md:mb-3 md:rounded-b-md">
                 <div className="absolute bottom-0 right-[45%] hidden h-0 w-0 border-l-[10px] border-r-[10px] border-t-[15px] border-l-transparent border-r-transparent border-t-primary md:block"></div>
                 {/*<DropdownMenuGroup className="py-1">*/}
