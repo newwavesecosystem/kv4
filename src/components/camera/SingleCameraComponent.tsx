@@ -219,20 +219,20 @@ function SingleCameraComponent({
 
           {/* Dropdown Menu */}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="rounded-full bg-primary/80 p-1 cursor-pointer">
-                      <EllipsisIcon className="h-5 w-5 "/>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Action</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </DropdownMenuTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                      <div className="rounded-full bg-primary/80 p-1 cursor-pointer">
+                        <EllipsisIcon className="h-5 w-5 "/>
+                      </div>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Actions</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <DropdownMenuContent
                 align="end"
                 className="border-0 bg-primary text-a11y"
@@ -273,6 +273,8 @@ function SingleCameraComponent({
                   </DropdownMenuItem>)}
             </DropdownMenuContent>
           </DropdownMenu>
+
+
         </div>
 
         {participant?.raiseHand && (
