@@ -182,34 +182,30 @@ function SingleCameraComponent({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                {pinnedParticipant.filter(
-                    (eachItem: any) => eachItem?.intId == participant.intId,
-                ).length > 0 && (
-                    <button
-                        className={cn(
-                            "p-1 z-10",
-                            participantTalkingList
-                                .filter((eachItem: any) => eachItem?.intId == participant.intId)
-                                .map((eachItem: any) =>
-                                    eachItem?.joined && eachItem?.muted
-                                        ? "rounded-full border border-a11y/20 bg-konn3ct-red"
-                                        : "rounded-full bg-primary/80",
-                                ),
-                        )}
-                    >
-                      {participantTalkingList
-                          .filter((eachItem: any, index: number) => eachItem?.intId == participant.intId)
-                          .map((eachItem: any) =>
-                              !eachItem?.joined ? (
-                                  <VolumeOffIcon key={index} className="h-5 w-5 "/>
-                              ) : eachItem?.joined && !eachItem?.muted ? (
-                                  <MicOnIcon key={index} className="h-5 w-5 "/>
-                              ) : (
-                                  <MicOffIcon key={index} muted={true} className="h-5 w-5 "/>
-                              ),
-                          )}
-                    </button>
-                )}
+                <button
+                    className={cn(
+                        "p-1 z-10",
+                        participantTalkingList
+                            .filter((eachItem: any) => eachItem?.intId == participant.intId)
+                            .map((eachItem: any) =>
+                                eachItem?.joined && eachItem?.muted
+                                    ? "rounded-full border border-a11y/20 bg-konn3ct-red"
+                                    : "rounded-full bg-primary/80",
+                            ),
+                    )}
+                >
+                  {participantTalkingList
+                      .filter((eachItem: any, index: number) => eachItem?.intId == participant.intId)
+                      .map((eachItem: any) =>
+                          !eachItem?.joined ? (
+                              <VolumeOffIcon key={index} className="h-5 w-5 "/>
+                          ) : eachItem?.joined && !eachItem?.muted ? (
+                              <MicOnIcon key={index} className="h-5 w-5 "/>
+                          ) : (
+                              <MicOffIcon key={index} muted={true} className="h-5 w-5 "/>
+                          ),
+                      )}
+                </button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>{participant.name} Mic Status</p>
@@ -223,9 +219,9 @@ function SingleCameraComponent({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <DropdownMenuTrigger asChild>
-                      <div className="rounded-full bg-primary/80 p-1 cursor-pointer">
-                        <EllipsisIcon className="h-5 w-5 "/>
-                      </div>
+                    <div className="rounded-full bg-primary/80 p-1 cursor-pointer">
+                      <EllipsisIcon className="h-5 w-5 "/>
+                    </div>
                   </DropdownMenuTrigger>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -279,7 +275,7 @@ function SingleCameraComponent({
 
         {participant?.raiseHand && (
             <div className="animate-wave absolute left-3 top-3 flex items-center gap-1">
-              <HandOnIcon coloured={true} className="h-8 w-8"/>
+              <HandOnIcon className="h-8 w-8"/>
             </div>
         )}
 
