@@ -405,123 +405,129 @@ function MiddleSide() {
         </Tooltip>
       </TooltipProvider>
 
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="items-center rounded-full border border-a11y/20 bg-transparent p-2">
-                  <EllipsisIcon className="h-6 w-6" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="mb-2 w-52 rounded-b-none border-0 bg-primary text-a11y md:mb-3 md:rounded-b-md">
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <button className="items-center rounded-full border border-a11y/20 bg-transparent p-2">
+                                <EllipsisIcon className="h-6 w-6"/>
+                            </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>More Options</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="mb-2 w-52 rounded-b-none border-0 bg-primary text-a11y md:mb-3 md:rounded-b-md">
                 <div className="absolute bottom-0 right-[45%] hidden h-0 w-0 border-l-[10px] border-r-[10px] border-t-[15px] border-l-transparent border-r-transparent border-t-primary md:block"></div>
                 <DropdownMenuGroup className="py-1">
-                  {breakOutRoomState.isActive ? (
-                      <DropdownMenuItem
-                          onClick={() => {
-                            setBreakOutRoomState((prev) => ({
-                              ...prev,
-                              step: 2,
-                            }));
-                          }}
-                          className="bg-[#DF2622]"
-                      >
-                        <RecordOnIcon className="mr-2 h-5 w-5" />
-                        <span>View Breakout Rooms</span>
-                      </DropdownMenuItem>
-                  ) : (
-                      <DropdownMenuItem
-                          onClick={() => {
-                            setBreakOutRoomState((prev) => ({
-                              ...prev,
-                              step: 1,
-                            }));
-                          }}
-                      >
-                        <RecordOnIcon className="mr-2 h-5 w-5" />
-                        <span>Breakout Rooms</span>
-                      </DropdownMenuItem>
-                  )}
+                    {breakOutRoomState.isActive ? (
+                        <DropdownMenuItem
+                            onClick={() => {
+                                setBreakOutRoomState((prev) => ({
+                                    ...prev,
+                                    step: 2,
+                                }));
+                            }}
+                            className="bg-[#DF2622]"
+                        >
+                            <RecordOnIcon className="mr-2 h-5 w-5" />
+                            <span>View Breakout Rooms</span>
+                        </DropdownMenuItem>
+                    ) : (
+                        <DropdownMenuItem
+                            onClick={() => {
+                                setBreakOutRoomState((prev) => ({
+                                    ...prev,
+                                    step: 1,
+                                }));
+                            }}
+                        >
+                            <RecordOnIcon className="mr-2 h-5 w-5" />
+                            <span>Breakout Rooms</span>
+                        </DropdownMenuItem>
+                    )}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator className="" />
                 <DropdownMenuGroup className="py-1 md:hidden">
-                  {user?.meetingDetails?.record == "true" ? recordingState.isActive ? (
-                      <DropdownMenuItem
-                          onClick={() => {
-                            if (CurrentUserRoleIsModerator(participantList,user)) {
-                              setRecordingState((prev) => ({
-                                ...prev,
-                                step: 2,
-                              }));
-                            } else {
-                              toast({
-                                variant: "destructive",
-                                title: "Permission Denied!!",
-                                description:
-                                    "You dont have the permission for this action. Kindly chat with the host or moderator",
-                              });
-                            }
-                          }}
-                          className="bg-[#DF2622]"
-                      >
-                        <RecordOnIcon className="mr-2 h-5 w-5" />
-                        <span>End Recording</span>
-                      </DropdownMenuItem>
-                  ) : (
-                      <DropdownMenuItem
-                          onClick={() => {
-                            if (CurrentUserRoleIsModerator(participantList,user)) {
-                              setRecordingState((prev) => ({
-                                ...prev,
-                                step: 1,
-                              }));
-                            } else {
-                              toast({
-                                variant: "destructive",
-                                title: "Permission Denied!!",
-                                description:
-                                    "You dont have the permission for this action. Kindly chat with the host or moderator",
-                              });
-                            }
-                          }}
-                      >
-                        <RecordOnIcon className="mr-2 h-5 w-5" />
-                        <span>{recordingState.isStarted ? "Start" : "Start"} Recording</span>
-                      </DropdownMenuItem>
-                  ) : null }
+                    {user?.meetingDetails?.record == "true" ? recordingState.isActive ? (
+                        <DropdownMenuItem
+                            onClick={() => {
+                                if (CurrentUserRoleIsModerator(participantList,user)) {
+                                    setRecordingState((prev) => ({
+                                        ...prev,
+                                        step: 2,
+                                    }));
+                                } else {
+                                    toast({
+                                        variant: "destructive",
+                                        title: "Permission Denied!!",
+                                        description:
+                                            "You dont have the permission for this action. Kindly chat with the host or moderator",
+                                    });
+                                }
+                            }}
+                            className="bg-[#DF2622]"
+                        >
+                            <RecordOnIcon className="mr-2 h-5 w-5" />
+                            <span>End Recording</span>
+                        </DropdownMenuItem>
+                    ) : (
+                        <DropdownMenuItem
+                            onClick={() => {
+                                if (CurrentUserRoleIsModerator(participantList,user)) {
+                                    setRecordingState((prev) => ({
+                                        ...prev,
+                                        step: 1,
+                                    }));
+                                } else {
+                                    toast({
+                                        variant: "destructive",
+                                        title: "Permission Denied!!",
+                                        description:
+                                            "You dont have the permission for this action. Kindly chat with the host or moderator",
+                                    });
+                                }
+                            }}
+                        >
+                            <RecordOnIcon className="mr-2 h-5 w-5" />
+                            <span>{recordingState.isStarted ? "Start" : "Start"} Recording</span>
+                        </DropdownMenuItem>
+                    ) : null }
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator className="md:hidden" />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem
-                      onClick={() => {
-                        setChatState(!chatState);
-                        setIsNewMessage(false)
-                      }}
-                      className="relative py-2 md:hidden"
-                  >
-                    <ChatIcon className="mr-2 h-5 w-5" />
-                    <span>Chat</span>
-                    {isNewMessage && (
-                        <div className="absolute left-5 top-2 h-2 w-2 animate-pulse rounded-full bg-a11y"></div>
-                    )}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                      onClick={() => {
-                        // setChatState(!chatState);
-                        window.location.reload();
-                        toast({
-                          title: "Rekonn3ct",
-                          description: "Re-konn3cting, Please wait for few moment",
-                        });
-                      }}
-                      className="py-2"
-                  >
-                    <RefreshIcon className="mr-2 h-5 w-5" />
-                    <span>Rekonn3ct</span>
-                  </DropdownMenuItem>
-                  {/* disabled because its redundant with layout on settings */}
-                  {/* <DropdownMenuSub>
+                    <DropdownMenuItem
+                        onClick={() => {
+                            setChatState(!chatState);
+                            setIsNewMessage(false)
+                        }}
+                        className="relative py-2 md:hidden"
+                    >
+                        <ChatIcon className="mr-2 h-5 w-5" />
+                        <span>Chat</span>
+                        {isNewMessage && (
+                            <div className="absolute left-5 top-2 h-2 w-2 animate-pulse rounded-full bg-a11y"></div>
+                        )}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => {
+                            // setChatState(!chatState);
+                            window.location.reload();
+                            toast({
+                                title: "Rekonn3ct",
+                                description: "Re-konn3cting, Please wait for few moment",
+                            });
+                        }}
+                        className="py-2"
+                    >
+                        <RefreshIcon className="mr-2 h-5 w-5" />
+                        <span>Rekonn3ct</span>
+                    </DropdownMenuItem>
+                    {/* disabled because its redundant with layout on settings */}
+                    {/* <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <AllAppsIcon className="mr-1 h-6 w-6" />
                 <span>Change layout</span>
@@ -537,199 +543,193 @@ function MiddleSide() {
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub> */}
-                  <DropdownMenuItem
-                      onClick={() => {
-                        document.documentElement.requestFullscreen();
-                      }}
-                      className="py-2"
-                  >
-                    <ExpandIcon className="mr-2 h-5 w-5" />
-                    <span>Go Fullscreen</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                      onClick={() => {
-                        setIsWhiteboardOpen(!isWhiteboardOpen);
-                      }}
-                      className="py-2"
-                  >
-                    <DesktopIcon className="mr-2 h-5 w-5" />
-                    <span>
+                    <DropdownMenuItem
+                        onClick={() => {
+                            document.documentElement.requestFullscreen();
+                        }}
+                        className="py-2"
+                    >
+                        <ExpandIcon className="mr-2 h-5 w-5" />
+                        <span>Go Fullscreen</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => {
+                            setIsWhiteboardOpen(!isWhiteboardOpen);
+                        }}
+                        className="py-2"
+                    >
+                        <DesktopIcon className="mr-2 h-5 w-5" />
+                        <span>
                 {isWhiteboardOpen ? "Close White Board" : "White Board"}
               </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                      onClick={() => {
-                        setConnectedUsers((prev) =>
-                            prev.map((prevUser) => {
-                              if (prevUser.id === user?.id) {
-                                return {
-                                  ...prevUser,
-                                  isHandRaised: !prevUser.isHandRaised,
-                                };
-                              }
-                              return prevUser;
-                            }),
-                        );
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => {
+                            setConnectedUsers((prev) =>
+                                prev.map((prevUser) => {
+                                    if (prevUser.id === user?.id) {
+                                        return {
+                                            ...prevUser,
+                                            isHandRaised: !prevUser.isHandRaised,
+                                        };
+                                    }
+                                    return prevUser;
+                                }),
+                            );
 
-                        var raiseH=false;
-                        const updatedArray = participantList?.map(
-                            (item: IParticipant) => {
-                              if (item.userId == user?.meetingDetails?.internalUserID) {
-                                raiseH=!item.raiseHand;
-                                return { ...item, raiseHand: !item.raiseHand };
-                              }
-                              return item;
-                            },
-                        );
+                            var raiseH=false;
+                            const updatedArray = participantList?.map(
+                                (item: IParticipant) => {
+                                    if (item.userId == user?.meetingDetails?.internalUserID) {
+                                        raiseH=!item.raiseHand;
+                                        return { ...item, raiseHand: !item.raiseHand };
+                                    }
+                                    return item;
+                                },
+                            );
 
-                        console.log(updatedArray);
+                            console.log(updatedArray);
 
-                        console.log("UserState: updatedArray", updatedArray);
+                            console.log("UserState: updatedArray", updatedArray);
 
-                        setParticipantList(updatedArray);
+                            setParticipantList(updatedArray);
 
-                        websocketRaiseHand(raiseH);
-                      }}
-                      className="py-2 md:hidden"
-                  >
-                    {connectedUsers.find((user) => user.id === user.id)
-                        ?.isHandRaised ? (
-                        <HandOffIcon className="mr-2 h-5 w-5" />
-                    ) : (
-                        <HandOnIcon className="mr-2 h-5 w-5" />
-                    )}
-                    <span>
+                            websocketRaiseHand(raiseH);
+                        }}
+                        className="py-2 md:hidden"
+                    >
+                        {connectedUsers.find((user) => user.id === user.id)
+                            ?.isHandRaised ? (
+                            <HandOffIcon className="mr-2 h-5 w-5" />
+                        ) : (
+                            <HandOnIcon className="mr-2 h-5 w-5" />
+                        )}
+                        <span>
                 {connectedUsers.find((user) => user.id === user.id)
                     ?.isHandRaised
                     ? "Lower Hand"
                     : "Raise Hand"}
               </span>
-                  </DropdownMenuItem>
-                  {CurrentUserIsPresenter(participantList, user) && (<DropdownMenuItem
-                      onClick={() => {
-                        setFileUploadModal((prev) => ({
-                          ...prev,
-                          step: 1,
-                        }));
-                      }}
-                      className="py-2"
-                  >
-                    <FolderOpenIcon className="mr-2 h-5 w-5" />
-                    <span>Upload Files</span>
-                  </DropdownMenuItem>)}
-
-                  {CurrentUserIsPresenter(participantList, user) && (
-                      <DropdownMenuItem
-                          onClick={() => {
-                            if (eCinemaModal.isActive)
-                              return toast({
-                                title: "Uh oh! Something went wrong.",
-                                description:
-                                    "You can't start a new eCinema session while one is ongoing.",
-                              });
-                            setECinemaModal((prev) => ({
-                              ...prev,
-                              step: 1,
+                    </DropdownMenuItem>
+                    {CurrentUserIsPresenter(participantList, user) && (<DropdownMenuItem
+                        onClick={() => {
+                            setFileUploadModal((prev) => ({
+                                ...prev,
+                                step: 1,
                             }));
-                          }}
-                          className="py-2 md:hidden"
-                      >
-                        <MovieColoredIcon className="mr-2 h-5 w-5" />
-                        <span>ECinema</span>
-                      </DropdownMenuItem>
-                  )}
+                        }}
+                        className="py-2"
+                    >
+                        <FolderOpenIcon className="mr-2 h-5 w-5" />
+                        <span>Upload Files</span>
+                    </DropdownMenuItem>)}
 
-                  {CurrentUserIsPresenter(participantList, user) && (
-                      <DropdownMenuItem
-                          onClick={() => {
-                            websocketMuteAllParticipants(
-                                user?.meetingDetails?.internalUserID,
-                            );
-                          }}
-                          className="py-2"
-                      >
-                        <MicOffIcon className="mr-2 h-5 w-5" />
-                        <span>Mute All</span>
-                      </DropdownMenuItem>
-                  )}
+                    {CurrentUserIsPresenter(participantList, user) && (
+                        <DropdownMenuItem
+                            onClick={() => {
+                                if (eCinemaModal.isActive)
+                                    return toast({
+                                        title: "Uh oh! Something went wrong.",
+                                        description:
+                                            "You can't start a new eCinema session while one is ongoing.",
+                                    });
+                                setECinemaModal((prev) => ({
+                                    ...prev,
+                                    step: 1,
+                                }));
+                            }}
+                            className="py-2 md:hidden"
+                        >
+                            <MovieColoredIcon className="mr-2 h-5 w-5" />
+                            <span>ECinema</span>
+                        </DropdownMenuItem>
+                    )}
 
-                  {CurrentUserIsPresenter(participantList, user) && (
-                      <DropdownMenuItem
-                          onClick={() => {
-                            if (pollModal.isActive || pollModal.isEnded) return;
-                            setPollModal((prev) => ({
-                              ...prev,
-                              step: 1,
-                            }));
-                          }}
-                          className="py-2"
-                      >
-                        <TextFormatIcon className="mr-2 h-5 w-5" />
-                        <span>Polls</span>
-                      </DropdownMenuItem>
-                  )}
+                    {CurrentUserIsPresenter(participantList, user) && (
+                        <DropdownMenuItem
+                            onClick={() => {
+                                websocketMuteAllParticipants(
+                                    user?.meetingDetails?.internalUserID,
+                                );
+                            }}
+                            className="py-2"
+                        >
+                            <MicOffIcon className="mr-2 h-5 w-5" />
+                            <span>Mute All</span>
+                        </DropdownMenuItem>
+                    )}
 
-                  {!donationState.isActive && (
-                      <DropdownMenuItem
-                          className="py-2"
-                          onClick={() => {
-                            setDonationState((prev) => ({
-                              ...prev,
-                              step: 1,
-                            }));
-                          }}
-                      >
-                        <GiftIcon className="mr-2 h-5 w-5" />
-                        <span>Donation</span>
-                      </DropdownMenuItem>
-                  )}
-                  <DropdownMenuSeparator />
-                  {/*<DropdownMenuSub>*/}
-                  {/*  <DropdownMenuSubTrigger className="py-2">*/}
-                  {/*    <BotIcon className="mr-2 h-5 w-5" />*/}
-                  {/*    <span>Konn3ct AI</span>*/}
-                  {/*  </DropdownMenuSubTrigger>*/}
-                  {/*  <DropdownMenuPortal>*/}
-                  {/*    <DropdownMenuSubContent className="border-0 bg-primary text-a11y">*/}
-                  {/*      <DropdownMenuItem>*/}
-                  {/*        <span>Transcript</span>*/}
-                  {/*      </DropdownMenuItem>*/}
-                  {/*      <DropdownMenuItem>*/}
-                  {/*        <span>Highlights</span>*/}
-                  {/*      </DropdownMenuItem>*/}
-                  {/*      <DropdownMenuItem>*/}
-                  {/*        <span className="">Notes</span>*/}
-                  {/*      </DropdownMenuItem>*/}
-                  {/*      <DropdownMenuItem*/}
-                  {/*        onClick={() => {*/}
-                  {/*          setKonn3ctAiChatState(!konn3ctAiChatState);*/}
-                  {/*        }}*/}
-                  {/*        className="md:hidden"*/}
-                  {/*      >*/}
-                  {/*        <span className="">Chat</span>*/}
-                  {/*      </DropdownMenuItem>*/}
-                  {/*    </DropdownMenuSubContent>*/}
-                  {/*  </DropdownMenuPortal>*/}
-                  {/*</DropdownMenuSub>*/}
+                    {CurrentUserIsPresenter(participantList, user) && (
+                        <DropdownMenuItem
+                            onClick={() => {
+                                if (pollModal.isActive || pollModal.isEnded) return;
+                                setPollModal((prev) => ({
+                                    ...prev,
+                                    step: 1,
+                                }));
+                            }}
+                            className="py-2"
+                        >
+                            <TextFormatIcon className="mr-2 h-5 w-5" />
+                            <span>Polls</span>
+                        </DropdownMenuItem>
+                    )}
 
-                  <DropdownMenuItem
-                      onClick={() => {
-                        setSettingsOpen(!settingsOpen);
-                      }}
-                      className="py-2"
-                  >
-                    <SettingsIcon className="mr-2 h-5 w-5" />
-                    <span>Settings</span>
-                  </DropdownMenuItem>
+                    {!donationState.isActive && (
+                        <DropdownMenuItem
+                            className="py-2"
+                            onClick={() => {
+                                setDonationState((prev) => ({
+                                    ...prev,
+                                    step: 1,
+                                }));
+                            }}
+                        >
+                            <GiftIcon className="mr-2 h-5 w-5" />
+                            <span>Donation</span>
+                        </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    {/*<DropdownMenuSub>*/}
+                    {/*  <DropdownMenuSubTrigger className="py-2">*/}
+                    {/*    <BotIcon className="mr-2 h-5 w-5" />*/}
+                    {/*    <span>Konn3ct AI</span>*/}
+                    {/*  </DropdownMenuSubTrigger>*/}
+                    {/*  <DropdownMenuPortal>*/}
+                    {/*    <DropdownMenuSubContent className="border-0 bg-primary text-a11y">*/}
+                    {/*      <DropdownMenuItem>*/}
+                    {/*        <span>Transcript</span>*/}
+                    {/*      </DropdownMenuItem>*/}
+                    {/*      <DropdownMenuItem>*/}
+                    {/*        <span>Highlights</span>*/}
+                    {/*      </DropdownMenuItem>*/}
+                    {/*      <DropdownMenuItem>*/}
+                    {/*        <span className="">Notes</span>*/}
+                    {/*      </DropdownMenuItem>*/}
+                    {/*      <DropdownMenuItem*/}
+                    {/*        onClick={() => {*/}
+                    {/*          setKonn3ctAiChatState(!konn3ctAiChatState);*/}
+                    {/*        }}*/}
+                    {/*        className="md:hidden"*/}
+                    {/*      >*/}
+                    {/*        <span className="">Chat</span>*/}
+                    {/*      </DropdownMenuItem>*/}
+                    {/*    </DropdownMenuSubContent>*/}
+                    {/*  </DropdownMenuPortal>*/}
+                    {/*</DropdownMenuSub>*/}
+
+                    <DropdownMenuItem
+                        onClick={() => {
+                            setSettingsOpen(!settingsOpen);
+                        }}
+                        className="py-2"
+                    >
+                        <SettingsIcon className="mr-2 h-5 w-5" />
+                        <span>Settings</span>
+                    </DropdownMenuItem>
                 </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Actions</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+            </DropdownMenuContent>
+        </DropdownMenu>
 
 
       <TooltipProvider>
