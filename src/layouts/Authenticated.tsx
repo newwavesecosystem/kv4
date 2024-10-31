@@ -145,7 +145,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
       <DonationModal />
       <PollModal />
       <ECinemaModal />
-      {user?.meetingDetails?.meetingID && <CCModal />}
+      {/*{user?.meetingDetails?.meetingID && <CCModal />}*/}
       <BreakOutModal />
       <FileUploadModal />
       <div className="sticky top-0 z-50 flex h-16 w-full justify-between border-b border-a11y/20 bg-primary px-5 text-sm backdrop-blur-[3px] md:py-4">
@@ -295,18 +295,18 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             </button>
           ): null}
 
-          <button
-            onClick={() => {
-              setCCModal((prev) => ({
-                ...prev,
-                isActive: true,
-                step: 1,
-              }));
-            }}
-            className="items-center rounded-full border border-a11y/20 p-2 md:hidden"
-          >
-            <CCIcon className="h-6 w-6" />
-          </button>
+          {/*<button*/}
+          {/*  onClick={() => {*/}
+          {/*    setCCModal((prev) => ({*/}
+          {/*      ...prev,*/}
+          {/*      isActive: true,*/}
+          {/*      step: 1,*/}
+          {/*    }));*/}
+          {/*  }}*/}
+          {/*  className="items-center rounded-full border border-a11y/20 p-2 md:hidden"*/}
+          {/*>*/}
+          {/*  <CCIcon className="h-6 w-6" />*/}
+          {/*</button>*/}
           {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.hideUserList) && (<button
             onClick={() => {
               setParticipantState(!participantState);
@@ -450,18 +450,18 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               <HandOnIcon className="h-6 w-6" />
             )}
           </button>
-          <button
-            onClick={() => {
-              setCCModal((prev) => ({
-                ...prev,
-                isActive: true,
-                step: 1,
-              }));
-            }}
-            className="items-center rounded-full border border-a11y/20 bg-transparent p-2"
-          >
-            <CCIcon className="h-6 w-6" />
-          </button>
+          {/*<button*/}
+          {/*  onClick={() => {*/}
+          {/*    setCCModal((prev) => ({*/}
+          {/*      ...prev,*/}
+          {/*      isActive: true,*/}
+          {/*      step: 1,*/}
+          {/*    }));*/}
+          {/*  }}*/}
+          {/*  className="items-center rounded-full border border-a11y/20 bg-transparent p-2"*/}
+          {/*>*/}
+          {/*  <CCIcon className="h-6 w-6" />*/}
+          {/*</button>*/}
           {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disablePublicChat) && (<button
             onClick={() => {
               setChatState(!chatState);
