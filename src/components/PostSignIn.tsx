@@ -45,7 +45,6 @@ import KurentoVideoViewer from "~/server/KurentoVideoViewer";
 import KurentoScreenShare from "~/server/KurentoScreenshare";
 import KurentoScreenShareViewer from "~/server/KurentoScreenshareViewer";
 import Draggable from "react-draggable";
-import CCModal from "~/components/cc/CCModal";
 import SocketIOCaption from "~/server/SocketIOCaption";
 import PinIcon from "~/components/icon/outline/PinIcon";
 import MinimizeIcon from "~/components/icon/outline/MinimizeIcon";
@@ -308,33 +307,32 @@ function PostSignIn() {
 
   }
 
+  const handleBeforeUnload = (event) => {
+    event.preventDefault();
+    event.returnValue = ''; // Or any custom message
+  };
+
+
 
   useEffect(() => {
     tokenExtraction();
-  }, [""]);
+  }, []);
 
   useEffect(() => {
-    console.log("setting up disabling back");
-    const disableBackButton = (event: any) => {
-      console.log("trying to disable back");
-      // Prevent navigating back using the browser's back button
-      event.preventDefault();
-    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
-    // Listen for the 'popstate' event (back/forward button navigation)
-    window.addEventListener("popstate", disableBackButton);
+    // return () => {
+    //   window.removeEventListener('beforeunload', handleBeforeUnload);
+    //
+    // };
+  });
 
-    document.addEventListener("gesturestart", function (e) {
-      e.preventDefault();
-    });
-
-    // Clean up the event listener when the component is unmounted
-    return () => {
+  useEffect(() => {
+    if(!postLeaveMeeting.isLeave || !postLeaveMeeting.isLeaveRoomCall || !postLeaveMeeting.isEndCall || !postLeaveMeeting.isOthers || !postLeaveMeeting.isSessionExpired || !postLeaveMeeting.isKicked) {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
       removeWakeLock();
-        window.removeEventListener('popstate', disableBackButton);
-    };
-  }); // Run the effect only once during component mount
-
+    }
+  }, [postLeaveMeeting]);
 
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
   const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
