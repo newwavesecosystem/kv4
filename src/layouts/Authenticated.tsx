@@ -70,7 +70,8 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
 } from "~/components/ui/dropdown-menu";
 import EllipsisIcon from "~/components/icon/outline/EllipsisIcon";
 import ExitIcon from "~/components/icon/outline/ExitIcon";
