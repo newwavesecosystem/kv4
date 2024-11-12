@@ -483,9 +483,9 @@ export const micFilterState = atom<{
 }>({
   key: "micFilterState",
   default: {
-    echoCancellation: true,
+    echoCancellation: false,
     noiseSuppression: false,
-    autoGainControl: false,
+    autoGainControl: true,
   },
 });
 
