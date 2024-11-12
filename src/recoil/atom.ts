@@ -261,12 +261,16 @@ export const eCinemaModalState = atom<{
   isActive: boolean;
   source: string;
   step: number;
+  eventName: string;
+  eventData: null;
 }>({
   key: "eCinemaModalState",
   default: {
     isActive: false,
     source: "",
     step: 0,
+    eventName: "",
+    eventData: null,
   },
 });
 

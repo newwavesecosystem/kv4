@@ -22,15 +22,26 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fix UI Color issue on pagination">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Return raised hand color to yellow">
+      <change afterPath="$PROJECT_DIR$/src/components/eCinema/EcinemaService.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/KurentoAudio.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoAudio.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/eCinema/ECinemaComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eCinema/ECinemaComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/eCinema/ECinemaModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eCinema/ECinemaModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/screenSharing/ScreenSharingComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screenSharing/ScreenSharingComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -153,6 +164,9 @@
       <workItem from="1727473873490" duration="9835000" />
       <workItem from="1727768867846" duration="14341000" />
       <workItem from="1728671238162" duration="608000" />
+      <workItem from="1730663952190" duration="28000" />
+      <workItem from="1730665179542" duration="87000" />
+      <workItem from="1730695864963" duration="60780000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -380,7 +394,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="samji" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>

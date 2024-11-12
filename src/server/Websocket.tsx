@@ -46,6 +46,12 @@ import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
 import {kurentoAudioEndStream} from "~/server/KurentoAudio";
 import {kurentoVideoEndStream} from "~/server/KurentoVideo";
 import {websocketKurentoScreenshareEndScreenshare} from "~/server/KurentoScreenshare";
+import {
+    receivedPlay, receivedPlayerUpdate, receivedPresenterReady,
+    receivedStop,
+    receiveVideoLinkFromWebsocket,
+    stopVideoLinkFromWebsocket
+} from "~/components/eCinema/EcinemaService";
 
 const maxReconnectAttempts = 10;
 
@@ -141,7 +147,7 @@ const Websocket = () => {
         console.log("reconnection state is changing: ",connectionStatus.websocket_connection_reconnect)
         const reConnect = () => {
             console.log("Reconnection launched");
-            // console.log("should stop reconnection,",stopReconnection);
+            console.log("should stop reconnection,",stopReconnection);
             console.log("should stop reconnection connectionStatus,",connectionStatus);
             if (stopReconnection) {
                 console.log('Stopping Websocket reconnection due to meeting exit condition');
@@ -321,6 +327,11 @@ const Websocket = () => {
 
                 if(collection == "external-video-meetings"){
                     handleExternalVideo(e.data)
+                }
+
+
+                if(collection!= null && collection.includes("stream-external-videos")){
+                    handleStreamExternalVideos(e.data)
                 }
 
                 if(collection == "video-streams"){
@@ -720,7 +731,7 @@ const Websocket = () => {
             const {externalVideoUrl} = fields;
 
             if (externalVideoUrl != null) {
-                receiveVideoLinkFromWebsocket(externalVideoUrl)
+                receiveVideoLinkFromWebsocket(externalVideoUrl,eCinemaModal, setECinemaModal,user!)
             }
         }
 
@@ -728,9 +739,42 @@ const Websocket = () => {
             const {externalVideoUrl} = fields;
 
             if (externalVideoUrl != null) {
-                receiveVideoLinkFromWebsocket(externalVideoUrl)
+                receiveVideoLinkFromWebsocket(externalVideoUrl,eCinemaModal, setECinemaModal,user!)
             } else {
-                stopVideoLinkFromWebsocket(null)
+                stopVideoLinkFromWebsocket(null,eCinemaModal, setECinemaModal)
+            }
+        }
+    }
+
+    const handleStreamExternalVideos = (eventData:any) => {
+        console.log('I got to handle incoming messages')
+        const obj = JSON.parse(eventData);
+        const {msg, id, fields} = obj;
+
+        if(msg == "changed") {
+            // a["{\"msg\":\"changed\",\"collection\":\"stream-external-videos-8f2b2142080438f766fd0f47c999e9158a9c2208-1730879553096\",\"id\":\"id\",\"fields\":{\"eventName\":\"stop\",\"args\":[{\"meetingId\":\"8f2b2142080438f766fd0f47c999e9158a9c2208-1730879553096\",\"userId\":\"w_tnozspbocr3x\",\"rate\":0,\"time\":293,\"state\":0}]}}"]
+            const {eventName} = fields;
+            const {time, state, rate} = fields.args[0];
+
+            if (eventName == "stop" ) {
+                console.log("ecm stop event name")
+                receivedStop(time,setECinemaModal);
+            }
+
+            if (eventName == "play") {
+                console.log("ecm play event name")
+                receivedPlay(time,setECinemaModal);
+            }
+
+            if (eventName == "presenterReady") {
+                console.log("ecm presenterReady event name")
+                receivedPresenterReady(time,setECinemaModal);
+            }
+
+
+            if (eventName == "playerUpdate") {
+                console.log("ecm playerUpdate event name")
+                receivedPlayerUpdate({ time, rate, state },setECinemaModal);
             }
         }
     }
@@ -1538,26 +1582,6 @@ const Websocket = () => {
         setChatTypingList(ur);
     }
 
-    const receiveVideoLinkFromWebsocket =(link:any)=>{
-        console.log('receive Link', link)
-        setECinemaModal({
-            ...eCinemaModal,
-            source: link,
-            isActive:true
-        });
-    }
-
-
-    const stopVideoLinkFromWebsocket =(link:any)=>{
-        console.log('receive Link', link)
-        setECinemaModal({
-            ...eCinemaModal,
-            source: link,
-            isActive:false
-        });
-    }
-
-
     return (
         <div>
         </div>
@@ -1677,10 +1701,6 @@ export function websocketPresenter(internalUserID:string|undefined){
     websocketSend([`{\"msg\":\"method\",\"id\":\"27\",\"method\":\"assignPresenter\",\"params\":[\"${internalUserID}\"]}`])
 }
 
-export function websocketSendExternalVideo(link:string){
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"startWatchingExternalVideo\",\"params\":[\"${link}"]}`]);
-}
-
 export function websocketStartPoll(id:any,question:any,answers:any){
     //Moderator have to sub to get answer update
     websocketSend([`{"msg":"sub","id":"${ServerInfo.generateRandomId(17)}","name":"current-poll","params":[false,true]}`]);
@@ -1695,10 +1715,6 @@ export function websocketVotePoll(id:any,answerID:any){
 export function websocketStopPoll(){
     websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"publishPoll","params":[]}`]);
     websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"stopPoll","params":[]}`]);
-}
-
-export function websocketStopExternalVideo(){
-    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"stopWatchingExternalVideo\",\"params\":[]}`]);
 }
 
 export function websocketRaiseHand(raiseHand:boolean){

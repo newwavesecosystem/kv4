@@ -9,7 +9,6 @@ import {
     screenSharingStreamState
 } from "~/recoil/atom";
 import SpinnerIcon from "../icon/outline/SpinnerIcon";
-import {websocketStopExternalVideo} from "~/server/Websocket";
 import ExpandIcon from "~/components/icon/outline/ExpandIcon";
 import ShareScreenOffIcon from "~/components/icon/outline/ShareScreenOffIcon";
 import {websocketKurentoScreenshareEndScreenshare} from "~/server/KurentoScreenshare";
