@@ -159,7 +159,8 @@ const KurentoVideoSingleStick = () => {
 
         console.log("Skipped pass !peer || !videoElement")
 
-        const stream = isPublisher ? peer.getLocalStream() : peer.getRemoteStream();
+        const stream = isPublisher ? peer.getLocalStream() : getReceiverRemoteStream(peer.peerConnection);
+        console.log("shouldAttachVideoStream:",stream)
         const diff = stream && (stream.id !== videoElement.srcObject?.id || !videoElement.paused);
 
         if (diff) return true;
@@ -175,7 +176,7 @@ const KurentoVideoSingleStick = () => {
     const attach = (peer:WebRtcPeer, videoElement:any) => {
         console.log("Trying to attach to element");
         if (peer && videoElement) {
-            const stream = isPublisher ? peer.getLocalStream() : peer.getRemoteStream();
+            const stream = isPublisher ? peer.getLocalStream() : getReceiverRemoteStream(peer.peerConnection);
             videoElement.pause();
             videoElement.srcObject = stream;
             videoElement.load();
