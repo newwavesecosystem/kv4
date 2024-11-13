@@ -65,18 +65,7 @@ function SingleCameraComponent({
 
     console.log("userCamera", userCamera);
     console.log(`userCamera camOn, ${participant.name}`, userCamera != null);
-    if (userCamera != null) {
-      console.log("userCamera is not null", userCamera.stream)
-      // if (videoRef.current && !camOn) {
-      console.log("userCamera videoRef.current > 0", userCamera.stream)
-      videoRef.current!.srcObject = userCamera.stream;
-      setCamOn(true);
-      console.log("userCamera is null")
-      playAndRetry(document.getElementById(`video${participant.intId}`)).then(r=>console.log("videoPlay playAndRetry ",r));
-      // }
-    } else {
-      setCamOn(false);
-    }
+
   }, [userCamera]);
 
   return (
@@ -109,7 +98,7 @@ function SingleCameraComponent({
       >
 
         <video
-            ref={videoRef}
+            // ref={videoRef}
             autoPlay
             playsInline
             muted

@@ -5,6 +5,7 @@ import { authUserState, connectionStatusState, participantCameraListState } from
 import * as ServerInfo from "~/server/ServerInfo";
 import {IParticipantCamera} from "~/types/index";
 import {websocketSend} from "~/server/Websocket";
+import {WebRtcPeer} from "kurento-utils";
 
 const KurentoVideoSingleStick = () => {
     const user = useRecoilValue(authUserState);
@@ -18,6 +19,7 @@ const KurentoVideoSingleStick = () => {
 
     const reconnectAttemptRef = useRef(0); // Track reconnection attempts
 
+    const isPublisher=false;
 
     function pinger(){
 
@@ -59,7 +61,7 @@ const KurentoVideoSingleStick = () => {
 
             switch (parsedMessage.id) {
                 case 'playStart':
-                    handleStreamStart(parsedMessage.cameraId);
+                    handlePlayStart(parsedMessage.cameraId);
                     break;
                 case 'startResponse':
                     handleStartResponse(parsedMessage.cameraId, parsedMessage);
@@ -110,21 +112,95 @@ const KurentoVideoSingleStick = () => {
         }
     };
 
-    const handleStreamStart = (cameraId: string) => {
+    const handlePlayStart = (cameraId: string) => {
         const webRtcPeer = webRtcPeers[cameraId];
         const remoteStream = webRtcPeer?.getRemoteStream();
 
-        // Immediately update participant list using the ref
-        const updatedArray = cameraListRef.current.map((item:IParticipantCamera) => {
-            if (item.streamID === cameraId) {
-                return { ...item, stream: remoteStream };
-            }
-            return item;
-        });
+        attachVideoStream(cameraId);
 
-        setParticipantCameraList(updatedArray); // Trigger the state update
+        // Immediately update participant list using the ref
+        // const updatedArray = cameraListRef.current.map((item:IParticipantCamera) => {
+        //     if (item.streamID === cameraId) {
+        //         return { ...item, stream: remoteStream };
+        //     }
+        //     return item;
+        // });
+        //
+        // setParticipantCameraList(updatedArray); // Trigger the state update
 
         console.log('Remote stream started for cameraId:', cameraId);
+    };
+
+    // peerConnection.ontrack = (event) => {
+    //     const [remoteStream] = event.streams;
+    //     // Attach this remoteStream to the video element
+    //     const videoElement = document.getElementById("remoteVideo");
+    //     videoElement.srcObject = remoteStream;
+    // };
+
+    const getReceiverRemoteStream = (peerConnection:RTCPeerConnection):MediaStream|null => {
+        if (peerConnection) {
+            const newRemoteStream = new MediaStream();
+            peerConnection.getReceivers().forEach(({ track }) => {
+                if (track) {
+                    newRemoteStream.addTrack(track);
+                }
+            });
+            return newRemoteStream;
+        }
+
+        return null;
+    };
+
+
+// Function to decide if we should attach the stream
+    const shouldAttachVideoStream = (peer:WebRtcPeer, videoElement:any) => {
+        if (!peer || !videoElement) return false;
+
+        console.log("Skipped pass !peer || !videoElement")
+
+        const stream = isPublisher ? peer.getLocalStream() : peer.getRemoteStream();
+        const diff = stream && (stream.id !== videoElement.srcObject?.id || !videoElement.paused);
+
+        if (diff) return true;
+
+        return isPublisher
+            && peer.getLocalStream()
+            && peer.getLocalStream().getVideoTracks().length > 0
+            && diff;
+    };
+
+
+    // Attach stream to video element
+    const attach = (peer:WebRtcPeer, videoElement:any) => {
+        console.log("Trying to attach to element");
+        if (peer && videoElement) {
+            const stream = isPublisher ? peer.getLocalStream() : peer.getRemoteStream();
+            videoElement.pause();
+            videoElement.srcObject = stream;
+            videoElement.load();
+        }
+    };
+
+    // Retrieve video element by stream ID
+    const getVideoElement = (streamId:string) :HTMLElement => {
+        const fc:IParticipantCamera=participantCameraList.filter((item:IParticipantCamera)=>item.streamID == streamId)[0];
+        return document.getElementById(`video${fc?.intId}`)!;
+    };
+
+    // Attach video stream with additional checks and notifications
+    const attachVideoStream = (stream:string) => {
+        const videoElement:HTMLElement = getVideoElement(stream);
+        const isLocal = false;
+        const peer = webRtcPeers[stream];
+
+        if (shouldAttachVideoStream(peer!, videoElement)) {
+            console.log("Can attach video stream")
+            // Attach the video stream
+            attach(peer!, videoElement);
+        }else{
+            console.log("Cannot attach video stream")
+        }
     };
 
     const startProcessForNewParticipants = () => {
