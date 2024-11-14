@@ -74,10 +74,7 @@ const KurentoScreenShareViewer = () => {
             console.log('Creating WebRtcPeer and generating local sdp offer ...');
             const constraints = {
                 audio: false,
-                video: {
-                    width: 640,
-                    framerate: 15,
-                },
+                video: true,
             };
 
             const options = {
@@ -164,6 +161,11 @@ const KurentoScreenShareViewer = () => {
                 layout: "4",
                 layoutName: "Focus on presenter",
             });
+
+            const videoElement:any = document.getElementById('rVideoElement');
+            videoElement?.load();
+            videoElement.volume=1;
+            videoElement.play();
         };
 
 

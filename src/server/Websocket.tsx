@@ -1488,16 +1488,6 @@ const Websocket = () => {
         setParticipantCameraList(ur);
     };
 
-
-    // const toggleRemoteScreenshare= async () => {
-    //     console.log("remoteScreenshareStreamState: ",screenshare.remoteScreenshareStreamState);
-    //     if(screenshare.localScreenshareStreamState){
-    //         screenshareDispatch(closeRemotePanel());
-    //     }else{
-    //         screenshareDispatch(openRemotePanel());
-    //     }
-    // };
-
     const addMessage=(sender:string, message:string,timestamp:any,id:any)=>{
         // Convert timestamp to Date object
         const date = new Date(timestamp);

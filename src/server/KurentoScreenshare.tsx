@@ -110,7 +110,7 @@ const KurentoScreenShare = () => {
 
 
             const options = {
-                localVideo: videoElement,
+                localVideo: null,
                 remoteVideo: null,
                 videoStream:screenSharingStream,
                 onicecandidate: onIceCandidate,
