@@ -27,9 +27,9 @@ function ScreenSharingComponent() {
   return (
     <div
       className={cn(
-        " m-auto h-[calc(100vh-128px)] max-w-2xl p-4 xl:max-w-6xl 2xl:max-w-none",
+        " m-auto h-[calc(100svh-128px)] max-w-2xl p-4 xl:max-w-6xl 2xl:max-w-none",
         connectedUsers.filter((user) => user.isMicOpen === true)?.length > 0 &&
-          "mt-6 h-[calc(100vh-150px)]",
+          "mt-6 h-[calc(100svh-150px)]",
       )}
     >
       <button

@@ -2220,7 +2220,7 @@ it from receiving any pointer events or affecting the cursor. */
 
 .tlui-popover__content {
   position: relative;
-  max-height: 75vh;
+  max-height: 75svh;
   margin: 0px;
   border: none;
   border-radius: var(--radius-3);
@@ -2443,7 +2443,7 @@ it from receiving any pointer events or affecting the cursor. */
   overflow-y: auto;
   min-width: 300px;
   max-width: 80vw;
-  max-height: 80vh;
+  max-height: 80svh;
 }
 
 .tlui-prompt__actions {
@@ -2497,7 +2497,7 @@ it from receiving any pointer events or affecting the cursor. */
   overflow: hidden;
   min-width: 300px;
   max-width: 80vw;
-  max-height: 80vh;
+  max-height: 80svh;
 }
 
 .tlui-dialog__header {
@@ -2662,7 +2662,7 @@ it from receiving any pointer events or affecting the cursor. */
   z-index: 0;
   height: fit-content;
   width: fit-content;
-  max-height: 80vh;
+  max-height: 80svh;
   border-radius: var(--radius-3);
   pointer-events: all;
   touch-action: auto;
@@ -2727,7 +2727,7 @@ it from receiving any pointer events or affecting the cursor. */
 /* ------------------ Actions Menu ------------------ */
 
 .tlui-actions-menu {
-  max-height: calc(100vh - 150px);
+  max-height: calc(100svh - 150px);
 }
 
 /* --------------------- Toasts --------------------- */
@@ -2935,7 +2935,7 @@ it from receiving any pointer events or affecting the cursor. */
   flex-direction: column;
   width: 220px;
   height: fit-content;
-  max-height: 50vh;
+  max-height: 50svh;
 }
 
 .tlui-page-menu__trigger {

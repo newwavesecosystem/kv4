@@ -20,7 +20,7 @@ function ECinemaComponent() {
     const participantList = useRecoilValue(participantListState);
 
   return (
-      <div className=" m-auto h-[calc(100vh-128px)] overflow-hidden rounded-lg p-4">
+      <div className=" m-auto h-[calc(100svh-128px)] overflow-hidden rounded-lg p-4">
           {isLoading && (
               <div className="flex h-full w-full items-center justify-center">
                   <SpinnerIcon className="h-20 w-20 animate-spin"/>

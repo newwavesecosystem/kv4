@@ -208,7 +208,7 @@ function PostSignIn() {
       {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
           <span className="flex w-full items-center justify-between px-4"
                 style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}
-      <div className="relative h-[calc(100vh-128px)] bg-primary/60 ">
+      <div className="relative h-[calc(100svh-128px)] bg-primary/60 ">
         {/* polls */}
         {(pollModal.isActive || pollModal.isEnded) && pollModal.step === 0 && (
           <button
@@ -379,12 +379,12 @@ function PostSignIn() {
           !eCinemaModal.isActive && (
             <div
               className={cn(
-                " m-auto h-[calc(100vh-158px)] items-center justify-center p-4",
+                " m-auto h-[calc(100svh-158px)] items-center justify-center p-4",
                 (isWhiteboardOpen || screenSharingStream) &&
                   participantTalkingList.filter(
                     (eachItem: any) => !eachItem.muted,
                   )?.length > 0 &&
-                  "mt-6 h-[calc(100vh-150px)]",
+                  "mt-6 h-[calc(100svh-150px)]",
                 participantList.length === 1 &&
                   " flex items-center justify-center md:aspect-square  ",
                 participantList.length === 2 &&

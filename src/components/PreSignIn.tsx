@@ -102,7 +102,7 @@ export default function PreSignIn() {
   return (
     <Guest>
       <Settings />
-      <div className="flex h-screen items-center justify-center bg-primary md:h-full md:flex-1">
+      <div className="flex h-svh items-center justify-center bg-primary md:h-full md:flex-1">
         <div className="m-auto flex flex-col items-center justify-center gap-3 px-5 text-center">
           <span className=" text-xl font-semibold md:text-2xl">
             Join Meeting

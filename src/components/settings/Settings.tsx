@@ -44,7 +44,7 @@ function Settings() {
           {/* left */}
           <div
             className={cn(
-              "hidden w-full rounded-t-2xl bg-primary px-5 lg:block lg:h-screen lg:w-[600px] lg:rounded-bl-2xl lg:rounded-tr-none lg:pt-5",
+              "hidden w-full rounded-t-2xl bg-primary px-5 lg:block lg:h-svh lg:w-[600px] lg:rounded-bl-2xl lg:rounded-tr-none lg:pt-5",
               screenSize.id <= 3 && !settingsMeta.isFoward && "block",
             )}
           >
