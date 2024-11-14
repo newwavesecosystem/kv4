@@ -47,7 +47,8 @@ import CCModal from "~/components/cc/CCModal";
 import SocketIOCaption from "~/server/SocketIOCaption";
 import PinIcon from "~/components/icon/outline/PinIcon";
 import MinimizeIcon from "~/components/icon/outline/MinimizeIcon";
-import {FindAvatarfromUserId, FindUserNamefromUserId} from "~/lib/checkFunctions";
+import { FindAvatarfromUserId, FindUserNamefromUserId } from "~/lib/checkFunctions";
+import ArrowChevronUpIcon from "./icon/outline/ArrowChevronUpIcon";
 
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
@@ -200,15 +201,35 @@ function PostSignIn() {
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
   const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
 
+  // start pagination logic
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 4; //don't change
+
+  // Pagination logic
+  const totalPages = Math.ceil((participantList.length - pinnedParticipant.length) / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const displayedParticipants = [...pinnedParticipant, ...participantList.filter((p: IParticipant) => !pinnedParticipant.includes(p))].slice(startIndex, endIndex);
+
+  // Pinning logic
+  const handlePin = (participant: IParticipant) => {
+    setPinnedParticipant([participant, ...pinnedParticipant]);
+  };
+
+  const handleUnpin = (participant: IParticipant) => {
+    setPinnedParticipant(pinnedParticipant.filter((p) => p.intId !== participant.intId));
+  };
+  // end pagination logic
+
   return (
     <Authenticated>
       {!connectionStatus?.websocket_connection ?
-          <span className="flex w-full items-center justify-between px-4"
-                style={{color: 'white', backgroundColor: 'red', textAlign: 'center'}}>You lost your network connection. Trying to reconnect<br/></span> : ''}
+        <span className="flex absolute top-16 w-full items-center justify-between px-4"
+          style={{ color: 'white', backgroundColor: 'red', textAlign: 'center' }}>You lost your network connection. Trying to reconnect<br /></span> : ''}
       {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
-          <span className="flex w-full items-center justify-between px-4"
-                style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}
-      <div className="relative h-[calc(100svh-128px)] bg-primary/60 ">
+        <span className="flex absolute top-16 w-full items-center justify-between px-4"
+          style={{ color: 'white', backgroundColor: 'black', textAlign: 'center' }}>Your audio is not connected. You will not hear the conversation in the meeting.<br /></span> : ''}
+      <div className="relative h-[calc(100vh-128px)] bg-primary/60 ">
         {/* polls */}
         {(pollModal.isActive || pollModal.isEnded) && pollModal.step === 0 && (
           <button
@@ -288,41 +309,41 @@ function PostSignIn() {
         {/* show active people talking */}
         {participantTalkingList.filter((eachItem: any) => eachItem.talking)
           ?.length > 0 && (
-          <div className="no-scrollbar absolute top-2 flex h-6 w-full justify-center gap-3 overflow-x-scroll text-xs antialiased">
-            {participantTalkingList
-              .filter((eachItem: any) => eachItem.talking)
-              .map((eachItem: any, index: number) => (
-                <div
-                  key={index}
-                  className="flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border border-a11y/20 p-1"
-                >
-                  {FindAvatarfromUserId(eachItem.intId,participantList) ? (
-                    <Image
-                      src={FindAvatarfromUserId(eachItem.intId,participantList)}
-                      width={20}
-                      height={20}
-                      className="rounded-full"
-                      alt="profile picture"
-                    />
-                  ) : (
-                    <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-a11y/20">
-                      {" "}
-                      {FindUserNamefromUserId(eachItem.intId, participantList)
-                        .split(" ")[0]
-                        ?.slice(0, 1)}
-                      {FindUserNamefromUserId(eachItem.intId, participantList)
-                        .split(" ")[1]
-                        ?.slice(0, 1)}
-                    </div>
-                  )}
-                  <span className="truncate">
-                    {FindUserNamefromUserId(eachItem.intId, participantList)}
-                  </span>
-                  <MicOnIcon className="h-4 w-4 shrink-0" />
-                </div>
-              ))}
-          </div>
-        )}
+            <div className="no-scrollbar absolute top-2 flex h-6 w-full justify-center gap-3 overflow-x-scroll text-xs antialiased">
+              {participantTalkingList
+                .filter((eachItem: any) => eachItem.talking)
+                .map((eachItem: any, index: number) => (
+                  <div
+                    key={index}
+                    className="flex max-w-[100px] items-center justify-center gap-1 rounded-3xl border border-a11y/20 p-1"
+                  >
+                    {FindAvatarfromUserId(eachItem.intId, participantList) ? (
+                      <Image
+                        src={FindAvatarfromUserId(eachItem.intId, participantList)}
+                        width={20}
+                        height={20}
+                        className="rounded-full"
+                        alt="profile picture"
+                      />
+                    ) : (
+                      <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-a11y/20">
+                        {" "}
+                        {FindUserNamefromUserId(eachItem.intId, participantList)
+                          .split(" ")[0]
+                          ?.slice(0, 1)}
+                        {FindUserNamefromUserId(eachItem.intId, participantList)
+                          .split(" ")[1]
+                          ?.slice(0, 1)}
+                      </div>
+                    )}
+                    <span className="truncate">
+                      {FindUserNamefromUserId(eachItem.intId, participantList)}
+                    </span>
+                    <MicOnIcon className="h-4 w-4 shrink-0" />
+                  </div>
+                ))}
+            </div>
+          )}
         {/*{(isWhiteboardOpen || screenSharingStream) &&*/}
         {/*  connectedUsers.filter((user) => user.isMicOpen === true)?.length >*/}
         {/*    0 && (*/}
@@ -356,7 +377,7 @@ function PostSignIn() {
         {/*    </div>*/}
         {/*  )}*/}
 
-        <div className="mb-5"/>
+        <div className="mb-5" />
 
         {/*@Solomon help me implement component for presentation*/}
         {/*{presentationSlide.show &&*/}
@@ -379,46 +400,56 @@ function PostSignIn() {
           !eCinemaModal.isActive && (
             <div
               className={cn(
-                " m-auto h-[calc(100svh-158px)] items-center justify-center p-4",
+                " m-auto h-[calc(100vh-158px)] overflow-y-auto items-center justify-center p-4",
                 (isWhiteboardOpen || screenSharingStream) &&
-                  participantTalkingList.filter(
-                    (eachItem: any) => !eachItem.muted,
-                  )?.length > 0 &&
-                  "mt-6 h-[calc(100svh-150px)]",
+                participantTalkingList.filter(
+                  (eachItem: any) => !eachItem.muted,
+                )?.length > 0 &&
+                "mt-6 h-[calc(100vh-150px)]",
                 participantList.length === 1 &&
-                  " flex items-center justify-center md:aspect-square  ",
+                "grid",
                 participantList.length === 2 &&
-                  "grid justify-center gap-2 md:grid-cols-2 mt-5",
+                "grid md:grid-cols-3",
                 participantList.length === 3 &&
-                  "grid grid-cols-2 gap-2 lg:grid-cols-3 ",
-                participantList.length >= 4 && "grid grid-cols-2 gap-2",
-                participantList.length >= 5 && "grid gap-2 md:grid-cols-3",
-                participantList.length >= 7 && "grid gap-2 md:grid-cols-4",
-                participantList.length >= 13 && "grid gap-2 md:grid-cols-5",
-                participantList.length >=3 && pinnedParticipant.length > 0 && "md:!grid-cols-4",
-              )} style={{paddingTop:"1.5rem"}}
-            >
-              {participantList
-              // pick only 5 participant
-              .filter(
-                (participant: IParticipant, index: number) => {
-                  if (pinnedParticipant.length > 0 ){
-                   return index < 5
-                  } else {
-                    return participant
-                  }
-                } ,
-              )
-              .map(
-                (participant: IParticipant, index: number) => (
-                  <SingleCameraComponent
-                    index={index}
-                    key={index}
-                    participant={participant}
-                    userCamera={participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId)[0]}
-                  />
-                ),
+                "grid grid-cols-2 md:grid-cols-3 ",
+                participantList.length >= 4 && "grid grid-cols-2 gap-2 md:grid-cols-4",
               )}
+            >
+              {displayedParticipants
+
+                .map(
+                  (participant: IParticipant, index: number) => (
+                    <SingleCameraComponent
+                      index={index}
+                      key={index}
+                      participant={participant}
+                      userCamera={participantCameraList.filter((cItem: IParticipantCamera) => cItem?.intId == participant.intId)[0]}
+                    />
+                  ),
+                )}
+
+              {/* pagination button */}
+              <div className="fixed bottom-16 right-0 md:top-16">
+                <div className="flex items-center gap-2 flex-row md:flex-col">
+                  <button
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    <ArrowChevronUpIcon className="-rotate-90 md:rotate-0" />
+                  </button>
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <span className={cn("w-4 h-4 rounded-full flex", currentPage === i + 1 ? "bg-primary" : "bg-secondary")}></span>
+                  )
+
+                  )}
+                  <button
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                    disabled={currentPage >= totalPages}
+                  >
+                    <ArrowChevronDownIcon className="-rotate-90 md:rotate-0"/>
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
@@ -432,34 +463,34 @@ function PostSignIn() {
             <div className="absolute top-0 z-50 m-2 backdrop-blur-3xl">
               <div className="flex flex-row-reverse px-2 py-2">
                 <button
-                    onClick={() => {
-                      setlayoutSettings({
-                        ...layoutSettings,
-                        layout: "4",
-                        layoutName: "Focus on presenter",
-                      });
-                    }}
-                    className="rounded-full bg-primary/80 p-1 "
+                  onClick={() => {
+                    setlayoutSettings({
+                      ...layoutSettings,
+                      layout: "4",
+                      layoutName: "Focus on presenter",
+                    });
+                  }}
+                  className="rounded-full bg-primary/80 p-1 "
                 >
-                  <MinimizeIcon className=" h-5 w-5"/>
+                  <MinimizeIcon className=" h-5 w-5" />
                 </button>
               </div>
               <div
-                  className={cn(
-                      " m-auto flex h-40 items-center justify-center gap-2 ",
-                  )}
+                className={cn(
+                  " m-auto flex h-40 items-center justify-center gap-2 ",
+                )}
               >
                 {participantList
-                    // pick only 6 participants
-                    .filter(
-                        (participant: IParticipant, index: number) => index < 6,
-                    )
-                    .map((participant: IParticipant, index: number) => (
+                  // pick only 6 participants
+                  .filter(
+                    (participant: IParticipant, index: number) => index < 6,
+                  )
+                  .map((participant: IParticipant, index: number) => (
                     <SingleCameraComponent
                       index={index}
                       key={index}
                       participant={participant}
-                      userCamera={participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId)[0]}
+                      userCamera={participantCameraList.filter((cItem: IParticipantCamera) => cItem?.intId == participant.intId)[0]}
                     />
                   ))}
               </div>
@@ -505,14 +536,14 @@ function PostSignIn() {
                       participant.presenter,
                   )
                   .map((participant: IParticipant, index: number) => (
-                      <div className="h-40 w-40" key={index}>
-                        <SingleCameraComponent
-                          index={index}
-                          key={index}
-                          participant={participant}
-                          userCamera={participantCameraList.filter((cItem:IParticipantCamera) => cItem?.intId == participant.intId)[0]}
-                        />
-                      </div>
+                    <div className="h-40 w-40" key={index}>
+                      <SingleCameraComponent
+                        index={index}
+                        key={index}
+                        participant={participant}
+                        userCamera={participantCameraList.filter((cItem: IParticipantCamera) => cItem?.intId == participant.intId)[0]}
+                      />
+                    </div>
                   ))}
               </div>
             </div>
@@ -531,16 +562,16 @@ function PostSignIn() {
           eCinemaModal.isActive && <ECinemaComponent />}
 
         {/* {screenSharingStream && screenShareState && <ScreenSharingComponent />} */}
-          {user?.sessiontoken != '' && <Websocket/>}
-          <KurentoAudio/>
-          <KurentoVideo/>
-          {user?.meetingDetails?.meetingID!=null &&<SocketIOCaption />}
-          {participantCameraList.filter((eachItem: any) => eachItem?.intId != user?.meetingDetails?.internalUserID).map((cItem:IParticipantCamera,index:number)=>{
-              return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>
-          })}
+        {user?.sessiontoken != '' && <Websocket />}
+        <KurentoAudio />
+        <KurentoVideo />
+        {user?.meetingDetails?.meetingID != null && <SocketIOCaption />}
+        {participantCameraList.filter((eachItem: any) => eachItem?.intId != user?.meetingDetails?.internalUserID).map((cItem: IParticipantCamera, index: number) => {
+          return <KurentoVideoViewer key={index} streamID={cItem?.streamID} />
+        })}
 
-          {screenShareState && <KurentoScreenShare/>}
-          {viewerscreenShareState && !screenShareState && <KurentoScreenShareViewer/>}
+        {screenShareState && <KurentoScreenShare />}
+        {viewerscreenShareState && !screenShareState && <KurentoScreenShareViewer />}
 
       </div>
     </Authenticated>
