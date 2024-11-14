@@ -102,12 +102,52 @@ const KurentoVideoSingleStick = () => {
     const handleStartResponse = (cameraId: string, message: any) => {
         const webRtcPeer = webRtcPeers[cameraId];
         if (webRtcPeer) {
-            webRtcPeer.processAnswer(message.sdpAnswer, (error: any) => {
+            // const offer = new RTCSessionDescription({
+            //     type: 'offer',
+            //     sdp:message.sdpAnswer,
+            // });
+            //
+            // webRtcPeer.peerConnection.setRemoteDescription(offer).then(async () => {
+            //
+            //     const sdpAnswer=await webRtcPeer.peerConnection.createAnswer({offerToReceiveAudio: false, offerToReceiveVideo: true});
+            //     await webRtcPeer.peerConnection.setLocalDescription(sdpAnswer);
+            //
+            //     console.log("setOfferAndGetAnswer: ",sdpAnswer);
+            //     var dt={
+            //         "id": "subscriberAnswer",
+            //         "type": "video",
+            //         "role": "viewer",
+            //         "cameraId": cameraId,
+            //         "answer": sdpAnswer.sdp
+            //     };
+            //
+            //     sendMessage(dt);
+            //
+            // });
+
+            // Handle the SDP offer by setting it on the WebRTC endpoint
+            webRtcPeer?.processOffer(message.sdpAnswer, (error, sdpAnswer) => {
                 if (error) {
-                    console.error('Error processing SDP answer:', error);
-                } else {
-                    console.log('SDP answer processed for cameraId:', cameraId);
+                    // Handle error
+                    console.error('Failed to process SDP answer:', error);
+                    return;
                 }
+
+                console.log('SDP answer received and processed successfully');
+
+                console.log("setOfferAndGetAnswer: ",sdpAnswer);
+                var dt={
+                    "id": "subscriberAnswer",
+                    "type": "video",
+                    "role": "viewer",
+                    "cameraId": cameraId,
+                    "answer": sdpAnswer
+                };
+
+                sendMessage(dt);
+
+                // Send the SDP answer back to the remote peer for negotiation
+                // sdpAnswer contains the generated SDP answer
             });
         }
     };
@@ -116,17 +156,17 @@ const KurentoVideoSingleStick = () => {
         const webRtcPeer = webRtcPeers[cameraId];
         const remoteStream = webRtcPeer?.getRemoteStream();
 
-        attachVideoStream(cameraId);
+        // attachVideoStream(cameraId);
 
         // Immediately update participant list using the ref
-        // const updatedArray = cameraListRef.current.map((item:IParticipantCamera) => {
-        //     if (item.streamID === cameraId) {
-        //         return { ...item, stream: remoteStream };
-        //     }
-        //     return item;
-        // });
-        //
-        // setParticipantCameraList(updatedArray); // Trigger the state update
+        const updatedArray = cameraListRef.current.map((item:IParticipantCamera) => {
+            if (item.streamID === cameraId) {
+                return { ...item, stream: remoteStream };
+            }
+            return item;
+        });
+
+        setParticipantCameraList(updatedArray); // Trigger the state update
 
         console.log('Remote stream started for cameraId:', cameraId);
     };
@@ -180,6 +220,7 @@ const KurentoVideoSingleStick = () => {
             videoElement.pause();
             videoElement.srcObject = stream;
             videoElement.load();
+            videoElement.play();
         }
     };
 
@@ -241,13 +282,13 @@ const KurentoVideoSingleStick = () => {
             localVideo: null,
             remoteVideo: null,
             onicecandidate: (candidate: any) => {
-                sendMessage({
-                    id: 'onIceCandidate',
-                    candidate,
-                    cameraId,
-                    type: 'video',
-                    role: 'viewer',
-                });
+                // sendMessage({
+                //     id: 'onIceCandidate',
+                //     candidate,
+                //     cameraId,
+                //     type: 'video',
+                //     role: 'viewer',
+                // });
             },
             mediaConstraints: constraints,
             configuration: {
@@ -257,18 +298,17 @@ const KurentoVideoSingleStick = () => {
 
         const webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function (this:any,error: any) {
             if (error) return console.error('WebRTC peer creation failed:', error);
-            this.generateOffer((error: any, offerSdp: any) => {
-                if (error) return console.error('SDP offer generation failed:', error);
+            // this.generateOffer((error: any, offerSdp: any) => {
+            //     if (error) return console.error('SDP offer generation failed:', error);
                 sendMessage({
                     id: 'start',
                     type: 'video',
                     role: 'viewer',
                     cameraId,
-                    bitrate: 200,
-                    record: true,
-                    sdpOffer: offerSdp,
+                    bitrate: 500,
+                    record: true
                 });
-            });
+            // });
         });
 
         setupSignalingStateLogger(webRtcPeer.peerConnection);
