@@ -156,10 +156,10 @@ const KurentoScreenShareViewer = () => {
             });
 
 
-            // const videoElement:any = document.getElementById('rVideoElement');
-            // videoElement?.load();
-            // videoElement.volume=1;
-            // videoElement.play();
+            const videoElement:any = document.getElementById('rVideoElement');
+            videoElement?.load();
+            videoElement.volume=1;
+            videoElement.play();
         };
 
 
