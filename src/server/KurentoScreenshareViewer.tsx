@@ -35,24 +35,6 @@ const KurentoScreenShareViewer = () => {
             console.log('Sending this data via KurentoScreenShareViewer websocket');
         };
 
-        const onOffer = (error:any, offerSdp:any) => {
-            if (error) return onError(error);
-
-            console.info('Invoking SDP offer callback function ' + offerSdp);
-            const message = {
-                "id": "start",
-                "type": "screenshare",
-                "role": "recv",
-                "internalMeetingId": user?.meetingDetails?.meetingID,
-                "voiceBridge": user?.meetingDetails?.voicebridge,
-                "userName": user?.meetingDetails?.fullname,
-                "callerName": user?.meetingDetails?.internalUserID,
-                "hasAudio": true,
-                "contentType": "camera"
-            };
-            KurentoScreenShareViewerSend(message);
-        };
-
         const onIceCandidate = (candidate:any) => {
             console.log('Local candidate' + JSON.stringify(candidate));
 
@@ -89,7 +71,18 @@ const KurentoScreenShareViewer = () => {
 
             webRtcPeer = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(this: any, error) {
                 if (error) return this.onError(error);
-                this.generateOffer(onOffer);
+                const message = {
+                    "id": "start",
+                    "type": "screenshare",
+                    "role": "recv",
+                    "internalMeetingId": user?.meetingDetails?.meetingID,
+                    "voiceBridge": user?.meetingDetails?.voicebridge,
+                    "userName": user?.meetingDetails?.fullname,
+                    "callerName": user?.meetingDetails?.internalUserID,
+                    "hasAudio": true,
+                    "contentType": "camera"
+                };
+                KurentoScreenShareViewerSend(message);
             });
         };
 
@@ -146,7 +139,7 @@ const KurentoScreenShareViewer = () => {
         const parseStream = () => {
             console.log('starting Remote screenshare Stream. Processing ...');
 
-            var gstream = webRtcPeer?.getRemoteStream()??null
+            var gstream = webRtcPeer?.getRemoteStream()
             console.log('Remote screenshare gstream:', gstream)
 
             // Check the length of the remote stream's tracks
@@ -154,7 +147,7 @@ const KurentoScreenShareViewer = () => {
 
             console.log('Number of tracks in the remote stream:', streamTracksCount);
 
-            setScreenSharingStream(gstream);
+            setScreenSharingStream(gstream!);
             setViewerScreenShareState(true);
             setlayoutSettings({
                 ...layoutSettings,
@@ -163,10 +156,10 @@ const KurentoScreenShareViewer = () => {
             });
 
 
-            const videoElement:any = document.getElementById('rVideoElement');
-            videoElement?.load();
-            videoElement.volume=1;
-            videoElement.play();
+            // const videoElement:any = document.getElementById('rVideoElement');
+            // videoElement?.load();
+            // videoElement.volume=1;
+            // videoElement.play();
         };
 
 
