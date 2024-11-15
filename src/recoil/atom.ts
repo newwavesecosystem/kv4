@@ -502,11 +502,15 @@ export const CamQualityState = atom<{
 }>({
   key: "camQualityState",
   default: {
-    id: 2,
-    name: "Medium",
-    bitrate: 200,
+    id: 3,
+    name: "High",
     default: true,
-    constraints:{}
+    bitrate: 500,
+    constraints: {
+      width: 1280,
+      height: 720,
+      frameRate: 15,
+    }
   },
 });
 

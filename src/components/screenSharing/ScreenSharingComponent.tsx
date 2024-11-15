@@ -35,7 +35,7 @@ function ScreenSharingComponent() {
     if (videoRef.current) {
       videoRef.current.srcObject = screenSharingStream;
 
-        playAndRetry(document.getElementById("screenSharePlay")).then(r=>console.log("screenSharePlay playAndRetry ",r));
+        playAndRetry(document.getElementById("screenSharePlay"),CurrentUserIsPresenter(participantList,user)).then(r=>console.log("screenSharePlay playAndRetry ",r));
     }
   }, []);
 

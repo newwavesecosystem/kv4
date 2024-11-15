@@ -49,13 +49,13 @@ const VideoQuality = [
     id: 2,
     name: "Medium",
     bitrate: 200,
-    default: true,
+    default: false,
     constraints:{}
   },
   {
     id: 3,
     name: "High",
-    default: false,
+    default: true,
     bitrate: 500,
     constraints: {
       width: 1280,

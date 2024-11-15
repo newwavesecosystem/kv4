@@ -154,13 +154,6 @@ const KurentoScreenShareViewer = () => {
                 layout: "4",
                 layoutName: "Focus on presenter",
             });
-
-
-            const videoElement:any = document.getElementById('screenSharePlay');
-            videoElement?.load();
-            videoElement.volume=1;
-            videoElement.muted = false;
-            videoElement.play();
         };
 
 
