@@ -9,7 +9,6 @@ import {
     screenSharingStreamState
 } from "~/recoil/atom";
 import SpinnerIcon from "../icon/outline/SpinnerIcon";
-import {websocketStopExternalVideo} from "~/server/Websocket";
 import ExpandIcon from "~/components/icon/outline/ExpandIcon";
 import ShareScreenOffIcon from "~/components/icon/outline/ShareScreenOffIcon";
 import {websocketKurentoScreenshareEndScreenshare} from "~/server/KurentoScreenshare";
@@ -36,7 +35,7 @@ function ScreenSharingComponent() {
     if (videoRef.current) {
       videoRef.current.srcObject = screenSharingStream;
 
-        playAndRetry(document.getElementById("screenSharePlay")).then(r=>console.log("screenSharePlay playAndRetry ",r));
+        playAndRetry(document.getElementById("screenSharePlay"),CurrentUserIsPresenter(participantList,user)).then(r=>console.log("screenSharePlay playAndRetry ",r));
     }
   }, []);
 
@@ -89,6 +88,7 @@ function ScreenSharingComponent() {
                       id="screenSharePlay"
                       autoPlay
                       playsInline
+                      muted
                       className="h-full w-full"
                   >
                       Your browser does not support video tag

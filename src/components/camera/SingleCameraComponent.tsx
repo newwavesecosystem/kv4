@@ -69,7 +69,7 @@ function SingleCameraComponent({
       console.log("userCamera is not null", userCamera.stream)
       // if (videoRef.current && !camOn) {
       console.log("userCamera videoRef.current > 0", userCamera.stream)
-      videoRef.current!.srcObject = userCamera.stream;
+      videoRef.current!.srcObject = userCamera.stream!;
       setCamOn(true);
       console.log("userCamera is null")
       playAndRetry(document.getElementById(`video${participant.intId}`)).then(r=>console.log("videoPlay playAndRetry ",r));

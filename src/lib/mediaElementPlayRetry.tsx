@@ -1,7 +1,7 @@
 const DEFAULT_MAX_RETRIES = 10;
 const DEFAULT_RETRY_TIMEOUT = 500;
 
-const playAndRetry = async (mediaElement:any, maxRetries = DEFAULT_MAX_RETRIES) => {
+const playAndRetry = async (mediaElement:any, isPresenter:boolean=true, maxRetries = DEFAULT_MAX_RETRIES) => {
   let attempt = 0;
   let played = false;
 
@@ -9,6 +9,9 @@ const playAndRetry = async (mediaElement:any, maxRetries = DEFAULT_MAX_RETRIES) 
   const playElement = () => new Promise((resolve, reject) => {
     console.log("doing playAndRetry, attempt:",attempt);
     setTimeout(() => {
+      if(!isPresenter){
+        mediaElement.muted=false;
+      }
       mediaElement.play().then(resolve).catch(reject);
     }, DEFAULT_RETRY_TIMEOUT);
   });

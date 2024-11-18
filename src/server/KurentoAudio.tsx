@@ -366,13 +366,17 @@ const KurentoAudio = () => {
 
         const audioElement = document.getElementById('audioElement');
         let constraints = {
-            audio: {
-                autoGainControl: micFilter.autoGainControl,
-                noiseSuppression: micFilter.noiseSuppression,
-                echoCancellation: micFilter.echoCancellation
-            },
+            audio: true,
             video: false
         };
+        // let constraints = {
+        //     audio: {
+        //         autoGainControl: micFilter.autoGainControl,
+        //         noiseSuppression: micFilter.noiseSuppression,
+        //         echoCancellation: micFilter.echoCancellation
+        //     },
+        //     video: false
+        // };
 
         let options = {
             remoteVideo:audioElement,

@@ -148,9 +148,10 @@ const KurentoVideo = () => {
     };
 
     const startProcess = () => {
+        const vidElement = document.getElementById(`video${user?.meetingDetails?.internalUserID}`);
         const constraints = { audio: false, video: { width: 640, framerate: 15 } };
         const options = {
-            localVideo: null,
+            localVideo: vidElement,
             remoteVideo: null,
             videoStream: cameraStream,
             onicecandidate: onIceCandidate,
