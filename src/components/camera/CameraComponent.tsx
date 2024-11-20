@@ -133,7 +133,7 @@ const CameraComponent: React.FC = () => {
   return (
     <>
       {loadingCamera && (
-        <div className="flex h-screen w-full items-center justify-center">
+        <div className="flex h-svh w-full items-center justify-center">
           <SpinnerIcon className="h-20 w-20 animate-spin" />
         </div>
       )}
