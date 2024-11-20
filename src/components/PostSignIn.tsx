@@ -58,7 +58,6 @@ import PresentationSlide from "./presentationSlide/PresentationSlide";
 import {GetCurrentSessionEjected, GetCurrentSessionToken, SetCurrentSessionToken} from "~/lib/localStorageFunctions";
 import KurentoVideoSingleStick from "~/server/KurentoVideoSingleStick";
 import ParticipantsCameraComponent from "~/components/camera/ParticipantsCameraComponent";
-import { FindAvatarfromUserId, FindUserNamefromUserId } from "~/lib/checkFunctions";
 import ArrowChevronUpIcon from "./icon/outline/ArrowChevronUpIcon";
 
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
@@ -100,9 +99,7 @@ function PostSignIn() {
   const [wakeLockActive, setWakeLockActive] = useState(false);
   const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
 
-  const [currentPage, setCurrentPage] = useState(1);
   const participantsPerPage:number = layoutSettings.maxTiles[0] ?? 4;
-  const totalPages = Math.ceil(participantList.length / participantsPerPage);
 
 
   const router = useRouter();
@@ -642,7 +639,7 @@ function PostSignIn() {
                     <ArrowChevronUpIcon className="-rotate-90 md:rotate-0" />
                   </button>
                   {Array.from({ length: totalPages }).map((_, i) => (
-                    <span className={cn("w-4 h-4 rounded-full flex", currentPage === i + 1 ? "bg-primary" : "bg-secondary")}></span>
+                    <span key={i} className={cn("w-4 h-4 rounded-full flex", currentPage === i + 1 ? "bg-primary" : "bg-secondary")}></span>
                   )
 
                   )}
