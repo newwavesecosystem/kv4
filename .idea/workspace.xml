@@ -22,18 +22,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fix error due key">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Implement prejoin interface with link url">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PostLeave.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostLeave.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/camera/CameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/CameraComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/MediaOnboardingDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/MediaOnboardingDialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/join/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/join/[id].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/ServerInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/ServerInfo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +88,7 @@
       <recent name="C:\Users\odeji\WebstormProjects\kv4\public\fonts" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.dev">
+  <component name="RunManager" selected="npm.build">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -129,9 +121,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.start" />
-        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.start" />
       </list>
@@ -174,7 +166,7 @@
       <workItem from="1730695864963" duration="60780000" />
       <workItem from="1732521899651" duration="15772000" />
       <workItem from="1732702158453" duration="5000" />
-      <workItem from="1732703252129" duration="15723000" />
+      <workItem from="1732703252129" duration="16983000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -394,7 +386,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732105715816</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="-Implement prejoin interface with link url">
+      <option name="closed" value="true" />
+      <created>1732728750413</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1732728750413</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -429,7 +429,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Worked on Mute button is not in sync for Konn3ct Web" />
     <MESSAGE value="Fixed Polls is not getting answer clicked by user&#10;Fix publishing of Poll result" />
     <MESSAGE value="-Working on WhiteboardComponent.tsx&#10;-Worked on separating overlapping talking indicator with participant list" />
     <MESSAGE value="testing out caption and translation" />
@@ -454,7 +453,8 @@
     <MESSAGE value="-Add Types for VoiceUser and saving all from server&#10;-Increase time count for kickedout session from 50 to 150&#10;-Now checking if audio websocket connection is ready before initiating webrtc&#10;-Remove key error on SingleCameraComponent.tsx" />
     <MESSAGE value="-Make audio and sound alert play through the selected output device" />
     <MESSAGE value="-Fix error due key" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Fix error due key" />
+    <MESSAGE value="-Implement prejoin interface with link url" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Implement prejoin interface with link url" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -481,7 +481,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/pages/join/[id].tsx</url>
-          <line>133</line>
+          <line>173</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>

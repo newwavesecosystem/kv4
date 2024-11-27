@@ -83,35 +83,28 @@ function SingleCameraComponent({
       <div
           key={index}
           className={cn(
-              "relative overflow-y-auto mx-auto rounded-lg bg-a11y/20",
-              participantList.length === 1 &&
-              "h-[40svh] w-[40svh] md:h-[40svw] md:w-[40svw] xl:h-[35svw] xl:w-[35svw] 2xl:h-[35svw] 2xl:w-[35svw]",
-        participantList.length === 2 &&
-        "h-[32svh] w-[32svh] md:h-[31svw] md:w-[31svw]",
-        participantList.length === 3 &&
-        "h-[20svh] w-[20svh] md:h-[31svw] md:w-[31svw]",
-        (index === 2 && participantList.length === 3) && "col-span-2 md:col-span-1 h-[40svh] w-[40svh] md:h-[31svw] md:w-[31svw] ",
-        participantList.length === 4 &&
-        "h-[20svh] w-[20svh] md:h-[23svw] md:w-[23svw]",
-              //participantList.length === 3 &&
-            //  pinnedParticipant.length < 1 &&
-            //  "lg:h-auto lg:w-auto",
-              //participantList.length >= 3 &&
-            //  participant.intId === pinnedParticipant[0]?.intId
-                //  ? "md:col-span-2 md:row-span-2"
-                //  : " ",
-              //(participantList.length === 3 || participantList.length === 5) &&
-            //  index === 0 &&
-            //  pinnedParticipant.length < 1 &&
-            //  "col-span-2 md:col-auto",
-              //participantTalkingList
-                //  .filter((eachItem: any) => eachItem?.intId == participant.intId)
-                //  .map(
-                  //    (eachItem: any) =>
-                    //      eachItem?.joined &&
-                    //      !eachItem?.muted &&
-                    //      "ring-2 ring-primary ring-offset-2 ring-offset-primary",
-                //  ),
+              "relative aspect-square h-full w-full overflow-hidden rounded-lg bg-a11y/20",
+              participantList.length === 2 &&
+              "md:h-auto md:w-auto xl:h-full xl:w-full",
+              participantList.length === 3 &&
+              pinnedParticipant.length < 1 &&
+              "lg:h-auto lg:w-auto",
+              participantList.length >= 3 &&
+              participant.intId === pinnedParticipant[0]?.intId
+                  ? "md:col-span-2 md:row-span-2"
+                  : " ",
+              (participantList.length === 3 || participantList.length === 5) &&
+              index === 0 &&
+              pinnedParticipant.length < 1 &&
+              "col-span-2 md:col-auto",
+              participantTalkingList
+                  .filter((eachItem: any) => eachItem?.intId == participant.intId)
+                  .map(
+                      (eachItem: any) =>
+                          eachItem?.joined &&
+                          !eachItem?.muted &&
+                          "ring-2 ring-primary ring-offset-2 ring-offset-primary",
+                  ),
           )}
       >
 

@@ -55,7 +55,6 @@ function JoinId() {
 
   const [data, setData] = useState({
     fullName: "",
-    display_image: null,
     email: "",
     passCode: "",
     meetingId: id || "",
@@ -66,6 +65,7 @@ function JoinId() {
     name: "",
     owner: "",
     passCode: false,
+    display_image: null,
     meetingId: "",
   });
 
@@ -144,8 +144,8 @@ function JoinId() {
 
               // SetCurrentSessionToken(responseData.data!);
 
-            setUser((prev:IAuthUser)=>({
-              ...prev,
+            setUser((prev:IAuthUser|null)=>({
+              ...prev!,
               sessiontoken:responseData.data
             }));
 

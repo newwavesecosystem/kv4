@@ -1289,7 +1289,7 @@ const Websocket = () => {
     }
 
 
-    const modifyJoinedUser = (id:number, state:boolean) => {
+    const modifyJoinedUser = (id:string, state:boolean) => {
         // Update the 'joined' property to 'true' for the object with id '7J2pQrMaH5C58ZsHj' for Audio state
         const updatedArray = participantTalkingList?.map((item:IVoiceUser) => {
             if (item.id === id) {
