@@ -13,7 +13,7 @@ import {
     connectionStatusState,
     donationModalState,
     eCinemaModalState,
-    fileUploadModalState, manageUserSettingsState,
+    fileUploadModalState, manageUserSettingsState, mediaPermissionState,
     micOpenState, microphoneStreamState,
     newMessage, newRaiseHand,
     participantCameraListState,
@@ -112,6 +112,7 @@ const Websocket = () => {
     const [microphoneStream, setMicrophoneStream] = useRecoilState(
         microphoneStreamState,
     );
+    const [mediaPermission, setMediaPermission] = useRecoilState(mediaPermissionState);
 
     const [stopReconnection, setStopReconnection] = useState(false);
 
@@ -1288,17 +1289,22 @@ const Websocket = () => {
     }
 
 
-    const modifyJoinedUser = (id:number, state:boolean) => {
+    const modifyJoinedUser = (id:string, state:boolean) => {
         // Update the 'joined' property to 'true' for the object with id '7J2pQrMaH5C58ZsHj' for Audio state
-        const updatedArray = participantTalkingList?.map((item:any) => {
+        const updatedArray = participantTalkingList?.map((item:IVoiceUser) => {
             if (item.id === id) {
+                if(item.intId ==  user?.meetingDetails?.internalUserID){
+                    if(mediaPermission.muteMicOnJoin){
+                        websocketMuteMic();
+                    }
+                }
                 return {...item, joined: state};
             }
             return item;
         });
 
 // 'updatedArray' now contains the modified object
-        console.log(updatedArray);
+//         console.log(updatedArray);
 
         setParticipantTalkingList(updatedArray)
 

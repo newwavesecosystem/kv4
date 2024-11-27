@@ -47,7 +47,7 @@ function FileUploadModalUpload() {
     >
       <DialogContent
         hideCloseButton={true}
-        className="h-[80vh] overflow-y-auto rounded-xl border-0 bg-primary text-a11y sm:max-w-[600px] md:rounded-xl xl:max-w-[800px]"
+        className="h-[80svh] overflow-y-auto rounded-xl border-0 bg-primary text-a11y sm:max-w-[600px] md:rounded-xl xl:max-w-[800px]"
       >
         {" "}
         <div className=" flex flex-col gap-6">

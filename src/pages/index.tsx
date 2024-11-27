@@ -20,7 +20,7 @@ export default function Home() {
       ) : (
         <>
           {
-            // user ? <PostSignIn /> : <PreSignIn />
+            // user?.sessiontoken != "" ? <PostSignIn /> : <PreSignIn />
             <PostSignIn />
           }
         </>

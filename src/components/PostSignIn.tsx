@@ -19,7 +19,7 @@ import {
   postLeaveMeetingState,
   donationModalState,
   pinnedUsersState,
-  LayoutSettingsState, presentationSlideState, manageUserSettingsState,
+  LayoutSettingsState, presentationSlideState, manageUserSettingsState, cameraStreamState,
 } from "~/recoil/atom";
 import Image from "next/image";
 import MicOnIcon from "./icon/outline/MicOnIcon";
@@ -59,6 +59,7 @@ import {GetCurrentSessionEjected, GetCurrentSessionToken, SetCurrentSessionToken
 import {getMyCookies} from "~/lib/cookiesFunctions";
 import KurentoVideoSingleStick from "~/server/KurentoVideoSingleStick";
 import ParticipantsCameraComponent from "~/components/camera/ParticipantsCameraComponent";
+import ArrowChevronUpIcon from "./icon/outline/ArrowChevronUpIcon";
 
 // import WhiteboardComponent from "./whiteboard/WhiteboardComponent";
 const WhiteboardComponent = dynamic(
@@ -79,7 +80,6 @@ function PostSignIn() {
   const [participantList, setParticipantList] =
     useRecoilState(participantListState);
   const participantTalkingList = useRecoilValue(participantTalkingListState);
-  const participantCameraList = useRecoilValue(participantCameraListState);
   const viewerscreenShareState = useRecoilValue(viewerScreenSharingState);
   const screenShareState = useRecoilValue(screenSharingState);
   const [connectionStatus, setConnection] = useRecoilState(
@@ -99,9 +99,14 @@ function PostSignIn() {
   const [wakeLockActive, setWakeLockActive] = useState(false);
   const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
 
-  const [currentPage, setCurrentPage] = useState(1);
   const participantsPerPage:number = layoutSettings.maxTiles[0] ?? 4;
-  const totalPages = Math.ceil(participantList.length / participantsPerPage);
+
+  const [cameraStream, setCameraSteam] = useRecoilState(cameraStreamState);
+
+  const [participantCameraList, setParticipantCameraList] = useRecoilState(
+      participantCameraListState,
+  );
+
 
 
   const router = useRouter();
@@ -163,6 +168,20 @@ function PostSignIn() {
           const responseData = response.data;
 
           if (responseData?.response?.returncode === "SUCCESS") {
+
+            if(cameraStream){
+              // if the user enable camera from prejoin, connect to camera
+              let newRecord:IParticipantCamera={
+                intId:user?.meetingDetails?.internalUserID,
+                streamID:`${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}default`,
+                id:"default",
+                deviceID: "default",
+                stream:cameraStream
+              }
+              setParticipantCameraList([...participantCameraList,newRecord])
+            }
+            getTurnServers(token);
+
             setUser({
               connectionAuthTime: 0, connectionID: "",
               meetingId: "",
@@ -174,7 +193,7 @@ function PostSignIn() {
               sessiontoken: token!
             });
             SetCurrentSessionToken(token!);
-            getTurnServers(token);
+
             checkDonation(responseData?.response?.externMeetingID);
             requestWakeLock();
           } else {
@@ -266,14 +285,7 @@ function PostSignIn() {
     }
   };
 
-  const tokenExtraction = async () =>{
-
-    // Get the URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams");
-    console.log(urlParams);
-    // extract the value from the query params
-    const token = urlParams.get("sessionToken");
+  const tokenExtraction = async (token:string) =>{
 
     if (token) {
       // do something with the extract query param
@@ -289,7 +301,7 @@ function PostSignIn() {
       validateToken(token);
 
       // update the URL, without re-triggering data fetching
-      router.push(newPathObject, undefined, { shallow: true });
+      // router.push(newPathObject, undefined, { shallow: true });
 
       // delete router.query.paramName;
       // router.push(router);
@@ -315,7 +327,8 @@ function PostSignIn() {
 
 
   useEffect(() => {
-    tokenExtraction();
+    console.log(`utk ${user?.sessiontoken}`);
+    tokenExtraction(user?.sessiontoken!);
   }, []);
 
   useEffect(() => {
@@ -337,10 +350,30 @@ function PostSignIn() {
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
   const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
 
+  // start pagination logic
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 4; //don't change
+
+  // Pagination logic
+  const totalPages = Math.ceil((participantList.length - pinnedParticipant.length) / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const displayedParticipants = [...pinnedParticipant, ...participantList.filter((p: IParticipant) => !pinnedParticipant.includes(p))].slice(startIndex, endIndex);
+
+  // Pinning logic
+  const handlePin = (participant: IParticipant) => {
+    setPinnedParticipant([participant, ...pinnedParticipant]);
+  };
+
+  const handleUnpin = (participant: IParticipant) => {
+    setPinnedParticipant(pinnedParticipant.filter((p) => p.intId !== participant.intId));
+  };
+  // end pagination logic
+
   return (
       <Authenticated>
         {!connectionStatus?.websocket_connection ?
-            <span className="flex w-full items-center justify-between px-4"
+            <span className="flex absolute top-16w-full items-center justify-between px-4"
                   style={{
                     color: 'white',
                     backgroundColor: 'red',
@@ -362,9 +395,9 @@ function PostSignIn() {
                   title: "Reconnecting",
                   description: "Reconnecting... Please wait for few moment",
                 });
-              }}>Reconnect Now</button>}<br/></span> : ''}
+              }}>Reconnect Now</button>}<br /></span> : ''}
         {connectionStatus?.websocket_connection && !connectionStatus?.audio_connection ?
-            <span className="flex w-full items-center justify-between px-4"
+            <span className="flex absolute top-16w-full items-center justify-between px-4"
                   style={{color: 'white', backgroundColor: 'black', textAlign: 'center'}}>Your audio is not connected. You will not hear the conversation in the meeting.<br/></span> : ''}
         <div className="relative h-[calc(100vh-128px)] bg-primary/60 ">
           {/* polls */}
@@ -580,37 +613,23 @@ function PostSignIn() {
           !eCinemaModal.isActive && !CurrentUserRoleIsModerator(participantList, user) && manageUserSettings.hideUserList && (
             <div
               className={cn(
-                " m-auto h-[calc(100vh-158px)] items-center justify-center p-4",
+                " m-auto h-[calc(100vh-158px)] overflow-y-auto items-center justify-center p-4",
                 (isWhiteboardOpen || screenSharingStream) &&
                 participantTalkingList.filter(
                   (eachItem: any) => !eachItem.muted,
                 )?.length > 0 &&
                 "mt-6 h-[calc(100vh-150px)]",
-                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length === 1 &&
-                " grid justify-center gap-2 md:grid-cols-2 mt-5  ",
-                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length === 2 &&
-                "grid justify-center gap-2 md:grid-cols-2 mt-5",
-                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length === 3 &&
-                "grid grid-cols-2 gap-2 lg:grid-cols-3 ",
-                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length >= 4 && "grid grid-cols-2 gap-2",
-                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length >= 5 && "grid gap-2 md:grid-cols-3",
-                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length >= 7 && "grid gap-2 md:grid-cols-4",
-                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length >= 13 && "grid gap-2 md:grid-cols-5",
-                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length >= 3 && pinnedParticipant.length > 0 && "md:!grid-cols-4",
-              )} style={{ paddingTop: "1.5rem" }}
+                participantList.length === 1 &&
+                "grid",
+                participantList.length === 2 &&
+                "grid md:grid-cols-3",
+                participantList.length === 3 &&
+                "grid grid-cols-2 md:grid-cols-3 ",
+                participantList.length >= 4 && "grid grid-cols-2 gap-2 md:grid-cols-4",
+              )}
             >
-              {participantList
-                  .filter((eachItem: IParticipant) => eachItem.role == ModeratorRole())
-                // pick only 5 participant
-                // .filter(
-                //   (participant: IParticipant, index: number) => {
-                //     if (pinnedParticipant.length > 0) {
-                //       return index < 5
-                //     } else {
-                //       return participant
-                //     }
-                //   },
-                // )
+              {displayedParticipants
+
                 .map(
                   (participant: IParticipant, index: number) => (
                     <SingleCameraComponent
@@ -621,6 +640,29 @@ function PostSignIn() {
                     />
                   ),
                 )}
+
+              {/* pagination button */}
+              <div className="fixed bottom-16 right-0 md:top-16">
+                <div className="flex items-center gap-2 flex-row md:flex-col">
+                  <button
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    <ArrowChevronUpIcon className="-rotate-90 md:rotate-0" />
+                  </button>
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <span key={i} className={cn("w-4 h-4 rounded-full flex", currentPage === i + 1 ? "bg-primary" : "bg-secondary")}></span>
+                  )
+
+                  )}
+                  <button
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                    disabled={currentPage >= totalPages}
+                  >
+                    <ArrowChevronDownIcon className="-rotate-90 md:rotate-0"/>
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 

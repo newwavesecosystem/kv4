@@ -117,7 +117,7 @@ function ChatModal() {
   return (
     <Sheet open={chatState} onOpenChange={setChatState}>
       <SheetContent
-        className="m-h-screen w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
+        className="m-h-svh w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
         side={"right"}
       >
         <div
@@ -262,9 +262,9 @@ function ChatModal() {
 
         <div
           className={cn(
-            " no-scrollbar h-[calc(100vh-192px)] overflow-y-auto",
-            infoMessageStatus && !usersTyping.length && "h-[calc(100vh-130px)]",
-            usersTyping.length > 0 && "h-[calc(100vh-150px)]",
+            " no-scrollbar h-[calc(100svh-192px)] overflow-y-auto",
+            infoMessageStatus && !usersTyping.length && "h-[calc(100svh-130px)]",
+            usersTyping.length > 0 && "h-[calc(100svh-150px)]",
           )}
         >
           {chatList.map((chat: IChat, index: number) => (

@@ -70,7 +70,7 @@ function ParticipantsModal() {
   return (
     <Sheet open={participantState} onOpenChange={setParticipantState}>
       <SheetContent
-        className="h-full w-full border-0 bg-primary text-a11y lg:w-[900px] "
+        className="h-svh w-full border-0 bg-primary text-a11y lg:w-[900px] "
         side={screenSize.id <= 3 ? "bottom" : "right"}
       >
         <div className="flex items-center gap-2">

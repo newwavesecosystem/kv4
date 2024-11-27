@@ -126,7 +126,7 @@ function CCModal() {
                         </div>
                       </div>
 
-                      <div className="flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto py-4">
+                      <div className="flex max-h-[50svh] w-full flex-col gap-2 overflow-y-auto py-4">
                         {ccLanguages
                           .filter((language) =>
                             language.name

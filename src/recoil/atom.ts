@@ -170,11 +170,12 @@ export const micOpenState = atom<boolean>({
   default: true,
 });
 
-export const mediaPermissionState = atom<{audioAllowed:boolean, videoAllowed:boolean}>({
+export const mediaPermissionState = atom<{audioAllowed:boolean, videoAllowed:boolean, muteMicOnJoin:boolean}>({
   key: "mediaPermissionState",
   default: {
     audioAllowed:false,
-    videoAllowed:false
+    videoAllowed:false,
+    muteMicOnJoin:false
   },
 });
 
