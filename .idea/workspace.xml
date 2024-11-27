@@ -22,13 +22,17 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Return raised hand color to yellow">
-      <change afterPath="$PROJECT_DIR$/src/components/eCinema/EcinemaService.tsx" afterDir="false" />
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fix error due key">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/eCinema/ECinemaComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eCinema/ECinemaComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/eCinema/ECinemaModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eCinema/ECinemaModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/screenSharing/ScreenSharingComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/screenSharing/ScreenSharingComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PostLeave.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostLeave.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/camera/CameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/CameraComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/MediaOnboardingDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/MediaOnboardingDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/join/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/join/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/ServerInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/ServerInfo.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -50,6 +54,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -167,6 +172,9 @@
       <workItem from="1730663952190" duration="28000" />
       <workItem from="1730665179542" duration="87000" />
       <workItem from="1730695864963" duration="60780000" />
+      <workItem from="1732521899651" duration="15772000" />
+      <workItem from="1732702158453" duration="5000" />
+      <workItem from="1732703252129" duration="15723000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -378,7 +386,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729586629634</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="-Fix error due key">
+      <option name="closed" value="true" />
+      <created>1732105715816</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1732105715816</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -413,7 +429,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed shared caption and realtime translation" />
     <MESSAGE value="Worked on Mute button is not in sync for Konn3ct Web" />
     <MESSAGE value="Fixed Polls is not getting answer clicked by user&#10;Fix publishing of Poll result" />
     <MESSAGE value="-Working on WhiteboardComponent.tsx&#10;-Worked on separating overlapping talking indicator with participant list" />
@@ -438,7 +453,8 @@
     <MESSAGE value="-Implement sessiontoken to be removed from url on page loaded&#10;-Implement encrypting, decrypting and saving sessionToken to localStorage" />
     <MESSAGE value="-Add Types for VoiceUser and saving all from server&#10;-Increase time count for kickedout session from 50 to 150&#10;-Now checking if audio websocket connection is ready before initiating webrtc&#10;-Remove key error on SingleCameraComponent.tsx" />
     <MESSAGE value="-Make audio and sound alert play through the selected output device" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Make audio and sound alert play through the selected output device" />
+    <MESSAGE value="-Fix error due key" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Fix error due key" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -462,6 +478,11 @@
           <url>file://$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx</url>
           <line>47</line>
           <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/pages/join/[id].tsx</url>
+          <line>133</line>
+          <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

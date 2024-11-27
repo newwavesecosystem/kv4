@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import {
   availableCamerasState,
   availableMicrophonesState,
-  availableSpeakersState,
+  availableSpeakersState, cameraStreamState,
   selectedCameraState,
   selectedMicrophoneState,
   selectedSpeakersState,
@@ -35,38 +35,43 @@ const CameraComponent: React.FC = () => {
   const [selectedSpeaker, setSelectedSpeaker] = useRecoilState(
     selectedSpeakersState,
   );
+  const [cameraStream, setCameraSteam] = useRecoilState(cameraStreamState);
 
-  const [loadingCamera, setLoadingCamera] = useState(true);
+  const [loadingCamera, setLoadingCamera] = useState(false);
   const [loadingMicrophone, setLoadingMicrophone] = useState(true);
   const [loadingSpeaker, setLoadingSpeaker] = useState(true);
 
   useEffect(() => {
+    if(cameraStream){
+      videoRef.current!.srcObject = cameraStream;
+    }
+
     // Function to handle camera switching
-    const switchCamera = async (deviceId: string) => {
-      try {
-        setLoadingCamera(true);
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { deviceId: { exact: deviceId } },
-          audio: true,
-        });
-
-        // Stop the current stream
-        const currentStream = videoRef.current?.srcObject as MediaStream | null;
-        if (currentStream) {
-          const tracks = currentStream.getTracks();
-          tracks.forEach((track) => track.stop());
-        }
-
-        // Attach the new stream to the video element
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoadingCamera(false);
-      }
-    };
+    // const switchCamera = async (deviceId: string) => {
+    //   try {
+    //     setLoadingCamera(true);
+    //     const stream = await navigator.mediaDevices.getUserMedia({
+    //       video: { deviceId: { exact: deviceId } },
+    //       audio: true,
+    //     });
+    //
+    //     // Stop the current stream
+    //     const currentStream = videoRef.current?.srcObject as MediaStream | null;
+    //     if (currentStream) {
+    //       const tracks = currentStream.getTracks();
+    //       tracks.forEach((track) => track.stop());
+    //     }
+    //
+    //     // Attach the new stream to the video element
+    //     if (videoRef.current) {
+    //       videoRef.current.srcObject = stream;
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   } finally {
+    //     setLoadingCamera(false);
+    //   }
+    // };
 
     // Function to get the list of available cameras and microphones
     // const getDevices = async () => {
@@ -121,14 +126,14 @@ const CameraComponent: React.FC = () => {
     // initCamera();
 
     // Cleanup on component unmount
-    return () => {
-      const stream = videoRef.current?.srcObject as MediaStream | null;
-      if (stream) {
-        const tracks = stream.getTracks();
-        tracks.forEach((track) => track.stop());
-      }
-    };
-  }, []);
+    // return () => {
+    //   const stream = videoRef.current?.srcObject as MediaStream | null;
+    //   if (stream) {
+    //     const tracks = stream.getTracks();
+    //     tracks.forEach((track) => track.stop());
+    //   }
+    // };
+  }, [cameraStream]);
 
   return (
     <>

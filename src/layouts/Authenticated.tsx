@@ -141,7 +141,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
         inter.variable,
       )}
     >
-      <MediaOnboardingDialog />
+
       <ResolutionModal />
       <EndRecordingModal />
       <RecordingConsentModal />

@@ -19,7 +19,7 @@ import {
   postLeaveMeetingState,
   donationModalState,
   pinnedUsersState,
-  LayoutSettingsState, presentationSlideState, manageUserSettingsState,
+  LayoutSettingsState, presentationSlideState, manageUserSettingsState, cameraStreamState,
 } from "~/recoil/atom";
 import Image from "next/image";
 import MicOnIcon from "./icon/outline/MicOnIcon";
@@ -78,7 +78,6 @@ function PostSignIn() {
   const [participantList, setParticipantList] =
     useRecoilState(participantListState);
   const participantTalkingList = useRecoilValue(participantTalkingListState);
-  const participantCameraList = useRecoilValue(participantCameraListState);
   const viewerscreenShareState = useRecoilValue(viewerScreenSharingState);
   const screenShareState = useRecoilValue(screenSharingState);
   const [connectionStatus, setConnection] = useRecoilState(
@@ -101,6 +100,13 @@ function PostSignIn() {
   const [currentPage, setCurrentPage] = useState(1);
   const participantsPerPage:number = layoutSettings.maxTiles[0] ?? 4;
   const totalPages = Math.ceil(participantList.length / participantsPerPage);
+
+  const [cameraStream, setCameraSteam] = useRecoilState(cameraStreamState);
+
+  const [participantCameraList, setParticipantCameraList] = useRecoilState(
+      participantCameraListState,
+  );
+
 
 
   const router = useRouter();
@@ -162,6 +168,20 @@ function PostSignIn() {
           const responseData = response.data;
 
           if (responseData?.response?.returncode === "SUCCESS") {
+
+            if(cameraStream){
+              // if the user enable camera from prejoin, connect to camera
+              let newRecord:IParticipantCamera={
+                intId:user?.meetingDetails?.internalUserID,
+                streamID:`${user?.meetingDetails?.internalUserID}${user?.meetingDetails?.authToken}default`,
+                id:"default",
+                deviceID: "default",
+                stream:cameraStream
+              }
+              setParticipantCameraList([...participantCameraList,newRecord])
+            }
+            getTurnServers(token);
+
             setUser({
               connectionAuthTime: 0, connectionID: "",
               meetingId: "",
@@ -173,7 +193,7 @@ function PostSignIn() {
               sessiontoken: token!
             });
             SetCurrentSessionToken(token!);
-            getTurnServers(token);
+
             checkDonation(responseData?.response?.externMeetingID);
             requestWakeLock();
           } else {
@@ -265,14 +285,7 @@ function PostSignIn() {
     }
   };
 
-  const tokenExtraction = async () =>{
-
-    // Get the URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    console.log("urlParams");
-    console.log(urlParams);
-    // extract the value from the query params
-    const token = urlParams.get("sessionToken");
+  const tokenExtraction = async (token:string) =>{
 
     if (token) {
       // do something with the extract query param
@@ -288,7 +301,7 @@ function PostSignIn() {
       validateToken(token);
 
       // update the URL, without re-triggering data fetching
-      router.push(newPathObject, undefined, { shallow: true });
+      // router.push(newPathObject, undefined, { shallow: true });
 
       // delete router.query.paramName;
       // router.push(router);
@@ -314,7 +327,8 @@ function PostSignIn() {
 
 
   useEffect(() => {
-    tokenExtraction();
+    console.log(`utk ${user?.sessiontoken}`);
+    tokenExtraction(user?.sessiontoken!);
   }, []);
 
   useEffect(() => {

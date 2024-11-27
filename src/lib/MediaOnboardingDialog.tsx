@@ -81,10 +81,11 @@ const MediaOnboardingDialog: React.FC = () => {
 
         requestMediaPermissions()
             .then(() => {
-                setMediaPermission({
+                setMediaPermission((prev)=>({
+                    ...prev,
                     audioAllowed:true,
                     videoAllowed:true
-                })
+                }));
                 setAudioAllowed(true);
                 setVideoAllowed(true);
                 setShowDialog(null);
