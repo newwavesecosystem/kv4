@@ -296,7 +296,7 @@ function ChatModalKonn3ctAi() {
   return (
     <Sheet open={konn3ctAiChatState} onOpenChange={setKonn3ctAiChatState}>
       <SheetContent
-        className="m-h-screen w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
+        className="m-h-svh w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
         side={"right"}
       >
         <div className="sticky top-0 flex max-h-32 flex-col gap-2 p-4">
@@ -312,7 +312,7 @@ function ChatModalKonn3ctAi() {
         </div>
 
         <div
-          className={cn(" no-scrollbar h-[calc(100vh-192px)] overflow-y-auto")}
+          className={cn(" no-scrollbar h-[calc(100svh-192px)] overflow-y-auto")}
         >
           {kaiChatList.map((chat:any, index:number) => (
             <SingleKonn3ctAiChat key={index} chat={chat} />

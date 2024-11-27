@@ -36,7 +36,7 @@ function FileUploadModalUploadingFull() {
     <Dialog open={fileUploadModal.step === 2 && fileUploadModal.isFull}>
       <DialogContent
         hideCloseButton={true}
-        className="max-h-[80vh] max-w-[400px] overflow-y-auto rounded-xl border-0 bg-primary text-a11y md:rounded-xl"
+        className="max-h-[80svh] max-w-[400px] overflow-y-auto rounded-xl border-0 bg-primary text-a11y md:rounded-xl"
       >
         {" "}
         <div className=" flex flex-col gap-4">

@@ -45,7 +45,7 @@ function PostLeave() {
           className=""
         />
       </div>
-      <div className="flex h-[calc(100vh-64px)] flex-col items-center justify-center bg-primary/80 ">
+      <div className="flex h-[calc(100svh-64px)] flex-col items-center justify-center bg-primary/80 ">
         <HandOnIcon className="h-20 w-20 rotate-45" />
         <span className="text-2xl font-bold">
           {postLeaveMeeting.isLeave && "You left the session"}

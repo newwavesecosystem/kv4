@@ -65,7 +65,7 @@ function ChatModalPrivateMessage() {
       }}
     >
       <SheetContent
-        className="m-h-screen w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
+        className="m-h-svh w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
         side={"right"}
       >
         <div className="sticky top-0 flex max-h-32 flex-col gap-2 p-4">
@@ -100,8 +100,8 @@ function ChatModalPrivateMessage() {
 
         <div
           className={cn(
-            " no-scrollbar h-[calc(100vh-192px)] overflow-y-auto",
-            infoMessageStatus && "h-[calc(100vh-130px)]",
+            " no-scrollbar h-[calc(100svh-192px)] overflow-y-auto",
+            infoMessageStatus && "h-[calc(100svh-130px)]",
           )}
         >
           {privateChatState.chatMessages.filter((chat)=> chat.chatId == privateChatState.id).map((chat, index) => (

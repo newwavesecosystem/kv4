@@ -93,9 +93,9 @@ function WhiteboardComponent() {
   return (
     <div
       className={cn(
-        " max-w-2xl p-4 xl:max-w-6xl h-[calc(100vh-128px)] m-auto",
+        " max-w-2xl p-4 xl:max-w-6xl h-[calc(100svh-128px)] m-auto",
         connectedUsers.filter((user) => user.isMicOpen === true)?.length > 0 &&
-          "h-[calc(100vh-150px)] mt-6",
+          "h-[calc(100svh-150px)] mt-6",
       )}
     >
       {isLoading && (

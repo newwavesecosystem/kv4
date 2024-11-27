@@ -137,7 +137,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={cn(
-        "flex min-h-screen flex-col font-inter text-a11y antialiased",
+        "flex min-h-svh flex-col font-inter text-a11y antialiased",
         inter.variable,
       )}
     >

@@ -7,7 +7,7 @@ function Guest({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={cn(
-        "flex min-h-screen flex-col items-stretch text-a11y bg-primary/60 font-inter antialiased",
+        "flex min-h-svh flex-col items-stretch text-a11y bg-primary/60 font-inter antialiased",
       )}
     >
       <div className="sticky border-b border-a11y/20 top-0 z-50 hidden w-full justify-between bg-primary/20 px-5 py-4 text-sm backdrop-blur-[3px] lg:flex">
