@@ -228,7 +228,7 @@ function JoinId() {
                   <button
                       className={cn(
                           "rounded-full p-2",
-                          !mediaPermission.muteMicOnJoin ? "bg-primary" : "bg-[#B9C9C2]",
+                          !mediaPermission.muteMicOnJoin ? "border-onegov border" : "bg-[#B9C9C2]",
                       )}
                       onClick={async () => {
                           setMediaPermission((prev)=>({
@@ -246,7 +246,7 @@ function JoinId() {
                   <button
                       className={cn(
                           "rounded-full p-2",
-                          videoState ? "bg-primary" : "bg-[#B9C9C2]",
+                          videoState ? "border-onegov border" : "bg-[#B9C9C2]",
                       )}
                       onClick={async () => {
                         if (videoState && cameraStream) {
@@ -308,7 +308,7 @@ function JoinId() {
                       value={data.fullName}
                       onChange={onChange}
                       required={true}
-                      className="w-full truncate rounded-md border border-[#5D957E] bg-[#F8F8F8] px-2 py-2 placeholder:text-primary/80  focus:shadow-none focus:outline-none"
+                      className="w-full truncate rounded-md border border-[#5D957E] bg-[#F8F8F8] px-2 py-2 placeholder:text-onegov/80  focus:shadow-none focus:outline-none"
                   />
                 </div>
                 <div className="flex w-full flex-col gap-1">
@@ -321,7 +321,7 @@ function JoinId() {
                       value={data.email}
                       onChange={onChange}
                       required={true}
-                      className=" w-full truncate rounded-md border border-[#5D957E] bg-[#F8F8F8] px-2 py-2 placeholder:text-primary/80  focus:shadow-none focus:outline-none "
+                      className=" w-full truncate rounded-md border border-[#5D957E] bg-[#F8F8F8] px-2 py-2 placeholder:text-onegov/80  focus:shadow-none focus:outline-none "
                   />
                 </div>
               </div>
@@ -351,24 +351,24 @@ function JoinId() {
                       <input
                           type="text"
                           name="passCode"
-                          placeholder="Passcode"
+                          placeholder="Enter Meeting Access Code here"
                           value={data.passCode}
                           onChange={onChange}
-                          className="w-full truncate rounded-md border border-[#5D957E] bg-[#F8F8F8] px-2 py-2 placeholder:text-primary/80  focus:shadow-none focus:outline-none"
+                          className="w-full truncate rounded-md border border-[#5D957E] bg-[#F8F8F8] px-2 py-2 placeholder:text-onegov/80  focus:shadow-none focus:outline-none"
                       />
                     </div>
                 )}
               </div>
               <div className="flex w-full">
-                <button
+                  {loading ? <SpinnerIcon className="animate-spin text-center ml-32"/> : <button
                     disabled={data.email == "" || data.fullName == "" || !/\S+@\S+\.\S+/.test(data.email)}
                     onClick={() => {
                       joinRoom();
                     }}
-                    className="items-center gap-2 rounded-md border-2 border-a11y/20 bg-primary text-white font-semibold px-10 py-2 w-full disabled:opacity-40"
+                    className="items-center gap-2 rounded-md border-2 border-a11y/20 bg-onegov text-white font-semibold px-10 py-2 w-full disabled:opacity-40"
                 >
-                  {loading ? <SpinnerIcon className="animate-spin ml-32"/> : "Konn3ct"}
-                </button>
+                  Join Now
+                </button>}
               </div>
             </div>
           </div>

@@ -35,19 +35,15 @@ function PostLeave() {
   }, [postLeaveMeeting]);
 
   return (
-    <div className="text-a11y">
-      <div className="flex h-16 items-center justify-center bg-onegov">
-        <Image
-          src="/logo_1gov.png"
-          alt="logo"
-          width={40}
-          height={40}
-          className=""
-        />
+    <div className="text-a11y mt-5">
+      <div className="flex items-center gap-2 ml-5">
+        <Image src="/conference_logo.png" alt="logo" width={53} height={53}/>
+        <span className="font-semibold text-base font-['Raleway']">Conference</span>
       </div>
-      <div className="flex h-[calc(100svh-64px)] flex-col items-center justify-center bg-onegov/80 ">
-        <HandOnIcon className="h-20 w-20 rotate-45" />
-        <span className="text-2xl font-bold text-white">
+      <div className="flex h-[calc(100svh-64px)] flex-col items-center justify-center bg-primary/80 ">
+        <Image src="/bye.png" alt="logo" width={82} height={80}/>
+        <span className="text-4xl font-bold text-black">
+          Oops! {" "}
           {postLeaveMeeting.isLeave && "You left the session"}
           {postLeaveMeeting.isLeaveRoomCall && "You left the session"}
           {postLeaveMeeting.isEndCall && "Session has Ended"}
@@ -86,7 +82,7 @@ function PostLeave() {
           {/*)}*/}
         </div>
         <div className="fixed bottom-5">
-          <button className="rounded-md border border-a11y px-4 py-1 text-sm">
+          <button className="rounded-md border border-onegov px-4 py-1 text-sm text-onegov">
             Send Feedback
           </button>
         </div>
