@@ -287,6 +287,13 @@ function PostSignIn() {
 
   const tokenExtraction = async (token:string) =>{
 
+    // Get the URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log("urlParams");
+    console.log(urlParams);
+    // extract the value from the query params
+    const urltoken = urlParams.get("sessionToken");
+
     if (token) {
       // do something with the extract query param
       console.log("token");
@@ -308,6 +315,8 @@ function PostSignIn() {
 
       // setTimeout(()=>{ history.replaceState(null, "", location.pathname) }, 0)
 
+    }else if(urltoken){
+      validateToken(urltoken);
     }else if(await GetCurrentSessionToken() != ""){
       validateToken(await GetCurrentSessionToken());
     }else{
