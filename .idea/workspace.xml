@@ -24,7 +24,6 @@
   <component name="ChangeListManager">
     <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Implement prejoin interface with link url">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/join/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/join/[id].tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
