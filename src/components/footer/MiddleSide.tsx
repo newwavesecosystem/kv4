@@ -629,6 +629,7 @@ function MiddleSide() {
                             onClick={() => {
                                 if (eCinemaModal.isActive)
                                     return toast({
+                                        variant: "destructive",
                                         title: "Uh oh! Something went wrong.",
                                         description:
                                             "You can't start a new eCinema session while one is ongoing.",

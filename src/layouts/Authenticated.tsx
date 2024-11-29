@@ -57,7 +57,7 @@ import HandOffIcon from "~/components/icon/outline/HandOffIcon";
 import FileUploadModal from "~/components/fileUpload/FileUploadModal";
 import { Howl } from 'howler';
 import RecordingConsentModal from "~/components/recording/RecordingConsentModal";
-import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
+import {CurrentUserIsPresenter, CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
 import MediaOnboardingDialog from "~/lib/MediaOnboardingDialog";
 import {kurentoAudioPlaySound} from "~/server/KurentoAudio";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "~/components/ui/tooltip";
@@ -411,12 +411,16 @@ function Authenticated({ children }: { children: React.ReactNode }) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                {participantList.filter(
-                    (item: IParticipant) =>
-                        item.intId == user?.meetingDetails?.internalUserID,
-                )[0]?.presenter && (
+                {CurrentUserIsPresenter(participantList, user) && (
                     <button
                         onClick={() => {
+                          if (eCinemaModal.isActive)
+                            return toast({
+                              variant: "destructive",
+                              title: "Uh oh! Something went wrong.",
+                              description:
+                                  "You can't start a new eCinema session while one is ongoing.",
+                            });
                           setECinemaModal((prev) => ({
                             ...prev,
                             step: 1,
