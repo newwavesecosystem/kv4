@@ -15,7 +15,7 @@ import {
     eCinemaModalState,
     fileUploadModalState, manageUserSettingsState, mediaPermissionState,
     micOpenState, microphoneStreamState,
-    newMessage, newRaiseHand,
+    newMessage, newRaiseHand, notificationSettingsState,
     participantCameraListState,
     participantListState,
     participantTalkingListState,
@@ -113,6 +113,8 @@ const Websocket = () => {
         microphoneStreamState,
     );
     const [mediaPermission, setMediaPermission] = useRecoilState(mediaPermissionState);
+
+    const [notificationSettings, setNotificationSettingsState] = useRecoilState(notificationSettingsState);
 
     const [stopReconnection, setStopReconnection] = useState(false);
 
@@ -1038,10 +1040,14 @@ const Websocket = () => {
         }
 
         if(msg == "changed") {
-            const {randomlySelectedUser, meetingEnded, voiceProp, lockSettingsProps} = obj.fields
+            const {randomlySelectedUser, meetingEnded, meetingEndedReason, voiceProp, lockSettingsProps} = obj.fields
 
             if (meetingEnded != null && meetingEnded) {
-                // console.log("Meeting has been Ended ",meetingEnded);
+                if(meetingEndedReason == "BREAKOUT_ENDED_BY_MOD"){
+                    console.log("Breakout Room ended");
+                    return;
+                }
+                console.log("Meeting has been Ended ",meetingEnded);
                 setPostLeaveMeeting({
                     ...postLeaveMeeting,
                     isEndCall: true,
@@ -1189,10 +1195,15 @@ const Websocket = () => {
     }
 
     const addtoUserlist = (user:any) => {
-        let ishola = participantList;
-        // console.log("UserState: ishola", ishola)
-        if (ishola.filter((item :any) => item?.userId == user?.userId).length < 1) {
+        if (participantList.filter((item :IParticipant) => item?.userId == user?.userId).length < 1) {
             setParticipantList([...participantList,user]);
+            if(notificationSettings.joined) {
+                toast({
+                    title: "User Joined",
+                    description: `${user.name} has joined the Meeting`,
+                    duration: 5000,
+                });
+            }
         }
 
         // {
@@ -1243,11 +1254,13 @@ const Websocket = () => {
         participantList?.map((item:IParticipant) => {
             if (item.id === id) {
                 if(item.userId != user?.meetingDetails?.internalUserID){
-                    toast({
-                        title: "User Left",
-                        description: `${item.name} has left the Meeting`,
-                        duration: 5000,
-                    });
+                    if(notificationSettings.leave) {
+                        toast({
+                            title: "User Left",
+                            description: `${item.name} has left the Meeting`,
+                            duration: 5000,
+                        });
+                    }
                 }
             }
         });
@@ -1409,24 +1422,25 @@ const Websocket = () => {
             return item;
         });
 
-        setIsnewRaiseHand(raiseHand);
+        if(notificationSettings.handRaised){
+            setIsnewRaiseHand(raiseHand);
 
-        if(raiseHand){
-            toast({
-                title: "Raised Hand 🙋🏽",
-                description: `${name} raised hand`,
-                duration: 1000,
-            });
+            if(raiseHand){
+                toast({
+                    title: "Raised Hand 🙋🏽",
+                    description: `${name} raised hand`,
+                    duration: 1000,
+                });
+            }
+
+            if(!raiseHand && name=="You"){
+                toast({
+                    title: "Raised Hand 🙋🏽",
+                    description: `Your hand has been lowered`,
+                    duration: 1000,
+                });
+            }
         }
-
-        if(!raiseHand && name=="You"){
-            toast({
-                title: "Raised Hand 🙋🏽",
-                description: `Your hand has been lowered`,
-                duration: 1000,
-            });
-        }
-
 
         setParticipantList(updatedArray)
     }
@@ -1517,7 +1531,15 @@ const Websocket = () => {
             time: formattedDate,
         }
         setChatList([...chatList,chat])
-        setIsNewMessage(true);
+
+        if(notificationSettings.newMessage){
+            toast({
+                title: `Public Message From ${sender}`,
+                description: `${message}`,
+                duration: 5000,
+            });
+            setIsNewMessage(true);
+        }
     }
 
     const addPrivateMessage=(sender:string, message:string,timestamp:any,id:any,chatId:any)=>{

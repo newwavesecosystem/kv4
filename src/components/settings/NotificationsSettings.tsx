@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import useScreenSize from "~/lib/useScreenSize";
 import { cn } from "~/lib/utils";
-import { currentTabState, settingsModalMetaState } from "~/recoil/atom";
+import {
+  currentTabState,
+  manageUserSettingsState,
+  notificationSettingsState,
+  settingsModalMetaState
+} from "~/recoil/atom";
 import { SettingsSheetClose } from "../ui/settingsSheet";
 import CloseIcon from "../icon/outline/CloseIcon";
 import { Switch } from "../ui/switch";
@@ -21,13 +26,7 @@ function NotificationsSettings() {
 
   const screenSize = useScreenSize();
 
-  const [data, setData] = useState({
-    joined: false,
-    leave: false,
-    newMessage: true,
-    handRaised: true,
-    error: false,
-  });
+  const [notificationSettings, setNotificationSettingsState] = useRecoilState(notificationSettingsState);
 
   return (
     <div
@@ -60,61 +59,61 @@ function NotificationsSettings() {
       </div>
       <div className="flex flex-col divide-y divide-a11y/20 py-6">
         <div className="flex items-center justify-between py-4">
-          <div className={cn("flex gap-3", !data.joined && "opacity-60")}>
+          <div className={cn("flex gap-3", !notificationSettings.joined && "opacity-60")}>
             <PeopleAdd className="h-6 w-6" />
             <label htmlFor="joined">Joined</label>
           </div>
           <Switch
-            checked={data.joined}
-            onCheckedChange={(checked) => setData({ ...data, joined: checked })}
+            checked={notificationSettings.joined}
+            onCheckedChange={(checked) => setNotificationSettingsState({ ...notificationSettings, joined: checked })}
             id="joined"
           />
         </div>
         <div className="flex items-center justify-between py-4">
-          <div className={cn("flex gap-3", !data.leave && "opacity-60")}>
+          <div className={cn("flex gap-3", !notificationSettings.leave && "opacity-60")}>
             <ExitIcon className="h-6 w-6" />
             <label htmlFor="leave">Leave</label>
           </div>
           <Switch
-            checked={data.leave}
-            onCheckedChange={(checked) => setData({ ...data, leave: checked })}
+            checked={notificationSettings.leave}
+            onCheckedChange={(checked) => setNotificationSettingsState({ ...notificationSettings, leave: checked })}
             id="leave"
           />
         </div>
         <div className="flex items-center justify-between py-4">
-          <div className={cn("flex gap-3", !data.newMessage && "opacity-60")}>
+          <div className={cn("flex gap-3", !notificationSettings.newMessage && "opacity-60")}>
             <ChatIcon className="h-6 w-6" />
             <label htmlFor="newMessage">New Message</label>
           </div>
           <Switch
-            checked={data.newMessage}
+            checked={notificationSettings.newMessage}
             onCheckedChange={(checked) =>
-              setData({ ...data, newMessage: checked })
+                setNotificationSettingsState({ ...notificationSettings, newMessage: checked })
             }
             id="newMessage"
           />
         </div>
         <div className="flex items-center justify-between py-4">
-          <div className={cn("flex gap-3", !data.handRaised && "opacity-60")}>
+          <div className={cn("flex gap-3", !notificationSettings.handRaised && "opacity-60")}>
             <HandOnIcon className="h-6 w-6" />
             <label htmlFor="handRaised">Hand Raise</label>
           </div>
           <Switch
-            checked={data.handRaised}
+            checked={notificationSettings.handRaised}
             onCheckedChange={(checked) =>
-              setData({ ...data, handRaised: checked })
+                setNotificationSettingsState({ ...notificationSettings, handRaised: checked })
             }
             id="leave"
           />
         </div>
         <div className="flex items-center justify-between py-4">
-          <div className={cn("flex gap-3", !data.error && "opacity-60")}>
+          <div className={cn("flex gap-3", !notificationSettings.error && "opacity-60")}>
             <AlertOctagonIcon className="h-6 w-6" />
             <label htmlFor="error">Error</label>
           </div>
           <Switch
-            checked={data.error}
-            onCheckedChange={(checked) => setData({ ...data, error: checked })}
+            checked={notificationSettings.error}
+            onCheckedChange={(checked) => setNotificationSettingsState({ ...notificationSettings, error: checked })}
             id="leave"
           />
         </div>

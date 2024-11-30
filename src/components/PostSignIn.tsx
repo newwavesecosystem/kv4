@@ -299,12 +299,6 @@ function PostSignIn() {
       console.log("token");
       console.log(token);
 
-      // create an updated router path object
-      const newPathObject = {
-        pathname: router.pathname,
-        query: ""
-      }
-
       validateToken(token);
 
       // update the URL, without re-triggering data fetching
@@ -316,7 +310,15 @@ function PostSignIn() {
       // setTimeout(()=>{ history.replaceState(null, "", location.pathname) }, 0)
 
     }else if(urltoken){
+      // create an updated router path object
+      const newPathObject = {
+        pathname: router.pathname,
+        query: ""
+      }
+
       validateToken(urltoken);
+
+      router.push(newPathObject, undefined, { shallow: true });
     }else if(await GetCurrentSessionToken() != ""){
       validateToken(await GetCurrentSessionToken());
     }else{
