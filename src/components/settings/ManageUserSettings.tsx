@@ -118,7 +118,8 @@ function ManageUserSettings() {
               checked={manageUserSettings.disableCam}
               onCheckedChange={(checked) => {
                 setManageUserSettings({...manageUserSettings, disableCam: checked})
-                websocketLockViewers(manageUserSettings, user?.meetingDetails?.internalUserID);
+                console.log(manageUserSettings);
+                websocketLockViewers({...manageUserSettings, disableCam: checked}, user?.meetingDetails?.internalUserID);
               }}
               id="disableCam"
           />
@@ -132,7 +133,7 @@ function ManageUserSettings() {
               checked={manageUserSettings.disablePublicChat}
               onCheckedChange={(checked) => {
                 setManageUserSettings({...manageUserSettings, disablePublicChat: checked})
-                websocketLockViewers(manageUserSettings, user?.meetingDetails?.internalUserID);
+                websocketLockViewers({...manageUserSettings, disablePublicChat: checked}, user?.meetingDetails?.internalUserID);
               }}
               id="disablePublicChat"
           />
@@ -146,7 +147,7 @@ function ManageUserSettings() {
               checked={manageUserSettings.disablePrivateChat}
               onCheckedChange={(checked) => {
                 setManageUserSettings({...manageUserSettings, disablePrivateChat: checked})
-                websocketLockViewers(manageUserSettings, user?.meetingDetails?.internalUserID);
+                websocketLockViewers({...manageUserSettings, disablePrivateChat: checked}, user?.meetingDetails?.internalUserID);
               }}
               id="disablePrivateChat"
           />
@@ -160,7 +161,7 @@ function ManageUserSettings() {
               checked={manageUserSettings.hideUserList}
               onCheckedChange={(checked) => {
                 setManageUserSettings({...manageUserSettings, hideUserList: checked})
-                websocketLockViewers(manageUserSettings, user?.meetingDetails?.internalUserID);
+                websocketLockViewers({...manageUserSettings, hideUserList: checked}, user?.meetingDetails?.internalUserID);
               }}
               id="hideUserList"
           />

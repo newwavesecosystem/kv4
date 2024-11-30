@@ -6,7 +6,7 @@ import {
   authUserState,
   chatListState,
   chatModalState,
-  chatTypingListState, participantListState,
+  chatTypingListState, manageUserSettingsState, participantListState,
   participantsModalState, privateChatModalState,
 } from "~/recoil/atom";
 import PeoplesIcon from "../icon/outline/PeoplesIcon";
@@ -40,6 +40,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "~/components/ui/dropdown-menu";
+import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
 
 const DummyMenu = [
   {
@@ -61,6 +62,8 @@ function ChatModal() {
     useRecoilState(chatTypingListState);
   const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
   const participantList = useRecoilValue(participantListState);
+  const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
+
   const [infoMessageStatus, setInfoMessageStatus] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("Everyone");
@@ -166,7 +169,7 @@ function ChatModal() {
             {/*    </Command>*/}
             {/*  </PopoverContent>*/}
             {/*</Popover>*/}
-            <DropdownMenu>
+            {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disablePrivateChat) && (<DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="items-center rounded-lg border border-a11y/20 p-2 text-sm flex">
                   Switch to Private Chat
@@ -231,7 +234,7 @@ function ChatModal() {
                   ))}
                 </DropdownMenuGroup>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu>)}
           </div>
 
           {chatTypingList.filter((item: any) => item.type == "public").length > 0 && (
