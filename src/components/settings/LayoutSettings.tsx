@@ -139,24 +139,24 @@ function LayoutSettings() {
             hidden
           />
         </div>
-        <div className="flex items-center justify-between py-4">
-          <div
-            className={cn(
-              "flex gap-3",
-              !layoutSettings.audioMode && "opacity-60",
-            )}
-          >
-            <MicOnIcon className="h-6 w-6" />
-            <label htmlFor="audioMode">Audio Only Mode</label>
-          </div>
-          <Switch
-            checked={layoutSettings.audioMode}
-            onCheckedChange={(checked) =>
-              setlayoutSettings({ ...layoutSettings, audioMode: checked })
-            }
-            id="audioMode"
-          />
-        </div>
+        {/*<div className="flex items-center justify-between py-4">*/}
+        {/*  <div*/}
+        {/*    className={cn(*/}
+        {/*      "flex gap-3",*/}
+        {/*      !layoutSettings.audioMode && "opacity-60",*/}
+        {/*    )}*/}
+        {/*  >*/}
+        {/*    <MicOnIcon className="h-6 w-6" />*/}
+        {/*    <label htmlFor="audioMode">Audio Only Mode</label>*/}
+        {/*  </div>*/}
+        {/*  <Switch*/}
+        {/*    checked={layoutSettings.audioMode}*/}
+        {/*    onCheckedChange={(checked) =>*/}
+        {/*      setlayoutSettings({ ...layoutSettings, audioMode: checked })*/}
+        {/*    }*/}
+        {/*    id="audioMode"*/}
+        {/*  />*/}
+        {/*</div>*/}
         <div className="flex flex-col py-4">
           <div>
             <span>Change layout</span>
@@ -188,9 +188,9 @@ function LayoutSettings() {
             ))}
           </RadioGroup>
           <div>
-            <button className=" rounded-lg border border-a11y/20 bg-a11y/20 px-4 py-2 text-sm">
-              Update Everyone
-            </button>
+            {/*<button className=" rounded-lg border border-a11y/20 bg-a11y/20 px-4 py-2 text-sm">*/}
+            {/*  Update Everyone*/}
+            {/*</button>*/}
           </div>
         </div>
         <div className="flex flex-col py-4">

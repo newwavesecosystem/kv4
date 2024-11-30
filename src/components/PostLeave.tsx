@@ -51,7 +51,7 @@ function PostLeave() {
           {postLeaveMeeting.isSessionExpired && "Session expired"}
           {postLeaveMeeting.isOthers && "Invalid Meeting Link"}
         </span>
-        <p className=" mt-2 text-sm text-white">Have a nice day, {user?.fullName}</p>
+        <p className=" mt-2 text-sm text-black">Have a nice day, {user?.fullName}</p>
         <div className="mt-10 flex items-center gap-2">
           {/*<span className="text-sm text-a11y/40">Left by mistake?</span>*/}
           {/*{!postLeaveMeeting.isKicked && (*/}

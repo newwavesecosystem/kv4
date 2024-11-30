@@ -388,78 +388,78 @@ function DeviceSettings() {
           </div>
         </div>
 
-        <div className="flex flex-col divide-y divide-a11y/20 py-6">
+        {/*<div className="flex flex-col divide-y divide-a11y/20 py-6">*/}
 
-          <div className="flex items-center justify-between py-4">
-            <div className={cn("flex gap-3", !micFilter.noiseSuppression && "opacity-60")}>
-              <MicOnIcon className="h-6 w-6" />
-              <label htmlFor="noiseSuppression">Noise Suppression</label>
-            </div>
-            <Switch
-                checked={micFilter.noiseSuppression}
-                onCheckedChange={(checked) => {
-                  if(supportedConstraint?.noiseSuppression) {
-                    applyAudioSettings(selectedMicrophone!).then(r => console.log("apply audio settings"));
-                    setMicFilter({...micFilter, noiseSuppression: checked})
-                  }else{
-                    toast({
-                      variant: "destructive",
-                      title: "Not Supported",
-                      description: `Your device did not support this feature`,
-                    });
-                  }
-                }}
-                id="noiseSuppression"
-            />
-          </div>
+        {/*  <div className="flex items-center justify-between py-4">*/}
+        {/*    <div className={cn("flex gap-3", !micFilter.noiseSuppression && "opacity-60")}>*/}
+        {/*      <MicOnIcon className="h-6 w-6" />*/}
+        {/*      <label htmlFor="noiseSuppression">Noise Suppression</label>*/}
+        {/*    </div>*/}
+        {/*    <Switch*/}
+        {/*        checked={micFilter.noiseSuppression}*/}
+        {/*        onCheckedChange={(checked) => {*/}
+        {/*          if(supportedConstraint?.noiseSuppression) {*/}
+        {/*            applyAudioSettings(selectedMicrophone!).then(r => console.log("apply audio settings"));*/}
+        {/*            setMicFilter({...micFilter, noiseSuppression: checked})*/}
+        {/*          }else{*/}
+        {/*            toast({*/}
+        {/*              variant: "destructive",*/}
+        {/*              title: "Not Supported",*/}
+        {/*              description: `Your device did not support this feature`,*/}
+        {/*            });*/}
+        {/*          }*/}
+        {/*        }}*/}
+        {/*        id="noiseSuppression"*/}
+        {/*    />*/}
+        {/*  </div>*/}
 
-          <div className="flex items-center justify-between py-4">
-            <div className={cn("flex gap-3", !micFilter.echoCancellation && "opacity-60")}>
-              <MicOnIcon className="h-6 w-6" />
-              <label htmlFor="echoCancellation">Echo Cancellation</label>
-            </div>
-            <Switch
-                checked={micFilter.echoCancellation}
-                onCheckedChange={(checked) => {
-                  if(supportedConstraint?.echoCancellation) {
-                    applyAudioSettings(selectedMicrophone!).then(r => console.log("apply audio settings"));
-                    setMicFilter({...micFilter, echoCancellation: checked})
-                  }else{
-                    toast({
-                      variant: "destructive",
-                      title: "Not Supported",
-                      description: `Your device did not support this feature`,
-                    });
-                  }
-                }}
-                id="echoCancellation"
-            />
-          </div>
+        {/*  <div className="flex items-center justify-between py-4">*/}
+        {/*    <div className={cn("flex gap-3", !micFilter.echoCancellation && "opacity-60")}>*/}
+        {/*      <MicOnIcon className="h-6 w-6" />*/}
+        {/*      <label htmlFor="echoCancellation">Echo Cancellation</label>*/}
+        {/*    </div>*/}
+        {/*    <Switch*/}
+        {/*        checked={micFilter.echoCancellation}*/}
+        {/*        onCheckedChange={(checked) => {*/}
+        {/*          if(supportedConstraint?.echoCancellation) {*/}
+        {/*            applyAudioSettings(selectedMicrophone!).then(r => console.log("apply audio settings"));*/}
+        {/*            setMicFilter({...micFilter, echoCancellation: checked})*/}
+        {/*          }else{*/}
+        {/*            toast({*/}
+        {/*              variant: "destructive",*/}
+        {/*              title: "Not Supported",*/}
+        {/*              description: `Your device did not support this feature`,*/}
+        {/*            });*/}
+        {/*          }*/}
+        {/*        }}*/}
+        {/*        id="echoCancellation"*/}
+        {/*    />*/}
+        {/*  </div>*/}
 
-          <div className="flex items-center justify-between py-4">
-            <div className={cn("flex gap-3", !micFilter.autoGainControl && "opacity-60")}>
-              <MicOnIcon className="h-6 w-6" />
-              <label htmlFor="autoGainControl">Audio Gain</label>
-            </div>
-            <Switch
-                checked={micFilter.autoGainControl}
-                onCheckedChange={(checked) => {
-                  if(supportedConstraint?.autoGainControl) {
-                    setMicFilter({...micFilter, autoGainControl: checked});
-                    applyAudioSettings(selectedMicrophone!).then(r => console.log("apply audio settings"));
-                  }else{
-                    toast({
-                      variant: "destructive",
-                      title: "Not Supported",
-                      description: `Your device did not support this feature`,
-                    });
-                  }
-                }}
-                id="autoGainControl"
-            />
-          </div>
+        {/*  <div className="flex items-center justify-between py-4">*/}
+        {/*    <div className={cn("flex gap-3", !micFilter.autoGainControl && "opacity-60")}>*/}
+        {/*      <MicOnIcon className="h-6 w-6" />*/}
+        {/*      <label htmlFor="autoGainControl">Audio Gain</label>*/}
+        {/*    </div>*/}
+        {/*    <Switch*/}
+        {/*        checked={micFilter.autoGainControl}*/}
+        {/*        onCheckedChange={(checked) => {*/}
+        {/*          if(supportedConstraint?.autoGainControl) {*/}
+        {/*            setMicFilter({...micFilter, autoGainControl: checked});*/}
+        {/*            applyAudioSettings(selectedMicrophone!).then(r => console.log("apply audio settings"));*/}
+        {/*          }else{*/}
+        {/*            toast({*/}
+        {/*              variant: "destructive",*/}
+        {/*              title: "Not Supported",*/}
+        {/*              description: `Your device did not support this feature`,*/}
+        {/*            });*/}
+        {/*          }*/}
+        {/*        }}*/}
+        {/*        id="autoGainControl"*/}
+        {/*    />*/}
+        {/*  </div>*/}
 
-        </div>
+        {/*</div>*/}
       </div>
     </div>
   );
