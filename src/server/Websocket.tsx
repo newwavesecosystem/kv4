@@ -1038,9 +1038,13 @@ const Websocket = () => {
         }
 
         if(msg == "changed") {
-            const {randomlySelectedUser, meetingEnded, voiceProp, lockSettingsProps} = obj.fields
+            const {randomlySelectedUser, meetingEnded, meetingEndedReason, voiceProp, lockSettingsProps} = obj.fields
 
             if (meetingEnded != null && meetingEnded) {
+                if(meetingEndedReason == "BREAKOUT_ENDED_BY_MOD"){
+                    console.log("Breakout Room ended");
+                    return;
+                }
                 console.log("Meeting has been Ended ",meetingEnded);
                 setPostLeaveMeeting({
                     ...postLeaveMeeting,

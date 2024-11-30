@@ -102,6 +102,9 @@ function BreakOutModalCreate() {
                     !breakOutRoomState.isAllowUsersToChooseRooms || breakOutRoomState.duration < 15
                 }
                 onClick={() => {
+                  if(breakOutRoomState.users.length == 0 && !breakOutRoomState.isAllowUsersToChooseRooms) {
+                    return;
+                  }
                   setBreakOutRoomState((prev) => ({
                     ...prev,
                     step: 2,
