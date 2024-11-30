@@ -14,7 +14,7 @@ import {
   IBreakOutRecord,
   IPresentationSlideState,
   IAuthUser,
-  IVoiceUser, IManageUserSettings
+  IVoiceUser, IManageUserSettings, INotificationSettings
 } from "~/types";
 
 export const authUserState = atom<IAuthUser | null>({
@@ -111,6 +111,17 @@ export const manageUserSettingsState = atom<IManageUserSettings>({
     muteAllUsers: false,
     muteAllUsersExceptPresenter: false,
     disableCam:false,disableMic:false,disableNotes:false,disablePrivateChat:false,disablePublicChat:false,hideUserList:false,hideViewersAnnotation:false,hideViewersCursor:false,lockOnJoin:true,lockOnJoinConfigurable:false
+  },
+});
+
+export const notificationSettingsState = atom<INotificationSettings>({
+  key: "notificationSettingsState",
+  default: {
+    joined: false,
+    leave: false,
+    newMessage: true,
+    handRaised: true,
+    error: true,
   },
 });
 

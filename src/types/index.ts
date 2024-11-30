@@ -158,6 +158,14 @@ export interface IManageUserSettings {
   lockOnJoinConfigurable:boolean
 }
 
+export interface INotificationSettings {
+  joined: boolean,
+  leave: boolean,
+  newMessage: boolean,
+  handRaised: boolean,
+  error: boolean,
+}
+
 export interface IBreakOutRecord {
   isActive: boolean;
   step: number;

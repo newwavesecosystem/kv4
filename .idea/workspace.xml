@@ -22,10 +22,13 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Restrict Ecinema to once">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fix Manage users not working instantly&#10;-Fix Private chat disabling on Public Chat modal">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/chat/ChatModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/chat/ChatModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/settings/NotificationsSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/NotificationsSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -402,7 +405,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732873606463</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="-Fix Manage users not working instantly&#10;-Fix Private chat disabling on Public Chat modal">
+      <option name="closed" value="true" />
+      <created>1732941625290</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1732941625290</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,7 +448,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="-Working on WhiteboardComponent.tsx&#10;-Worked on separating overlapping talking indicator with participant list" />
     <MESSAGE value="testing out caption and translation" />
     <MESSAGE value="Caption is now working" />
     <MESSAGE value="disable AI for now" />
@@ -462,7 +472,8 @@
     <MESSAGE value="-Fix error due key" />
     <MESSAGE value="-Implement prejoin interface with link url" />
     <MESSAGE value="-Restrict Ecinema to once" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Restrict Ecinema to once" />
+    <MESSAGE value="-Fix Manage users not working instantly&#10;-Fix Private chat disabling on Public Chat modal" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Fix Manage users not working instantly&#10;-Fix Private chat disabling on Public Chat modal" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -501,6 +512,12 @@
           <url>file://$PROJECT_DIR$/src/components/breakout/BreakOutModalCreate.tsx</url>
           <line>104</line>
           <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/server/Websocket.tsx</url>
+          <line>1256</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
