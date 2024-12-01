@@ -116,14 +116,6 @@ function JoinId() {
   }
 
   const joinRoom=()=>{
-      if (!/\S+@\S+\.\S+/.test(data.email)) {
-          toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "Email is invalid",
-          });
-          return;
-      }
     setLoading(true);
     axios.post(`${ServerInfo.joinURL}kv4/join-room`,{
       "room": id,
@@ -361,8 +353,25 @@ function JoinId() {
               </div>
               <div className="flex w-full">
                 <button
-                    disabled={data.email == "" || data.fullName == "" || !/\S+@\S+\.\S+/.test(data.email)}
                     onClick={() => {
+                        if( data.fullName == "") {
+                            toast({
+                                variant: "destructive",
+                                title: "Uh oh! Something went wrong.",
+                                description: "Name is invalid",
+                            });
+                            return;
+                        }
+
+                       if(data.email == "" || !/\S+@\S+\.\S+/.test(data.email)) {
+                           toast({
+                               variant: "destructive",
+                               title: "Uh oh! Something went wrong.",
+                               description: "Email is invalid",
+                           });
+                           return;
+                       }
+
                       joinRoom();
                     }}
                     className="items-center gap-2 rounded-md border-2 border-a11y/20 bg-primary text-white font-semibold px-10 py-2 w-full disabled:opacity-40"
