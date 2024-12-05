@@ -52,6 +52,11 @@ import {
     receiveVideoLinkFromWebsocket,
     stopVideoLinkFromWebsocket
 } from "~/components/eCinema/EcinemaService";
+import {
+    receiveForceJoinRoom,
+    receiveFreeJoinRoom,
+    receiveStopBreakoutRoom
+} from "~/components/breakout/BreakoutRoomService";
 
 const maxReconnectAttempts = 10;
 
@@ -933,35 +938,19 @@ const Websocket = () => {
         if(msg == "added") {
             // ["{\"msg\":\"added\",\"collection\":\"breakouts\",\"id\":\"dF7ZMsFdC7zvFANbr\",\"fields\":{\"breakoutId\":\"60b5008f1dbdb7f487ab51c637cd80f757f8c9be-1707763221040\",\"captureNotes\":false,\"captureSlides\":false,\"externalId\":\"4d3cc89d80677808207417d4aa82a5868f6c75de-1707763221040\",\"freeJoin\":true,\"isDefaultName\":true,\"joinedUsers\":[],\"name\":\"Odejinmi Room (Room 2)\",\"parentMeetingId\":\"d02560dd9d7db4467627745bd6701e809ffca6e3-1707762025148\",\"sendInviteToModerators\":false,\"sequence\":2,\"shortName\":\"Room 2\",\"timeRemaining\":0}}"]
 
-            const {breakoutId,joinedUsers,shortName,name,sendInviteToModerators,sequence} = fields;
+            const {breakoutId,joinedUsers,shortName,name,sendInviteToModerators,sequence,freeJoin} = fields;
 
             console.log('breakoutId',breakoutId);
             console.log('breakoutId',fields);
 
-            if(breakoutId != null) {
-                setBreakOutRoomState((prev) => ({
-                    ...prev,
-                    rooms: [
-                        ...prev.rooms,
-                        {
-                            id: id,
-                            breakoutId: breakoutId,
-                            title: shortName,
-                            users: joinedUsers,
-                        }
-                    ],
-                }));
-
-                setBreakOutRoomState((prev) => ({
-                    ...prev,
-                    step: 2,
-                    activatedAt: new Date(),
-                    createdAt: new Date(),
-                    isActive: true,
-                    endedAt: dayjs()
-                        .add(breakOutRoomState.duration, "minute")
-                        .toDate(),
-                }));
+            if(!participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0].breakoutProps.isBreakoutUser){
+                if(breakoutId != null) {
+                    if(freeJoin){
+                        receiveFreeJoinRoom(fields,id,breakOutRoomState,setBreakOutRoomState);
+                    }else{
+                        receiveForceJoinRoom(fields,id,breakOutRoomState,setBreakOutRoomState);
+                    }
+                }
             }
         }
 
@@ -976,38 +965,16 @@ const Websocket = () => {
             console.log("redirectToHtml5JoinURL",redirectToHtml5JoinURL);
 
             if(redirectToHtml5JoinURL != null){
+                if(micState){
+                    websocketMuteMic();
+                }
                 window.open(redirectToHtml5JoinURL, '_blank');
             }
 
         }
 
         if(msg == "removed") {
-            setBreakOutRoomState((prev) => ({
-                ...prev,
-                rooms: [
-                    ...prev.rooms.filter((item)=>item.id != id),
-                ],
-            }));
-
-            if(breakOutRoomState.rooms.length <= 0){
-                setBreakOutRoomState({
-                    step: 0,
-                    isActive: false,
-                    rooms: [],
-                    users: [],
-                    isAllowUsersToChooseRooms: true,
-                    isSendInvitationToAssignedModerators: false,
-                    duration: 15,
-                    isSaveWhiteBoard: false,
-                    isSaveSharedNotes: false,
-                    createdAt: null,
-                    creatorName: "",
-                    creatorId: 0,
-                    isEnded: false,
-                    activatedAt: null,
-                    endedAt: null,
-                });
-            }
+            receiveStopBreakoutRoom(fields,id,breakOutRoomState,setBreakOutRoomState);
         }
 
     }
