@@ -9,7 +9,7 @@ export const receiveFreeJoinRoom =(fields:any, id:any, breakOutRoomState:any, se
 
     const {breakoutId,joinedUsers,shortName,name,sendInviteToModerators,sequence} = fields;
 
-    setBreakOutRoomState((prev) => ({
+    setBreakOutRoomState((prev:any) => ({
         ...prev,
         rooms: [
             ...prev.rooms,
@@ -23,7 +23,7 @@ export const receiveFreeJoinRoom =(fields:any, id:any, breakOutRoomState:any, se
     }));
 
 
-    setBreakOutRoomState((prev) => ({
+    setBreakOutRoomState((prev:any) => ({
         ...prev,
         step: 2,
         activatedAt: new Date(),
@@ -40,7 +40,7 @@ export const receiveForceJoinRoom =(fields:any, id:any, breakOutRoomState:any, s
 
     const {breakoutId,joinedUsers,shortName,name,sendInviteToModerators,sequence} = fields;
 
-    setBreakOutRoomState((prev) => ({
+    setBreakOutRoomState((prev:any) => ({
         ...prev,
         rooms: [
             ...prev.rooms,
@@ -54,7 +54,7 @@ export const receiveForceJoinRoom =(fields:any, id:any, breakOutRoomState:any, s
     }));
 
 
-    setBreakOutRoomState((prev) => ({
+    setBreakOutRoomState((prev:any) => ({
         ...prev,
         step: 2,
         activatedAt: new Date(),
@@ -69,10 +69,10 @@ export const receiveForceJoinRoom =(fields:any, id:any, breakOutRoomState:any, s
 
 export const receiveStopBreakoutRoom =(fields:any, id:any, breakOutRoomState:any, setBreakOutRoomState:any)=>{
     console.log('receiveStopBreakoutRoom', fields)
-    setBreakOutRoomState((prev) => ({
+    setBreakOutRoomState((prev:any) => ({
         ...prev,
         rooms: [
-            ...prev.rooms.filter((item)=>item.id != id),
+            ...prev.rooms.filter((item:any)=>item.id != id),
         ],
     }));
 
