@@ -431,7 +431,7 @@ const Websocket = () => {
                 donationCreatorId: dn[4] as number,
                 donationCreatorName: user?.fullName as string
             });
-            addMessage(senderName,dn[0],timestamp,id);
+            addMessage(senderName,dn[0],timestamp,id,sender);
             return;
         }
 
@@ -465,7 +465,7 @@ const Websocket = () => {
                 return;
             }
 
-            addMessage(senderName,message,timestamp,id);
+            addMessage(senderName,message,timestamp,id,sender);
             return;
         }
 
@@ -943,8 +943,8 @@ const Websocket = () => {
             console.log('breakoutId',breakoutId);
             console.log('breakoutId',fields);
 
-            if(!participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0].breakoutProps.isBreakoutUser){
-                if(breakoutId != null) {
+            if(breakoutId != null) {
+                if(!participantList.filter((e:IParticipant)=>e.intId == user?.meetingDetails?.internalUserID)[0]?.breakoutProps.isBreakoutUser){
                     if(freeJoin){
                         receiveFreeJoinRoom(fields,id,breakOutRoomState,setBreakOutRoomState);
                     }else{
@@ -987,7 +987,7 @@ const Websocket = () => {
         const {msg, id, fields} = obj;
 
         if(msg == "added") {
-            const {lockSettingsProps} = obj.fields;
+            const {lockSettingsProps, voiceProp} = obj.fields;
 
             if(lockSettingsProps != null){
                 setManageUserSettings((prev)=>({
@@ -1003,6 +1003,12 @@ const Websocket = () => {
                     lockOnJoin: lockSettingsProps.lockOnJoin,
                     lockOnJoinConfigurable: lockSettingsProps.lockOnJoinConfigurable
                 }));
+            }
+
+            if (voiceProp != null) {
+                if (voiceProp.muteOnStart) {
+                    setMicState(voiceProp.muteOnStart);
+                }
             }
         }
 
@@ -1326,13 +1332,15 @@ const Websocket = () => {
 
         const updatedArray = participantList?.map((item:IParticipant) => {
             if (item.id === id) {
-                if (item.userId == user?.meetingDetails?.internalUserID) {
-                    console.log("UserState: You have been made Presenter 📺");
-                    toast({
-                        title: "You have been made a Presenter",
-                        description: `You can now share your screen using the button beside camera icon`,
-                        duration: 9000,
-                    });
+                if(state) {
+                    if (item.userId == user?.meetingDetails?.internalUserID) {
+                        console.log("UserState: You have been made Presenter 📺");
+                        toast({
+                            title: "You have been made a Presenter",
+                            description: `You can now share your screen using the button beside camera icon`,
+                            duration: 9000,
+                        });
+                    }
                 }
                 return {...item, presenter: state};
             }
@@ -1475,7 +1483,7 @@ const Websocket = () => {
         setParticipantCameraList(ur);
     };
 
-    const addMessage=(sender:string, message:string,timestamp:any,id:any)=>{
+    const addMessage=(sender:string, message:string,timestamp:any,id:any,senderID:any)=>{
         // Convert timestamp to Date object
         const date = new Date(timestamp);
 
@@ -1499,13 +1507,15 @@ const Websocket = () => {
         }
         setChatList([...chatList,chat])
 
-        if(notificationSettings.newMessage){
-            toast({
-                title: `Public Message From ${sender}`,
-                description: `${message}`,
-                duration: 5000,
-            });
-            setIsNewMessage(true);
+        if(senderID != user?.meetingDetails?.internalUserID) {
+            if (notificationSettings.newMessage) {
+                toast({
+                    title: `Public Message From ${sender}`,
+                    description: `${message}`,
+                    duration: 5000,
+                });
+                setIsNewMessage(true);
+            }
         }
     }
 

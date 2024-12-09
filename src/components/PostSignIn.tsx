@@ -626,23 +626,37 @@ function PostSignIn() {
           !eCinemaModal.isActive && !CurrentUserRoleIsModerator(participantList, user) && manageUserSettings.hideUserList && (
             <div
               className={cn(
-                " m-auto h-[calc(100vh-158px)] overflow-y-auto items-center justify-center p-4",
+                " m-auto h-[calc(100vh-158px)] items-center justify-center p-4",
                 (isWhiteboardOpen || screenSharingStream) &&
                 participantTalkingList.filter(
                   (eachItem: any) => !eachItem.muted,
                 )?.length > 0 &&
                 "mt-6 h-[calc(100vh-150px)]",
-                participantList.length === 1 &&
-                "grid",
-                participantList.length === 2 &&
-                "grid md:grid-cols-3",
-                participantList.length === 3 &&
-                "grid grid-cols-2 md:grid-cols-3 ",
-                participantList.length >= 4 && "grid grid-cols-2 gap-2 md:grid-cols-4",
-              )}
+                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length === 1 &&
+                " grid justify-center gap-2 md:grid-cols-2 mt-5  ",
+                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length === 2 &&
+                "grid justify-center gap-2 md:grid-cols-2 mt-5",
+                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length === 3 &&
+                "grid grid-cols-2 gap-2 lg:grid-cols-3 ",
+                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length >= 4 && "grid grid-cols-2 gap-2",
+                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length >= 5 && "grid gap-2 md:grid-cols-3",
+                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length >= 7 && "grid gap-2 md:grid-cols-4",
+                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length >= 13 && "grid gap-2 md:grid-cols-5",
+                participantList.filter((eachItem: IParticipant) => eachItem.role == ModeratorRole()).length >= 3 && pinnedParticipant.length > 0 && "md:!grid-cols-4",
+              )} style={{ paddingTop: "1.5rem" }}
             >
-              {displayedParticipants
-
+              {participantList
+                  .filter((eachItem: IParticipant) => eachItem.role == ModeratorRole())
+                // pick only 5 participant
+                // .filter(
+                //   (participant: IParticipant, index: number) => {
+                //     if (pinnedParticipant.length > 0) {
+                //       return index < 5
+                //     } else {
+                //       return participant
+                //     }
+                //   },
+                // )
                 .map(
                   (participant: IParticipant, index: number) => (
                     <SingleCameraComponent

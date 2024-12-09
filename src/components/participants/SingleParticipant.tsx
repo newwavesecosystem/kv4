@@ -117,7 +117,7 @@ function SingleParticipant({
             className="divide-y divide-a11y/20 border-a11y/20 bg-primary text-a11y shadow-lg"
             >
             {CurrentUserRoleIsModerator(participantList,user) && <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger>
                   <RepeatIcon className="mr-2 h-5 w-5" />
                   Change Role
                 </DropdownMenuSubTrigger>
@@ -129,7 +129,7 @@ function SingleParticipant({
                         return displayActions(item, index);
                       }
 
-                      if (participant.role !== ViewerRole() && item.id === 5) {
+                      if (participant.role !== ViewerRole() && item.id === 5 && participant.intId != user?.meetingDetails?.internalUserID) {
                         return displayActions(item, index);
                       }
 

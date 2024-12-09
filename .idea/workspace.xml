@@ -22,9 +22,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Input validation with notification on Join page">
-      <change afterPath="$PROJECT_DIR$/src/components/breakout/BreakoutRoomService.tsx" afterDir="false" />
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Mute mic before redirecting to breakout room&#10;-Fix breakout room modal showing when joined a breakout room">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/participants/SingleParticipant.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/participants/SingleParticipant.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -167,7 +169,8 @@
       <workItem from="1732521899651" duration="15772000" />
       <workItem from="1732702158453" duration="5000" />
       <workItem from="1732703252129" duration="16983000" />
-      <workItem from="1733406614377" duration="7424000" />
+      <workItem from="1733406614377" duration="9833000" />
+      <workItem from="1733692029504" duration="5142000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -411,7 +414,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732941625290</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="-Mute mic before redirecting to breakout room&#10;-Fix breakout room modal showing when joined a breakout room">
+      <option name="closed" value="true" />
+      <created>1733416442221</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1733416442222</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -446,7 +457,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="testing out caption and translation" />
     <MESSAGE value="Caption is now working" />
     <MESSAGE value="disable AI for now" />
     <MESSAGE value="added message for unsupported speech recognization browser" />
@@ -471,7 +481,8 @@
     <MESSAGE value="-Implement prejoin interface with link url" />
     <MESSAGE value="-Restrict Ecinema to once" />
     <MESSAGE value="-Fix Manage users not working instantly&#10;-Fix Private chat disabling on Public Chat modal" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Fix Manage users not working instantly&#10;-Fix Private chat disabling on Public Chat modal" />
+    <MESSAGE value="-Mute mic before redirecting to breakout room&#10;-Fix breakout room modal showing when joined a breakout room" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Mute mic before redirecting to breakout room&#10;-Fix breakout room modal showing when joined a breakout room" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -513,7 +524,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/server/Websocket.tsx</url>
-          <line>1241</line>
+          <line>1229</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>

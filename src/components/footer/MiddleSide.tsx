@@ -499,7 +499,7 @@ function MiddleSide() {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator className="md:hidden" />
                 <DropdownMenuGroup>
-                    <DropdownMenuItem
+                    {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disablePublicChat) && (<DropdownMenuItem
                         onClick={() => {
                             setChatState(!chatState);
                             setIsNewMessage(false)
@@ -511,7 +511,7 @@ function MiddleSide() {
                         {isNewMessage && (
                             <div className="absolute left-5 top-2 h-2 w-2 animate-pulse rounded-full bg-a11y"></div>
                         )}
-                    </DropdownMenuItem>
+                    </DropdownMenuItem>)}
                     <DropdownMenuItem
                         onClick={() => {
                             // setChatState(!chatState);
@@ -649,14 +649,15 @@ function MiddleSide() {
                     {CurrentUserIsPresenter(participantList, user) && (
                         <DropdownMenuItem
                             onClick={() => {
+                                setManageUserSettings({...manageUserSettings, muteAllUsers: !manageUserSettings.muteAllUsers})
                                 websocketMuteAllParticipants(
                                     user?.meetingDetails?.internalUserID,
                                 );
                             }}
                             className="py-2"
                         >
-                            <MicOffIcon className="mr-2 h-5 w-5" />
-                            <span>Mute All</span>
+                            {manageUserSettings.muteAllUsers ? <MicOnIcon className="mr-2 h-5 w-5" />: <MicOffIcon className="mr-2 h-5 w-5" />}
+                            <span>{manageUserSettings.muteAllUsers ? "UnMute": "Mute"} All</span>
                         </DropdownMenuItem>
                     )}
 
