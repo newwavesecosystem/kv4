@@ -1568,7 +1568,7 @@ const Websocket = () => {
 
     }
     const removetypingUsers = (id:any) =>{
-        console.log('removing typing users' , id);
+        // console.log('removing typing users' , id);
 
         let ishola = chatTypingList;
 

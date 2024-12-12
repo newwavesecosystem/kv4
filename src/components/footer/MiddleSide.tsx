@@ -85,6 +85,12 @@ import {
 } from "~/server/KurentoScreenshare";
 import {CurrentUserIsPresenter, CurrentUserRoleIsModerator, ModeratorRole} from "~/lib/checkFunctions";
 import {Tooltip, TooltipTrigger, TooltipContent, TooltipProvider} from "~/components/ui/tooltip";
+import MicOnIcon1gov from "~/components/icon/outline/MicOnIcon1gov";
+import MicOffIcon1gov from "~/components/icon/outline/MicOffIcon1gov";
+import VideoOffIcon1gov from "~/components/icon/outline/VideoOffIcon1gov";
+import VideoOnIcon1gov from "~/components/icon/outline/VideoOnIcon1gov";
+import ShareScreenOffIcon1gov from "~/components/icon/outline/ShareScreenOffIcon1gov";
+import ShareScreenOnIcon1gov from "~/components/icon/outline/ShareScreenOnIcon1gov";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
@@ -161,7 +167,7 @@ function MiddleSide() {
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <div className="flex items-center gap-1 rounded-3xl border border-onegov/40 bg-[#DF2622] p-2 md:hidden">
+                    <div className="flex items-center gap-1 rounded border bg-[#DF2622] p-2 md:hidden">
                         <button
                             onClick={() => {
                                 setRoomCallModal(true);
@@ -228,8 +234,8 @@ function MiddleSide() {
                 <TooltipTrigger asChild>
                     <button
                         className={cn(
-                            "rounded-full p-2",
-                            !micState ? "border border-a11y/20 bg-transparent" : "bg-konn3ct-red",
+                            "rounded p-2",
+                            !micState ? "border border-[#545250]" : "border border-[#545250]",
                         )}
                         onClick={async () => {
                             // setMicState(!micState);
@@ -237,9 +243,9 @@ function MiddleSide() {
                         }}
                     >
                         {!micState ? (
-                            <MicOnIcon className="h-6 w-6 "/>
+                            <MicOnIcon1gov className="h-6 w-6 "/>
                         ) : (
-                            <MicOffIcon muted={true} className="h-6 w-6 "/>
+                            <MicOffIcon1gov className="h-6 w-6 "/>
                         )}
                     </button>
                 </TooltipTrigger>
@@ -254,8 +260,8 @@ function MiddleSide() {
                 <TooltipTrigger asChild>
                     {(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disableCam) && (<button
                         className={cn(
-                            "rounded-full p-2",
-                            videoState ? "border border-a11y/20 bg-transparent" : "bg-konn3ct-red",
+                            "rounded p-2",
+                            videoState ? "border border-[#545250]" : "border border-[#545250]",
                         )}
                         onClick={async () => {
                             if (videoState) {
@@ -327,9 +333,9 @@ function MiddleSide() {
                 }}
             >
               {videoState ? (
-                  <VideoOnIcon className="h-6 w-6 " />
+                  <VideoOnIcon1gov className="h-6 w-6 " />
               ) : (
-                  <VideoOffIcon className="h-6 w-6 " />
+                  <VideoOffIcon1gov className="h-6 w-6 " />
               )}
             </button>)}
           </TooltipTrigger>
@@ -347,10 +353,10 @@ function MiddleSide() {
             {CurrentUserIsPresenter(participantList, user) && (
                 <button
                     className={cn(
-                        "rounded-full p-2",
+                        "rounded p-2",
                         screenShareState
-                            ? "border border-a11y/20 bg-transparent"
-                            : "bg-konn3ct-red",
+                            ? "border border-[#545250]"
+                            : "border border-[#545250]",
                     )}
                     onClick={async () => {
                       if (screenShareState && screenSharingStream) {
@@ -392,9 +398,9 @@ function MiddleSide() {
                     }}
                 >
                   {screenShareState ? (
-                      <ShareScreenOnIcon className="h-6 w-6 " />
+                      <ShareScreenOnIcon1gov className="h-6 w-6 " />
                   ) : (
-                      <ShareScreenOffIcon className="h-6 w-6 " />
+                      <ShareScreenOffIcon1gov className="h-6 w-6 " />
                   )}
                 </button>
             )}
@@ -410,7 +416,7 @@ function MiddleSide() {
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <DropdownMenuTrigger asChild>
-                                <button className="items-center rounded-full border border-a11y/20 bg-transparent p-2">
+                                <button className="items-center rounded border border-[#545250] bg-transparent p-2">
                                     <EllipsisIcon className="h-6 w-6"/>
                                 </button>
                             </DropdownMenuTrigger>
@@ -737,7 +743,7 @@ function MiddleSide() {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="hidden items-center gap-1 rounded-3xl border border-a11y/40 bg-[#DF2622] p-2 md:flex">
+            <div className="hidden items-center gap-1 rounded border bg-[#DF2622] p-2 md:flex">
               <button
                   onClick={() => {
                     setRoomCallModal(true);

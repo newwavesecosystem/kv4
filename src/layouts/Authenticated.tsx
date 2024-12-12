@@ -75,6 +75,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import EllipsisIcon from "~/components/icon/outline/EllipsisIcon";
 import ExitIcon from "~/components/icon/outline/ExitIcon";
+import HandOnIcon1gov from "~/components/icon/outline/HandOnIcon1gov";
 
 
 function Authenticated({ children }: { children: React.ReactNode }) {
@@ -265,7 +266,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                 });
               }
             }}
-            className="items-center rounded-full border border-a11y/20 p-2 md:hidden"
+            className="items-center rounded border border-[#545250] p-2 md:hidden"
           >
             <ShareIcon className="h-6 w-6" />
           </button>
@@ -315,7 +316,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                       : 3,
                 }));
               }}
-              className="flex items-center rounded-3xl border bg-a11y/20 p-2 text-xs text-a11y md:hidden"
+              className="flex items-center rounded border border-[#545250] p-2 text-xs text-a11y md:hidden"
             >
               <MoneyIcon className="h-6 w-6 pt-1" />
               <span>Donation</span>
@@ -465,7 +466,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                         });
                       }
                     }}
-                    className="items-center rounded-full border border-a11y/20 p-2"
+                    className="items-center rounded border border-[#545250] p-2"
                 >
                   <ShareIcon className="h-6 w-6"/>
                 </button>
@@ -495,7 +496,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                             step: 1,
                           }));
                         }}
-                        className="items-center rounded-full border border-a11y/20 p-2"
+                        className="items-center rounded border border-[#545250] p-2"
                     >
                       <MovieColoredIcon className="h-6 w-6"/>
                     </button>
@@ -600,7 +601,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                       websocketRaiseHand(raiseH);
                     }}
                     className={cn(
-                        "items-center rounded-full border border-a11y/20 bg-transparent p-2",
+                        "items-center rounded border border-[#545250] bg-transparent p-2",
                         participantList.filter(
                             (item: IParticipant) =>
                                 item.intId == user?.meetingDetails?.internalUserID,
@@ -648,7 +649,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
                       setChatState(!chatState);
                       setIsNewMessage(false);
                     }}
-                    className="relative items-center rounded-full border border-a11y/20 bg-transparent p-2"
+                    className="relative items-center rounded border border-[#545250] bg-transparent p-2"
                 >
                   <ChatIcon className="h-6 w-6"/>
                   {isNewMessage && (
