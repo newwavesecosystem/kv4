@@ -805,7 +805,7 @@ function PostSignIn() {
           {user?.sessiontoken != '' && <Websocket/>}
           <KurentoAudio/>
           <KurentoVideo/>
-          {user?.meetingDetails?.meetingID != null && <SocketIOCaption/>}
+          {/*{user?.meetingDetails?.meetingID != null && <SocketIOCaption/>}*/}
           {participantCameraList.length > 0 && <KurentoVideoSingleStick/>}
           {/*{participantCameraList.filter((eachItem: any) => eachItem?.intId != user?.meetingDetails?.internalUserID).map((cItem: IParticipantCamera, index: number) => {*/}
           {/*    return <KurentoVideoViewer key={index} streamID={cItem?.streamID}/>*/}

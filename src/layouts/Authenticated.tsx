@@ -115,7 +115,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
   const [appToggle, setAppToggles] = useState({appsToggle:[], adminUI: {
       "name": "1Gov Admin",
-      "url": "https://govsupport.convergenceondemand.com/admin/tenant"
+      "url": `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/admin/tenant`
     } });
 
 
@@ -203,7 +203,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
             <Tooltip>
               <TooltipTrigger asChild>
                 {user?.meetingDetails?.customLogoURL != null && user?.meetingDetails?.customLogoURL != "" &&
-                    <Image
+                    <img
                         src={user?.meetingDetails?.customLogoURL}
                         alt="logo"
                         width={60}
