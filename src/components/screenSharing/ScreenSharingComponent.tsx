@@ -39,8 +39,26 @@ function ScreenSharingComponent() {
     }
   }, []);
 
+    const handleFullscreen = () => {
+        if (videoRef.current) {
+            if (!document.fullscreenElement) {
+                videoRef.current.requestFullscreen().catch(err => {
+                    console.error("Fullscreen request failed:", err);
+                    alert("Fullscreen is not supported or was blocked.");
+                });
+                // setIsFullScreen(true);
+            } else if (document.exitFullscreen) {
+                document.exitFullscreen();
+                // setIsFullScreen(false);
+            }
+        } else {
+            console.error("Video element not found");
+        }
+    };
 
-  return (
+
+
+    return (
       <div
           className={cn(
               " m-auto h-[calc(100svh-128px)] max-w-2xl p-4 xl:max-w-6xl 2xl:max-w-none",
@@ -96,9 +114,10 @@ function ScreenSharingComponent() {
 
                   <div className="absolute right-7 top-7 ">
                       <button
-                          onClick={() => {
-                              document.getElementById("screenSharePlay")?.requestFullscreen();
-                          }}
+                          onClick={handleFullscreen}
+                          // onClick={() => {
+                          //     document.getElementById("screenSharePlay")?.requestFullscreen();
+                          // }}
                           className="flex items-center gap-2 rounded-md border-2 border-a11y/20 bg-primary/20 px-3 py-2 text-sm backdrop-blur-3xl"
                       >
                           <ExpandIcon className="h-5 w-5"/>
