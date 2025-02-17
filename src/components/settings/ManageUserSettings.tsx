@@ -69,12 +69,12 @@ function ManageUserSettings() {
       </div>
       {CurrentUserRoleIsModerator(participantList, user) ? (<div className="divide-a11y/20 flex flex-col divide-y py-6">
         <div className="flex items-center justify-between py-4">
-          <div className={cn("flex gap-3", !manageUserSettings.muteAllUsers && "opacity-60")}>
+          <div className={cn("flex gap-3", !manageUserSettings.disableMic && "opacity-60")}>
             <MicOffIcon className="h-6 w-6"/>
             <label htmlFor="muteAllUsers">Disable Mic</label>
           </div>
           <Switch
-              checked={manageUserSettings.muteAllUsers}
+              checked={manageUserSettings.disableMic}
               onCheckedChange={(checked) => {
                 setManageUserSettings({...manageUserSettings, disableMic: checked})
                 console.log(manageUserSettings);

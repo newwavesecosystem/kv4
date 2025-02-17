@@ -232,7 +232,7 @@ function MiddleSide() {
                             !micState ? "border border-a11y/20 bg-transparent" : "bg-konn3ct-red",
                         )}
                         onClick={async () => {
-                            if(CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disableMic) {
+                            if(!CurrentUserRoleIsModerator(participantList, user) && manageUserSettings.disableMic) {
                                 toast({
                                     variant: "destructive",
                                     title: "Access Denied",

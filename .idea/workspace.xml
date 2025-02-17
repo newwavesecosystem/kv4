@@ -22,10 +22,12 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Fix the need to refresh to fully join the meeting">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Added Disabling of Pariticipant Microphone">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/KurentoAudio.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoAudio.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,7 +176,8 @@
       <workItem from="1736780479942" duration="26000" />
       <workItem from="1737039626155" duration="2030000" />
       <workItem from="1738313146463" duration="12000" />
-      <workItem from="1739781586716" duration="14139000" />
+      <workItem from="1739781586716" duration="16616000" />
+      <workItem from="1739819623468" duration="1418000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -450,7 +453,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739806662672</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Added Disabling of Pariticipant Microphone">
+      <option name="closed" value="true" />
+      <created>1739808251325</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1739808251325</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -485,8 +496,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fixed blank camera when resharing camera" />
-    <MESSAGE value="-worked on recording, Implement Start &amp; Pause; Change End Recording to Pause Recording&#10;-Fix banner image not to show unless it get value" />
     <MESSAGE value="-Reduced the size of custom logo to fit in the box&#10;-Bring focus on presenter (Minimize icon) on participant list&#10;-Added ui-avatars.com to next.config.mjs" />
     <MESSAGE value="-Worked on Connection status and audio disconnected notification." />
     <MESSAGE value="-Add Full Screen Mode to ECinemaComponent.tsx&#10;-On Group Chat: Sending of HTMl content is not displayed correctly" />
@@ -510,7 +519,9 @@
     <MESSAGE value="Working on Audio Transcribing" />
     <MESSAGE value="Implement waiting room" />
     <MESSAGE value="Fix the need to refresh to fully join the meeting" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix the need to refresh to fully join the meeting" />
+    <MESSAGE value="Added Disabling of Microphone" />
+    <MESSAGE value="Added Disabling of Pariticipant Microphone" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Disabling of Pariticipant Microphone" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -552,7 +563,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/server/Websocket.tsx</url>
-          <line>1233</line>
+          <line>1238</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
