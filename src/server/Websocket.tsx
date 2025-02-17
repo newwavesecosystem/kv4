@@ -244,7 +244,7 @@ const Websocket = () => {
             websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"breakouts\",\"params\":[\"MODERATOR\"]}`])
             websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"guestUser\",\"params\":[\"MODERATOR\"]}`])
             websocketSend([`{\"msg\":\"sub\",\"id\":\"${generateRandomId(17)}\",\"name\":\"annotations\",\"params\":[]}`])
-        }, 1500);
+        }, 500);
     };
 
     const initializeWebSocket = () => {

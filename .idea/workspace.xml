@@ -22,11 +22,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Added Disabling of Pariticipant Microphone">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Modify SingleParticipant.tsx Mic status">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/KurentoAudio.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoAudio.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -177,7 +174,7 @@
       <workItem from="1737039626155" duration="2030000" />
       <workItem from="1738313146463" duration="12000" />
       <workItem from="1739781586716" duration="16616000" />
-      <workItem from="1739819623468" duration="1418000" />
+      <workItem from="1739819623468" duration="5825000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -461,7 +458,23 @@
       <option name="project" value="LOCAL" />
       <updated>1739808251325</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Added Disabling of Pariticipant Microphone &amp; fix refreshing to join">
+      <option name="closed" value="true" />
+      <created>1739821140261</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1739821140261</updated>
+    </task>
+    <task id="LOCAL-00040" summary="-Modify SingleParticipant.tsx Mic status">
+      <option name="closed" value="true" />
+      <created>1739825469768</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1739825469768</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -496,8 +509,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="-Reduced the size of custom logo to fit in the box&#10;-Bring focus on presenter (Minimize icon) on participant list&#10;-Added ui-avatars.com to next.config.mjs" />
-    <MESSAGE value="-Worked on Connection status and audio disconnected notification." />
     <MESSAGE value="-Add Full Screen Mode to ECinemaComponent.tsx&#10;-On Group Chat: Sending of HTMl content is not displayed correctly" />
     <MESSAGE value="-On Mobile: No ismoderator check for Start recording&#10;-Disable recording when not activated for the meeting" />
     <MESSAGE value="-Fix issues on ecinema" />
@@ -521,7 +532,9 @@
     <MESSAGE value="Fix the need to refresh to fully join the meeting" />
     <MESSAGE value="Added Disabling of Microphone" />
     <MESSAGE value="Added Disabling of Pariticipant Microphone" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Disabling of Pariticipant Microphone" />
+    <MESSAGE value="Added Disabling of Pariticipant Microphone &amp; fix refreshing to join" />
+    <MESSAGE value="-Modify SingleParticipant.tsx Mic status" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Modify SingleParticipant.tsx Mic status" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
