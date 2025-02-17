@@ -22,11 +22,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Working on Audio Transcribing">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Fix the need to refresh to fully join the meeting">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/icon/outline/SpinnerIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/icon/outline/SpinnerIcon.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/join/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/join/[id].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +174,7 @@
       <workItem from="1736780479942" duration="26000" />
       <workItem from="1737039626155" duration="2030000" />
       <workItem from="1738313146463" duration="12000" />
-      <workItem from="1739781586716" duration="12114000" />
+      <workItem from="1739781586716" duration="14139000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -435,7 +434,23 @@
       <option name="project" value="LOCAL" />
       <updated>1739794663560</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="Implement waiting room">
+      <option name="closed" value="true" />
+      <created>1739805933240</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1739805933240</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Fix the need to refresh to fully join the meeting">
+      <option name="closed" value="true" />
+      <created>1739806662672</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1739806662672</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -470,8 +485,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="disable AI for now" />
-    <MESSAGE value="added message for unsupported speech recognization browser" />
     <MESSAGE value="fixed blank camera when resharing camera" />
     <MESSAGE value="-worked on recording, Implement Start &amp; Pause; Change End Recording to Pause Recording&#10;-Fix banner image not to show unless it get value" />
     <MESSAGE value="-Reduced the size of custom logo to fit in the box&#10;-Bring focus on presenter (Minimize icon) on participant list&#10;-Added ui-avatars.com to next.config.mjs" />
@@ -495,7 +508,9 @@
     <MESSAGE value="-Fix Manage users not working instantly&#10;-Fix Private chat disabling on Public Chat modal" />
     <MESSAGE value="-Mute mic before redirecting to breakout room&#10;-Fix breakout room modal showing when joined a breakout room" />
     <MESSAGE value="Working on Audio Transcribing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working on Audio Transcribing" />
+    <MESSAGE value="Implement waiting room" />
+    <MESSAGE value="Fix the need to refresh to fully join the meeting" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix the need to refresh to fully join the meeting" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -527,7 +542,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/footer/MiddleSide.tsx</url>
-          <line>626</line>
+          <line>634</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -537,7 +552,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/server/Websocket.tsx</url>
-          <line>1229</line>
+          <line>1233</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
