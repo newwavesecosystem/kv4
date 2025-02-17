@@ -121,7 +121,7 @@ function SingleParticipant({
                   ) : eachItem?.joined && !eachItem?.muted ? (
                       <MicOnIcon key={i} className="h-5 w-5 "/>
                   ) : (
-                      <MicOffIcon muted={false} key={i} className="h-5 w-5 "/>
+                      <MicOffIcon muted={true} key={i} className="h-5 w-5 "/>
                   ),
               )}
         </button>
