@@ -108,7 +108,7 @@ function SingleParticipant({
                     .filter((eachItem: any) => eachItem?.intId == participant.intId)
                     .map((eachItem: any) =>
                         eachItem?.joined && eachItem?.muted
-                            ? "rounded-full border border-konn3ct-red bg-white"
+                            ? "rounded-full border border-konn3ct-red bg-konn3ct-red"
                             : "rounded-full border border-black/20",
                     ),
             )}
