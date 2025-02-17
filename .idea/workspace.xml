@@ -23,11 +23,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Mute mic before redirecting to breakout room&#10;-Fix breakout room modal showing when joined a breakout room">
+      <change afterPath="$PROJECT_DIR$/src/pages/api/whisper.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/participants/SingleParticipant.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/participants/SingleParticipant.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +68,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;samji&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/odeji/WebstormProjects/kv4/src/lib&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/odeji/WebstormProjects/k_dashboard_frontend&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -171,6 +172,12 @@
       <workItem from="1732703252129" duration="16983000" />
       <workItem from="1733406614377" duration="9833000" />
       <workItem from="1733692029504" duration="5142000" />
+      <workItem from="1735389360729" duration="11636000" />
+      <workItem from="1736780380902" duration="17000" />
+      <workItem from="1736780479942" duration="26000" />
+      <workItem from="1737039626155" duration="2030000" />
+      <workItem from="1738313146463" duration="12000" />
+      <workItem from="1739781586716" duration="6602000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
