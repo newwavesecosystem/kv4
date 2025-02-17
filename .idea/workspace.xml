@@ -22,13 +22,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Mute mic before redirecting to breakout room&#10;-Fix breakout room modal showing when joined a breakout room">
-      <change afterPath="$PROJECT_DIR$/src/pages/api/whisper.js" afterDir="false" />
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Working on Audio Transcribing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/icon/outline/SpinnerIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/icon/outline/SpinnerIcon.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/join/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/join/[id].tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -177,7 +175,7 @@
       <workItem from="1736780479942" duration="26000" />
       <workItem from="1737039626155" duration="2030000" />
       <workItem from="1738313146463" duration="12000" />
-      <workItem from="1739781586716" duration="6602000" />
+      <workItem from="1739781586716" duration="12114000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -429,7 +427,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733416442222</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Working on Audio Transcribing">
+      <option name="closed" value="true" />
+      <created>1739794663560</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1739794663560</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -464,7 +470,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Caption is now working" />
     <MESSAGE value="disable AI for now" />
     <MESSAGE value="added message for unsupported speech recognization browser" />
     <MESSAGE value="fixed blank camera when resharing camera" />
@@ -489,7 +494,8 @@
     <MESSAGE value="-Restrict Ecinema to once" />
     <MESSAGE value="-Fix Manage users not working instantly&#10;-Fix Private chat disabling on Public Chat modal" />
     <MESSAGE value="-Mute mic before redirecting to breakout room&#10;-Fix breakout room modal showing when joined a breakout room" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Mute mic before redirecting to breakout room&#10;-Fix breakout room modal showing when joined a breakout room" />
+    <MESSAGE value="Working on Audio Transcribing" />
+    <option name="LAST_COMMIT_MESSAGE" value="Working on Audio Transcribing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -516,7 +522,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/pages/join/[id].tsx</url>
-          <line>165</line>
+          <line>187</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">

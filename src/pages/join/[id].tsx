@@ -70,13 +70,25 @@ function JoinId() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [waitingRoom, setWaitingRoom] = useState(false);
 
+  let sinterval:any=null;
 
   useEffect(() => {
     if(id) {
       validateRoom();
     }
   },[id] );
+
+  useEffect(() => {
+    if(waitingRoom) {
+        sinterval = setInterval(() => {
+            joinRoom();
+        }, 5000);
+        return () => clearInterval(sinterval);
+    }
+  },[waitingRoom] );
+
   const validateRoom=()=>{
     axios.post(`${ServerInfo.joinURL}kv4/validate-meeting`,{
       "name": id
@@ -136,6 +148,8 @@ function JoinId() {
 
               // SetCurrentSessionToken(responseData.data!);
 
+              setWaitingRoom(false);
+
             setUser((prev:IAuthUser|null)=>({
               ...prev!,
               sessiontoken:responseData.data
@@ -144,11 +158,19 @@ function JoinId() {
             // redirect to room
             router.push("/");
           } else {
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: responseData?.message,
-            });
+              if(responseData?.message.toString().includes("Room not started")){
+                  if(!waitingRoom) {
+                      setWaitingRoom(true);
+                  }
+              }else{
+                  setWaitingRoom(false);
+                  toast({
+                      variant: "destructive",
+                      title: "Uh oh! Something went wrong.",
+                      description: responseData?.message,
+                  });
+              }
+
           }
         })
         .catch(function (error) {
@@ -290,7 +312,7 @@ function JoinId() {
                 {/*</button>*/}
               </div>
 
-              <div className="flex w-full gap-4 text-start">
+                {!waitingRoom && (<div className="flex w-full gap-4 text-start">
                 <div className="md:full flex w-[60%] flex-col gap-1">
                   <label className="" htmlFor="fullName">Name</label>
                   <input
@@ -316,8 +338,8 @@ function JoinId() {
                       className=" w-full truncate rounded-md border border-[#5D957E] bg-[#F8F8F8] px-2 py-2 placeholder:text-primary/80  focus:shadow-none focus:outline-none "
                   />
                 </div>
-              </div>
-              <div className="flex w-full gap-4 text-start text-sm">
+              </div>)}
+                {!waitingRoom && (<div className="flex w-full gap-4 text-start text-sm">
                 {/*<div*/}
                 {/*    className={cn(*/}
                 {/*        "flex flex-col gap-1",*/}
@@ -343,16 +365,16 @@ function JoinId() {
                       <input
                           type="text"
                           name="passCode"
-                          placeholder="Passcode"
+                          placeholder="Enter Meeting Access Code here"
                           value={data.passCode}
                           onChange={onChange}
                           className="w-full truncate rounded-md border border-[#5D957E] bg-[#F8F8F8] px-2 py-2 placeholder:text-primary/80  focus:shadow-none focus:outline-none"
                       />
                     </div>
                 )}
-              </div>
-              <div className="flex w-full">
-                <button
+              </div>)}
+                {!waitingRoom && (<div className="flex w-full">
+                  {loading ? <SpinnerIcon coloured={true} className="animate-spin text-center ml-32"/> : <button
                     onClick={() => {
                         if( data.fullName == "") {
                             toast({
@@ -376,9 +398,28 @@ function JoinId() {
                     }}
                     className="items-center gap-2 rounded-md border-2 border-a11y/20 bg-primary text-white font-semibold px-10 py-2 w-full disabled:opacity-40"
                 >
-                  {loading ? <SpinnerIcon className="animate-spin ml-32"/> : "Konn3ct"}
-                </button>
-              </div>
+                      Konn3ct
+                </button>}
+              </div>)}
+
+                {waitingRoom && (<div className="flex w-full gap-4 mt-5 text-center content-center items-center">
+                    <SpinnerIcon coloured={true} className="animate-spin text-center ml-4"/>
+                    <span className="">
+                        Waiting for the Host to start the meeting
+                      </span>
+                </div>)}
+
+                {waitingRoom && (<div className="flex w-full">
+                  {<button
+                    onClick={() => {
+                        setWaitingRoom(false);
+                    }}
+                    className="items-center gap-2 rounded-md border-2 border-a11y/20 bg-red-500 text-white font-semibold px-10 py-2 w-full disabled:opacity-40"
+                >
+                 Cancel
+                </button>}
+              </div>)}
+
             </div>
           </div>
         </div>
