@@ -69,46 +69,46 @@ function ManageUserSettings() {
       </div>
       {CurrentUserRoleIsModerator(participantList, user) ? (<div className="divide-a11y/20 flex flex-col divide-y py-6">
         <div className="flex items-center justify-between py-4">
-          <div className={cn("flex gap-3", !manageUserSettings.muteAllUsers && "opacity-60")}>
+          <div className={cn("flex gap-3", !manageUserSettings.disableMic && "opacity-60")}>
             <MicOffIcon className="h-6 w-6"/>
-            <label htmlFor="muteAllUsers">Mute all users</label>
+            <label htmlFor="muteAllUsers">Disable Mic</label>
           </div>
           <Switch
-              checked={manageUserSettings.muteAllUsers}
+              checked={manageUserSettings.disableMic}
               onCheckedChange={(checked) => {
-                setManageUserSettings({...manageUserSettings, muteAllUsers: checked})
-
-                websocketMuteAllParticipants(user?.meetingDetails?.internalUserID);
+                setManageUserSettings({...manageUserSettings, disableMic: checked})
+                console.log(manageUserSettings);
+                websocketLockViewers({...manageUserSettings, disableMic: checked}, user?.meetingDetails?.internalUserID);
               }}
               id="muteAllUsers"
           />
         </div>
-        <div className="flex items-center justify-between py-4">
-          <div
-              className={cn(
-                  "flex gap-3",
-                  !manageUserSettings.muteAllUsersExceptPresenter && "opacity-60",
-              )}
-          >
-            <PeopleSpeakIcon className="h-6 w-6"/>
-            <label htmlFor="muteAllUsersExceptPresenter">
-              Mute all users except presenter
-            </label>
-          </div>
-          <Switch
-              checked={manageUserSettings.muteAllUsersExceptPresenter}
-              onCheckedChange={(checked) => {
-                setManageUserSettings({...manageUserSettings, muteAllUsersExceptPresenter: checked});
+        {/*<div className="flex items-center justify-between py-4">*/}
+        {/*  <div*/}
+        {/*      className={cn(*/}
+        {/*          "flex gap-3",*/}
+        {/*          !manageUserSettings.muteAllUsersExceptPresenter && "opacity-60",*/}
+        {/*      )}*/}
+        {/*  >*/}
+        {/*    <PeopleSpeakIcon className="h-6 w-6"/>*/}
+        {/*    <label htmlFor="muteAllUsersExceptPresenter">*/}
+        {/*      Mute all users except presenter*/}
+        {/*    </label>*/}
+        {/*  </div>*/}
+        {/*  <Switch*/}
+        {/*      checked={manageUserSettings.muteAllUsersExceptPresenter}*/}
+        {/*      onCheckedChange={(checked) => {*/}
+        {/*        setManageUserSettings({...manageUserSettings, muteAllUsersExceptPresenter: checked});*/}
 
-                if (checked) {
-                  websocketMuteParticipantsePresenter(user?.meetingDetails?.internalUserID);
-                } else {
-                  websocketMuteAllParticipants(user?.meetingDetails?.internalUserID);
-                }
-              }}
-              id="muteAllUsersExceptPresenter"
-          />
-        </div>
+        {/*        if (checked) {*/}
+        {/*          websocketMuteParticipantsePresenter(user?.meetingDetails?.internalUserID);*/}
+        {/*        } else {*/}
+        {/*          websocketMuteAllParticipants(user?.meetingDetails?.internalUserID);*/}
+        {/*        }*/}
+        {/*      }}*/}
+        {/*      id="muteAllUsersExceptPresenter"*/}
+        {/*  />*/}
+        {/*</div>*/}
         <div className="flex items-center justify-between py-4">
           <div className={cn("flex gap-3", !manageUserSettings.disableCam && "opacity-60")}>
             <VideoOnIcon className="h-6 w-6"/>

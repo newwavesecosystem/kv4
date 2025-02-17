@@ -13,6 +13,8 @@ import SpeechRecognition, {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { broadcastCaption } from "~/server/SocketIOCaption";
 import { ScrollArea } from "../ui/scroll-area";
+import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
+import * as process from "process";
 
 function CCModal() {
   const [ccModal, setCCModal] = useRecoilState(ccModalState);
@@ -44,18 +46,123 @@ function CCModal() {
     scrollToBottom() //auto scroll down while streaming cc
   }, [transcriptTranslated, ccModal.caption])
 
-  // When a new transcript is received, add it to the lines array
-  useEffect(() => {
-    console.log("cSocket transcript useEffect ");
-    SpeechRecognition.startListening({ continuous: true });
+    // When a new transcript is received, add it to the lines array
+    useEffect(() => {
+      if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="sp") {
+        console.log("cSocket transcript useEffect ");
+        SpeechRecognition.startListening({continuous: true});
 
-    if (transcript && !micState) {
-      setTimeout(resetTranscript, 30000)
-      broadcastCaption(transcript, user?.meetingDetails);
-      setTranscriptTranslated(`Me: ${transcript}`);
+        if (transcript && !micState) {
+          setTimeout(resetTranscript, 30000)
+          broadcastCaption(transcript, user?.meetingDetails);
+          setTranscriptTranslated(`Me: ${transcript}`);
+        }
+
+        if (!micState) {
+          SpeechRecognition.stopListening();
+        }
+      }
+    }, [transcript]);
+
+
+    useEffect(() => {
+      if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="whisper") {
+        console.log("cSocket transcript useEffect whisper ");
+        startRecording();
+        setTimeout(() => {
+          stopRecording();
+          startRecording();
+        }, 3000)
+      }
+
+    }, []);
+
+  const handleBeforeUnload = (event:any) => {
+    SpeechRecognition.stopListening();
+  };
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+  });
+
+  const [transcription, setTranscription] = useState('');
+
+  const handleAudioData = async (audioBlob:any) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(audioBlob);
+    reader.onloadend = async () => {
+      const base64Audio = reader.result;
+
+      try {
+        const response = await fetch('/api/whisper', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ file: base64Audio }),
+        });
+
+        const data = await response.json();
+        setTranscription(data.text || 'No transcription available.');
+      } catch (error) {
+        console.error('Error:', error);
+        setTranscription('Failed to transcribe.');
+      }
+    };
+  };
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioChunks, setAudioChunks] = useState([]);
+
+  useEffect(() => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert("Your browser doesn't support audio recording.");
+      return;
     }
 
-  }, [transcript]);
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      const recorder = new MediaRecorder(stream);
+      recorder.ondataavailable = (event) => {
+        // setAudioChunks((prev:any[]) => [...prev, event.data]);
+      };
+      setMediaRecorder(recorder);
+    });
+  }, []);
+
+  const startRecording = () => {
+    console.log("cc starting recorder");
+    if (mediaRecorder) {
+      setIsRecording(true);
+      setAudioChunks([]);
+      mediaRecorder.start();
+    }
+  };
+
+  const stopRecording = () => {
+    console.log("cc stopping recorder");
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      setIsRecording(false);
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        handleAudioData(audioBlob); // Send audio data to parent
+      };
+    }
+  };
+
+  const recorderControls = useAudioRecorder()
+  const addAudioElement = (blob:any) => {
+    // const url = URL.createObjectURL(blob);
+    // const audio = document.createElement("audio");
+    // audio.src = url;
+    // audio.controls = true;
+    // document.body.appendChild(audio);
+    handleAudioData(blob);
+  };
+
+
 
   return (
     <>
@@ -69,14 +176,26 @@ function CCModal() {
               <ScrollArea className="h-full px-4">
                 <div ref={CCRef}>
                   {transcriptTranslated}
-                  <br />
+                  <br/>
                   {ccModal.caption}
+                  {transcription}
+                  {/*<button onClick={startRecording} disabled={isRecording}>*/}
+                  {/*  Start Recording*/}
+                  {/*</button>*/}
+                  {/*<button onClick={stopRecording} disabled={!isRecording}>*/}
+                  {/*  Stop Recording*/}
+                  {/*</button>*/}
+                  <AudioRecorder
+                      onRecordingComplete={(blob) => addAudioElement(blob)}
+                      recorderControls={recorderControls}
+                  />
+                  <button onClick={recorderControls.stopRecording}>Stop recording</button>
                 </div>
               </ScrollArea>
 
               <div className="flex h-full flex-col items-center divide-y divide-a11y border-l-2 border-a11y/70">
                 <button
-                  onClick={() => {
+                    onClick={() => {
                     setCCModal((prev) => ({
                       ...prev,
                       step: 0,

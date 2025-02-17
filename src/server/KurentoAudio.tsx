@@ -275,6 +275,13 @@ const KurentoAudio = () => {
                             ...prev,
                             audio_connection:false
                         }))
+
+                        if(parsedMessage.message == "SFU_UNAUTHORIZED"){
+                            setTimeout(() => {
+                                startProcess();
+                            }, 5000);
+
+                        }
                         break;
                     case 'iceCandidate':
                         console.log("iceCandidate");

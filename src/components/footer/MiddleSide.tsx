@@ -238,7 +238,15 @@ function MiddleSide() {
                             !micState ? "border border-[#545250]" : "border border-[#545250]",
                         )}
                         onClick={async () => {
-                            // setMicState(!micState);
+                            if(!CurrentUserRoleIsModerator(participantList, user) && manageUserSettings.disableMic) {
+                                toast({
+                                    variant: "destructive",
+                                    title: "Access Denied",
+                                    description: `Your Microphone has been disabled by the Moderator.`,
+                                });
+
+                                return;
+                            }
                             websocketMuteMic();
                         }}
                     >
