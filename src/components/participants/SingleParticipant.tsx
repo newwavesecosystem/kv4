@@ -36,6 +36,8 @@ import {IParticipant, IVoiceUser} from "~/types";
 import {CurrentUserRoleIsModerator, FindAvatarfromUserId, ModeratorRole, ViewerRole} from "~/lib/checkFunctions";
 import Image from "next/image";
 import HandOnIcon from "~/components/icon/outline/HandOnIcon";
+import VolumeOffIcon from "~/components/icon/outline/VolumeOffIcon";
+import {cn} from "~/lib/utils";
 
 function SingleParticipant({
   participant,
@@ -96,134 +98,156 @@ function SingleParticipant({
       {participant.id != user?.id.toString() && <div className=" flex items-center gap-2">
 
         <button>
-          {participant.raiseHand && <HandOnIcon className="h-6 w-6" />}
+          {participant.raiseHand && <HandOnIcon className="h-6 w-6"/>}
         </button>
 
-        <button>
-          {talkingList.map((eachItem:any) => (
-              eachItem?.intId == participant.intId && eachItem?.joined ? (eachItem?.muted ? <MicOffIcon className="h-6 w-6" /> :
-                <MicOnIcon className="h-6 w-6" />): null
-          ))}
+        <button
+            className={cn(
+                "p-1 z-10",
+                talkingList
+                    .filter((eachItem: any) => eachItem?.intId == participant.intId)
+                    .map((eachItem: any) =>
+                        eachItem?.joined && eachItem?.muted
+                            ? "rounded-full border border-konn3ct-red bg-white"
+                            : "rounded-full border border-black/20",
+                    ),
+            )}
+        >
+          {talkingList
+              .filter((eachItem: any, index: number) => eachItem?.intId == participant.intId)
+              .map((eachItem: any,i:number) =>
+                  !eachItem?.joined ? (
+                      <VolumeOffIcon key={i} className="h-5 w-5 "/>
+                  ) : eachItem?.joined && !eachItem?.muted ? (
+                      <MicOnIcon key={i} className="h-5 w-5 "/>
+                  ) : (
+                      <MicOffIcon muted={true} key={i} className="h-5 w-5 "/>
+                  ),
+              )}
         </button>
 
         <DropdownMenu open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger asChild>
             <button>
-              <EllipsisIcon className="h-6 w-6 " />
+              <EllipsisIcon className="h-6 w-6 "/>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            align="end"
-            className="divide-y divide-a11y/20 border-a11y/20 bg-primary text-a11y shadow-lg"
-            >
-            {CurrentUserRoleIsModerator(participantList,user) && <DropdownMenuSub>
+              align="end"
+              className="divide-y divide-a11y/20 border-a11y/20 bg-primary text-a11y shadow-lg"
+          >
+            {CurrentUserRoleIsModerator(participantList, user) && <DropdownMenuSub>
               <DropdownMenuSubTrigger>
-                  <RepeatIcon className="mr-2 h-5 w-5" />
-                  Change Role
-                </DropdownMenuSubTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuSubContent className="divide-y divide-a11y/20 border border-a11y/20 bg-primary text-a11y shadow-2xl">
-                    {userRolesData.map((item: any, index: number) => {
+                <RepeatIcon className="mr-2 h-5 w-5"/>
+                Change Role
+              </DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent
+                    className="divide-y divide-a11y/20 border border-a11y/20 bg-primary text-a11y shadow-2xl">
+                  {userRolesData.map((item: any, index: number) => {
 
-                      if (participant.role !== ModeratorRole() && item.id === 1) {
-                        return displayActions(item, index);
+                    if (participant.role !== ModeratorRole() && item.id === 1) {
+                      return displayActions(item, index);
+                    }
+
+                    if (participant.role !== ViewerRole() && item.id === 5 && participant.intId != user?.meetingDetails?.internalUserID) {
+                      return displayActions(item, index);
+                    }
+
+                    if (!participant.presenter && item.id === 4) {
+                      return displayActions(item, index);
+                    }
+
+                    // Make sure to handle the case where neither condition is met
+                    return null;
+                  })}
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
+            </DropdownMenuSub>}
+
+            {CurrentUserRoleIsModerator(participantList, user) && talkingList.filter((eachItem: IVoiceUser) =>
+                eachItem?.intId == participant.intId && eachItem?.joined && !eachItem?.muted).length > 0 && (
+                <DropdownMenuItem className="py-4" onClick={() => {
+                  websocketMuteParticipants(participant.userId);
+                }}>
+                  <VolumeOnIcon volume={1} className="mr-2 h-5 w-5"/>
+                  Mute User
+                </DropdownMenuItem>)}
+
+            {user?.meetingDetails?.internalUserID == participant.intId ? null : (CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disablePrivateChat) && (
+                <DropdownMenuItem
+                    onClick={() => {
+                      if (!user) return;
+
+                      console.log("Private Chat: searching in privateChatState.users", privateChatState.users)
+
+                      if (privateChatState.users.filter((item) => item.id == participant.intId).length > 0) {
+                        console.log("Private Chat: searching in privateChatState.chatRooms", privateChatState.chatRooms)
+                        privateChatState.chatRooms.map((citem) => {
+                          citem.participants.map((ccitem) => {
+                            if (ccitem.id == participant.intId) {
+                              setPrivateChatState((prev) => ({
+                                ...prev,
+                                isActive: true,
+                                id: citem.chatId,
+                              }));
+
+                              return;
+                            }
+                          });
+                        });
+
+                        return;
                       }
 
-                      if (participant.role !== ViewerRole() && item.id === 5 && participant.intId != user?.meetingDetails?.internalUserID) {
-                        return displayActions(item, index);
-                      }
-
-                      if (!participant.presenter && item.id === 4) {
-                        return displayActions(item, index);
-                      }
-
-                      // Make sure to handle the case where neither condition is met
-                      return null;
-                    })}
-                  </DropdownMenuSubContent>
-                </DropdownMenuPortal>
-              </DropdownMenuSub>}
-
-            {CurrentUserRoleIsModerator(participantList,user) && talkingList.filter((eachItem:IVoiceUser) =>
-                eachItem?.intId == participant.intId  && eachItem?.joined && !eachItem?.muted).length > 0 && (<DropdownMenuItem className="py-4" onClick={()=>{
-                websocketMuteParticipants(participant.userId);
-              }}>
-                <VolumeOnIcon volume={1} className="mr-2 h-5 w-5" />
-                Mute User
-              </DropdownMenuItem>)}
-
-            {user?.meetingDetails?.internalUserID == participant.intId ? null : (CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.disablePrivateChat) && (<DropdownMenuItem
-                onClick={() => {
-                  if (!user) return;
-
-                  console.log("Private Chat: searching in privateChatState.users",privateChatState.users)
-
-                  if(privateChatState.users.filter((item)=> item.id == participant.intId).length > 0){
-                    console.log("Private Chat: searching in privateChatState.chatRooms",privateChatState.chatRooms)
-                    privateChatState.chatRooms.map((citem)=>{
-                      citem.participants.map((ccitem)=>{
-                        if(ccitem.id == participant.intId){
-                          setPrivateChatState((prev)=>({
-                            ...prev,
-                            isActive: true,
-                            id: citem.chatId,
-                          }));
-
-                          return;
-                        }
+                      console.log("Private Chat: starting a new chat")
+                      websocketStartPrivateChat(participant);
+                      setPrivateChatState({
+                        ...privateChatState,
+                        // isActive: !privateChatState.isActive,
+                        users: [
+                          // {
+                          //   email: user.email,
+                          //   fullName: user.fullName,
+                          //   id: user.id,
+                          // },
+                          ...privateChatState.users,
+                          {
+                            email: participant.extId,
+                            fullName: participant.name,
+                            id: participant.intId,
+                          },
+                        ],
+                        isActive: true,
                       });
-                    });
+                    }}
+                    className="py-4"
+                >
+                  <ChatIcon className="mr-2 h-5 w-5"/>
+                  Private Chat
+                </DropdownMenuItem>)}
 
-                    return;
-                  }
+            {user?.meetingDetails?.internalUserID == participant.intId ? null : CurrentUserRoleIsModerator(participantList, user) &&
+                <DropdownMenuItem
+                    onClick={() => {
+                      setRemoveParticipant({
+                        ...removeParticipant,
+                        isActive: !removeParticipant.isActive,
+                        userId: participant.intId,
+                        userFullName: participant.name,
+                      });
+                    }}
+                    className="py-4"
+                >
+                  <PeopleRemove className="mr-2 h-5 w-5"/>
+                  Remove User
+                </DropdownMenuItem>}
 
-                  console.log("Private Chat: starting a new chat")
-                  websocketStartPrivateChat(participant);
-                  setPrivateChatState({
-                    ...privateChatState,
-                    // isActive: !privateChatState.isActive,
-                    users: [
-                      // {
-                      //   email: user.email,
-                      //   fullName: user.fullName,
-                      //   id: user.id,
-                      // },
-                        ...privateChatState.users,
-                      {
-                        email: participant.extId,
-                        fullName: participant.name,
-                        id: participant.intId,
-                      },
-                    ],
-                    isActive: true,
-                  });
-                }}
-                className="py-4"
-              >
-                <ChatIcon className="mr-2 h-5 w-5" />
-                Private Chat
-              </DropdownMenuItem>)}
-
-            {user?.meetingDetails?.internalUserID == participant.intId ? null : CurrentUserRoleIsModerator(participantList,user) && <DropdownMenuItem
-                onClick={() => {
-                  setRemoveParticipant({
-                    ...removeParticipant,
-                    isActive: !removeParticipant.isActive,
-                    userId: participant.intId,
-                    userFullName: participant.name,
-                  });
-                }}
-                className="py-4"
-              >
-                <PeopleRemove className="mr-2 h-5 w-5" />
-                Remove User
-              </DropdownMenuItem>}
-
-            </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
 
-        </div>}
+      </div>}
     </div>
   );
 }
