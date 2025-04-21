@@ -31,7 +31,7 @@ import PeoplesIcon from "~/components/icon/outline/PeoplesIcon";
 import PeopleAppointmentIcon from "~/components/icon/outline/PeopleAppointmentIcon";
 import PeopleSpeakIcon from "~/components/icon/outline/PeopleSpeakIcon";
 import {CurrentUserRoleIsModerator, ModeratorRole} from "~/lib/checkFunctions";
-import {websocketPresenter} from "~/server/Websocket";
+import {websocketPinUser, websocketPresenter} from "~/server/Websocket";
 import playAndRetry from "~/lib/mediaElementPlayRetry";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "~/components/ui/tooltip";
 
@@ -233,17 +233,20 @@ function SingleCameraComponent({
                 align="end"
                 className="border-0 bg-primary text-a11y"
             >
-              <DropdownMenuItem
+              {CurrentUserRoleIsModerator(participantList, user) && userCamera != null && (<DropdownMenuItem
                   onClick={() => {
-                    if (pinnedParticipant.length > 0) {
-                      setPinnedParticipant(
-                          pinnedParticipant.filter(
-                              (eachItem: any) => eachItem?.intId != participant.intId,
-                          ),
-                      );
-                    } else {
-                      setPinnedParticipant([participant]);
-                    }
+                    websocketPinUser(participant.intId,pinnedParticipant.filter(
+                        (eachItem: any) => eachItem?.intId == participant.intId,
+                    ).length > 0)
+                    // if (pinnedParticipant.length > 0) {
+                    //   setPinnedParticipant(
+                    //       pinnedParticipant.filter(
+                    //           (eachItem: any) => eachItem?.intId != participant.intId,
+                    //       ),
+                    //   );
+                    // } else {
+                    //   setPinnedParticipant([participant]);
+                    // }
                   }}
                   className="py-2"
               >
@@ -253,12 +256,13 @@ function SingleCameraComponent({
                 ).length > 0
                     ? "Unpin to screen"
                     : "Pin to screen"}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator className="h-0.5"/>
+              </DropdownMenuItem>)}
               <DropdownMenuItem onClick={toggleMirror} className="py-2">
                 <VideoConfOffIcon className="mr-2 h-5 w-5"/>
                 {isMirrored ? "Remove Mirror" : "Mirror"}
               </DropdownMenuItem>
+
+              <DropdownMenuSeparator className="h-0.5"/>
 
               {CurrentUserRoleIsModerator(participantList, user) && !participant.presenter && (
                   <DropdownMenuItem onClick={() => {

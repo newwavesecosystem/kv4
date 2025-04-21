@@ -22,8 +22,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Modify SingleParticipant.tsx Mic status">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Modify Icon issue on SingleParticipant.tsx">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/camera/ParticipantsCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/ParticipantsCameraComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -175,6 +178,10 @@
       <workItem from="1738313146463" duration="12000" />
       <workItem from="1739781586716" duration="16616000" />
       <workItem from="1739819623468" duration="5825000" />
+      <workItem from="1740594125308" duration="1259000" />
+      <workItem from="1742474205976" duration="596000" />
+      <workItem from="1744653930792" duration="596000" />
+      <workItem from="1745219418561" duration="10845000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -573,11 +580,6 @@
           <url>file://$PROJECT_DIR$/src/components/breakout/BreakOutModalCreate.tsx</url>
           <line>104</line>
           <option name="timeStamp" value="23" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/server/Websocket.tsx</url>
-          <line>1238</line>
-          <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
