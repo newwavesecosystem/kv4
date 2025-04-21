@@ -1021,6 +1021,10 @@ const Websocket = () => {
             }
 
             if (voiceProp != null) {
+                setManageUserSettings((prev)=>({
+                    ...prev,
+                    muteAllUsers: voiceProp.muteOnStart,
+                }));
                 if (voiceProp.muteOnStart) {
                     setMicState(voiceProp.muteOnStart);
                 }
@@ -1048,6 +1052,10 @@ const Websocket = () => {
             }
 
             if (voiceProp != null) {
+                setManageUserSettings((prev)=>({
+                    ...prev,
+                    muteAllUsers: voiceProp.muteOnStart,
+                }));
                 if (!voiceProp.muteOnStart) {
                     setMicState(voiceProp.muteOnStart);
                 }

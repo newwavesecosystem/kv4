@@ -654,7 +654,7 @@ function MiddleSide() {
                         </DropdownMenuItem>
                     )}
 
-                    {CurrentUserIsPresenter(participantList, user) && (
+                    {CurrentUserRoleIsModerator(participantList, user) && (
                         <DropdownMenuItem
                             onClick={() => {
                                 setManageUserSettings({...manageUserSettings, muteAllUsers: !manageUserSettings.muteAllUsers})

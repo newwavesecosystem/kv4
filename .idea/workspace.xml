@@ -22,11 +22,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Modify Icon issue on SingleParticipant.tsx">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Worked on Pinning to screen to be global&#10;-Worked on Displaying pinned participants first before others&#10;-You can only pin user if the video cam of the user is on and you are a moderator">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/camera/ParticipantsCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/ParticipantsCameraComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -181,7 +181,7 @@
       <workItem from="1740594125308" duration="1259000" />
       <workItem from="1742474205976" duration="596000" />
       <workItem from="1744653930792" duration="596000" />
-      <workItem from="1745219418561" duration="10845000" />
+      <workItem from="1745219418561" duration="13158000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -481,7 +481,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739825469768</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="-Worked on Pinning to screen to be global&#10;-Worked on Displaying pinned participants first before others&#10;-You can only pin user if the video cam of the user is on and you are a moderator">
+      <option name="closed" value="true" />
+      <created>1745263553669</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1745263553669</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -516,8 +524,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="-Add Full Screen Mode to ECinemaComponent.tsx&#10;-On Group Chat: Sending of HTMl content is not displayed correctly" />
-    <MESSAGE value="-On Mobile: No ismoderator check for Start recording&#10;-Disable recording when not activated for the meeting" />
     <MESSAGE value="-Fix issues on ecinema" />
     <MESSAGE value="Finish work on screen sharing implementation" />
     <MESSAGE value="-Added Go full screen to screen sharing&#10;-Fix screenSharing issue on participant end" />
@@ -541,7 +547,9 @@
     <MESSAGE value="Added Disabling of Pariticipant Microphone" />
     <MESSAGE value="Added Disabling of Pariticipant Microphone &amp; fix refreshing to join" />
     <MESSAGE value="-Modify SingleParticipant.tsx Mic status" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Modify SingleParticipant.tsx Mic status" />
+    <MESSAGE value="Worked on Pinning to screen to be global&#10;Worked on Displaying pinned participants first before others" />
+    <MESSAGE value="-Worked on Pinning to screen to be global&#10;-Worked on Displaying pinned participants first before others&#10;-You can only pin user if the video cam of the user is on and you are a moderator" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Worked on Pinning to screen to be global&#10;-Worked on Displaying pinned participants first before others&#10;-You can only pin user if the video cam of the user is on and you are a moderator" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

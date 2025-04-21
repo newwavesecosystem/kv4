@@ -376,10 +376,10 @@ function PostSignIn() {
   // end pagination logic
 
   useEffect(() => {
-    setPageSize(layoutSettings.maxTiles[0]);
+    setPageSize(layoutSettings.maxTiles[0]??4);
     setTotalPages(Math.ceil((participantList.length - pinnedParticipant.length) / pageSize));
 
-    const filteredParticipants = participantList.filter(participant => {
+    const filteredParticipants = participantList.filter((participant:IParticipant)=> {
       // Check if the participant's ID is not pinned
       if(pinnedParticipant.filter((p) => p.intId == participant.intId).length == 0){
         return participant;

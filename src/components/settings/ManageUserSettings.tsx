@@ -71,7 +71,7 @@ function ManageUserSettings() {
         <div className="flex items-center justify-between py-4">
           <div className={cn("flex gap-3", !manageUserSettings.disableMic && "opacity-60")}>
             <MicOffIcon className="h-6 w-6"/>
-            <label htmlFor="muteAllUsers">Disable Mic</label>
+            <label htmlFor="disableMic">Disable Mic</label>
           </div>
           <Switch
               checked={manageUserSettings.disableMic}
@@ -80,7 +80,7 @@ function ManageUserSettings() {
                 console.log(manageUserSettings);
                 websocketLockViewers({...manageUserSettings, disableMic: checked}, user?.meetingDetails?.internalUserID);
               }}
-              id="muteAllUsers"
+              id="disableMic"
           />
         </div>
         {/*<div className="flex items-center justify-between py-4">*/}
