@@ -660,20 +660,20 @@ function MiddleSide() {
                         </DropdownMenuItem>
                     )}
 
-                    {/*{CurrentUserIsPresenter(participantList, user) && (*/}
-                    {/*    <DropdownMenuItem*/}
-                    {/*        onClick={() => {*/}
-                    {/*            setManageUserSettings({...manageUserSettings, muteAllUsers: !manageUserSettings.muteAllUsers})*/}
-                    {/*            websocketMuteAllParticipants(*/}
-                    {/*                user?.meetingDetails?.internalUserID,*/}
-                    {/*            );*/}
-                    {/*        }}*/}
-                    {/*        className="py-2"*/}
-                    {/*    >*/}
-                    {/*        {manageUserSettings.muteAllUsers ? <MicOnIcon className="mr-2 h-5 w-5" />: <MicOffIcon className="mr-2 h-5 w-5" />}*/}
-                    {/*        <span>{manageUserSettings.muteAllUsers ? "UnMute": "Mute"} All</span>*/}
-                    {/*    </DropdownMenuItem>*/}
-                    {/*)}*/}
+                    {CurrentUserRoleIsModerator(participantList, user) && (
+                        <DropdownMenuItem
+                            onClick={() => {
+                                setManageUserSettings({...manageUserSettings, muteAllUsers: !manageUserSettings.muteAllUsers})
+                                websocketMuteAllParticipants(
+                                    user?.meetingDetails?.internalUserID,
+                                );
+                            }}
+                            className="py-2"
+                        >
+                            {manageUserSettings.muteAllUsers ? <MicOnIcon className="mr-2 h-5 w-5" />: <MicOffIcon className="mr-2 h-5 w-5" />}
+                            <span>{manageUserSettings.muteAllUsers ? "UnMute": "Mute"} All</span>
+                        </DropdownMenuItem>
+                    )}
 
                     {CurrentUserIsPresenter(participantList, user) && (
                         <DropdownMenuItem

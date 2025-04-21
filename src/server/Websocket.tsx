@@ -18,7 +18,7 @@ import {
     newMessage, newRaiseHand, notificationSettingsState,
     participantCameraListState,
     participantListState,
-    participantTalkingListState,
+    participantTalkingListState, pinnedUsersState,
     pollModalState, postLeaveMeetingState,
     presentationSlideState, privateChatModalState,
     recordingModalState, screenSharingState,
@@ -114,6 +114,7 @@ const Websocket = () => {
     const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(
         postLeaveMeetingState,
     );
+    const [pinnedParticipant, setPinnedParticipant] = useRecoilState(pinnedUsersState);
     const [microphoneStream, setMicrophoneStream] = useRecoilState(
         microphoneStreamState,
     );
@@ -535,7 +536,7 @@ const Websocket = () => {
         }
 
         if (msg == 'changed') {
-            const {presenter, role, raiseHand} = fields;
+            const {presenter, role, raiseHand, pin} = fields;
 
             if(presenter != null){
                 console.log("UserState: handling presenter change",obj);
@@ -550,6 +551,11 @@ const Websocket = () => {
             if(raiseHand != null){
                 console.log("UserState: handling raiseHand change",obj);
                 modifyRaiseHandStateUser(id,raiseHand)
+            }
+
+            if(pin != null){
+                console.log("UserState: handling pin change",obj);
+                modifyPinStateUser(id,pin)
             }
         }
 
@@ -1015,6 +1021,10 @@ const Websocket = () => {
             }
 
             if (voiceProp != null) {
+                setManageUserSettings((prev)=>({
+                    ...prev,
+                    muteAllUsers: voiceProp.muteOnStart,
+                }));
                 if (voiceProp.muteOnStart) {
                     setMicState(voiceProp.muteOnStart);
                 }
@@ -1042,6 +1052,10 @@ const Websocket = () => {
             }
 
             if (voiceProp != null) {
+                setManageUserSettings((prev)=>({
+                    ...prev,
+                    muteAllUsers: voiceProp.muteOnStart,
+                }));
                 if (!voiceProp.muteOnStart) {
                     setMicState(voiceProp.muteOnStart);
                 }
@@ -1429,6 +1443,32 @@ const Websocket = () => {
         setParticipantList(updatedArray)
     }
 
+    const modifyPinStateUser = (id:any, pin:boolean) => {
+
+        const updatedArray = participantList?.map((item:IParticipant) => {
+            if (item.id === id) {
+                if (pinnedParticipant.length > 0) {
+                    setPinnedParticipant(
+                        pinnedParticipant.filter(
+                            (eachItem: any) => eachItem?.intId != item.intId,
+                        ),
+                    );
+                } else {
+                    setPinnedParticipant([item]);
+                }
+                return {...item};
+            }
+            return item;
+        });
+
+        console.log(updatedArray);
+
+        console.log("UserState: updatedArray", updatedArray);
+
+        setParticipantList(updatedArray)
+
+    }
+
 
     const removeTalkingUser = (user:any) => {
         var ishola = participantTalkingList;
@@ -1723,6 +1763,10 @@ export function websocketStopPoll(){
 
 export function websocketRaiseHand(raiseHand:boolean){
     websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"changeRaiseHand\",\"params\":[${raiseHand}]}`]);
+}
+
+export function websocketPinUser(internalUserID:string,pin:boolean){
+    websocketSend([`{\"msg\":\"method\",\"id\":\"${ServerInfo.generateSmallId()}\",\"method\":\"changePin\",\"params\":["${internalUserID}",${!pin}]}`]);
 }
 
 export function websocketStartPrivateChat(participant:IParticipant){

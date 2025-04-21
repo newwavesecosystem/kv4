@@ -10,10 +10,9 @@ const ParticipantsCameraComponent = ({ participantList, pinnedParticipant, pagin
     pinnedParticipant: IParticipant[];
     paginateParticipants: IParticipant[];
 }) => {
-  const participantsPerPage = 8; // Limit to 8 participants per page
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(participantList.length / participantsPerPage);
   const participantCameraList = useRecoilValue(participantCameraListState);
+
+  console.log("ParticipantsCameraComponent->displayedParticipants:",paginateParticipants.length)
 
   return (
       <div>
@@ -32,7 +31,7 @@ const ParticipantsCameraComponent = ({ participantList, pinnedParticipant, pagin
             )}
             style={{ paddingTop: "1.5rem" }}
         >
-          {paginateParticipants.map((participant, index) => (
+          {pinnedParticipant.map((participant, index) => (
               <SingleCameraComponent
                   index={index}
                   key={participant.id}
@@ -42,6 +41,16 @@ const ParticipantsCameraComponent = ({ participantList, pinnedParticipant, pagin
                   )[0]}
               />
           ))}
+            {paginateParticipants.map((participant, index) => (
+                <SingleCameraComponent
+                    index={index}
+                    key={participant.id}
+                    participant={participant}
+                    userCamera={participantCameraList.filter(
+                        (cItem:IParticipantCamera) => cItem.intId === participant.intId
+                    )[0]}
+                />
+            ))}
         </div>
 
       </div>

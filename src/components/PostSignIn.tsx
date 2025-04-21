@@ -99,13 +99,13 @@ function PostSignIn() {
   const [wakeLockActive, setWakeLockActive] = useState(false);
   const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
 
-  const participantsPerPage:number = layoutSettings.maxTiles[0] ?? 4;
-
   const [cameraStream, setCameraSteam] = useRecoilState(cameraStreamState);
 
   const [participantCameraList, setParticipantCameraList] = useRecoilState(
       participantCameraListState,
   );
+
+  const [displayedParticipants, setDisplayedParticipants] = useState([]);
 
 
 
@@ -363,13 +363,8 @@ function PostSignIn() {
 
   // start pagination logic
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 4; //don't change
-
-  // Pagination logic
-  const totalPages = Math.ceil((participantList.length - pinnedParticipant.length) / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const displayedParticipants = [...pinnedParticipant, ...participantList.filter((p: IParticipant) => !pinnedParticipant.includes(p))].slice(startIndex, endIndex);
+  const [pageSize, setPageSize] = useState(4);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Pinning logic
   const handlePin = (participant: IParticipant) => {
@@ -380,6 +375,26 @@ function PostSignIn() {
     setPinnedParticipant(pinnedParticipant.filter((p) => p.intId !== participant.intId));
   };
   // end pagination logic
+
+  useEffect(() => {
+    setPageSize(layoutSettings.maxTiles[0]??4);
+    setTotalPages(Math.ceil((participantList.length - pinnedParticipant.length) / pageSize));
+
+    const filteredParticipants = participantList.filter((participant:IParticipant)=> {
+      // Check if the participant's ID is not pinned
+      if(pinnedParticipant.filter((p) => p.intId == participant.intId).length == 0){
+        return participant;
+      }
+    });
+
+    setDisplayedParticipants(filteredParticipants.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
+    ));
+    console.log("displayedParticipants:",displayedParticipants.length)
+    console.log("pageSize:",pageSize)
+    console.log("totalPages:",totalPages)
+  }, [participantList,layoutSettings.maxTiles,currentPage]);
 
   return (
       <Authenticated>
@@ -578,10 +593,7 @@ function PostSignIn() {
                   (screenSharingStream && layoutSettings.layout === "2")) &&
               !eCinemaModal.isActive && (CurrentUserRoleIsModerator(participantList, user) || !manageUserSettings.hideUserList) && (
                   <div>
-                      <ParticipantsCameraComponent participantList={participantList} pinnedParticipant={pinnedParticipant} paginateParticipants={participantList.slice(
-                          (currentPage - 1) * participantsPerPage,
-                          currentPage * participantsPerPage
-                          )} />
+                      <ParticipantsCameraComponent participantList={participantList} pinnedParticipant={pinnedParticipant} paginateParticipants={displayedParticipants} />
 
                           {/* Pagination controls */}
                           <div className="pagination-controls flex justify-center gap-4 mt-2">
