@@ -30,7 +30,7 @@ import {
   eCinemaModalState,
   participantsModalState,
   recordingModalState,
-  newMessage, newRaiseHand, selectedSpeakersState, manageUserSettingsState,
+  newMessage, newRaiseHand, selectedSpeakersState, manageUserSettingsState, soundNotificationState,
 } from "~/recoil/atom";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
 
@@ -97,6 +97,8 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
   const [participantList, setParticipantList] = useRecoilState(participantListState);
 
+  const [soundNotification, setSoundNotification] = useRecoilState(soundNotificationState);
+
   const [isNewMessage, setIsNewMessage] = useRecoilState(newMessage);
 
   const [isnewRaiseHand, setIsnewRaiseHand] = useRecoilState(newRaiseHand);
@@ -118,20 +120,25 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
   const NewMessageSound = "/message.mp3";
   const RaiseHandSound = "/finger-snaps.mp3";
+  const WaitingSound = "/waiting_room.mp3";
 
   useEffect(() => {
-    if(isNewMessage) {
+    if(soundNotification.newMessage) {
       kurentoAudioPlaySound(NewMessageSound, selectedSpeaker?.deviceId);
     }
-  }, [isNewMessage])
 
-
-  useEffect(() => {
-    if(isnewRaiseHand) {
+    if(soundNotification.newRaiseHand) {
       kurentoAudioPlaySound(RaiseHandSound, selectedSpeaker?.deviceId);
     }
-  }, [isnewRaiseHand])
 
+    if(soundNotification.newWaitingUser) {
+      kurentoAudioPlaySound(WaitingSound, selectedSpeaker?.deviceId);
+    }
+
+    // setSoundNotification({
+    //   newMessage: false, newRaiseHand: false, newWaitingUser: false
+    // })
+  }, [soundNotification])
 
 
   return (

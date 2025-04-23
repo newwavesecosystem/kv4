@@ -22,8 +22,8 @@ import {
     pollModalState, postLeaveMeetingState,
     presentationSlideState, privateChatModalState,
     recordingModalState, screenSharingState,
-    screenSharingStreamState,
-    viewerScreenSharingState,
+    screenSharingStreamState, selectedSpeakersState, soundNotificationState,
+    viewerScreenSharingState, waitingRoomTypeState,
     waitingRoomUsersState
 } from "~/recoil/atom";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
@@ -43,7 +43,7 @@ import {FindUserNamefromUserId, ModeratorRole} from "~/lib/checkFunctions";
 import {SetCurrentSessionEjected} from "~/lib/localStorageFunctions";
 import {ValidationStates} from "~/lib/utils";
 import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
-import {kurentoAudioEndStream} from "~/server/KurentoAudio";
+import {kurentoAudioEndStream, kurentoAudioPlaySound} from "~/server/KurentoAudio";
 import {kurentoVideoEndStream} from "~/server/KurentoVideo";
 import {websocketKurentoScreenshareEndScreenshare} from "~/server/KurentoScreenshare";
 import {
@@ -114,13 +114,18 @@ const Websocket = () => {
     const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(
         postLeaveMeetingState,
     );
+    const [waitingRoomType, setWaitingRoomType] = useRecoilState(waitingRoomTypeState);
     const [pinnedParticipant, setPinnedParticipant] = useRecoilState(pinnedUsersState);
     const [microphoneStream, setMicrophoneStream] = useRecoilState(
         microphoneStreamState,
     );
     const [mediaPermission, setMediaPermission] = useRecoilState(mediaPermissionState);
 
+    const [selectedSpeaker, setSelectedSpeaker] = useRecoilState(selectedSpeakersState);
+
     const [notificationSettings, setNotificationSettingsState] = useRecoilState(notificationSettingsState);
+
+    const [soundNotification, setSoundNotification] = useRecoilState(soundNotificationState);
 
     const [stopReconnection, setStopReconnection] = useState(false);
 
@@ -934,8 +939,40 @@ const Websocket = () => {
         const {msg, id, fields} = obj;
 
         if(msg == "added") {
-            const {name,intId,role,avatar,guest,authenticated} = fields;
-            setWaitingRoomUsers([...waitingRoomUsers,{name,intId,role,avatar,guest,authenticated,"_id":id}]);
+            const {name,intId,role,avatar,guest,authenticated,approved,denied} = fields;
+            if(!approved && !denied) {
+                if (waitingRoomUsers.filter((item :IWaitingUser) => item?._id == id).length < 1) {
+                    setWaitingRoomUsers([...waitingRoomUsers, {
+                        name,
+                        intId,
+                        role,
+                        avatar,
+                        guest,
+                        authenticated,
+                        "_id": id
+                    }]);
+
+                    toast({
+                        title: "Someone wants to join this meeting",
+                        description: `${name}`,
+                        duration: 5000,
+                    });
+
+                    setSoundNotification((prev)=>({
+                        ...prev,
+                        newWaitingUser:true
+                    }))
+                }
+            }
+        }
+
+        if(msg == "changed") {
+            const {approved,denied} = fields;
+            if(approved || denied) {
+                let ur = waitingRoomUsers.filter((item: IWaitingUser) => item?._id != id);
+                console.log("waitingRoomUsers: handleRemoval ", ur)
+                setWaitingRoomUsers(ur);
+            }
         }
 
         if(msg == "removed") {
@@ -1002,7 +1039,7 @@ const Websocket = () => {
         const {msg, id, fields} = obj;
 
         if(msg == "added") {
-            const {lockSettingsProps, voiceProp} = obj.fields;
+            const {lockSettingsProps, voiceProp, usersProp} = obj.fields;
 
             if(lockSettingsProps != null){
                 setManageUserSettings((prev)=>({
@@ -1029,10 +1066,15 @@ const Websocket = () => {
                     setMicState(voiceProp.muteOnStart);
                 }
             }
+
+            if (usersProp != null) {
+                setWaitingRoomType(usersProp?.guestPolicy == "ASK_MODERATOR" ? 1 :usersProp?.guestPolicy == "ALWAYS_ACCEPT" ? 2 :3);
+            }
+
         }
 
         if(msg == "changed") {
-            const {randomlySelectedUser, meetingEnded, meetingEndedReason, voiceProp, lockSettingsProps} = obj.fields
+            const {randomlySelectedUser, meetingEnded, meetingEndedReason, voiceProp, lockSettingsProps, usersProp} = obj.fields
 
             if (meetingEnded != null && meetingEnded) {
                 if(meetingEndedReason == "BREAKOUT_ENDED_BY_MOD"){
@@ -1049,6 +1091,10 @@ const Websocket = () => {
 
             if (randomlySelectedUser != null) {
                 // handleRandomUsers(eventData)
+            }
+
+            if (usersProp != null) {
+                setWaitingRoomType(usersProp?.guestPolicy == "ASK_MODERATOR" ? 1 :usersProp?.guestPolicy == "ALWAYS_ACCEPT" ? 2 :3);
             }
 
             if (voiceProp != null) {
@@ -1421,7 +1467,13 @@ const Websocket = () => {
         });
 
         if(notificationSettings.handRaised){
-            setIsnewRaiseHand(raiseHand);
+            // setIsnewRaiseHand(raiseHand);
+
+            setSoundNotification((prev)=>({
+                ...prev,
+                newRaiseHand:true
+            }))
+
 
             if(raiseHand){
                 toast({
@@ -1563,7 +1615,11 @@ const Websocket = () => {
                     description: `${message}`,
                     duration: 5000,
                 });
-                setIsNewMessage(true);
+
+                setSoundNotification((prev)=>({
+                    ...prev,
+                    newMessage:true
+                }))
             }
         }
     }
