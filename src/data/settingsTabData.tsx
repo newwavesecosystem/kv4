@@ -38,14 +38,14 @@ const settingsTabData = [
     auth: true,
     clickSourceId: 0,
   },
-  // {
-  //   id: 5,
-  //   name: "Waiting Room",
-  //   icon: <PeopleAppointmentIcon className="h-6 w-6" />,
-  //   disable: false,
-  //   auth: true,
-  //   clickSourceId: 0,
-  // },
+  {
+    id: 5,
+    name: "Waiting Room",
+    icon: <PeopleAppointmentIcon className="h-6 w-6" />,
+    disable: false,
+    auth: true,
+    clickSourceId: 0,
+  },
   {
     id: 6,
     name: "Take Spot Attendance",
