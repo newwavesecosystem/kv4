@@ -31,6 +31,18 @@ export const authUserState = atom<IAuthUser | null>({
   },
 });
 
+export const soundNotificationState = atom<{newMessage:boolean,
+  newRaiseHand:boolean,
+  newWaitingUser:boolean
+}>({
+  key: "soundNotification",
+  default: {
+    newMessage:false,
+    newRaiseHand:false,
+    newWaitingUser:false
+  },
+});
+
 export const newMessage = atom<boolean>({
   key: "newMessage",
   default: false,
@@ -92,6 +104,11 @@ export const kaiChatListState = atom<any>({
 export const waitingRoomUsersState = atom<IWaitingUser[]>({
   key: "waitingRoomUsersState",
   default: [],
+});
+
+export const waitingRoomTypeState = atom<number>({
+  key: "waitingRoomTypeState",
+  default: 2,
 });
 
 export const currentColorTheme = atom<{
