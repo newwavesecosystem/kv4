@@ -185,20 +185,22 @@ export interface IBreakOutRecord {
 }
 
 export interface IPresentationSlideState {
-  pages: {
-    id: string,
-    num: string,
-    thumbUri: string,
-    txtUri: string,
-    svgUri: string,
-    imageUri: string,
-    current: boolean,
-  }[];
+  pages: IPresentationSlidePages[];
   current: boolean;
   downloadable: boolean;
   name: String;
   podId: String;
   id: String;
+}
+
+export interface IPresentationSlidePages {
+  id: string,
+  num: string,
+  thumbUri: string,
+  txtUri: string,
+  svgUri: string,
+  imageUri: string,
+  current: boolean,
 }
 
 export interface IWhiteBoardAnnotationRemote {

@@ -576,11 +576,18 @@ function PostSignIn() {
         <div className="mb-5" />
 
         {/* @Solomon help me implement component for presentation */}
-        {/* {presentationSlide.show &&*/}
-        {/*  <PresentationSlide*/}
-        {/*    slides={presentationSlide.presentations.filter((item) => item.id == presentationSlide.currentPresentationID)[0]}*/}
-        {/*  />*/}
-        {/*}*/}
+         {presentationSlide.show && presentationSlide.currentPresentationID !="" &&
+          <PresentationSlide
+              slides={
+                // Find the current presentation first
+                presentationSlide.presentations
+                    .filter((item) => item.id == presentationSlide.currentPresentationID)[0]
+                    .pages // Get the pages array
+                    .slice() // Create a shallow copy of the array
+                    .sort((a, b) => parseInt(a.num) - parseInt(b.num)) // Then sort the copy
+              }
+          />
+        }
 
 
 
@@ -589,7 +596,7 @@ function PostSignIn() {
         {/* render camera feed if not whiteboard or screensharing */}
         {/*and hideUserList is not true; render all cams*/}
         {/*and pagination has been added*/}
-        {!isWhiteboardOpen &&
+        {!presentationSlide.show && !isWhiteboardOpen &&
             (!screenSharingStream ||
                 (screenSharingStream && layoutSettings.layout === "2")) &&
             !eCinemaModal.isActive &&

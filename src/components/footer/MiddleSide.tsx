@@ -1,31 +1,37 @@
 import React, {useEffect, useState} from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
-  authUserState,
-  cameraOpenState,
-  cameraStreamState,
-  chatModalKonn3ctAiState,
-  chatModalState,
-  connectedUsersState,
-  donationModalState,
-  eCinemaModalState,
-  endCallModalState,
-  leaveRoomCallModalState,
-  micOpenState,
-  participantCameraListState,
-  microphoneStreamState,
-  pollModalState,
-  recordingModalState,
-  screenSharingState,
-  screenSharingStreamState,
-  settingsModalState,
-  whiteBoardOpenState,
-  participantListState,
-  connectionStatusState,
-  breakOutModalState,
-  selectedCameraState,
-  fileUploadModalState,
-  newMessage, selectedMicrophoneState, micFilterState, CamQualityState, mediaPermissionState, manageUserSettingsState,
+    authUserState,
+    cameraOpenState,
+    cameraStreamState,
+    chatModalKonn3ctAiState,
+    chatModalState,
+    connectedUsersState,
+    donationModalState,
+    eCinemaModalState,
+    endCallModalState,
+    leaveRoomCallModalState,
+    micOpenState,
+    participantCameraListState,
+    microphoneStreamState,
+    pollModalState,
+    recordingModalState,
+    screenSharingState,
+    screenSharingStreamState,
+    settingsModalState,
+    whiteBoardOpenState,
+    participantListState,
+    connectionStatusState,
+    breakOutModalState,
+    selectedCameraState,
+    fileUploadModalState,
+    newMessage,
+    selectedMicrophoneState,
+    micFilterState,
+    CamQualityState,
+    mediaPermissionState,
+    manageUserSettingsState,
+    presentationSlideState,
 } from "~/recoil/atom";
 import { useToast } from "../ui/use-toast";
 import PhoneEndIcon from "../icon/outline/PhoneEndIcon";
@@ -155,6 +161,7 @@ function MiddleSide() {
 
   const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
 
+  const [presentationSlide, setPresentationSlide] = useRecoilState(presentationSlideState);
 
   return (
     <div className=" flex w-full items-center justify-center gap-5">
@@ -619,6 +626,8 @@ function MiddleSide() {
                     : "Raise Hand"}
               </span>
                     </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
                     {CurrentUserIsPresenter(participantList, user) && (<DropdownMenuItem
                         onClick={() => {
                             setFileUploadModal((prev) => ({
@@ -631,6 +640,30 @@ function MiddleSide() {
                         <FolderOpenIcon className="mr-2 h-5 w-5" />
                         <span>Upload Files</span>
                     </DropdownMenuItem>)}
+
+                    {presentationSlide.presentations.map((data, index) => (
+                        <DropdownMenuItem
+                            key={`upf-${index}`}
+                            onClick={() => {
+                                setPresentationSlide((prev)=>({
+                                    ...prev,
+                                    show:prev.currentPresentationID == data.id ? !prev.show  : true ,
+                                    currentPresentationID:data.id
+                                }));
+
+                            // setFileUploadModal((prev) => ({
+                            // ...prev,
+                            // step: 1,
+                            // }));
+                        }}
+                        className="py-2"
+                        >
+                    <FolderOpenIcon className="mr-2 h-5 w-5" />
+                    <span>{data.name}</span>
+                </DropdownMenuItem>
+                    ))}
+
+                    <DropdownMenuSeparator />
 
                     {CurrentUserIsPresenter(participantList, user) && (
                         <DropdownMenuItem

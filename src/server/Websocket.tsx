@@ -32,7 +32,7 @@ import {
     IColumnBreakOutRoom,
     IManageUserSettings,
     IParticipant,
-    IParticipantCamera,
+    IParticipantCamera, IPresentationSlideState,
     IVoiceUser,
     IWaitingUser
 } from "~/types";
@@ -914,22 +914,60 @@ const Websocket = () => {
         const {msg, id, fields} = obj;
 
         if(msg == "added") {
-            const {pages,current,downloadable,name,podId,id} = fields;
+            const {pages,current,downloadable,name,podId,id,conversion} = fields;
 
             console.log(`pages issues:`,pages);
 
-            setPresentationSlide((prev)=>({
-                show:true,
-                currentPresentationID:id,
-                presentations: [...prev.presentations,{
-                pages: pages,
-                current: current,
-                downloadable: downloadable,
-                name: name,
-                podId: podId,
-                id: id,
-            }]
-            }));
+            if(conversion.done){
+                setPresentationSlide((prev)=>({
+                    show:true,
+                    currentPresentationID:id,
+                    presentations: [...prev.presentations,{
+                        pages: pages,
+                        current: current,
+                        downloadable: downloadable,
+                        name: name,
+                        podId: podId,
+                        id: id,
+                    }]
+                }));
+            }else{
+                setPresentationSlide((prev)=>({
+                    show:true,
+                    currentPresentationID:id,
+                    presentations: [...prev.presentations,{
+                        pages: [],
+                        current: false,
+                        downloadable: false,
+                        name: name,
+                        podId: podId,
+                        id: id,
+                    }]
+                }));
+            }
+
+        }
+
+        if(msg == "changed") {
+            const {pages,current,downloadable,name,podId,id,conversion} = fields;
+
+            console.log(`pages issues:`,pages);
+
+            if(conversion.done && pages!= null){
+                setPresentationSlide((prev)=>({
+                    show:true,
+                    currentPresentationID:id,
+                    presentations: [prev.presentations?.map((item:IPresentationSlideState) => {
+                        if (item.id === id) {
+                            return {...item, pages: pages,
+                                current: current,
+                                downloadable: downloadable};
+                        }
+                        return item;
+                    })]
+                }));
+            }
+
         }
     }
 
@@ -1201,7 +1239,7 @@ const Websocket = () => {
             const responseData = response.data;
 
             if(response.status == 200){
-                handlePresentationUploaded(find[0].name, id,authToken);
+                handlePresentationUploaded(find[0].file.name, id,authToken);
 
                 setFileUploadModal((prev) => ({
                     ...prev,
@@ -1209,8 +1247,8 @@ const Websocket = () => {
                 }));
 
                 toast({
-                    title: "Completed",
-                    description: `${find[0].name} uploaded successfully`,
+                    title: "File Upload Completed",
+                    description: `${find[0].file.name} uploaded successfully`,
                     duration: 5000,
                 });
             }
