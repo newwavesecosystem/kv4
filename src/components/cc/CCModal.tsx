@@ -13,7 +13,7 @@ import SpeechRecognition, {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { broadcastCaption } from "~/server/SocketIOCaption";
 import { ScrollArea } from "../ui/scroll-area";
-import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
+
 import * as process from "process";
 
 function CCModal() {
@@ -69,13 +69,8 @@ function CCModal() {
       if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="whisper") {
         console.log("cSocket transcript useEffect whisper ");
         startRecording();
-        setTimeout(() => {
-          stopRecording();
-          startRecording();
-        }, 3000)
       }
-
-    }, []);
+    }, [ccModal.isActive]);
 
   const handleBeforeUnload = (event:any) => {
     SpeechRecognition.stopListening();
@@ -86,13 +81,15 @@ function CCModal() {
   });
 
   const [transcription, setTranscription] = useState('');
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleAudioData = async (audioBlob:any) => {
+  const handleAudioData = async (audioBlob: Blob) => {
     const reader = new FileReader();
     reader.readAsDataURL(audioBlob);
     reader.onloadend = async () => {
       const base64Audio = reader.result;
-
       try {
         const response = await fetch('/api/whisper', {
           method: 'POST',
@@ -101,66 +98,125 @@ function CCModal() {
           },
           body: JSON.stringify({ file: base64Audio }),
         });
-
         const data = await response.json();
-        setTranscription(data.text || 'No transcription available.');
+        // setTranscription(prev => `${prev} ${data.text || ''}`);
+        setTranscription(`Me: ${data.text}`);
+        broadcastCaption(data.text, user?.meetingDetails);
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error transcribing audio:', error);
         setTranscription('Failed to transcribe.');
       }
     };
   };
 
-  const [isRecording, setIsRecording] = useState(false);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [audioChunks, setAudioChunks] = useState([]);
-
-  useEffect(() => {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      alert("Your browser doesn't support audio recording.");
-      return;
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+      console.log("Stopping recorder");
+      mediaRecorderRef.current.stop();
     }
+  };
 
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const recorder = new MediaRecorder(stream);
-      recorder.ondataavailable = (event) => {
-        // setAudioChunks((prev:any[]) => [...prev, event.data]);
-      };
-      setMediaRecorder(recorder);
-    });
-  }, []);
+  const pauseRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+      console.log("Pausing recorder");
+      mediaRecorderRef.current.pause();
+    }
+  };
+
+  const resumeRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === "paused") {
+      console.log("Resuming recorder");
+      mediaRecorderRef.current.resume();
+    }
+  };
 
   const startRecording = () => {
-    console.log("cc starting recorder");
-    if (mediaRecorder) {
-      setIsRecording(true);
-      setAudioChunks([]);
-      mediaRecorder.start();
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === "inactive") {
+      console.log("Starting recorder");
+      audioChunksRef.current = []; // Clear previous chunks
+      mediaRecorderRef.current.start();
+      // Stop recording after 5 seconds
+      setTimeout(stopRecording, 5000);
     }
   };
 
-  const stopRecording = () => {
-    console.log("cc stopping recorder");
-    if (mediaRecorder) {
-      mediaRecorder.stop();
-      setIsRecording(false);
+  // Effect to initialize and clean up MediaRecorder
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE !== "whisper") return;
 
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        handleAudioData(audioBlob); // Send audio data to parent
-      };
+    let stream: MediaStream | null = null;
+
+    const setupMediaRecorder = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const recorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = recorder;
+
+        recorder.ondataavailable = (event) => {
+          console.log("recorder.ondataavailable");
+          if (event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+
+        recorder.onstop = () => {
+          console.log("recorder.onstop");
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+          console.log("recorder.size",audioBlob.size);
+          if (audioBlob.size > 0) {
+            handleAudioData(audioBlob);
+          }
+        };
+
+      } catch (err) {
+        console.error("Error setting up media recorder:", err);
+      }
+    };
+
+    setupMediaRecorder();
+
+    return () => {
+      console.log("Cleaning up media recorder");
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+      }
+      stopRecording();
+      stream?.getTracks().forEach(track => track.stop());
+    };
+  }, []);
+
+  // Effect to control the recording loop
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE !== "whisper") return;
+
+    console.log("recorder micState:",!micState)
+    if (ccModal.isActive && !micState) {
+      // Start or resume the recording loop
+      console.log("Starting or resuming recording loop");
+      if (mediaRecorderRef.current?.state === 'paused') {
+        resumeRecording();
+      } else {
+        startRecording(); // Start immediately if not already started
+      }
+      if (!recordingIntervalRef.current) {
+        recordingIntervalRef.current = setInterval(startRecording, 5500); // Loop every 5.5 seconds
+      }
+    } else {
+      // Pause recording when mic is off or modal is closed
+      console.log("Pausing recording loop");
+      pauseRecording();
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+        recordingIntervalRef.current = null;
+      }
     }
-  };
 
-  const recorderControls = useAudioRecorder()
-  const addAudioElement = (blob:any) => {
-    // const url = URL.createObjectURL(blob);
-    // const audio = document.createElement("audio");
-    // audio.src = url;
-    // audio.controls = true;
-    // document.body.appendChild(audio);
-    handleAudioData(blob);
-  };
+    return () => {
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+      }
+    };
+  }, [ccModal.isActive, micState]);
 
 
 
@@ -179,17 +235,6 @@ function CCModal() {
                   <br/>
                   {ccModal.caption}
                   {transcription}
-                  {/*<button onClick={startRecording} disabled={isRecording}>*/}
-                  {/*  Start Recording*/}
-                  {/*</button>*/}
-                  {/*<button onClick={stopRecording} disabled={!isRecording}>*/}
-                  {/*  Stop Recording*/}
-                  {/*</button>*/}
-                  <AudioRecorder
-                      onRecordingComplete={(blob) => addAudioElement(blob)}
-                      recorderControls={recorderControls}
-                  />
-                  <button onClick={recorderControls.stopRecording}>Stop recording</button>
                 </div>
               </ScrollArea>
 

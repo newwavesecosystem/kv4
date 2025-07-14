@@ -920,7 +920,7 @@ const Websocket = () => {
 
             if(conversion.done){
                 setPresentationSlide((prev)=>({
-                    show:true,
+                    show:false,
                     currentPresentationID:id,
                     presentations: [...prev.presentations,{
                         pages: pages,
@@ -954,8 +954,8 @@ const Websocket = () => {
             console.log(`pages issues:`,pages);
 
             if(conversion.done && pages!= null){
-                setPresentationSlide((prev)=>({
-                    show:true,
+                setPresentationSlide((prev:any)=>({
+                    show:false,
                     currentPresentationID:id,
                     presentations: [prev.presentations?.map((item:IPresentationSlideState) => {
                         if (item.id === id) {

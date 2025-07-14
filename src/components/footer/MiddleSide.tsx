@@ -645,7 +645,7 @@ function MiddleSide() {
                         <DropdownMenuItem
                             key={`upf-${index}`}
                             onClick={() => {
-                                setPresentationSlide((prev)=>({
+                                setPresentationSlide((prev:any)=>({
                                     ...prev,
                                     show:prev.currentPresentationID == data.id ? !prev.show  : true ,
                                     currentPresentationID:data.id

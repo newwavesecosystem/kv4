@@ -24,12 +24,11 @@
   <component name="ChangeListManager">
     <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="uncomment Waiting room">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/presentationSlide/PresentationSlide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/presentationSlide/PresentationSlide.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ui/carousel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/carousel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -191,6 +190,7 @@
       <workItem from="1749107654734" duration="103000" />
       <workItem from="1749880312524" duration="107000" />
       <workItem from="1750925933317" duration="6060000" />
+      <workItem from="1752310774008" duration="16289000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -615,6 +615,12 @@
           <url>file://$PROJECT_DIR$/src/pages/join/[id].tsx</url>
           <line>487</line>
           <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/cc/CCModal.tsx</url>
+          <line>101</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

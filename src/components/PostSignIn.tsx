@@ -576,18 +576,18 @@ function PostSignIn() {
         <div className="mb-5" />
 
         {/* @Solomon help me implement component for presentation */}
-         {presentationSlide.show && presentationSlide.currentPresentationID !="" &&
-          <PresentationSlide
-              slides={
-                // Find the current presentation first
-                presentationSlide.presentations
-                    .filter((item) => item.id == presentationSlide.currentPresentationID)[0]
-                    .pages // Get the pages array
-                    .slice() // Create a shallow copy of the array
-                    .sort((a, b) => parseInt(a.num) - parseInt(b.num)) // Then sort the copy
-              }
-          />
-        }
+        {/* {presentationSlide.show && presentationSlide.currentPresentationID !="" &&*/}
+        {/*  <PresentationSlide*/}
+        {/*      slides={*/}
+        {/*        // Find the current presentation first*/}
+        {/*        presentationSlide.presentations*/}
+        {/*            .filter((item) => item.id == presentationSlide.currentPresentationID)[0]*/}
+        {/*            .pages // Get the pages array*/}
+        {/*            .slice() // Create a shallow copy of the array*/}
+        {/*            .sort((a, b) => parseInt(a.num) - parseInt(b.num)) // Then sort the copy*/}
+        {/*      }*/}
+        {/*  />*/}
+        {/*}*/}
 
 
 

@@ -252,6 +252,7 @@ const CarouselNext = React.forwardRef<
 })
 CarouselNext.displayName = "CarouselNext"
 
+// eslint-disable-next-line react/display-name
 const CarouselPreviousPresentation = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
@@ -281,6 +282,7 @@ const CarouselPreviousPresentation = React.forwardRef<
 })
 CarouselPrevious.displayName = "CarouselPrevious"
 
+// eslint-disable-next-line react/display-name
 const CarouselNextPresentation = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
