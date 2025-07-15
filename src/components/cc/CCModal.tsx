@@ -58,7 +58,7 @@ function CCModal() {
 
 
     useEffect(() => {
-      if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="whisper") {
+      if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="elevenlabs") {
         console.log("cSocket transcript useEffect whisper ");
         startRecording();
       }
@@ -88,7 +88,7 @@ function CCModal() {
     reader.onloadend = async () => {
       const base64Audio = reader.result;
       try {
-        const response = await fetch('/api/whisper', {
+        const response = await fetch('/api/elevenlabs', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ function CCModal() {
 
   // Effect to initialize and clean up MediaRecorder
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE !== "whisper") return;
+    if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE !== "elevenlabs") return;
 
     let stream: MediaStream | null = null;
 
@@ -185,7 +185,7 @@ function CCModal() {
 
   // Effect to control the recording loop
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE !== "whisper") return;
+    if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE !== "elevenlabs") return;
 
     console.log("recorder micState:",!micState)
     if (ccModal.isActive && !micState) {
@@ -222,9 +222,9 @@ function CCModal() {
     <>
       {ccModal.isActive && (
         <div>
-          <div>
-            {!browserSupportsSpeechRecognition ? <span className="flex w-full items-center justify-between rounded-md px-4" style={{ color: 'white', backgroundColor: 'red', textAlign: 'center' }}>Your browser doesn't support speech recognition, others wont see what you are saying. Kindly make use of latest Chrome Browser to enjoy this feature. <br /></span> : ''}
-          </div>
+          {/*<div>*/}
+          {/*  {!browserSupportsSpeechRecognition ? <span className="flex w-full items-center justify-between rounded-md px-4" style={{ color: 'white', backgroundColor: 'red', textAlign: 'center' }}>Your browser doesn't support speech recognition, others wont see what you are saying. Kindly make use of latest Chrome Browser to enjoy this feature. <br /></span> : ''}*/}
+          {/*</div>*/}
           <div className="fixed bottom-20 z-10 mx-auto flex w-full justify-center px-4">
             <div className="flex h-20 w-full items-center justify-between rounded-md bg-primary md:max-w-xl ">
               <ScrollArea className="h-full px-4">

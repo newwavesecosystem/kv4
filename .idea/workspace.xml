@@ -22,11 +22,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Worked On Audio Transcription&#10;Worked on Presentation Display">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Integrated Elevenlabs for Audio transcription&#10;-Comment browserSupportsSpeechRecognition check">
+      <change afterPath="$PROJECT_DIR$/src/pages/api/elevenlabs.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/ServerInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/ServerInfo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/SocketIOCaption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/SocketIOCaption.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,7 +187,7 @@
       <workItem from="1749107654734" duration="103000" />
       <workItem from="1749880312524" duration="107000" />
       <workItem from="1750925933317" duration="6060000" />
-      <workItem from="1752310774008" duration="21012000" />
+      <workItem from="1752310774008" duration="27010000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -512,7 +511,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752534640196</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Perfecting audio transcription and translation">
+      <option name="closed" value="true" />
+      <created>1752538237010</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1752538237010</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -547,8 +554,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="-Added Go full screen to screen sharing&#10;-Fix screenSharing issue on participant end" />
-    <MESSAGE value="-Added listening to session token reuse" />
     <MESSAGE value="-Fix switching of Camera&#10;-Fix switching of Mic&#10;-Make Speaker test work&#10;-Make request camera to use deviceID&#10;-Make request audio to use deviceID&#10;-Add mic filter state to atom&#10;-Add constraint details to video quality" />
     <MESSAGE value="-Added Mic filters and support check&#10;-Implement Video Quality" />
     <MESSAGE value="-Added retrieving of existing private chat on Public chat by selecting at the top&#10;-Typing on Private chat is now showing" />
@@ -572,7 +577,9 @@
     <MESSAGE value="-Worked on Pinning to screen to be global&#10;-Worked on Displaying pinned participants first before others&#10;-You can only pin user if the video cam of the user is on and you are a moderator" />
     <MESSAGE value="-Added Guest room&#10;-Displaying of moderator messages to the guest users" />
     <MESSAGE value="Worked On Audio Transcription&#10;Worked on Presentation Display" />
-    <option name="LAST_COMMIT_MESSAGE" value="Worked On Audio Transcription&#10;Worked on Presentation Display" />
+    <MESSAGE value="Perfecting audio transcription and translation" />
+    <MESSAGE value="-Integrated Elevenlabs for Audio transcription&#10;-Comment browserSupportsSpeechRecognition check" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Integrated Elevenlabs for Audio transcription&#10;-Comment browserSupportsSpeechRecognition check" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
