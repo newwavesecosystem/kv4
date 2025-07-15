@@ -22,13 +22,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="uncomment Waiting room">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Worked On Audio Transcription&#10;Worked on Presentation Display">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/carousel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/carousel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/ServerInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/ServerInfo.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/SocketIOCaption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/SocketIOCaption.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -190,7 +188,7 @@
       <workItem from="1749107654734" duration="103000" />
       <workItem from="1749880312524" duration="107000" />
       <workItem from="1750925933317" duration="6060000" />
-      <workItem from="1752310774008" duration="16289000" />
+      <workItem from="1752310774008" duration="21012000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -506,7 +504,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745359233486</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="Worked On Audio Transcription&#10;Worked on Presentation Display">
+      <option name="closed" value="true" />
+      <created>1752534640196</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1752534640196</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -541,7 +547,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Finish work on screen sharing implementation" />
     <MESSAGE value="-Added Go full screen to screen sharing&#10;-Fix screenSharing issue on participant end" />
     <MESSAGE value="-Added listening to session token reuse" />
     <MESSAGE value="-Fix switching of Camera&#10;-Fix switching of Mic&#10;-Make Speaker test work&#10;-Make request camera to use deviceID&#10;-Make request audio to use deviceID&#10;-Add mic filter state to atom&#10;-Add constraint details to video quality" />
@@ -566,7 +571,8 @@
     <MESSAGE value="Worked on Pinning to screen to be global&#10;Worked on Displaying pinned participants first before others" />
     <MESSAGE value="-Worked on Pinning to screen to be global&#10;-Worked on Displaying pinned participants first before others&#10;-You can only pin user if the video cam of the user is on and you are a moderator" />
     <MESSAGE value="-Added Guest room&#10;-Displaying of moderator messages to the guest users" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Added Guest room&#10;-Displaying of moderator messages to the guest users" />
+    <MESSAGE value="Worked On Audio Transcription&#10;Worked on Presentation Display" />
+    <option name="LAST_COMMIT_MESSAGE" value="Worked On Audio Transcription&#10;Worked on Presentation Display" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -618,7 +624,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/cc/CCModal.tsx</url>
-          <line>101</line>
+          <line>98</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="27" />
         </line-breakpoint>

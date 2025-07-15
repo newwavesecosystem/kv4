@@ -38,14 +38,6 @@ function CCModal() {
     CCRef.current?.scrollIntoView(false)
   }
 
-  useEffect(() => {
-    scrollToBottom() //initial load
-  }, [])
-
-  useEffect(() => {
-    scrollToBottom() //auto scroll down while streaming cc
-  }, [transcriptTranslated, ccModal.caption])
-
     // When a new transcript is received, add it to the lines array
     useEffect(() => {
       if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="sp") {
@@ -84,6 +76,11 @@ function CCModal() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+
+  useEffect(() => {
+    scrollToBottom() //auto scroll down while streaming cc
+  }, [transcriptTranslated, ccModal.caption,transcription])
 
   const handleAudioData = async (audioBlob: Blob) => {
     const reader = new FileReader();
@@ -126,7 +123,8 @@ function CCModal() {
   const resumeRecording = () => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === "paused") {
       console.log("Resuming recorder");
-      mediaRecorderRef.current.resume();
+      mediaRecorderRef.current.stop();
+      startRecording();
     }
   };
 
@@ -231,10 +229,10 @@ function CCModal() {
             <div className="flex h-20 w-full items-center justify-between rounded-md bg-primary md:max-w-xl ">
               <ScrollArea className="h-full px-4">
                 <div ref={CCRef}>
-                  {transcriptTranslated}
-                  <br/>
                   {ccModal.caption}
+                  <br/>
                   {transcription}
+                  {transcriptTranslated}
                 </div>
               </ScrollArea>
 

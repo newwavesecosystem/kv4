@@ -1,6 +1,6 @@
 export const laravelAppURL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 export const extRegisterURL = "https://bbb-sam-bridge.vercel.app";
-export const translateURL = "https://newmegatongueapi.staging.5starcompany.com.ng/api";
+export const translateURL = "https://megatongue.prisca.5starcompany.com.ng/api";
 export const engineBaseURL = process.env.NEXT_PUBLIC_ENGINE_DOMAIN;
 export const tokenValidationURL = `https://${engineBaseURL}/bigbluebutton/api/enter`;
 export const guestRoomURL = `https://${engineBaseURL}/bigbluebutton/api/guestWait`;
