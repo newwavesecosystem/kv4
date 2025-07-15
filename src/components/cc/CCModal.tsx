@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { authUserState, ccModalState, micOpenState } from "~/recoil/atom";
+import {authUserState, ccModalState, micOpenState, participantTalkingListState} from "~/recoil/atom";
 import CloseIcon from "../icon/outline/CloseIcon";
 import EllipsisIcon from "../icon/outline/EllipsisIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
@@ -162,19 +162,47 @@ function CCModal() {
           const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
           console.log("recorder.size",audioBlob.size);
           if (audioBlob.size > 0) {
-            handleAudioData(audioBlob);
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const reader = new FileReader();
+
+            reader.onload = async (event:any) => {
+              try {
+                const arrayBuffer = event.target.result as ArrayBuffer;
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                
+                // Simple VAD: check if the audio is loud enough
+                const pcmData = audioBuffer.getChannelData(0);
+                const sum = pcmData.reduce((acc, val) => acc + Math.abs(val), 0);
+                const avg = sum / pcmData.length;
+
+                // Adjust this threshold based on testing
+                const threshold = 0.01;
+                console.log("recorder VAD average:", avg);
+
+                if (avg > threshold) {
+                  console.log("recorder Speech detected, sending for transcription.");
+                  handleAudioData(audioBlob);
+                } else {
+                  console.log("recorder Silence detected, not sending.");
+                }
+              } catch (e) {
+                console.error("recorder Error processing audio for VAD:", e);
+              }
+            };
+
+            reader.readAsArrayBuffer(audioBlob);
           }
         };
 
       } catch (err) {
-        console.error("Error setting up media recorder:", err);
+        console.error("recorder Error setting up media recorder:", err);
       }
     };
 
     setupMediaRecorder();
 
     return () => {
-      console.log("Cleaning up media recorder");
+      console.log("recorder Cleaning up media recorder");
       if (recordingIntervalRef.current) {
         clearInterval(recordingIntervalRef.current);
       }
