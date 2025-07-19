@@ -1,5 +1,12 @@
 import DateTimeFormat = Intl.DateTimeFormat;
-import { presentationSlideState } from "~/recoil/atom";
+import {
+  connectionStatusState,
+  eCinemaModalState,
+  fileUploadModalState,
+  mediaPermissionState,
+  presentationSlideState,
+  soundNotificationState
+} from "~/recoil/atom";
 
 export interface IConnectedUser {
   id: number;
@@ -131,6 +138,7 @@ export interface IParticipant {
   currentConnectionId: string;
   id: string;
   connection_status: string;
+  chatId?: string; // Added for private chat
 }
 
 export interface IWaitingUser {
@@ -144,15 +152,16 @@ export interface IWaitingUser {
 }
 
 export interface IManageUserSettings {
-  muteAllUsers: boolean,
-  muteAllUsersExceptPresenter: boolean,
-  disableCam:boolean,
-  disableMic:boolean,
-  disableNotes:boolean,
-  disablePrivateChat:boolean,
-  disablePublicChat:boolean,
-  hideUserList:boolean,
-  hideViewersAnnotation:boolean,
+  meetingId?: string; // Added for lock viewers
+  muteAllUsers: boolean;
+  muteAllUsersExceptPresenter: boolean;
+  shareWebcam: boolean; // Renamed from disableCam
+  shareMicrophone: boolean; // Renamed from disableMic
+  sendPublicChatMessage: boolean; // Renamed from disablePublicChat
+  sendPrivateChatMessage: boolean; // Renamed from disablePrivateChat
+  editSharedNotes: boolean; // Renamed from disableNotes
+  seeOtherViewers: boolean; // Renamed from hideUserList
+  hideViewersAnnotation:boolean;
   hideViewersCursor:boolean,
   lockOnJoin:boolean,
   lockOnJoinConfigurable:boolean
@@ -165,6 +174,111 @@ export interface INotificationSettings {
   handRaised: boolean,
   error: boolean,
 }
+
+export interface IPostLeaveMeeting {
+  isLeave: boolean;
+  isEndCall: boolean;
+  isLeaveRoomCall: boolean;
+  isKicked: boolean;
+  isSessionExpired: boolean;
+  isOthers: boolean;
+}
+
+export interface IECinemaModal {
+  isActive: boolean;
+  source: string;
+  step: number;
+  eventName: string;
+  eventData: null;
+}
+
+export interface IRecordingModal {
+  isActive: boolean;
+  isStarted: boolean;
+  recordingConsent: boolean;
+  step: number;
+  id: number;
+  width: number;
+  height: number;
+  name: string;
+}
+
+export interface IDonationModal {
+  isActive: boolean;
+  step: number;
+  donationName: string;
+  donationAmount: number;
+  donationAmountType: string;
+  donationCreatorName: string;
+  donationCreatorId: number;
+  donationCreatedAt: Date;
+  enableFlashNotification: boolean;
+  totalAmountDonatated: number;
+  usersDonated: {
+    id: number;
+    fullName: string | null;
+    email: string | null;
+    donationDescription: string;
+    donationUniqueNumber: number | null;
+    donationAmount: number;
+  }[]
+}
+
+export interface IPollModal {
+  isActive: boolean;
+  isEnded: boolean;
+  isEdit: boolean;
+  isUserHost: boolean;
+  step: number;
+  pollQuestion: string;
+  pollCreatorName: string;
+  pollCreatorId: string;
+  pollCreatedAt: Date;
+  pollOptions: {
+    id: number;
+    option: string;
+    votes: number;
+  }[];
+  totalVotes: number;
+  usersVoted: {
+    id: string | null | undefined;
+    fullName: string | null | undefined;
+    email: string | null | undefined;
+    votedOption: string;
+    votedOptionId: number;
+  }[];
+}
+
+export interface ISoundNotificationState {
+  newMessage:boolean,
+  newRaiseHand:boolean,
+  newWaitingUser:boolean
+}
+
+export interface IFileUploadModal {
+  step: number;
+  isMinimized: boolean;
+  isFull: boolean;
+  files: File[];
+  filesToUpload: string[];
+  filesUploadInProgress: any[];
+}
+
+export interface IMediaPermission {
+  audioAllowed:boolean,
+  videoAllowed:boolean,
+  muteMicOnJoin:boolean
+}
+
+export interface IConnectionStatus {
+  websocket_connection: boolean;
+  websocket_connection_reconnect: boolean;
+  audio_connection: boolean;
+  iceServers: {
+    username: string;     credential: string;     urls: string;
+  }[];
+}
+
 
 export interface IBreakOutRecord {
   isActive: boolean;
@@ -350,6 +464,21 @@ export interface IEmojiMart {
   emoticons: string[];
 }
 
+export class BreakoutRoomOptions {
+	rooms: IColumnBreakOutRoom[] = [];
+	time: number = 0;
+	freeRoom: boolean = false;
+	saveWhiteBoard: boolean = false;
+	saveSharedNote: boolean = false;
+	sendInvite: boolean = false;
+	roomName: string | undefined;
+}
+
+export interface IPresentationMain {
+  show: boolean,
+  currentPresentationID: "",
+  presentations: IPresentationSlideState[]
+}
 export interface IPresentationSlide {
   id: string,
   num: number,

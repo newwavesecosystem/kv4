@@ -51,7 +51,7 @@ const SocketIOCaption = () => {
         const response = await axios({
             method: "post",
             maxBodyLength: Infinity,
-            url: `${ServerInfo.translateURL}/free-translator`,
+            url: `${ServerInfo.translateURL}/translator`,
             headers: {
                 apikey: "AJSAel5d4cSwAqopPs19LEIqZ42kX1TEnnUJRpb6",
                 "Content-Type": "application/json",

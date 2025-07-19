@@ -14,7 +14,14 @@ import {
   IBreakOutRecord,
   IPresentationSlideState,
   IAuthUser,
-  IVoiceUser, IManageUserSettings, INotificationSettings
+  IVoiceUser,
+  IManageUserSettings,
+  INotificationSettings,
+  IPostLeaveMeeting,
+  IECinemaModal,
+  IRecordingModal,
+  IPollModal,
+  ISoundNotificationState, IFileUploadModal, IMediaPermission, IConnectionStatus, IDonationModal, IPresentationMain
 } from "~/types";
 
 export const authUserState = atom<IAuthUser | null>({
@@ -31,10 +38,7 @@ export const authUserState = atom<IAuthUser | null>({
   },
 });
 
-export const soundNotificationState = atom<{newMessage:boolean,
-  newRaiseHand:boolean,
-  newWaitingUser:boolean
-}>({
+export const soundNotificationState = atom<ISoundNotificationState>({
   key: "soundNotification",
   default: {
     newMessage:false,
@@ -53,14 +57,7 @@ export const newRaiseHand = atom<boolean>({
   default: false,
 });
 
-export const connectionStatusState = atom<{
-  websocket_connection: boolean;
-  websocket_connection_reconnect: boolean;
-  audio_connection: boolean;
-  iceServers: {
-    username: string;     credential: string;     urls: string;
-  }[];
-}>({
+export const connectionStatusState = atom<IConnectionStatus>({
   key: "connectionStatusState",
   default: {websocket_connection:false, websocket_connection_reconnect:false, audio_connection:false, iceServers:[]},
 });
@@ -157,14 +154,7 @@ export const leaveRoomCallModalState = atom<boolean>({
   default: false,
 });
 
-export const postLeaveMeetingState = atom<{
-  isLeave: boolean;
-  isEndCall: boolean;
-  isLeaveRoomCall: boolean;
-  isKicked: boolean;
-  isSessionExpired: boolean;
-  isOthers: boolean;
-}>({
+export const postLeaveMeetingState = atom<IPostLeaveMeeting>({
   key: "postLeaveMeetingState",
   default: {
     isLeave: false,
@@ -198,7 +188,7 @@ export const micOpenState = atom<boolean>({
   default: true,
 });
 
-export const mediaPermissionState = atom<{audioAllowed:boolean, videoAllowed:boolean, muteMicOnJoin:boolean}>({
+export const mediaPermissionState = atom<IMediaPermission>({
   key: "mediaPermissionState",
   default: {
     audioAllowed:false,
@@ -259,11 +249,7 @@ export const currentTabState = atom<{
   default: settingsTabData[0],
 });
 
-export const presentationSlideState = atom<{
-  show: boolean,
-  currentPresentationID: "",
-  presentations: IPresentationSlideState[]
-}>({
+export const presentationSlideState = atom<IPresentationMain>({
   key: "presentationSlideState",
   default: {
     show: false,
@@ -272,27 +258,12 @@ export const presentationSlideState = atom<{
   },
 });
 
-export const recordingModalState = atom<{
-  isActive: boolean;
-  isStarted: boolean;
-  recordingConsent: boolean;
-  step: number;
-  id: number;
-  width: number;
-  height: number;
-  name: string;
-}>({
+export const recordingModalState = atom<IRecordingModal>({
   key: "recordingModalState",
   default: { step: 0, isActive: false, isStarted: false, recordingConsent: false, height: 0, width: 0, id: 0, name: "" },
 });
 
-export const eCinemaModalState = atom<{
-  isActive: boolean;
-  source: string;
-  step: number;
-  eventName: string;
-  eventData: null;
-}>({
+export const eCinemaModalState = atom<IECinemaModal>({
   key: "eCinemaModalState",
   default: {
     isActive: false,
@@ -344,26 +315,7 @@ export const ccModalState = atom<{
   },
 });
 
-export const donationModalState = atom<{
-  isActive: boolean;
-  step: number;
-  donationName: string;
-  donationAmount: number;
-  donationAmountType: string;
-  donationCreatorName: string;
-  donationCreatorId: number;
-  donationCreatedAt: Date;
-  enableFlashNotification: boolean;
-  totalAmountDonatated: number;
-  usersDonated: {
-    id: number;
-    fullName: string | null;
-    email: string | null;
-    donationDescription: string;
-    donationUniqueNumber: number | null;
-    donationAmount: number;
-  }[];
-}>({
+export const donationModalState = atom<IDonationModal>({
   key: "donationModalState",
   default: {
     step: 0,
@@ -394,14 +346,7 @@ export const whiteboardAnnotationState = atom<IWhiteBoardAnnotationRemote[]>({
 //   })),
 // ];
 
-export const fileUploadModalState = atom<{
-  step: number;
-  isMinimized: boolean;
-  isFull: boolean;
-  files: File[];
-  filesToUpload: string[];
-  filesUploadInProgress: any[];
-}>({
+export const fileUploadModalState = atom<IFileUploadModal>({
   key: "fileUploadModalState",
   default: {
     step: 0,
@@ -434,30 +379,7 @@ export const breakOutModalState = atom<IBreakOutRecord>({
   },
 });
 
-export const pollModalState = atom<{
-  isActive: boolean;
-  isEnded: boolean;
-  isEdit: boolean;
-  isUserHost: boolean;
-  step: number;
-  pollQuestion: string;
-  pollCreatorName: string;
-  pollCreatorId: string;
-  pollCreatedAt: Date;
-  pollOptions: {
-    id: number;
-    option: string;
-    votes: number;
-  }[];
-  totalVotes: number;
-  usersVoted: {
-    id: string | null | undefined;
-    fullName: string | null | undefined;
-    email: string | null | undefined;
-    votedOption: string;
-    votedOptionId: number;
-  }[];
-}>({
+export const pollModalState = atom<IPollModal>({
   key: "pollModalState",
   default: {
     step: 0,

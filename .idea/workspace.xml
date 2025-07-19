@@ -22,10 +22,15 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Integrated Elevenlabs for Audio transcription&#10;-Comment browserSupportsSpeechRecognition check">
-      <change afterPath="$PROJECT_DIR$/src/pages/api/elevenlabs.js" afterDir="false" />
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Added VAD to control sending silent audio to Elevenlabs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PostLeave.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostLeave.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/eCinema/EcinemaService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eCinema/EcinemaService.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/recoil/atom.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/recoil/atom.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/SocketIOCaption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/SocketIOCaption.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,7 +192,7 @@
       <workItem from="1749107654734" duration="103000" />
       <workItem from="1749880312524" duration="107000" />
       <workItem from="1750925933317" duration="6060000" />
-      <workItem from="1752310774008" duration="27010000" />
+      <workItem from="1752310774008" duration="54999000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -519,7 +524,23 @@
       <option name="project" value="LOCAL" />
       <updated>1752538237010</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="-Integrated Elevenlabs for Audio transcription&#10;-Comment browserSupportsSpeechRecognition check on CC Modal">
+      <option name="closed" value="true" />
+      <created>1752577220835</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1752577220835</updated>
+    </task>
+    <task id="LOCAL-00046" summary="-Added VAD to control sending silent audio to Elevenlabs">
+      <option name="closed" value="true" />
+      <created>1752619157305</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1752619157305</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -554,8 +575,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="-Fix switching of Camera&#10;-Fix switching of Mic&#10;-Make Speaker test work&#10;-Make request camera to use deviceID&#10;-Make request audio to use deviceID&#10;-Add mic filter state to atom&#10;-Add constraint details to video quality" />
-    <MESSAGE value="-Added Mic filters and support check&#10;-Implement Video Quality" />
     <MESSAGE value="-Added retrieving of existing private chat on Public chat by selecting at the top&#10;-Typing on Private chat is now showing" />
     <MESSAGE value="-Fix error" />
     <MESSAGE value="-Implement sessiontoken to be removed from url on page loaded&#10;-Implement encrypting, decrypting and saving sessionToken to localStorage" />
@@ -579,7 +598,9 @@
     <MESSAGE value="Worked On Audio Transcription&#10;Worked on Presentation Display" />
     <MESSAGE value="Perfecting audio transcription and translation" />
     <MESSAGE value="-Integrated Elevenlabs for Audio transcription&#10;-Comment browserSupportsSpeechRecognition check" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Integrated Elevenlabs for Audio transcription&#10;-Comment browserSupportsSpeechRecognition check" />
+    <MESSAGE value="-Integrated Elevenlabs for Audio transcription&#10;-Comment browserSupportsSpeechRecognition check on CC Modal" />
+    <MESSAGE value="-Added VAD to control sending silent audio to Elevenlabs" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Added VAD to control sending silent audio to Elevenlabs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -634,6 +655,12 @@
           <line>98</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/recoil/atom.ts</url>
+          <line>190</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

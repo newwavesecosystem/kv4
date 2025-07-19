@@ -5,7 +5,7 @@ import {authUserState, microphoneStreamState, postLeaveMeetingState, screenShari
 import HandOnIcon from "./icon/outline/HandOnIcon";
 import ExitIcon from "./icon/outline/ExitIcon";
 import {kurentoAudioEndStream} from "~/server/KurentoAudio";
-import {websocketEnd} from "~/server/Websocket";
+// import {websocketEnd} from "~/server/Websocket";
 import stopMicrophoneStream from "~/lib/microphone/stopMicrophoneStream";
 import {kurentoVideoEndStream} from "~/server/KurentoVideo";
 import {websocketKurentoScreenshareEndScreenshare} from "~/server/KurentoScreenshare";
@@ -31,7 +31,7 @@ function PostLeave() {
     if(screenSharingStream != null){
       websocketKurentoScreenshareEndScreenshare(screenSharingStream);
     }
-    websocketEnd();
+    // websocketEnd();
   }, [postLeaveMeeting]);
 
   return (

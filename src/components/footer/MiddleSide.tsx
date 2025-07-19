@@ -641,27 +641,27 @@ function MiddleSide() {
                         <span>Upload Files</span>
                     </DropdownMenuItem>)}
 
-                    {presentationSlide.presentations.map((data, index) => (
-                        <DropdownMenuItem
-                            key={`upf-${index}`}
-                            onClick={() => {
-                                setPresentationSlide((prev:any)=>({
-                                    ...prev,
-                                    show:prev.currentPresentationID == data.id ? !prev.show  : true ,
-                                    currentPresentationID:data.id
-                                }));
+                {/*    {presentationSlide.presentations.map((data, index) => (*/}
+                {/*        <DropdownMenuItem*/}
+                {/*            key={`upf-${index}`}*/}
+                {/*            onClick={() => {*/}
+                {/*                setPresentationSlide((prev:any)=>({*/}
+                {/*                    ...prev,*/}
+                {/*                    show:prev.currentPresentationID == data.id ? !prev.show  : true ,*/}
+                {/*                    currentPresentationID:data.id*/}
+                {/*                }));*/}
 
-                            // setFileUploadModal((prev) => ({
-                            // ...prev,
-                            // step: 1,
-                            // }));
-                        }}
-                        className="py-2"
-                        >
-                    <FolderOpenIcon className="mr-2 h-5 w-5" />
-                    <span>{data.name}</span>
-                </DropdownMenuItem>
-                    ))}
+                {/*            // setFileUploadModal((prev) => ({*/}
+                {/*            // ...prev,*/}
+                {/*            // step: 1,*/}
+                {/*            // }));*/}
+                {/*        }}*/}
+                {/*        className="py-2"*/}
+                {/*        >*/}
+                {/*    <FolderOpenIcon className="mr-2 h-5 w-5" />*/}
+                {/*    <span>{data.name}</span>*/}
+                {/*</DropdownMenuItem>*/}
+                {/*    ))}*/}
 
                     <DropdownMenuSeparator />
 
