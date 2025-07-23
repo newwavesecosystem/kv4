@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from "../ui/dialog";
 import { useRecoilState } from "recoil";
 import { removeUserModalState } from "~/recoil/atom";
 import { Checkbox } from "../ui/checkbox";
-import {websocketRemoveUser} from "~/server/Websocket";
+import {websocketRemoveUser} from "~/server/WebsocketActions";
 
 function RemoveUserModal() {
   const [removeParticipant, setRemoveParticipant] =

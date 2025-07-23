@@ -7,7 +7,6 @@ import { SettingsSheetClose } from "../ui/settingsSheet";
 import CloseIcon from "../icon/outline/CloseIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
 import {IParticipant} from "~/types";
-import {websocketAllowAllWaitingUser} from "~/server/Websocket";
 import TickIcon from "~/components/icon/outline/TickIcon";
 import ArrowChevronDownIcon from "~/components/icon/outline/ArrowChevronDownIcon";
 

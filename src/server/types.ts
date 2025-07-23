@@ -15,10 +15,21 @@ import {
 
 export interface IWebSocketState {
     user: IAuthUser | null;
-    participantList: any;
+    participantList: IParticipant[];
     manageUserSettings: IManageUserSettings;
     postLeaveMeeting: IPostLeaveMeeting;
     eCinemaModal: IECinemaModal;
+    micState: boolean;
+    screenShareState: boolean;
+    waitingRoomUsers: IWaitingUser[];
+    breakOutRoomState: IBreakOutRecord;
+    fileUploadModal: IFileUploadModal;
+    notificationSettings: INotificationSettings;
+    chatTypingList: any;
+    mediaPermission:IMediaPermission,
+    participantTalkingList:IVoiceUser[],
+    pinnedParticipant:IParticipant[],
+    participantCameraList:any
 }
 
 export interface IWebSocketStateSetters {
@@ -34,27 +45,28 @@ export interface IWebSocketStateSetters {
     setChatTypingList: SetterOrUpdater<any>;
     setECinemaModal: SetterOrUpdater<IECinemaModal>;
     setDonationState: SetterOrUpdater<IDonationModal>;
-    setPollModal: SetterOrUpdater<IPollModal>;
-    setPresentationSlide: SetterOrUpdater<IPresentationMain>;
-    setWaitingRoomUsers: SetterOrUpdater<IWaitingUser[]>;
+    setPollModal: SetterOrUpdater<IPollModal | any>;
+    setPresentationSlide: SetterOrUpdater<IPresentationMain | any>;
+    setWaitingRoomUsers: SetterOrUpdater<IWaitingUser[] | any>;
     setMicState: SetterOrUpdater<boolean>;
-    setBreakOutRoomState: SetterOrUpdater<IBreakOutRecord>;
+    setBreakOutRoomState: SetterOrUpdater<IBreakOutRecord | any>;
     setIsNewMessage: SetterOrUpdater<boolean>;
-    setFileUploadModal: SetterOrUpdater<IFileUploadModal>;
-    setPrivateChatState: SetterOrUpdater<IPrivateChatMessage>;
+    setFileUploadModal: SetterOrUpdater<IFileUploadModal | any>;
+    setPrivateChatState: SetterOrUpdater<IPrivateChatMessage | any>;
     setScreenShareState: SetterOrUpdater<boolean>;
     setChatTypeList: SetterOrUpdater<any[]>;
     setIsnewRaiseHand: SetterOrUpdater<boolean>;
-    setManageUserSettings: SetterOrUpdater<IManageUserSettings>;
-    setPostLeaveMeeting: SetterOrUpdater<IPostLeaveMeeting>;
+    setManageUserSettings: SetterOrUpdater<IManageUserSettings | any>;
+    setPostLeaveMeeting: SetterOrUpdater<IPostLeaveMeeting | any>;
     setWaitingRoomType: SetterOrUpdater<number>;
     setPinnedParticipant: SetterOrUpdater<IParticipant[]>;
     setMicrophoneStream: SetterOrUpdater<any>;
     setMediaPermission: SetterOrUpdater<IMediaPermission>;
     setSelectedSpeaker: SetterOrUpdater<MediaDeviceInfo | null>;
     setNotificationSettingsState: SetterOrUpdater<INotificationSettings>;
-    setSoundNotification: SetterOrUpdater<ISoundNotificationState>;
+    setSoundNotification: SetterOrUpdater<ISoundNotificationState | any>;
     shouldStopReconnectingLocal: () => void;
     startSub: () => void;
     setReconnectAttempts: (value: number) => void;
+    toast: (props: { title: string; description: string; duration: number; }) => void;
 }

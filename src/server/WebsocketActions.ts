@@ -1,6 +1,37 @@
 import { websocketService } from './WebsocketService';
-import { generatesSmallId, generateRandomId } from "./ServerInfo";
-import { IAuthUser, IBreakoutRoom, IManageUserSettings, IParticipant, BreakoutRoomOptions, IColumnBreakOutRoom } from "~/types";
+import * as ServerInfo from './ServerInfo';
+import {generateRandomId, generateSmallId, generatesSmallId} from "./ServerInfo";
+import {IAuthUser, IBreakoutRoom, IColumnBreakOutRoom, IManageUserSettings, IParticipant} from "~/types/index";
+
+/**
+ * Helper function to send an array of messages through the WebSocket service.
+ * The sockjs-client send method expects a single string, and the server expects
+ * a JSON-stringified array of strings.
+ * @param messages - An array of stringified JSON messages to send.
+ */
+export const websocketSend=(messages: string[])=> {
+    websocketService.send(JSON.stringify(messages));
+}
+
+export function websocketRecord() {
+    console.log('I am Websockets')
+    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"toggleRecording","params":[]}`])
+}
+
+export function websocketClear() {
+    // websocketSend([`{"msg":"method","id":"51","method":"setEmojiStatus","params":["${UserInfo.internalUserID}","none"]}`])
+}
+
+
+interface BreakoutRoomOptions {
+    rooms: IColumnBreakOutRoom[];
+    time: number;
+    freeRoom: boolean;
+    saveWhiteBoard: boolean;
+    saveSharedNote: boolean;
+    sendInvite: boolean;
+    roomName: string | undefined;
+}
 
 // A helper to stringify and send data
 const send = (data: any) => {
@@ -60,6 +91,11 @@ export const websocketSendPrivateMessage = (internalUserID: any, message: string
     send(msg);
 }
 
+export const websocketStartPrivateChat = (participant: IParticipant) => {
+    const msg = { msg: 'sub', id: generateRandomId(17), name: 'group-chat-msg', params: [participant.chatId] };
+    send(msg);
+}
+
 export const websocketStartTyping = (internalUserID: string) => {
     const msg = { msg: 'method', id: generatesSmallId(), method: 'startUserTyping', params: [internalUserID] };
     send(msg);
@@ -110,23 +146,24 @@ export const websocketMuteParticipantsePresenter = (internalUserID: any) => {
 }
 
 export const websocketLockViewers = (manageUserSettings: IManageUserSettings, internalUserID: any) => {
-    if (!manageUserSettings.meetingId) return;
     const msg = {
         msg: 'method',
         id: generatesSmallId(),
-        method: 'lockUsers',
+        method: 'toggleLockSettings',
         params: [{
-            meetingId: manageUserSettings.meetingId,
-            userId: internalUserID,
-            settings: [
-                { locked: manageUserSettings.shareWebcam, name: 'shareWebcam', setBy: null },
-                { locked: manageUserSettings.shareMicrophone, name: 'shareMicrophone', setBy: null },
-                { locked: manageUserSettings.sendPublicChatMessage, name: 'sendPublicChatMessage', setBy: null },
-                { locked: manageUserSettings.sendPrivateChatMessage, name: 'sendPrivateChatMessage', setBy: null },
-                { locked: manageUserSettings.editSharedNotes, name: 'editSharedNotes', setBy: null },
-                { locked: manageUserSettings.seeOtherViewers, name: 'seeOtherViewers', setBy: null }
-            ]
+            "disableCam":manageUserSettings.disableCam,
+            "disableMic":manageUserSettings.disableMic,
+            "disableNotes":manageUserSettings.disableNotes,
+            "disablePrivateChat":manageUserSettings.disablePrivateChat,
+            "disablePublicChat":manageUserSettings.disablePublicChat,
+            "hideUserList":manageUserSettings.hideUserList,
+            "hideViewersAnnotation":manageUserSettings.hideViewersAnnotation,
+            "hideViewersCursor":manageUserSettings.hideViewersCursor,
+            "lockOnJoin":true,
+            "lockOnJoinConfigurable":false,
+            "setBy":internalUserID
         }]
+
     };
     send(msg);
 }
@@ -136,13 +173,13 @@ export const websocketSetWaitingRoom = (policy: 'ALWAYS_ACCEPT' | 'ALWAYS_DENY' 
     send(msg);
 }
 
-export const websocketDenyAllWaitingUser = () => {
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'denyAllGuests', params: [] };
+export const websocketDenyAllWaitingUser = (user:any) => {
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'denyAllGuests', params: [user,"DENY"] };
     send(msg);
 }
 
-export const websocketAllowAllWaitingUser = () => {
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'allowAllGuests', params: [] };
+export const websocketAllowAllWaitingUser = (user:any) => {
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'allowAllGuests', params: [user,"ALLOW"] };
     send(msg);
 }
 
@@ -184,17 +221,19 @@ export const websocketSendMessage2PrivateWaitingUser = (message: string, interna
     send(msg);
 }
 
-export const websocketToggleVoice = () => {
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'toggleSelfVoice', params: [] };
+
+export function websocketMuteMic() {
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'toggleVoice', params: [] };
     send(msg);
 }
+
 
 export const websocketPresenter = (internalUserID: string | undefined) => {
     const msg = { msg: 'method', id: generatesSmallId(), method: 'assignPresenter', params: [internalUserID] };
     send(msg);
 }
 
-export const websocketStartPoll = (question: string, answers: string[]) => {
+export const websocketStartPoll = (id:any,question: string, answers: string[]) => {
     const pollAnswers = answers.map((answer, i) => ({ id: i, key: answer }));
     const msg = { msg: 'method', id: generatesSmallId(), method: 'startPoll', params: ['R_POLL', question, pollAnswers] };
     send(msg);
@@ -220,9 +259,28 @@ export const websocketPinUser = (internalUserID: string, pin: boolean) => {
     send(msg);
 }
 
-export const websocketStartPrivateChat = (participant: IParticipant) => {
-    const msg = { msg: 'sub', id: generateRandomId(17), name: 'group-chat-msg', params: [participant.chatId] };
-    send(msg);
+export function websocketCreateBreakoutRoom(options: BreakoutRoomOptions): void {
+    const { rooms, time, freeRoom, saveWhiteBoard, saveSharedNote, sendInvite, roomName } = options;
+
+    const record=true;
+
+    const roomParams: IBreakoutRoom[]=[
+        ...rooms.slice(1).map((item:IColumnBreakOutRoom, number)=>({
+            users: [],
+            name: `${roomName} (${item.title})`,
+            captureNotesFilename: `Room_${number}_Notes`,
+            captureSlidesFilename: `Room_${number}_Whiteboard`,
+            shortName: item.title,
+            isDefaultName: true,
+            freeJoin: freeRoom,
+            sequence: number+1,
+        }))
+    ]
+
+    const breakoutRoomParams = [roomParams, time, record, saveWhiteBoard, saveSharedNote, sendInvite];
+
+    const jsonString = JSON.stringify(breakoutRoomParams);
+    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"createBreakoutRoom","params":${jsonString}}`]);
 }
 
 export const startBreakoutRoom = (user: IAuthUser, breakoutRoomOptions: BreakoutRoomOptions) => {
@@ -240,30 +298,14 @@ export const startBreakoutRoom = (user: IAuthUser, breakoutRoomOptions: Breakout
     }
     send(startBreakout);
 }
-
+export const websocketRequest2JoinBreakoutRoom=(breakoutId: string | null)=>{
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'requestJoinURL', params: [
+            {breakoutId: breakoutId}
+        ] };
+    send(msg);
+}
 export const websocketEndBreakoutRoom = () => {
     const msg = { msg: 'method', id: generatesSmallId(), method: 'endAllBreakoutRooms', params: [] };
-    send(msg);
-}
-
-export const handleRequestPresentationUploadToken = (uniqueID: string) => {
-    const msg = { msg: 'sub', id: uniqueID, name: 'presentation-upload-token', params: [uniqueID] };
-    send(msg);
-}
-
-export const handlePresentationUploaded = (name: string, id: string, presentationAuthToken: string) => {
-    const msg = {
-        msg: 'method',
-        id: generatesSmallId(),
-        method: 'presentationUpload',
-        params: [{
-            name: name,
-            id: id,
-            authzToken: presentationAuthToken,
-            current: true,
-            temporary: true
-        }]
-    };
     send(msg);
 }
 
@@ -281,6 +323,30 @@ export const joinBreakoutRoom = (user: IAuthUser, room: IColumnBreakOutRoom) => 
         id: generatesSmallId()
     }
     send(joinBreakout);
+}
+
+export const handleRequestPresentationUploadToken = (uniqueID: string,file:File) => {
+    const msg = { msg: 'sub', id: generateSmallId(), name: 'requestPresentationUploadToken', params: ["DEFAULT_PRESENTATION_POD",file?.name,uniqueID] };
+    send(msg);
+
+    const msg2 = { msg: 'sub', id: generateRandomId(17), name: 'presentation-upload-token', params: ["DEFAULT_PRESENTATION_POD",file?.name,uniqueID] };
+    send(msg2);
+}
+
+export const handlePresentationUploaded = (name: string, id: string, presentationAuthToken: string) => {
+    const msg = {
+        msg: 'method',
+        id: generatesSmallId(),
+        method: 'presentationUpload',
+        params: [{
+            name: name,
+            id: id,
+            authzToken: presentationAuthToken,
+            current: true,
+            temporary: true
+        }]
+    };
+    send(msg);
 }
 
 export const websocketLeaveMeeting = (user: IAuthUser) => {

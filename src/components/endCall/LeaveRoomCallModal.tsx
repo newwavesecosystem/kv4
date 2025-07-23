@@ -1,9 +1,9 @@
 import React from "react";
 import { AlertDialog, AlertDialogContent } from "../ui/alert-dialog";
-import { useRecoilState } from "recoil";
-import { leaveRoomCallModalState, postLeaveMeetingState } from "~/recoil/atom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {authUserState, leaveRoomCallModalState, postLeaveMeetingState} from "~/recoil/atom";
 import AlertTriangleIcon from "../icon/outline/AlertTriangleIcon";
-import { websocketLeaveMeeting } from "~/server/Websocket";
+import {websocketLeaveMeeting} from "~/server/WebsocketActions";
 
 function LeaveRoomCallModal() {
   const [leaveRoomCallModal, setRoomCallModal] = useRecoilState(
@@ -12,6 +12,8 @@ function LeaveRoomCallModal() {
   const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(
     postLeaveMeetingState,
   );
+  const user = useRecoilValue(authUserState);
+
   return (
     <AlertDialog open={leaveRoomCallModal} onOpenChange={setRoomCallModal}>
       <AlertDialogContent className="rounded-xl border-0 bg-primary py-3 text-a11y sm:max-w-[425px] md:rounded-xl">
@@ -41,7 +43,7 @@ function LeaveRoomCallModal() {
                 //   ...postLeaveMeeting,
                 //   isLeaveRoomCall: true,
                 // });
-                websocketLeaveMeeting();
+                websocketLeaveMeeting(user!);
               }}
             >
               Leave Session

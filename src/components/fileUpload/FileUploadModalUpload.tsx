@@ -16,7 +16,7 @@ import InformationIcon from "../icon/outline/InformationIcon";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "~/lib/utils";
 import * as ServerInfo from "~/server/ServerInfo";
-import {handleRequestPresentationUploadToken} from "~/server/Websocket";
+import {handleRequestPresentationUploadToken} from "~/server/WebsocketActions";
 
 function FileUploadModalUpload() {
   const [fileUploadModal, setFileUploadModal] =

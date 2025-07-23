@@ -152,16 +152,15 @@ export interface IWaitingUser {
 }
 
 export interface IManageUserSettings {
-  meetingId?: string; // Added for lock viewers
-  muteAllUsers: boolean;
-  muteAllUsersExceptPresenter: boolean;
-  shareWebcam: boolean; // Renamed from disableCam
-  shareMicrophone: boolean; // Renamed from disableMic
-  sendPublicChatMessage: boolean; // Renamed from disablePublicChat
-  sendPrivateChatMessage: boolean; // Renamed from disablePrivateChat
-  editSharedNotes: boolean; // Renamed from disableNotes
-  seeOtherViewers: boolean; // Renamed from hideUserList
-  hideViewersAnnotation:boolean;
+  muteAllUsers: boolean,
+  muteAllUsersExceptPresenter: boolean,
+  disableCam:boolean,
+  disableMic:boolean,
+  disableNotes:boolean,
+  disablePrivateChat:boolean,
+  disablePublicChat:boolean,
+  hideUserList:boolean,
+  hideViewersAnnotation:boolean,
   hideViewersCursor:boolean,
   lockOnJoin:boolean,
   lockOnJoinConfigurable:boolean
@@ -374,10 +373,10 @@ export interface IChat {
 }
 
 export interface IChatMessage {
-  id: number;
+  id: any;
   message: string;
-  sender: IConnectedUser;
-  timestamp: number;
+  name: any;
+  time: string;
 }
 
 export interface IPrivateChatMessage {

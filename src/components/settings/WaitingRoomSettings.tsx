@@ -15,9 +15,13 @@ import CloseIcon from "../icon/outline/CloseIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
 import TickIcon from "../icon/outline/TickIcon";
 import ChatIcon from "../icon/outline/ChatIcon";
-import {websocketAllowAllWaitingUser, websocketDenyAllWaitingUser, websocketSetWaitingRoom} from "~/server/Websocket";
 import {IWaitingUser} from "~/types";
 import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
+import {
+  websocketAllowAllWaitingUser,
+  websocketDenyAllWaitingUser,
+  websocketSetWaitingRoom
+} from "~/server/WebsocketActions";
 
 function WaitingRoomSettings() {
   const currentTab = useRecoilValue(currentTabState);
@@ -70,13 +74,13 @@ function WaitingRoomSettings() {
         <div className="flex items-center justify-between py-3 text-sm">
           <button className={`${waitingRoomType == 1 ? 'bg-a11y/40': 'bg-a11y/10'} flex items-center rounded-lg p-2`} onClick={()=>{
             setWaitingRoomType(1);
-            websocketSetWaitingRoom(1);
+            websocketSetWaitingRoom('ASK_MODERATOR');
           }}>
             <span className="ml-2">Ask Moderator</span>
           </button>
           <button className={`${waitingRoomType == 2 ? 'bg-a11y/40': 'bg-a11y/10'} flex items-center rounded-lg p-2`} onClick={()=>{
             setWaitingRoomType(2);
-            websocketSetWaitingRoom(2);
+            websocketSetWaitingRoom('ALWAYS_ACCEPT');
           }}>
             {" "}
             <span className="ml-2">Always Accept</span>

@@ -33,7 +33,7 @@ import dynamic from "next/dynamic";
 import ScreenSharingComponent from "./screenSharing/ScreenSharingComponent";
 import ArrowChevronDownIcon from "./icon/outline/ArrowChevronDownIcon";
 import ECinemaComponent from "./eCinema/ECinemaComponent";
-import Websocket, {websocketLeaveMeeting} from "~/server/Websocket";
+import Websocket from "~/server/Websocket";
 import KurentoAudio from "~/server/KurentoAudio";
 import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";

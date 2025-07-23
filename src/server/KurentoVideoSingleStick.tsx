@@ -4,7 +4,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { authUserState, connectionStatusState, participantCameraListState } from '~/recoil/atom';
 import * as ServerInfo from "~/server/ServerInfo";
 import {IParticipantCamera} from "~/types/index";
-import {websocketSend} from "~/server/Websocket";
 import {WebRtcPeer} from "kurento-utils";
 
 const KurentoVideoSingleStick = () => {
@@ -28,13 +27,13 @@ const KurentoVideoSingleStick = () => {
             if(wsRef.current?.CLOSED){
                 clearInterval(myVar);
             }
-            websocketSend({"id": "ping"})
+            sendMessage({"id": "ping"})
         }
     }
 
     const sendMessage = (data: any) => {
         if (wsRef.current != null) {
-            wsRef.current.send(JSON.stringify(data));
+            wsRef.current?.send(JSON.stringify(data));
             console.log('Sent data via WebSocket:', data);
         } else {
             console.error('WebSocket is not open. Cannot send data.');
@@ -42,20 +41,20 @@ const KurentoVideoSingleStick = () => {
     };
 
     const initializeWebSocket = () => {
-        if (wsRef.current && (wsRef.current.readyState === WebSocket.OPEN || wsRef.current.readyState === WebSocket.CONNECTING)) {
+        if (wsRef.current && (wsRef.current?.readyState === WebSocket.OPEN || wsRef.current?.readyState === WebSocket.CONNECTING)) {
             console.log('WebSocket connection is already open or connecting');
             return;
         }
 
         wsRef.current = new WebSocket(`${ServerInfo.sfuURL}?sessionToken=${user?.sessiontoken}`);
 
-        wsRef.current.onopen = () => {
+        wsRef.current!.onopen = () => {
             console.log('WebSocket connection established');
             pinger();
             // startProcessForNewParticipants();
         };
 
-        wsRef.current.onmessage = (message) => {
+        wsRef.current!.onmessage = (message) => {
             const parsedMessage = JSON.parse(message.data);
             console.info('Received message from SFU:', parsedMessage);
 
@@ -78,7 +77,7 @@ const KurentoVideoSingleStick = () => {
             }
         };
 
-        wsRef.current.onclose = () => {
+        wsRef.current!.onclose = () => {
             console.log('WebSocket connection closed');
             cleanUpWebRtcPeers();
             attemptReconnect(); // Attempt reconnection
@@ -359,7 +358,7 @@ const KurentoVideoSingleStick = () => {
 
         return () => {
             if (wsRef.current?.readyState === WebSocket.OPEN) {
-                wsRef.current.close();
+                wsRef.current?.close();
             }
             cleanUpWebRtcPeers();
         };

@@ -1,6 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
 import * as kurentoUtils from "kurento-utils";
-import {websocketSend} from "./Websocket";
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
 import {
@@ -12,6 +11,7 @@ import {
 } from "~/recoil/atom";
 import {IParticipantCamera} from "~/types";
 import requestCameraAccess from "~/lib/camera/requestCameraAccess";
+import {websocketSend} from "~/server/WebsocketActions";
 
 
 let ws: WebSocket | null = null;
@@ -211,7 +211,7 @@ const KurentoVideo = () => {
             if (!videoState || ws?.readyState !== WebSocket.OPEN) {
                 clearInterval(interval);
             }
-            websocketSend({ id: "ping" });
+            ws?.send(JSON.stringify({ id: "ping" }));
         }, 15000);
     };
 

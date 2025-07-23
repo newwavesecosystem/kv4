@@ -7,8 +7,8 @@ import { Checkbox } from "../ui/checkbox";
 import RoomBoard from "./RoomBoard";
 import InformationIcon from "../icon/outline/InformationIcon";
 import dayjs from "dayjs";
-import {websocketCreateBreakoutRoom} from "~/server/Websocket";
 import {IParticipant, IUserBreakOutRoom} from "~/types";
+import {websocketCreateBreakoutRoom} from "~/server/WebsocketActions";
 
 function BreakOutModalCreate() {
   const [breakOutRoomState, setBreakOutRoomState] = useRecoilState(breakOutModalState);

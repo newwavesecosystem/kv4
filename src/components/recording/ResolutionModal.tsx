@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import recordingResolutionsData from "~/data/recordingResolutionsData";
 import { useToast } from "../ui/use-toast";
-import {websocketRecord} from "~/server/Websocket";
+import {websocketRecord} from "~/server/WebsocketActions";
 
 function ResolutionModal() {
   const [recordingState, setRecordingState] =

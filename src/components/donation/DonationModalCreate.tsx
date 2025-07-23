@@ -4,9 +4,9 @@ import { authUserState, donationModalState } from "~/recoil/atom";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Checkbox } from "../ui/checkbox";
-import {websocketSendMessage} from "~/server/Websocket";
 import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";
+import {websocketSendMessage} from "~/server/WebsocketActions";
 
 function DonationModalCreate() {
   const [donationState, setDonationState] = useRecoilState(donationModalState);

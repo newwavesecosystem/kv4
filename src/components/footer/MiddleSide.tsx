@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
     authUserState,
@@ -76,13 +76,6 @@ import ShareScreenOffIcon from "../icon/outline/ShareScreenOffIcon";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
 import HandOnIcon from "../icon/outline/HandOnIcon";
 import HandOffIcon from "../icon/outline/HandOffIcon";
-import {
-  websocketMuteAllParticipants,
-  websocketMuteMic,
-  websocketPresenter,
-  websocketRaiseHand,
-  websocketStopCamera,
-} from "~/server/Websocket";
 import { IChat, IParticipant, IParticipantCamera } from "~/types";
 import MovieColoredIcon from "../icon/outline/MovieColoredIcon";
 import {generateRandomId} from "~/server/ServerInfo";
@@ -91,6 +84,12 @@ import {
 } from "~/server/KurentoScreenshare";
 import {CurrentUserIsPresenter, CurrentUserRoleIsModerator, ModeratorRole} from "~/lib/checkFunctions";
 import {Tooltip, TooltipTrigger, TooltipContent, TooltipProvider} from "~/components/ui/tooltip";
+import {
+    websocketMuteAllParticipants,
+    websocketMuteMic,
+    websocketRaiseHand,
+    websocketStopCamera
+} from "~/server/WebsocketActions";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
@@ -609,7 +608,7 @@ function MiddleSide() {
 
                             setParticipantList(updatedArray);
 
-                            websocketRaiseHand(raiseH);
+                            websocketRaiseHand(user?.meetingDetails?.internalUserID!,raiseH);
                         }}
                         className="py-2 md:hidden"
                     >

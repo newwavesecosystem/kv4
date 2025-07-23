@@ -26,18 +26,18 @@ import PeopleRemove from "../icon/outline/PeopleRemove";
 import RepeatIcon from "../icon/outline/RepeatIcon";
 import MicOnIcon from "~/components/icon/outline/MicOnIcon";
 import userRolesData from "~/data/userRolesData";
-import {
-  websocketMuteParticipants,
-  websocketParticipantsChangeRole,
-  websocketPresenter,
-  websocketStartPrivateChat
-} from "~/server/Websocket";
 import {IParticipant, IVoiceUser} from "~/types";
 import {CurrentUserRoleIsModerator, FindAvatarfromUserId, ModeratorRole, ViewerRole} from "~/lib/checkFunctions";
 import Image from "next/image";
 import HandOnIcon from "~/components/icon/outline/HandOnIcon";
 import VolumeOffIcon from "~/components/icon/outline/VolumeOffIcon";
 import {cn} from "~/lib/utils";
+import {
+  websocketMuteParticipants,
+  websocketParticipantsChangeRole,
+  websocketPresenter,
+  websocketStartPrivateChat
+} from "~/server/WebsocketActions";
 
 function SingleParticipant({
   participant,
@@ -168,7 +168,7 @@ function SingleParticipant({
             {CurrentUserRoleIsModerator(participantList, user) && talkingList.filter((eachItem: IVoiceUser) =>
                 eachItem?.intId == participant.intId && eachItem?.joined && !eachItem?.muted).length > 0 && (
                 <DropdownMenuItem className="py-4" onClick={() => {
-                  websocketMuteParticipants(participant.userId);
+                  websocketMuteParticipants(user?.meetingDetails?.internalUserID!,participant.userId);
                 }}>
                   <VolumeOnIcon volume={1} className="mr-2 h-5 w-5"/>
                   Mute User

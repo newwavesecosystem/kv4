@@ -3,7 +3,7 @@ import { AlertDialog, AlertDialogContent } from "../ui/alert-dialog";
 import { useRecoilState } from "recoil";
 import { endCallModalState, postLeaveMeetingState } from "~/recoil/atom";
 import AlertTriangleIcon from "../icon/outline/AlertTriangleIcon";
-import { websocketEndMeeting } from "~/server/Websocket";
+import {websocketEndMeeting} from "~/server/WebsocketActions";
 
 function EndCallModal() {
   const [endCallModal, setEndCallModal] = useRecoilState(endCallModalState);

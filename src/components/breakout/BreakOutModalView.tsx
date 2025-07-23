@@ -7,7 +7,6 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import SendIcon from "../icon/outline/SendIcon";
 import { Separator } from "../ui/separator";
-import {websocketRequest2JoinBreakoutRoom} from "~/server/Websocket";
 import {IParticipant} from "~/types/index";
 import {cn} from "~/lib/utils";
 import stopScreenSharingStream from "~/lib/screenSharing/stopScreenSharingStream";
@@ -16,6 +15,7 @@ import requestScreenSharingAccess from "~/lib/screenSharing/requestScreenSharing
 import ShareScreenOnIcon from "~/components/icon/outline/ShareScreenOnIcon";
 import ShareScreenOffIcon from "~/components/icon/outline/ShareScreenOffIcon";
 import {ModeratorRole} from "~/lib/checkFunctions";
+import {websocketRequest2JoinBreakoutRoom} from "~/server/WebsocketActions";
 dayjs.extend(duration);
 function BreakOutModalView() {
   const [breakOutRoomState, setBreakOutRoomState] =

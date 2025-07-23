@@ -18,7 +18,6 @@ import {
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
 import axios from "axios";
 import * as ServerInfo from "~/server/ServerInfo";
-import {websocketStartTyping} from "~/server/Websocket";
 
 const ChatTypesData = [
   {
@@ -297,7 +296,7 @@ function ChatModalKonn3ctAi() {
     <Sheet open={konn3ctAiChatState} onOpenChange={setKonn3ctAiChatState}>
       <SheetContent
         className="m-h-svh w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
-        side={"right"}
+        side="right"
       >
         <div className="sticky top-0 flex max-h-32 flex-col gap-2 p-4">
           <div className="flex items-center gap-2">

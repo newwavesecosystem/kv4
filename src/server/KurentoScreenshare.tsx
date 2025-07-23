@@ -1,6 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
 import * as kurentoUtils from "kurento-utils";
-import {websocketSend} from "./Websocket"
 import * as ServerInfo from './ServerInfo';
 import {useRecoilState, useRecoilValue} from "recoil";
 import {

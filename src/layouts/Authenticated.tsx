@@ -42,7 +42,6 @@ import EndCallModal from "~/components/endCall/EndCallModal";
 import RecordOnIcon from "~/components/icon/outline/RecordOnIcon";
 import MiddleSide from "~/components/footer/MiddleSide";
 import DonationModal from "~/components/donation/DonationModal";
-import { websocketMuteMic , websocketRaiseHand} from "~/server/Websocket";
 import ChatModalKonn3ctAi from "~/components/chat/ChatModalKonn3ctAi";
 import ChatModalPrivateMessage from "~/components/chat/ChatModalPrivateMessage";
 import PollModal from "~/components/poll/PollModal";
@@ -71,6 +70,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import EllipsisIcon from "~/components/icon/outline/EllipsisIcon";
 import ExitIcon from "~/components/icon/outline/ExitIcon";
+import {websocketRaiseHand} from "~/server/WebsocketActions";
 
 
 function Authenticated({ children }: { children: React.ReactNode }) {
@@ -174,7 +174,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
               <TooltipTrigger asChild>
                 {user?.meetingDetails?.customLogoURL != null && user?.meetingDetails?.customLogoURL != "" &&
                     <Image
-                        src={user?.meetingDetails?.customLogoURL}
+                        src={user?.meetingDetails?.customLogoURL!}
                         alt="logo"
                         width={60}
                         height={28}
@@ -535,7 +535,7 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
                       setParticipantList(updatedArray)
 
-                      websocketRaiseHand(raiseH);
+                      websocketRaiseHand(user?.meetingDetails?.internalUserID!,raiseH);
                     }}
                     className={cn(
                         "items-center rounded-full border border-a11y/20 bg-transparent p-2",

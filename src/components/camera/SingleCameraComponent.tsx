@@ -31,9 +31,9 @@ import PeoplesIcon from "~/components/icon/outline/PeoplesIcon";
 import PeopleAppointmentIcon from "~/components/icon/outline/PeopleAppointmentIcon";
 import PeopleSpeakIcon from "~/components/icon/outline/PeopleSpeakIcon";
 import {CurrentUserRoleIsModerator, ModeratorRole} from "~/lib/checkFunctions";
-import {websocketPinUser, websocketPresenter} from "~/server/Websocket";
 import playAndRetry from "~/lib/mediaElementPlayRetry";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "~/components/ui/tooltip";
+import {websocketPinUser, websocketPresenter} from "~/server/WebsocketActions";
 
 function SingleCameraComponent({
   participant, userCamera,

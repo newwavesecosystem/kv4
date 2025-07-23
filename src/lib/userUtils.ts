@@ -19,7 +19,7 @@ export const updateUser = (list: IParticipant[], user: Partial<IParticipant> & {
     const index = list.findIndex((p) => p.id === user.id);
     if (index > -1) {
         const newList = [...list];
-        newList[index] = { ...newList[index], ...user };
+        // newList[index] = { ...newList[index], ...user };
         return newList;
     }
     return list;

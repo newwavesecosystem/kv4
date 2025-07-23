@@ -26,7 +26,6 @@ import VideoOnIcon from "../icon/outline/VideoOnIcon";
 import VolumeOnIcon from "../icon/outline/VolumeOnIcon";
 import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
 import stopCameraStream from "~/lib/camera/stopCameraStream";
-import {websocketStopCamera} from "~/server/Websocket";
 import requestCameraAccess from "~/lib/camera/requestCameraAccess";
 import {IParticipantCamera} from "~/types";
 import {useToast} from "~/components/ui/use-toast";

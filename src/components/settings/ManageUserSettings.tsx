@@ -16,13 +16,9 @@ import { Switch } from "../ui/switch";
 import MicOffIcon from "../icon/outline/MicOffIcon";
 import PeopleSpeakIcon from "../icon/outline/PeopleSpeakIcon";
 import LockOffIcon from "../icon/outline/LockOffIcon";
-import {
-  websocketLockViewers,
-  websocketMuteAllParticipants,
-  websocketMuteParticipantsePresenter
-} from "~/server/Websocket";
 import VideoOnIcon from "~/components/icon/outline/VideoOnIcon";
 import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
+import {websocketLockViewers} from "~/server/WebsocketActions";
 
 function ManageUserSettings() {
   const currentTab = useRecoilValue(currentTabState);

@@ -5,7 +5,7 @@ const MAX_RECONNECT_ATTEMPTS = 10;
 const RECONNECT_DELAY_BASE_MS = 1000;
 const RECONNECT_DELAY_MAX_MS = 30000;
 
-let sock: SockJS | null = null;
+let sock: any | null = null;
 let reconnectAttempts = 0;
 let shouldReconnect = true;
 let pingInterval: NodeJS.Timeout | null = null;

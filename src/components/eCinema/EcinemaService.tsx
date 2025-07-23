@@ -1,7 +1,7 @@
 import * as ServerInfo from "~/server/ServerInfo";
-import {websocketSend} from "~/server/Websocket";
 import {generateRandomId} from "~/server/ServerInfo";
 import {IAuthUser} from "~/types/index";
+import {websocketSend} from "~/server/WebsocketActions";
 
 export const startWatching = (url:any) => {
     // let externalVideoUrl = url;
@@ -69,49 +69,49 @@ export const receiveVideoLinkFromWebsocket =(link:any, eCinemaModal:any, setECin
 
 export const stopVideoLinkFromWebsocket =(link:any, eCinemaModal:any, setECinemaModal:any)=>{
     console.log('receive Link', link)
-    // setECinemaModal({
-    //     ...eCinemaModal,
-    //     source: link,
-    //     isActive:false
-    // });
+    setECinemaModal({
+        ...eCinemaModal,
+        source: link,
+        isActive:false
+    });
 }
 
 export const receivedPlay =(time:any, setECinemaModal:any)=>{
     console.log('receive play');
-    // setECinemaModal((prev:any)=>({
-    //     ...prev,
-    //     eventName: "play",
-    //     eventData: time,
-    // }));
+    setECinemaModal((prev:any)=>({
+        ...prev,
+        eventName: "play",
+        eventData: time,
+    }));
 }
 
 export const receivedStop =(time:any, setECinemaModal:any)=>{
     console.log('ecm receive stop');
 
-    // setECinemaModal((prev:any)=>({
-    //     ...prev,
-    //     eventName: "stop",
-    //     eventData: time,
-    // }));
+    setECinemaModal((prev:any)=>({
+        ...prev,
+        eventName: "stop",
+        eventData: time,
+    }));
 }
 
 
 export const receivedPresenterReady =(time:any, setECinemaModal:any)=>{
     console.log('receive PresenterReady');
-    // setECinemaModal((prev:any)=>({
-    //     ...prev,
-    //     eventName: "presenterReady",
-    //     eventData: time,
-    // }));
+    setECinemaModal((prev:any)=>({
+        ...prev,
+        eventName: "presenterReady",
+        eventData: time,
+    }));
 }
 
 export const receivedPlayerUpdate =(data:any, setECinemaModal:any)=>{
     console.log('receive playerUpdate ',data);
-    // setECinemaModal((prev:any)=>({
-    //     ...prev,
-    //     eventName: "playerUpdate",
-    //     eventData: data,
-    // }));
+    setECinemaModal((prev:any)=>({
+        ...prev,
+        eventName: "playerUpdate",
+        eventData: data,
+    }));
 }
 
 

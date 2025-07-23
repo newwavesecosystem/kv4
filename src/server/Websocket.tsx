@@ -38,6 +38,7 @@ import {
 } from '~/recoil/atom';
 import { IWebSocketState, IWebSocketStateSetters } from '~/server/types';
 import { generateRandomId } from '~/server/ServerInfo';
+import {toast} from "~/components/ui/use-toast";
 
 
 const Websocket: React.FC = () => {
@@ -45,35 +46,35 @@ const Websocket: React.FC = () => {
     const [user, setUser] = useRecoilState(authUserState);
     const setConnection = useSetRecoilState(connectionStatusState);
     const [participantList, setParticipantList] = useRecoilState(participantListState);
-    const setParticipantTalkingList = useSetRecoilState(participantTalkingListState);
     const setRecordingState = useSetRecoilState(recordingModalState);
-    const setParticipantCameraList = useSetRecoilState(participantCameraListState);
     const setViewerScreenShareState = useSetRecoilState(viewerScreenSharingState);
     const setScreenSharingStream = useSetRecoilState(screenSharingStreamState);
     const setChatList = useSetRecoilState(chatListState);
-    const setChatTypingList = useSetRecoilState(chatTypingListState);
     const [eCinemaModal, setECinemaModal] = useRecoilState(eCinemaModalState);
     const setDonationState = useSetRecoilState(donationModalState);
     const setPollModal = useSetRecoilState(pollModalState);
     const setPresentationSlide = useSetRecoilState(presentationSlideState);
-    const setWaitingRoomUsers = useSetRecoilState(waitingRoomUsersState);
-    const setMicState = useSetRecoilState(micOpenState);
-    const setBreakOutRoomState = useSetRecoilState(breakOutModalState);
     const setIsNewMessage = useSetRecoilState(newMessage);
-    const setFileUploadModal = useSetRecoilState(fileUploadModalState);
     const setPrivateChatState = useSetRecoilState(privateChatModalState);
-    const setScreenShareState = useSetRecoilState(screenSharingState);
     const setChatTypeList = useSetRecoilState(chatTypeListState);
     const setIsnewRaiseHand = useSetRecoilState(newRaiseHand);
     const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
     const [postLeaveMeeting, setPostLeaveMeeting] = useRecoilState(postLeaveMeetingState);
     const setWaitingRoomType = useSetRecoilState(waitingRoomTypeState);
-    const setPinnedParticipant = useSetRecoilState(pinnedUsersState);
     const setMicrophoneStream = useSetRecoilState(microphoneStreamState);
-    const setMediaPermission = useSetRecoilState(mediaPermissionState);
     const setSelectedSpeaker = useSetRecoilState(selectedSpeakersState);
-    const setNotificationSettingsState = useSetRecoilState(notificationSettingsState);
     const setSoundNotification = useSetRecoilState(soundNotificationState);
+    const [notificationSettings, setNotificationSettingsState] = useRecoilState(notificationSettingsState);
+    const [chatTypingList, setChatTypingList] = useRecoilState(chatTypingListState);
+    const [mediaPermission, setMediaPermission] = useRecoilState(mediaPermissionState);
+    const [participantTalkingList, setParticipantTalkingList] = useRecoilState(participantTalkingListState);
+    const [pinnedParticipant, setPinnedParticipant] = useRecoilState(pinnedUsersState);
+    const [participantCameraList, setParticipantCameraList] = useRecoilState(participantCameraListState);
+    const [micState, setMicState] = useRecoilState(micOpenState);
+    const [screenShareState, setScreenShareState] = useRecoilState(screenSharingState);
+    const [waitingRoomUsers, setWaitingRoomUsers] = useRecoilState(waitingRoomUsersState);
+    const [breakOutRoomState, setBreakOutRoomState] = useRecoilState(breakOutModalState);
+    const [fileUploadModal, setFileUploadModal] = useRecoilState(fileUploadModalState);
 
     const messageHandlerRef = React.useRef<((rawMessage: string) => void) | null>(null);
 
@@ -85,6 +86,17 @@ const Websocket: React.FC = () => {
             manageUserSettings,
             postLeaveMeeting,
             eCinemaModal,
+            micState,
+            screenShareState,
+            waitingRoomUsers,
+            breakOutRoomState,
+            fileUploadModal,
+            notificationSettings,
+            chatTypingList,
+            mediaPermission,
+            participantTalkingList,
+            pinnedParticipant,
+            participantCameraList
         };
 
         const stateSetters: IWebSocketStateSetters = {
@@ -123,7 +135,7 @@ const Websocket: React.FC = () => {
             shouldStopReconnectingLocal: () => websocketService.disconnect(),
             startSub: () => {
                 console.log("Starting validate auth token and subs");
-                const { meetingID, internalUserID, authToken, externUserID } = user?.meetingDetails;
+                const { meetingID, internalUserID, authToken, externUserID } = user?.meetingDetails!;
                 const validationMsg = { msg: 'method', id: '2', method: 'validateAuthToken', params: [meetingID, internalUserID, authToken, externUserID] };
                 websocketService.send(JSON.stringify(validationMsg));
 
@@ -148,6 +160,9 @@ const Websocket: React.FC = () => {
                 });
             },
             setReconnectAttempts: () => {},
+            toast: (props) => {
+                toast(props);
+            },
         };
 
         messageHandlerRef.current = (rawMessage: string) => {

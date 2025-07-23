@@ -29,7 +29,6 @@ import {
 } from "../ui/command";
 import TickIcon from "../icon/outline/TickIcon";
 import { cn } from "~/lib/utils";
-import {websocketSendMessage, websocketStartPrivateChat, websocketStartTyping} from "~/server/Websocket";
 import {IChat, IEmojiMart, IParticipant, IPrivateChatMessage} from "~/types";
 import Picker from "@emoji-mart/react";
 import emojiData from "@emoji-mart/data";
@@ -41,6 +40,7 @@ import {
   DropdownMenuTrigger
 } from "~/components/ui/dropdown-menu";
 import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
+import {websocketSendMessage, websocketStartPrivateChat, websocketStartTyping} from "~/server/WebsocketActions";
 
 const DummyMenu = [
   {
@@ -121,7 +121,7 @@ function ChatModal() {
     <Sheet open={chatState} onOpenChange={setChatState}>
       <SheetContent
         className="m-h-svh w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
-        side={"right"}
+        side="right"
       >
         <div
           className={cn(

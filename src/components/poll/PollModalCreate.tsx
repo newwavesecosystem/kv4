@@ -5,9 +5,7 @@ import { Dialog, DialogContent } from "../ui/dialog";
 import AddIcon from "../icon/outline/AddIcon";
 import MinusIcon from "../icon/outline/MinusIcon";
 import { cn } from "~/lib/utils";
-import {websocketStartPoll} from "~/server/Websocket";
-import {randomInt} from "crypto";
-import {generateSmallId} from "~/server/ServerInfo";
+import {websocketStartPoll} from "~/server/WebsocketActions";
 
 function PollModalCreate() {
   const [pollModal, setPollModal] = useRecoilState(pollModalState);
@@ -138,7 +136,7 @@ function PollModalCreate() {
                   pollCreatorName: user?.fullName as string,
                 }));
 
-                websocketStartPoll(`${user?.meetingDetails?.internalUserID}/1`,data.pollQuestion,JSON.stringify(options.map(item => item.option)));
+                websocketStartPoll(`${user?.meetingDetails?.internalUserID}/1`,data.pollQuestion,options.map(item => item.option));
               }}
             >
               Publish Polls

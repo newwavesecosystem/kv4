@@ -13,7 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Picker from "@emoji-mart/react";
 import emojiData from "@emoji-mart/data";
 import { IEmojiMart } from "~/types";
-import {websocketSendMessage, websocketSendPrivateMessage, websocketStartTyping} from "~/server/Websocket";
+import {websocketSendPrivateMessage, websocketStartTyping} from "~/server/WebsocketActions";
 
 function ChatModalPrivateMessage() {
   const [privateChatState, setPrivateChatState] = useRecoilState(privateChatModalState);
@@ -66,7 +66,7 @@ function ChatModalPrivateMessage() {
     >
       <SheetContent
         className="m-h-svh w-full border-0 bg-primary p-0 text-a11y lg:w-[900px] "
-        side={"right"}
+        side="right"
       >
         <div className="sticky top-0 flex max-h-32 flex-col gap-2 p-4">
           <div className="flex items-center gap-2">

@@ -4,8 +4,8 @@ import { connectedUsersState, pollModalState } from "~/recoil/atom";
 import { Dialog, DialogContent } from "../ui/dialog";
 import PlayIcon from "../icon/outline/PlayIcon";
 import PauseIcon from "../icon/outline/PauseIcon";
-import {websocketStopPoll} from "~/server/Websocket";
 import { participantListState } from "~/recoil/atom";
+import {websocketStopPoll} from "~/server/WebsocketActions";
 
 function PollModalHostLiveView() {
   const [pollModal, setPollModal] = useRecoilState(pollModalState);

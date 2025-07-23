@@ -16,9 +16,9 @@ import {
   AlertDialogContent,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import {websocketLeaveMeeting, websocketRecord} from "~/server/Websocket";
 import {IParticipant} from "~/types/index";
 import {CurrentUserRoleIsModerator} from "~/lib/checkFunctions";
+import {websocketLeaveMeeting} from "~/server/WebsocketActions";
 
 function RecordingConsentModal() {
   const [recordingState, setRecordingState] =
@@ -71,7 +71,7 @@ function RecordingConsentModal() {
                     ...postLeaveMeeting,
                     isLeaveRoomCall: true,
                   });
-                  websocketLeaveMeeting();
+                  websocketLeaveMeeting(user!);
                 }}
             >
               Leave Session
