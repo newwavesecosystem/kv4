@@ -22,11 +22,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Commit restructuring on Websocket">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fixed participantvoice issue">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/api/elevenlabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/api/elevenlabs.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/WebsocketHandlers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/WebsocketHandlers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,7 +188,7 @@
       <workItem from="1749107654734" duration="103000" />
       <workItem from="1749880312524" duration="107000" />
       <workItem from="1750925933317" duration="6060000" />
-      <workItem from="1752310774008" duration="107512000" />
+      <workItem from="1752310774008" duration="109126000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -552,7 +552,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753279625661</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="-Fixed participantvoice issue">
+      <option name="closed" value="true" />
+      <created>1753802481836</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1753802481837</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -587,7 +595,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="-Implement sessiontoken to be removed from url on page loaded&#10;-Implement encrypting, decrypting and saving sessionToken to localStorage" />
     <MESSAGE value="-Add Types for VoiceUser and saving all from server&#10;-Increase time count for kickedout session from 50 to 150&#10;-Now checking if audio websocket connection is ready before initiating webrtc&#10;-Remove key error on SingleCameraComponent.tsx" />
     <MESSAGE value="-Make audio and sound alert play through the selected output device" />
     <MESSAGE value="-Fix error due key" />
@@ -612,7 +619,8 @@
     <MESSAGE value="-Added VAD to control sending silent audio to Elevenlabs" />
     <MESSAGE value="-Reworked on Websocket from monolithic to Service, handler and action" />
     <MESSAGE value="-Commit restructuring on Websocket" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Commit restructuring on Websocket" />
+    <MESSAGE value="-Fixed participantvoice issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Fixed participantvoice issue" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

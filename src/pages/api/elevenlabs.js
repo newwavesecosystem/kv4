@@ -38,6 +38,7 @@ export default async function handler(req, res) {
       contentType: 'audio/wav',
     });
   formData.append('model_id', 'scribe_v1');
+  formData.append('tag_audio_events', 'false');
 
     // Make the request to the ElevenLabs API
     const response = await axios.post(ELEVENLABS_API_URL, formData, {

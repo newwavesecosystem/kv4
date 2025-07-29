@@ -259,8 +259,8 @@ function CCModal() {
                 <div ref={CCRef}>
                   {ccModal.caption}
                   <br/>
-                  {transcription}
-                  {transcriptTranslated}
+                  {/*{transcription}*/}
+                  {/*{transcriptTranslated}*/}
                 </div>
               </ScrollArea>
 

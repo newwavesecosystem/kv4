@@ -17,7 +17,7 @@ import {
     IVoiceUser
 } from "~/types/index";
 import { ValidationStates } from "~/lib/utils";
-import { handlePresentationUploaded } from '~/server/WebsocketActions';
+import {handlePresentationUploaded, websocketMuteMic} from '~/server/WebsocketActions';
 import axios from 'axios';
 import * as ServerInfo from './ServerInfo';
 
@@ -825,7 +825,7 @@ const modifyJoinedUser = (id:string, joinState:boolean,state:IWebSocketState,sta
         if (item.id === id) {
             if(item.intId ==  state.user?.meetingDetails?.internalUserID){
                 if(state.mediaPermission.muteMicOnJoin){
-                    // websocketMuteMic(); #todo: do this rom actions
+                    websocketMuteMic();
                 }
             }
             return {...item, joined: joinState};
