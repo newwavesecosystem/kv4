@@ -799,7 +799,7 @@ const addTalkingUser = (voiceUser:any,state:IWebSocketState,stateSetters:IWebSoc
         stateSetters.setParticipantTalkingList([...state.participantTalkingList,voiceUser])
     }else{
         //Remove existing one and add new one
-        var removeExisting=state.participantTalkingList.filter((item:IVoiceUser) => item?.intId != voiceUser?.intId);
+        var removeExisting=state.participantTalkingList.filter((item:IVoiceUser) => item.intId != voiceUser.intId);
         stateSetters.setParticipantTalkingList([...removeExisting,voiceUser])
     }
 

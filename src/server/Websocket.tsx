@@ -168,7 +168,7 @@ const Websocket: React.FC = () => {
         messageHandlerRef.current = (rawMessage: string) => {
             handleWebSocketMessage(rawMessage, state, stateSetters);
         };
-    }, [user, participantList, manageUserSettings, postLeaveMeeting, eCinemaModal, setUser, setConnection, setParticipantList, setParticipantTalkingList, setRecordingState, setParticipantCameraList, setViewerScreenShareState, setScreenSharingStream, setChatList, setChatTypingList, setECinemaModal, setDonationState, setPollModal, setPresentationSlide, setWaitingRoomUsers, setMicState, setBreakOutRoomState, setIsNewMessage, setFileUploadModal, setPrivateChatState, setScreenShareState, setChatTypeList, setIsnewRaiseHand, setManageUserSettings, setPostLeaveMeeting, setWaitingRoomType, setPinnedParticipant, setMicrophoneStream, setMediaPermission, setSelectedSpeaker, setNotificationSettingsState, setSoundNotification]);
+    }, [user, participantList, manageUserSettings, postLeaveMeeting, eCinemaModal, participantTalkingList, setUser, setConnection, setParticipantList, setParticipantTalkingList, setRecordingState, setParticipantCameraList, setViewerScreenShareState, setScreenSharingStream, setChatList, setChatTypingList, setECinemaModal, setDonationState, setPollModal, setPresentationSlide, setWaitingRoomUsers, setMicState, setBreakOutRoomState, setIsNewMessage, setFileUploadModal, setPrivateChatState, setScreenShareState, setChatTypeList, setIsnewRaiseHand, setManageUserSettings, setPostLeaveMeeting, setWaitingRoomType, setPinnedParticipant, setMicrophoneStream, setMediaPermission, setSelectedSpeaker, setNotificationSettingsState, setSoundNotification]);
 
     // This effect manages the WebSocket connection and runs only once.
     useEffect(() => {

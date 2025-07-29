@@ -22,45 +22,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Reworked on Websocket from monolithic to Service, handler and action">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Commit restructuring on Websocket">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PostSignIn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PostSignIn.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/breakout/BreakOutModalCreate.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/breakout/BreakOutModalCreate.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/breakout/BreakOutModalView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/breakout/BreakOutModalView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/breakout/BreakoutRoomService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/breakout/BreakoutRoomService.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/camera/SingleCameraComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/chat/ChatModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/chat/ChatModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/chat/ChatModalKonn3ctAi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/chat/ChatModalKonn3ctAi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/chat/ChatModalPrivateMessage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/chat/ChatModalPrivateMessage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/donation/DonationModalCreate.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/donation/DonationModalCreate.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/eCinema/EcinemaService.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eCinema/EcinemaService.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/endCall/EndCallModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/endCall/EndCallModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/endCall/LeaveRoomCallModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/endCall/LeaveRoomCallModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/fileUpload/FileUploadModalUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/fileUpload/FileUploadModalUpload.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/MiddleSide.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/participants/RemoveUserModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/participants/RemoveUserModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/participants/SingleParticipant.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/participants/SingleParticipant.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/poll/PollModalCreate.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/poll/PollModalCreate.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/poll/PollModalHostLiveView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/poll/PollModalHostLiveView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/poll/PollModalParticipantLiveView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/poll/PollModalParticipantLiveView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/recording/EndRecordingModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/recording/EndRecordingModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/recording/RecordingConsentModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/recording/RecordingConsentModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/recording/ResolutionModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/recording/ResolutionModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/settings/DeviceSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/DeviceSettings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/ManageUserSettings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/settings/TakeSpotAttendanceSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/TakeSpotAttendanceSettings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/settings/WaitingRoomSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/WaitingRoomSettings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/userUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/userUtils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/KurentoScreenshare.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoScreenshare.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/KurentoVideo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoVideo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/KurentoVideoSingleStick.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoVideoSingleStick.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/KurentoVideoViewer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/KurentoVideoViewer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/Websocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/Websocket.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/WebsocketActions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/WebsocketActions.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server/WebsocketHandlers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/WebsocketHandlers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/WebsocketService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/WebsocketService.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -223,7 +188,7 @@
       <workItem from="1749107654734" duration="103000" />
       <workItem from="1749880312524" duration="107000" />
       <workItem from="1750925933317" duration="6060000" />
-      <workItem from="1752310774008" duration="85325000" />
+      <workItem from="1752310774008" duration="107512000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -579,7 +544,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752904917645</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="-Commit restructuring on Websocket">
+      <option name="closed" value="true" />
+      <created>1753279625661</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1753279625661</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -614,7 +587,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="-Fix error" />
     <MESSAGE value="-Implement sessiontoken to be removed from url on page loaded&#10;-Implement encrypting, decrypting and saving sessionToken to localStorage" />
     <MESSAGE value="-Add Types for VoiceUser and saving all from server&#10;-Increase time count for kickedout session from 50 to 150&#10;-Now checking if audio websocket connection is ready before initiating webrtc&#10;-Remove key error on SingleCameraComponent.tsx" />
     <MESSAGE value="-Make audio and sound alert play through the selected output device" />
@@ -639,7 +611,8 @@
     <MESSAGE value="-Integrated Elevenlabs for Audio transcription&#10;-Comment browserSupportsSpeechRecognition check on CC Modal" />
     <MESSAGE value="-Added VAD to control sending silent audio to Elevenlabs" />
     <MESSAGE value="-Reworked on Websocket from monolithic to Service, handler and action" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Reworked on Websocket from monolithic to Service, handler and action" />
+    <MESSAGE value="-Commit restructuring on Websocket" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Commit restructuring on Websocket" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

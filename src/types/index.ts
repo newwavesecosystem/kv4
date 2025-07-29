@@ -38,8 +38,8 @@ export interface IVoiceUser {
   talking:       boolean;
   voiceConf:     string;
   voiceUserId:   string;
-  endTime:       number;
-  startTime:     number;
+  endTime:       number|null;
+  startTime:     number|null;
   floor:         boolean;
   lastFloorTime: string;
 }
