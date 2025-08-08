@@ -28,10 +28,10 @@ const ChatTypesData = [
     id: 2,
     name: "Meeting Summary",
   },
-  // {
-  //   id: 3,
-  //   name: "Create/Send Messages",
-  // },
+  {
+    id: 3,
+    name: "My Name Mentioned?",
+  },
 ];
 
 function ChatModalKonn3ctAi() {
@@ -155,6 +155,54 @@ function ChatModalKonn3ctAi() {
     });
 
     xhr.open("POST", `${ServerInfo.aiEnginesURL}/summary`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send(data);
+  }
+
+  async function myNameMentioned() {
+    console.log("myNameMentioned API")
+
+    setKaiChatList((prev:any)=>([
+        ...prev,
+          {
+            id: 1,
+            name: "ai",
+            message: "Searching for where you are mentioned...",
+            time: new Date().toLocaleString(),
+            from: "ai",
+          }
+          ]
+    ));
+
+    var data = JSON.stringify({
+      "meetingID": user?.meetingDetails?.meetingID,
+      "name": user?.meetingDetails?.fullname
+    });
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function() {
+      if(this.readyState === 4) {
+        console.log(this.responseText);
+        var jresp=JSON.parse(this.responseText);
+
+        setKaiChatList((prev:any)=>([
+              ...prev,
+              {
+                id: 1,
+                name: "ai",
+                message: jresp.message,
+                time: new Date().toLocaleString(),
+                from: "ai",
+              }
+            ]
+        ));
+      }
+    });
+
+    xhr.open("POST", `${ServerInfo.aiEnginesURL}/mentioned`);
     xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.send(data);
@@ -330,6 +378,9 @@ function ChatModalKonn3ctAi() {
                 <button onClick={()=>summary()}  className="rounded-md border border-a11y px-4 py-2 ">
                   Meeting Summary
                 </button>
+                <button onClick={()=>myNameMentioned()}  className="rounded-md border border-a11y px-4 py-2 ">
+                  My Name Mentioned?
+                </button>
               </div>
             </div>
           )}
@@ -355,6 +406,8 @@ function ChatModalKonn3ctAi() {
 
                         if(chatType.id==1){
                           highlights();
+                        }else if(chatType.id==3){
+                          myNameMentioned();
                         }else{
                           summary();
                         }
