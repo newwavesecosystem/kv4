@@ -10,16 +10,27 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const { file } = req.body;
+  console.log("using transcription server: ",process.env.TRANSCRIPT_SERVER);
+  if(process.env.TRANSCRIPT_SERVER == "elevenlabs"){
+    return await transcription(req,res);
+  }else{
+    return await whisper(req,res);
+  }
+
+}
+
+async function transcription(req, res) {
+
+  const {file} = req.body;
 
   if (!file) {
-    return res.status(400).json({ message: 'No file provided' });
+    return res.status(400).json({message: 'No file provided'});
   }
 
   // The API key is stored in environment variables for security
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ message: 'ElevenLabs API key not configured' });
+    return res.status(500).json({message: 'ElevenLabs API key not configured'});
   }
 
   try {
@@ -37,8 +48,8 @@ export default async function handler(req, res) {
       filename: 'audio.wav',
       contentType: 'audio/wav',
     });
-  formData.append('model_id', 'scribe_v1');
-  formData.append('tag_audio_events', 'false');
+    formData.append('model_id', 'scribe_v1');
+    formData.append('tag_audio_events', 'false');
 
     // Make the request to the ElevenLabs API
     const response = await axios.post(ELEVENLABS_API_URL, formData, {
@@ -49,9 +60,34 @@ export default async function handler(req, res) {
     });
 
     // The transcription is in the 'text' field of the response data
-    res.status(200).json({ text: response.data.text });
+    res.status(200).json({text: response.data.text});
   } catch (error) {
     console.error('Error transcribing audio with ElevenLabs:', error.response ? error.response.data : error.message);
-    res.status(500).json({ message: 'Error transcribing audio' });
+    res.status(500).json({message: 'Error transcribing audio'});
+  }
+}
+
+async function whisper(req, res) {
+  try {
+    // Save audio file
+    const { file } = req.body;
+    const audioBuffer = Buffer.from(file.split(',')[1], 'base64');
+
+    // Call Whisper API
+    const form = new FormData();
+    form.append('file', audioBuffer, 'audio.wav');
+    form.append('model', 'whisper-1');
+
+    const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', form, {
+      headers: {
+        ...form.getHeaders(),
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+    });
+
+    res.status(200).json({ text: response.data.text });
+  } catch (error) {
+    console.error('Error:', error.response?.data || error.message);
+    res.status(500).json({ error: 'Failed to process audio' });
   }
 }

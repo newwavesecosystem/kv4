@@ -111,16 +111,16 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
 
   const sound = new Howl({
-    src: ['/message.mp3'],
+    src: ['/sounds/message.mp3'],
   });
 
   const raiseHandSound = new Howl({
-    src: ['/finger-snaps.mp3'],
+    src: ['/sounds/finger-snaps.mp3'],
   });
 
-  const NewMessageSound = "/message.mp3";
-  const RaiseHandSound = "/finger-snaps.mp3";
-  const WaitingSound = "/waiting_room.mp3";
+  const NewMessageSound = "/sounds/message.mp3";
+  const RaiseHandSound = "/sounds/finger-snaps.mp3";
+  const WaitingSound = "/sounds/waiting_room.mp3";
 
   useEffect(() => {
     if(soundNotification.newMessage) {

@@ -25,6 +25,11 @@ function CCModal() {
   const user = useRecoilValue(authUserState);
   const [micState, setMicState] = useRecoilState(micOpenState);
 
+  const [transcription, setTranscription] = useState('');
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const {
     transcript,
     listening,
@@ -39,48 +44,44 @@ function CCModal() {
   }
 
     // When a new transcript is received, add it to the lines array
-    useEffect(() => {
-      if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="sp") {
-        console.log("cSocket transcript useEffect ");
-        SpeechRecognition.startListening({continuous: true});
+    // useEffect(() => {
+    //   if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="sp") {
+    //     console.log("cSocket transcript useEffect ");
+    //     SpeechRecognition.startListening({continuous: true});
+    //
+    //     if (transcript && !micState) {
+    //       setTimeout(resetTranscript, 30000)
+    //       broadcastCaption(transcript, user?.meetingDetails);
+    //       setTranscriptTranslated(`Me: ${transcript}`);
+    //     }
+    //
+    //     if (!micState) {
+    //       SpeechRecognition.stopListening();
+    //     }
+    //   }
+    // }, [transcript]);
+    //
+    //
+    // useEffect(() => {
+    //   if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="elevenlabs") {
+    //     console.log("cSocket transcript useEffect whisper ");
+    //     startRecording();
+    //   }
+    // }, [ccModal.isActive]);
 
-        if (transcript && !micState) {
-          setTimeout(resetTranscript, 30000)
-          broadcastCaption(transcript, user?.meetingDetails);
-          setTranscriptTranslated(`Me: ${transcript}`);
-        }
-
-        if (!micState) {
-          SpeechRecognition.stopListening();
-        }
-      }
-    }, [transcript]);
-
-
-    useEffect(() => {
-      if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="elevenlabs") {
-        console.log("cSocket transcript useEffect whisper ");
-        startRecording();
-      }
-    }, [ccModal.isActive]);
-
-  const handleBeforeUnload = (event:any) => {
-    SpeechRecognition.stopListening();
-  };
 
   useEffect(() => {
     window.addEventListener('beforeunload', handleBeforeUnload);
   });
 
-  const [transcription, setTranscription] = useState('');
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
-
   useEffect(() => {
     scrollToBottom() //auto scroll down while streaming cc
   }, [transcriptTranslated, ccModal.caption,transcription])
+
+
+  const handleBeforeUnload = (event:any) => {
+    SpeechRecognition.stopListening();
+  };
 
   const handleAudioData = async (audioBlob: Blob) => {
     const reader = new FileReader();
@@ -88,7 +89,7 @@ function CCModal() {
     reader.onloadend = async () => {
       const base64Audio = reader.result;
       try {
-        const response = await fetch('/api/elevenlabs', {
+        const response = await fetch('/api/transcription', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -140,7 +141,6 @@ function CCModal() {
 
   // Effect to initialize and clean up MediaRecorder
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE !== "elevenlabs") return;
 
     let stream: MediaStream | null = null;
 
@@ -176,7 +176,7 @@ function CCModal() {
                 const avg = sum / pcmData.length;
 
                 // Adjust this threshold based on testing
-                const threshold = 0.01;
+                const threshold = 0.019;
                 console.log("recorder VAD average:", avg);
 
                 if (avg > threshold) {
@@ -213,10 +213,9 @@ function CCModal() {
 
   // Effect to control the recording loop
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE !== "elevenlabs") return;
-
     console.log("recorder micState:",!micState)
-    if (ccModal.isActive && !micState) {
+    // if (ccModal.isActive && !micState) {
+    if (!micState) {
       // Start or resume the recording loop
       console.log("Starting or resuming recording loop");
       if (mediaRecorderRef.current?.state === 'paused') {
@@ -259,7 +258,7 @@ function CCModal() {
                 <div ref={CCRef}>
                   {ccModal.caption}
                   <br/>
-                  {/*{transcription}*/}
+                  {transcription}
                   {/*{transcriptTranslated}*/}
                 </div>
               </ScrollArea>

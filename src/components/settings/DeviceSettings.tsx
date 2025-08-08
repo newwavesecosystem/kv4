@@ -167,7 +167,7 @@ function DeviceSettings() {
   // }
 
   const testSpeaker = () => {
-    kurentoAudioPlaySound('/sound_test.mp3', selectedSpeaker?.deviceId);
+    kurentoAudioPlaySound('/sounds/sound_test.mp3', selectedSpeaker?.deviceId);
 
     // const audioContext = new (window.AudioContext ||
     //   window.webkitAudioContext)();

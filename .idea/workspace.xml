@@ -22,11 +22,17 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fixed participantvoice issue">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Fixed room joining that fluctuate for Caption">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/finger-snaps.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/public/sounds/finger-snaps.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/message.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/public/sounds/message.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/sound_test.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/public/sounds/sound_test.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/waiting_room.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/public/sounds/waiting_room.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/api/elevenlabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/api/elevenlabs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/WebsocketHandlers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/WebsocketHandlers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/settings/DeviceSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/DeviceSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/api/elevenlabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/api/transcription.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/api/whisper.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +81,7 @@
     &quot;npm.build.executor&quot;: &quot;Run&quot;,
     &quot;npm.dev.executor&quot;: &quot;Run&quot;,
     &quot;npm.start.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.jsonOptions&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;inlay.hints&quot;,
     &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\odeji\\WebstormProjects\\kv4\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -87,6 +93,9 @@
       <recent name="C:\Users\odeji\WebstormProjects\kv4\src\components\recording" />
       <recent name="C:\Users\odeji\WebstormProjects\kv4\src\server" />
       <recent name="C:\Users\odeji\WebstormProjects\kv4\public\fonts" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\odeji\WebstormProjects\kv4\public\sounds" />
     </key>
   </component>
   <component name="RunManager" selected="npm.dev">
@@ -188,7 +197,10 @@
       <workItem from="1749107654734" duration="103000" />
       <workItem from="1749880312524" duration="107000" />
       <workItem from="1750925933317" duration="6060000" />
-      <workItem from="1752310774008" duration="109126000" />
+      <workItem from="1752310774008" duration="109858000" />
+      <workItem from="1753804729564" duration="1317000" />
+      <workItem from="1753806133548" duration="88000" />
+      <workItem from="1753951212274" duration="13124000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -287,22 +299,6 @@
       <option name="presentableId" value="LOCAL-00014" />
       <option name="project" value="LOCAL" />
       <updated>1722855101747</updated>
-    </task>
-    <task id="LOCAL-00015" summary="-worked on recording, Implement Start &amp; Pause; Change End Recording to Pause Recording&#10;-Fix banner image not to show unless it get value">
-      <option name="closed" value="true" />
-      <created>1724194857749</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1724194857749</updated>
-    </task>
-    <task id="LOCAL-00016" summary="-Reduced the size of custom logo to fit in the box&#10;-Bring focus on presenter (Minimize icon) on participant list&#10;-Added ui-avatars.com to next.config.mjs">
-      <option name="closed" value="true" />
-      <created>1724220226569</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1724220226569</updated>
     </task>
     <task id="LOCAL-00017" summary="-Worked on Connection status and audio disconnected notification.">
       <option name="closed" value="true" />
@@ -560,7 +556,23 @@
       <option name="project" value="LOCAL" />
       <updated>1753802481837</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="-Remove life event from transcription&#10;-Remove User transcript from CC Modal">
+      <option name="closed" value="true" />
+      <created>1753804250004</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1753804250008</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Fixed room joining that fluctuate for Caption">
+      <option name="closed" value="true" />
+      <created>1754525527423</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1754525527423</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -595,8 +607,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="-Add Types for VoiceUser and saving all from server&#10;-Increase time count for kickedout session from 50 to 150&#10;-Now checking if audio websocket connection is ready before initiating webrtc&#10;-Remove key error on SingleCameraComponent.tsx" />
-    <MESSAGE value="-Make audio and sound alert play through the selected output device" />
     <MESSAGE value="-Fix error due key" />
     <MESSAGE value="-Implement prejoin interface with link url" />
     <MESSAGE value="-Restrict Ecinema to once" />
@@ -620,7 +630,9 @@
     <MESSAGE value="-Reworked on Websocket from monolithic to Service, handler and action" />
     <MESSAGE value="-Commit restructuring on Websocket" />
     <MESSAGE value="-Fixed participantvoice issue" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Fixed participantvoice issue" />
+    <MESSAGE value="-Remove life event from transcription&#10;-Remove User transcript from CC Modal" />
+    <MESSAGE value="Fixed room joining that fluctuate for Caption" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed room joining that fluctuate for Caption" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -672,32 +684,27 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/cc/CCModal.tsx</url>
-          <line>98</line>
-          <properties lambdaOrdinal="-1" />
+          <line>99</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/recoil/atom.ts</url>
           <line>190</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/server/WebsocketHandlers.ts</url>
           <line>599</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/server/WebsocketActions.ts</url>
           <line>300</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="34" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/settings/TakeSpotAttendanceSettings.tsx</url>
           <line>106</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="35" />
         </line-breakpoint>
       </breakpoints>
