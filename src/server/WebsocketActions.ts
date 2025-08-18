@@ -57,14 +57,10 @@ export const websocketSendMessage = (internalUserID: any, meetingTitle: any, sen
         params: [
             'MAIN-PUBLIC-GROUP-CHAT',
             {
-                id: generatesSmallId(),
-                chatId: 'MAIN-PUBLIC-GROUP-CHAT',
+                chatEmphasizedText: true,
                 message: message,
-                sender: { id: internalUserID, name: sender, role: 'VIEWER' },
-                timestamp: new Date().getTime(),
-                correlationId: `${internalUserID}-${new Date().getTime()}`,
-                senderId: internalUserID,
-                chatName: meetingTitle
+                sender: { id: internalUserID, name: internalUserID, role: '' },
+                correlationId: `${internalUserID}-${new Date().getTime()}`
             }
         ]
     };
@@ -79,12 +75,11 @@ export const websocketSendPrivateMessage = (internalUserID: any, message: string
         params: [
             chatID,
             {
-                id: generatesSmallId(),
-                chatId: chatID,
                 message: message,
-                sender: { id: internalUserID },
+                sender: { id: internalUserID, name: internalUserID, role: '' },
                 timestamp: new Date().getTime(),
-                correlationId: `${internalUserID}-${new Date().getTime()}`
+                correlationId: `${internalUserID}-${new Date().getTime()}`,
+                chatEmphasizedText: false
             }
         ]
     };
@@ -92,7 +87,7 @@ export const websocketSendPrivateMessage = (internalUserID: any, message: string
 }
 
 export const websocketStartPrivateChat = (participant: IParticipant) => {
-    const msg = { msg: 'sub', id: generateRandomId(17), name: 'group-chat-msg', params: [participant.chatId] };
+    const msg = {  msg: 'method', id: generateSmallId(), method: 'createGroupChat', params: JSON.stringify([{subscriptionId:generateRandomId(17),...participant}]) };
     send(msg);
 }
 
@@ -351,11 +346,17 @@ export const handlePresentationUploaded = (name: string, id: string, presentatio
 
 export const websocketLeaveMeeting = (user: IAuthUser) => {
     if (!user.meetingDetails) return;
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'userLeaveMeeting', params: [user.meetingDetails.internalUserID] };
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'userLeftMeeting', params: [] };
     send(msg);
+    const msg1 = { msg: 'method', id: generatesSmallId(), method: 'setExitReason', params: ["logout"] };
+    send(msg1);
+    //Then unsub all subscriptions
 }
 
 export const websocketEndMeeting = () => {
     const msg = { msg: 'method', id: generatesSmallId(), method: 'endMeeting', params: [] };
     send(msg);
+    const msg1 = { msg: 'method', id: generatesSmallId(), method: 'setExitReason', params: ["meetingEnded"] };
+    send(msg1);
+    //Then unsub all subscriptions
 }
