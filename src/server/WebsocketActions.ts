@@ -9,13 +9,18 @@ import {IAuthUser, IBreakoutRoom, IColumnBreakOutRoom, IManageUserSettings, IPar
  * a JSON-stringified array of strings.
  * @param messages - An array of stringified JSON messages to send.
  */
-export const websocketSend=(messages: string[])=> {
+export const websocketSend=(messages: any)=> {
     websocketService.send(JSON.stringify(messages));
 }
 
 export function websocketRecord() {
-    console.log('I am Websockets')
-    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"toggleRecording","params":[]}`])
+    const msg = {
+        msg: 'method',
+        id: generatesSmallId(),
+        method: 'toggleRecording',
+        params: []
+    };
+    send(msg);
 }
 
 export function websocketClear() {
@@ -106,22 +111,13 @@ export const websocketRemoveUser = (internalUserID: any, preventRejoin: boolean)
     send(msg);
 }
 
-export const websocketStopCamera = (streamID: string) => {
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'userBroadcastUnpublish', params: [streamID] };
-    send(msg);
-}
-
-export const websocketRecording = () => {
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'setRecordingStatus', params: [true] };
-    send(msg);
-}
 
 export const websocketParticipantsChangeRole = (internalUserID: any, type: number) => {
     let role = "VIEWER";
     if (type == 1) {
         role = "MODERATOR"
     }
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'assignPresenter', params: [internalUserID, role] };
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'changeRole', params: [internalUserID, role] };
     send(msg);
 }
 
@@ -341,6 +337,16 @@ export const handlePresentationUploaded = (name: string, id: string, presentatio
             temporary: true
         }]
     };
+    send(msg);
+}
+
+export const websocketWebcamPlayStart = (deviceID:string) => {
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'userShareWebcam', params: [deviceID] };
+    send(msg);
+}
+
+export const websocketWebcamStop = (streamID: string) => {
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'userUnshareWebcam', params: [streamID] };
     send(msg);
 }
 

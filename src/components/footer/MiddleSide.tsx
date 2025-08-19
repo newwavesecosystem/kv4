@@ -84,12 +84,7 @@ import {
 } from "~/server/KurentoScreenshare";
 import {CurrentUserIsPresenter, CurrentUserRoleIsModerator, ModeratorRole} from "~/lib/checkFunctions";
 import {Tooltip, TooltipTrigger, TooltipContent, TooltipProvider} from "~/components/ui/tooltip";
-import {
-    websocketMuteAllParticipants,
-    websocketMuteMic,
-    websocketRaiseHand,
-    websocketStopCamera
-} from "~/server/WebsocketActions";
+import { websocketMuteAllParticipants, websocketMuteMic, websocketRaiseHand, websocketWebcamStop } from "~/server/WebsocketActions";
 
 function MiddleSide() {
   const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
@@ -273,7 +268,7 @@ function MiddleSide() {
                         )}
                         onClick={async () => {
                             if (videoState) {
-                                websocketStopCamera(
+                                websocketWebcamStop(
                                     `${user?.meetingDetails?.internalUserID}${user?.meetingDetails
                                         ?.authToken}${participantCameraList.filter(
                                         (item: any) =>

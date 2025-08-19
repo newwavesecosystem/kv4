@@ -11,7 +11,7 @@ import {
 } from "~/recoil/atom";
 import {IParticipantCamera} from "~/types";
 import requestCameraAccess from "~/lib/camera/requestCameraAccess";
-import {websocketSend} from "~/server/WebsocketActions";
+import {websocketWebcamPlayStart} from "~/server/WebsocketActions";
 
 
 let ws: WebSocket | null = null;
@@ -118,7 +118,7 @@ const KurentoVideo = () => {
 
             switch (parsedMessage.id) {
                 case 'playStart':
-                    websocketSend([`{\"msg\":\"method\",\"id\":\"100\",\"method\":\"userShareWebcam\",\"params\":[\"${buildStreamName(userCamera.deviceID)}\"]}`]);
+                    websocketWebcamPlayStart(buildStreamName(userCamera.deviceID));
                     startPing();
                     break;
                 case 'startResponse':

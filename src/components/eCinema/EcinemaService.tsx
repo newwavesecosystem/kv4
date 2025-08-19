@@ -1,5 +1,5 @@
 import * as ServerInfo from "~/server/ServerInfo";
-import {generateRandomId} from "~/server/ServerInfo";
+import {generateRandomId, generatesSmallId} from "~/server/ServerInfo";
 import {IAuthUser} from "~/types/index";
 import {websocketSend} from "~/server/WebsocketActions";
 
@@ -16,12 +16,28 @@ export const startWatching = (url:any) => {
     // // Close Shared Notes if open.
     // NotesService.pinSharedNotes(false);
 
-    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"startWatchingExternalVideo","params":["${url}"]}`]);
+    const msg = {
+        msg: 'method',
+        id: generatesSmallId(),
+        method: 'startWatchingExternalVideo',
+        params: [
+            url
+        ]
+    };
+
+    websocketSend(msg);
 
 };
 
 export const stopWatching = () => {
-    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"stopWatchingExternalVideo","params":[]}`]);
+
+    const msg = {
+        msg: 'method',
+        id: generatesSmallId(),
+        method: 'stopWatchingExternalVideo',
+        params: []
+    };
+    websocketSend(msg);
 };
 
 let lastMessage:any = null;
@@ -46,7 +62,19 @@ export const sendMessage = (event:any, data:any) => {
     // We might use more states in the future
     data.state =  data.state ? 1 : 0;
 
-    websocketSend([`{"msg":"method","id":"${ServerInfo.generateSmallId()}","method":"emitExternalVideoEvent","params":[{"status":"${event}","playerStatus":${JSON.stringify(data)}}]}`]);
+    const msg = {
+        msg: 'method',
+        id: generatesSmallId(),
+        method: 'emitExternalVideoEvent',
+        params: [
+            {
+                status: event,
+                playerStatus: JSON.stringify(data)
+            }
+        ]
+    };
+
+    websocketSend(msg);
 };
 
 
@@ -59,11 +87,69 @@ export const receiveVideoLinkFromWebsocket =(link:any, eCinemaModal:any, setECin
         isActive:true
     });
 
-    websocketSend([`{"msg":"sub","id":"${generateRandomId(17)}","name":"stream-external-videos-${user.meetingDetails?.meetingID}","params":["play",{"useCollection":false,"args":[]}]}`]);
-    websocketSend([`{"msg":"sub","id":"${generateRandomId(17)}","name":"stream-external-videos-${user.meetingDetails?.meetingID}","params":["stop",{"useCollection":false,"args":[]}]}`]);
-    websocketSend([`{"msg":"sub","id":"${generateRandomId(17)}","name":"stream-external-videos-${user.meetingDetails?.meetingID}","params":["presenterReady",{"useCollection":false,"args":[]}]}`]);
-    websocketSend([`{"msg":"sub","id":"${generateRandomId(17)}","name":"stream-external-videos-${user.meetingDetails?.meetingID}","params":["playerUpdate",{"useCollection":false,"args":[]}]}`]);
 
+    const msg = {
+        msg: 'sub',
+        id: generateRandomId(17),
+        method: `stream-external-videos-${user.meetingDetails?.meetingID}`,
+        params: [
+            "play",
+            {
+                useCollection: false,
+                args: []
+            }
+        ]
+    };
+
+    websocketSend(msg);
+
+
+    const msg1 = {
+        msg: 'sub',
+        id: generateRandomId(17),
+        method: `stream-external-videos-${user.meetingDetails?.meetingID}`,
+        params: [
+            "stop",
+            {
+                useCollection: false,
+                args: []
+            }
+        ]
+    };
+
+    websocketSend(msg1);
+
+
+    const msg2 = {
+        msg: 'sub',
+        id: generateRandomId(17),
+        method: `stream-external-videos-${user.meetingDetails?.meetingID}`,
+        params: [
+            "presenterReady",
+            {
+                useCollection: false,
+                args: []
+            }
+        ]
+    };
+
+    websocketSend(msg2);
+
+
+    const msg3 = {
+        msg: 'sub',
+        id: generateRandomId(17),
+        method: `stream-external-videos-${user.meetingDetails?.meetingID}`,
+        params: [
+            "playerUpdate",
+            {
+                useCollection: false,
+                args: []
+            }
+        ]
+    };
+
+    websocketSend(msg3);
 }
 
 
