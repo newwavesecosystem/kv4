@@ -107,7 +107,7 @@ export const websocketStopTyping = () => {
 }
 
 export const websocketRemoveUser = (internalUserID: any, preventRejoin: boolean) => {
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'ejectUserFromMeeting', params: [internalUserID, preventRejoin ? "ALWAYS_EJECT" : "NORMAL_EJECT"] };
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'removeUser', params: [internalUserID, preventRejoin] };
     send(msg);
 }
 
@@ -121,8 +121,8 @@ export const websocketParticipantsChangeRole = (internalUserID: any, type: numbe
     send(msg);
 }
 
-export const websocketMuteParticipants = (internalUserID: any, userToMuteId: string) => {
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'muteUser', params: [userToMuteId, internalUserID, true] };
+export const websocketMuteParticipants = (userToMuteId: string) => {
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'toggleVoice', params: [userToMuteId] };
     send(msg);
 }
 

@@ -168,7 +168,7 @@ function SingleParticipant({
             {CurrentUserRoleIsModerator(participantList, user) && talkingList.filter((eachItem: IVoiceUser) =>
                 eachItem?.intId == participant.intId && eachItem?.joined && !eachItem?.muted).length > 0 && (
                 <DropdownMenuItem className="py-4" onClick={() => {
-                  websocketMuteParticipants(user?.meetingDetails?.internalUserID!,participant.userId);
+                  websocketMuteParticipants(participant.userId);
                 }}>
                   <VolumeOnIcon volume={1} className="mr-2 h-5 w-5"/>
                   Mute User
