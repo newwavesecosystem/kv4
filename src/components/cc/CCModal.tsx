@@ -7,11 +7,8 @@ import ArrowChevronLeftIcon from "../icon/outline/ArrowChevronLeftIcon";
 import SearchIcon from "../icon/outline/SearchIcon";
 import CCLanguageData from "~/data/ccLanguageData";
 import { cn } from "~/lib/utils";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { broadcastCaption } from "~/server/SocketIOCaption";
+import { broadcastCaption, transcribeAudio } from "~/server/SocketIOCaption";
 import { ScrollArea } from "../ui/scroll-area";
 
 import * as process from "process";
@@ -30,45 +27,11 @@ function CCModal() {
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
-
   const CCRef = useRef<HTMLDivElement | null>(null)
 
   const scrollToBottom = () => {
     CCRef.current?.scrollIntoView(false)
   }
-
-    // When a new transcript is received, add it to the lines array
-    // useEffect(() => {
-    //   if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="sp") {
-    //     console.log("cSocket transcript useEffect ");
-    //     SpeechRecognition.startListening({continuous: true});
-    //
-    //     if (transcript && !micState) {
-    //       setTimeout(resetTranscript, 30000)
-    //       broadcastCaption(transcript, user?.meetingDetails);
-    //       setTranscriptTranslated(`Me: ${transcript}`);
-    //     }
-    //
-    //     if (!micState) {
-    //       SpeechRecognition.stopListening();
-    //     }
-    //   }
-    // }, [transcript]);
-    //
-    //
-    // useEffect(() => {
-    //   if (process.env.NEXT_PUBLIC_TRANSSCRIPT_TYPE=="elevenlabs") {
-    //     console.log("cSocket transcript useEffect whisper ");
-    //     startRecording();
-    //   }
-    // }, [ccModal.isActive]);
-
 
   useEffect(() => {
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -80,7 +43,7 @@ function CCModal() {
 
 
   const handleBeforeUnload = (event:any) => {
-    SpeechRecognition.stopListening();
+    stopRecording();
   };
 
   const handleAudioData = async (audioBlob: Blob) => {
@@ -88,22 +51,7 @@ function CCModal() {
     reader.readAsDataURL(audioBlob);
     reader.onloadend = async () => {
       const base64Audio = reader.result;
-      try {
-        const response = await fetch('/api/transcription', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ file: base64Audio }),
-        });
-        const data = await response.json();
-        // setTranscription(prev => `${prev} ${data.text || ''}`);
-        setTranscription(`Me: ${data.text}`);
-        broadcastCaption(data.text, user?.meetingDetails);
-      } catch (error) {
-        console.error('Error transcribing audio:', error);
-        setTranscription('Failed to transcribe.');
-      }
+      transcribeAudio(base64Audio,user?.meetingDetails);
     };
   };
 
@@ -227,7 +175,7 @@ function CCModal() {
         recordingIntervalRef.current = setInterval(startRecording, 5500); // Loop every 5.5 seconds
       }
     } else {
-      // Pause recording when mic is off or modal is closed
+      // Pause recording when mic is off
       console.log("Pausing recording loop");
       pauseRecording();
       if (recordingIntervalRef.current) {
@@ -249,17 +197,13 @@ function CCModal() {
     <>
       {ccModal.isActive && (
         <div>
-          {/*<div>*/}
-          {/*  {!browserSupportsSpeechRecognition ? <span className="flex w-full items-center justify-between rounded-md px-4" style={{ color: 'white', backgroundColor: 'red', textAlign: 'center' }}>Your browser doesn't support speech recognition, others wont see what you are saying. Kindly make use of latest Chrome Browser to enjoy this feature. <br /></span> : ''}*/}
-          {/*</div>*/}
           <div className="fixed bottom-20 z-10 mx-auto flex w-full justify-center px-4">
-            <div className="flex h-20 w-full items-center justify-between rounded-md bg-primary md:max-w-xl ">
+            <div className="flex h-40 w-full items-center justify-between rounded-md bg-primary md:max-w-xl ">
               <ScrollArea className="h-full px-4">
                 <div ref={CCRef}>
-                  {ccModal.caption}
-                  <br/>
-                  {transcription}
-                  {/*{transcriptTranslated}*/}
+                  {ccModal.caption.split("break--line").map((item, index) => (
+                    <p key={index}>{item}</p>
+                  ))}
                 </div>
               </ScrollArea>
 

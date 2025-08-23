@@ -60,7 +60,6 @@
     "react-dropzone": "^14.2.3",
     "react-markdown": "^10.1.0",
     "react-resizable-panels": "^1.0.10",
-    "react-speech-recognition": "^3.10.0",
     "recoil": "^0.7.7",
     "regenerator-runtime": "^0.14.1",
     "remark-gfm": "^4.0.1",

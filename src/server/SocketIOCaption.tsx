@@ -27,6 +27,36 @@ export function broadcastCaption(text: any, meetingDetails: IMeetingDetails | nu
         console.warn("Cannot broadcast caption: socket not connected or missing meeting details");
     }
 }
+export function transcribeAudio(audio: any, meetingDetails: IMeetingDetails | null | undefined) {
+    console.log("send audio");
+    // Add validation before emitting
+    if (socket && socket.connected && meetingDetails?.meetingID) {
+        socket.emit("transcribe_audio", {
+            "audio": audio,
+            "user": meetingDetails?.fullname,
+            "meetingID": meetingDetails?.meetingID,
+            "date": new Date().toLocaleString()
+        });
+    } else {
+        console.warn("Cannot broadcast transcribeAudio: socket not connected or missing meeting details");
+    }
+}
+
+export function translateCaption(text: any, target:string, user: string, meetingDetails: IMeetingDetails | null | undefined) {
+    console.log("send for translation", text);
+    // Add validation before emitting
+    if (socket && socket.connected && meetingDetails?.meetingID) {
+        socket.emit("translation", {
+            "text": text,
+            "target": text,
+            "user": user,
+            "meetingID": meetingDetails?.meetingID,
+            "date": new Date().toLocaleString()
+        });
+    } else {
+        console.warn("Cannot broadcast caption: socket not connected or missing meeting details");
+    }
+}
 
 const SocketIOCaption = () => {
     const user = useRecoilValue(authUserState);
@@ -35,49 +65,6 @@ const SocketIOCaption = () => {
     const [socketConnected, setSocketConnected] = useState(false);
     const [hasJoinedRoom, setHasJoinedRoom] = useState(false);
     const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
-
-    async function translate(text: string, user: string) {
-        console.log("cSocket Translate API - ", ccModalLanguageRef.current);
-        
-        try {
-            let data = JSON.stringify({
-                "q": text,
-                "source": "auto",
-                "target": ccModalLanguageRef.current,
-                "format": "text"
-            });
-
-            const response = await axios({
-                method: "post",
-                maxBodyLength: Infinity,
-                url: `${ServerInfo.translateURL}/translator`,
-                headers: {
-                    apikey: "AJSAel5d4cSwAqopPs19LEIqZ42kX1TEnnUJRpb6",
-                    "Content-Type": "application/json",
-                },
-                data: data,
-            });
-
-            const responseData = response.data;
-            console.log("response", responseData);
-
-            let displayText = `${user}: ${responseData?.message}`;
-            console.log("cSocket receive_captions with translation displayText", displayText);
-            
-            setCCModal((prev) => ({
-                ...prev,
-                caption: displayText,
-            }));
-        } catch (error) {
-            console.error("Translation error:", error);
-            // Fallback to original text if translation fails
-            let displayText = `${user}: ${text}`;
-            setCCModal((prev) => ({
-                ...prev,
-                caption: displayText,
-            }));
-        }
-    }
 
     const joinRoom = (meetingID: string) => {
         if (socket && socket.connected && meetingID && !hasJoinedRoom) {
@@ -145,18 +132,51 @@ const SocketIOCaption = () => {
                 return;
             }
 
-            let displayText = `${arg.user}: ${arg.text}`;
+            let displayText = `${arg.user}: ${arg.text}break--line`;
             console.log("cSocket receive_captions displayText", displayText);
             console.log("cSocket caption language", ccModalLanguageRef.current);
 
             if (ccModalLanguageRef.current !== "df") {
-                translate(arg.text, arg.user);
+                translateCaption(arg.text,ccModalLanguageRef.current,arg.user,user.meetingDetails);
             } else {
                 setCCModal((prev) => ({
                     ...prev,
-                    caption: displayText,
+                    caption: prev.caption + displayText,
                 }));
             }
+        });
+
+        socket.on("translation", (arg) => {
+            console.log("cSocket receive translation", arg);
+            console.log("cSocket receive translation user", arg.user);
+
+            if (!arg || !arg.text) {
+                console.warn("Invalid translation data received:", arg);
+                return;
+            }
+
+            let displayText = `${arg.user}: ${arg.text}break--line`;
+            console.log("cSocket receive_captions displayText", displayText);
+
+            setCCModal((prev) => ({
+                ...prev,
+                caption: prev.caption + displayText,
+            }));
+        });
+
+        socket.on("transcribe_audio", (arg) => {
+            console.log("cSocket transcribe_audio", arg);
+
+            if (!arg || !arg.text) {
+                console.warn("Invalid translation data received:", arg);
+                return;
+            }
+
+            let displayText = `Me: ${arg.text}break--line`;
+            setCCModal((prev) => ({
+                ...prev,
+                caption: prev.caption + displayText,
+            }));
         });
 
         // Handle room join confirmation (if server sends it)

@@ -22,17 +22,12 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="Fixed room joining that fluctuate for Caption">
+    <list default="true" id="66b9e498-53b2-4311-bf47-2105ac4f3107" name="Default Changelist" comment="-Fix Mute participant action&#10;-Fix Remove User action">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/finger-snaps.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/public/sounds/finger-snaps.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/message.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/public/sounds/message.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/sound_test.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/public/sounds/sound_test.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/waiting_room.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/public/sounds/waiting_room.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/cc/CCModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/settings/DeviceSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/settings/DeviceSettings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/Authenticated.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/api/elevenlabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/api/transcription.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/api/whisper.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/ccLanguageData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/ccLanguageData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/SocketIOCaption.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/SocketIOCaption.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -200,7 +195,11 @@
       <workItem from="1752310774008" duration="109858000" />
       <workItem from="1753804729564" duration="1317000" />
       <workItem from="1753806133548" duration="88000" />
-      <workItem from="1753951212274" duration="13124000" />
+      <workItem from="1753951212274" duration="16879000" />
+      <workItem from="1755511482235" duration="29762000" />
+      <workItem from="1755794357460" duration="3443000" />
+      <workItem from="1755852871647" duration="12257000" />
+      <workItem from="1755895448065" duration="9332000" />
     </task>
     <task id="LOCAL-00001" summary="Chnage the engine url">
       <created>1713166848662</created>
@@ -300,30 +299,6 @@
       <option name="project" value="LOCAL" />
       <updated>1722855101747</updated>
     </task>
-    <task id="LOCAL-00017" summary="-Worked on Connection status and audio disconnected notification.">
-      <option name="closed" value="true" />
-      <created>1724686486117</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1724686486118</updated>
-    </task>
-    <task id="LOCAL-00018" summary="-Add Full Screen Mode to ECinemaComponent.tsx&#10;-On Group Chat: Sending of HTMl content is not displayed correctly">
-      <option name="closed" value="true" />
-      <created>1725484283317</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1725484283317</updated>
-    </task>
-    <task id="LOCAL-00019" summary="-On Mobile: No ismoderator check for Start recording&#10;-Disable recording when not activated for the meeting">
-      <option name="closed" value="true" />
-      <created>1725980952385</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1725980952385</updated>
-    </task>
     <task id="LOCAL-00020" summary="-Fix issues on ecinema">
       <created>1726135994345</created>
       <option name="number" value="00020" />
@@ -379,30 +354,6 @@
       <option name="presentableId" value="LOCAL-00027" />
       <option name="project" value="LOCAL" />
       <updated>1727196936457</updated>
-    </task>
-    <task id="LOCAL-00028" summary="-Add Types for VoiceUser and saving all from server&#10;-Increase time count for kickedout session from 50 to 150&#10;-Now checking if audio websocket connection is ready before initiating webrtc&#10;-Remove key error on SingleCameraComponent.tsx">
-      <option name="closed" value="true" />
-      <created>1727773337491</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1727773337491</updated>
-    </task>
-    <task id="LOCAL-00029" summary="-Make audio and sound alert play through the selected output device">
-      <option name="closed" value="true" />
-      <created>1729586629634</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1729586629634</updated>
-    </task>
-    <task id="LOCAL-00030" summary="-Fix error due key">
-      <option name="closed" value="true" />
-      <created>1732105715816</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1732105715816</updated>
     </task>
     <task id="LOCAL-00031" summary="-Implement prejoin interface with link url">
       <option name="closed" value="true" />
@@ -572,7 +523,55 @@
       <option name="project" value="LOCAL" />
       <updated>1754525527423</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="-Moved sounds to sounds folder&#10;-Moved transcription switch from frontend to backend&#10;-Rewrite transcription endpoint to contain whisper &amp; elevenlabs and switch with env">
+      <option name="closed" value="true" />
+      <created>1754683790995</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1754683790995</updated>
+    </task>
+    <task id="LOCAL-00053" summary="-Added My name Mentioned to AI&#10;-Make AI messages display well">
+      <option name="closed" value="true" />
+      <created>1754686525253</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1754686525253</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Sorted Actions of Group chat, Leave Meeting and End Meeting">
+      <option name="closed" value="true" />
+      <created>1755529636267</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1755529636268</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Sorted Actions of Change Role, Webcam start, Webcam Stop, Ecenemas actions">
+      <option name="closed" value="true" />
+      <created>1755597697805</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1755597697805</updated>
+    </task>
+    <task id="LOCAL-00056" summary="-Change Chat Message And AI Message display format to markdown&#10;-Added Copy Button the Group Chat">
+      <option name="closed" value="true" />
+      <created>1755609673126</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1755609673127</updated>
+    </task>
+    <task id="LOCAL-00057" summary="-Fix Mute participant action&#10;-Fix Remove User action">
+      <option name="closed" value="true" />
+      <created>1755890089438</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1755890089438</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -607,12 +606,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="-Fix error due key" />
-    <MESSAGE value="-Implement prejoin interface with link url" />
-    <MESSAGE value="-Restrict Ecinema to once" />
-    <MESSAGE value="-Fix Manage users not working instantly&#10;-Fix Private chat disabling on Public Chat modal" />
-    <MESSAGE value="-Mute mic before redirecting to breakout room&#10;-Fix breakout room modal showing when joined a breakout room" />
-    <MESSAGE value="Working on Audio Transcribing" />
     <MESSAGE value="Implement waiting room" />
     <MESSAGE value="Fix the need to refresh to fully join the meeting" />
     <MESSAGE value="Added Disabling of Microphone" />
@@ -632,7 +625,13 @@
     <MESSAGE value="-Fixed participantvoice issue" />
     <MESSAGE value="-Remove life event from transcription&#10;-Remove User transcript from CC Modal" />
     <MESSAGE value="Fixed room joining that fluctuate for Caption" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed room joining that fluctuate for Caption" />
+    <MESSAGE value="-Moved sounds to sounds folder&#10;-Moved transcription switch from frontend to backend&#10;-Rewrite transcription endpoint to contain whisper &amp; elevenlabs and switch with env" />
+    <MESSAGE value="-Added My name Mentioned to AI&#10;-Make AI messages display well" />
+    <MESSAGE value="Sorted Actions of Group chat, Leave Meeting and End Meeting" />
+    <MESSAGE value="Sorted Actions of Change Role, Webcam start, Webcam Stop, Ecenemas actions" />
+    <MESSAGE value="-Change Chat Message And AI Message display format to markdown&#10;-Added Copy Button the Group Chat" />
+    <MESSAGE value="-Fix Mute participant action&#10;-Fix Remove User action" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Fix Mute participant action&#10;-Fix Remove User action" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -664,7 +663,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/footer/MiddleSide.tsx</url>
-          <line>667</line>
+          <line>662</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -683,11 +682,6 @@
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/components/cc/CCModal.tsx</url>
-          <line>99</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/recoil/atom.ts</url>
           <line>190</line>
           <option name="timeStamp" value="29" />
@@ -699,13 +693,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/server/WebsocketActions.ts</url>
-          <line>300</line>
+          <line>291</line>
           <option name="timeStamp" value="34" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/settings/TakeSpotAttendanceSettings.tsx</url>
           <line>106</line>
           <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/server/WebsocketActions.ts</url>
+          <line>62</line>
+          <option name="timeStamp" value="36" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
