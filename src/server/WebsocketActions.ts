@@ -160,17 +160,17 @@ export const websocketLockViewers = (manageUserSettings: IManageUserSettings, in
 }
 
 export const websocketSetWaitingRoom = (policy: 'ALWAYS_ACCEPT' | 'ALWAYS_DENY' | 'ASK_MODERATOR') => {
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'updateGuestPolicy', params: [policy] };
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'changeGuestPolicy', params: [policy] };
     send(msg);
 }
 
 export const websocketDenyAllWaitingUser = (user:any) => {
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'denyAllGuests', params: [user,"DENY"] };
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'allowPendingUsers', params: [user,"DENY"] };
     send(msg);
 }
 
 export const websocketAllowAllWaitingUser = (user:any) => {
-    const msg = { msg: 'method', id: generatesSmallId(), method: 'allowAllGuests', params: [user,"ALLOW"] };
+    const msg = { msg: 'method', id: generatesSmallId(), method: 'allowPendingUsers', params: [user,"ALLOW"] };
     send(msg);
 }
 
@@ -178,16 +178,9 @@ export const websocketSendMessage2AllWaitingUser = (message: string) => {
     const msg = {
         msg: 'method',
         id: generatesSmallId(),
-        method: 'sendGroupChatMsg',
+        method: 'setGuestLobbyMessage',
         params: [
-            'GUEST-WAITING-ROOM-CHAT',
-            {
-                id: generatesSmallId(),
-                chatId: 'GUEST-WAITING-ROOM-CHAT',
-                message: message,
-                timestamp: new Date().getTime(),
-                correlationId: generatesSmallId()
-            }
+            message
         ]
     };
     send(msg);
@@ -197,16 +190,10 @@ export const websocketSendMessage2PrivateWaitingUser = (message: string, interna
     const msg = {
         msg: 'method',
         id: generatesSmallId(),
-        method: 'sendGroupChatMsg',
+        method: 'setPrivateGuestLobbyMessage',
         params: [
-            `GUEST-WAITING-ROOM-CHAT-${internalUserID}`,
-            {
-                id: generatesSmallId(),
-                chatId: `GUEST-WAITING-ROOM-CHAT-${internalUserID}`,
-                message: message,
-                timestamp: new Date().getTime(),
-                correlationId: generatesSmallId()
-            }
+            message,
+            internalUserID
         ]
     };
     send(msg);

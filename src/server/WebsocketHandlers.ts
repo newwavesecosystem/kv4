@@ -487,7 +487,7 @@ const handleGuestUsers: Handler = (data, state, stateSetters) => {
         if(!approved && !denied) {
             if (state.waitingRoomUsers.filter((item :any) => item?._id == id).length < 1) {
                 stateSetters.setWaitingRoomUsers([...state.waitingRoomUsers, { ...fields, "_id": id }]);
-                stateSetters.toast({ title: "Someone wants to join this meeting", description: `${fields.name}`, duration: 5000 });
+                stateSetters.toast({ title: "Someone wants to join this meeting. Kindly allow or deny", description: `${fields.name}`, duration: 5000 });
                 stateSetters.setSoundNotification((prev: any)=>({...prev, newWaitingUser:true}))
             }
         }

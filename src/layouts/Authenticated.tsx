@@ -30,7 +30,13 @@ import {
   eCinemaModalState,
   participantsModalState,
   recordingModalState,
-  newMessage, newRaiseHand, selectedSpeakersState, manageUserSettingsState, soundNotificationState,
+  newMessage,
+  newRaiseHand,
+  selectedSpeakersState,
+  manageUserSettingsState,
+  soundNotificationState,
+  settingsModalState,
+  currentTabState,
 } from "~/recoil/atom";
 import requestMicrophoneAccess from "~/lib/microphone/requestMicrophoneAccess";
 
@@ -71,6 +77,7 @@ import {
 import EllipsisIcon from "~/components/icon/outline/EllipsisIcon";
 import ExitIcon from "~/components/icon/outline/ExitIcon";
 import {websocketRaiseHand} from "~/server/WebsocketActions";
+import settingsTabData from "~/data/settingsTabData";
 
 
 function Authenticated({ children }: { children: React.ReactNode }) {
@@ -109,6 +116,8 @@ function Authenticated({ children }: { children: React.ReactNode }) {
 
   const [manageUserSettings, setManageUserSettings] = useRecoilState(manageUserSettingsState);
 
+  const [settingsOpen, setSettingsOpen] = useRecoilState(settingsModalState);
+  const [currentTab, setCurrentTab] = useRecoilState(currentTabState);
 
   const sound = new Howl({
     src: ['/sounds/message.mp3'],
@@ -132,6 +141,8 @@ function Authenticated({ children }: { children: React.ReactNode }) {
     }
 
     if(soundNotification.newWaitingUser) {
+      setCurrentTab(settingsTabData[4]);
+      setSettingsOpen(true);
       kurentoAudioPlaySound(WaitingSound, selectedSpeaker?.deviceId);
     }
 

@@ -102,7 +102,7 @@ function WaitingRoomSettings() {
             <TickIcon className="h-6 w-6" />
             <span className="ml-2">Allow Everyone</span>
           </button>
-          <button className="bg-a11y/20 flex items-center rounded-lg p-2" onClick={()=>{
+          <button className="bg-red-700 flex items-center rounded-lg p-2" onClick={()=>{
             websocketDenyAllWaitingUser(waitingRoomUsers);
             setWaitingRoomUsers([]);
           }}>
@@ -132,7 +132,7 @@ function WaitingRoomSettings() {
                 }}>
                   Allow
                 </button>
-                <button className="border-a11y/20 rounded-2xl border px-4 py-1 text-sm" onClick={()=>{
+                <button className="bg-red-700 rounded-2xl border px-4 py-1 text-sm" onClick={()=>{
                   websocketDenyAllWaitingUser([item]);
 
                   let ur=waitingRoomUsers.filter((item:IWaitingUser) => item?._id != item._id);
